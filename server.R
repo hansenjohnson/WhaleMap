@@ -109,8 +109,14 @@ function(input, output, session){
       addProviderTiles(providers$Esri.OceanBasemap) %>%
       fitBounds(~max(lon, na.rm = T), ~min(lat, na.rm = T), ~min(lon, na.rm = T), ~max(lat, na.rm = T)) %>%
       
+      # use NOAA graticules
+      addWMSTiles(
+        "https://maps.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer/",
+        layers = c("1-degree grid", "5-degree grid"),
+        options = WMSTileOptions(format = "image/png8", transparent = TRUE),
+        attribution = "NOAA") %>%
+      
       # add extra map features
-      # addMouseCoordinates(style = 'basic') %>%
       addScaleBar(position = 'bottomleft')%>%
       addMeasure(primaryLengthUnit = "kilometers",secondaryLengthUnit = 'miles', primaryAreaUnit = "hectares",secondaryAreaUnit="acres", position = 'bottomleft')
   })
@@ -137,6 +143,7 @@ function(input, output, session){
     proxy = leafletProxy("map")
     proxy %>% clearMarkers() %>% clearShapes()
     
+    # add tracklines
     if(nrow(TRACKS()) == 0){
       return(NULL)
     } else {
