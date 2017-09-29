@@ -21,6 +21,9 @@ for(i in seq_along(noaa_track_list)){
   TRACKS[[i]] = read.table(noaa_track_list[i], sep = ',')
 }
 
+# catch error
+if(length(TRACKS)!=length(noaa_track_list)){stop('Not all tracks were processed!')}
+
 # flatten tracks
 tracks = do.call(rbind, TRACKS)
 tracks = tracks[,-c(4:7)]

@@ -26,6 +26,7 @@ noaa15_sig = readRDS('data/interim/2015_noaa_sightings.rds')
 noaa17_sig = readRDS('data/interim/2017_noaa_sightings.rds')
 shelagh16_sig = readRDS('data/interim/2016_shelagh_sightings.rds')
 shelagh17_sig = readRDS('data/interim/2017_shelagh_sightings.rds')
+dfo17_sig = readRDS('data/interim/2017_dfo_sightings.rds')
 tc17_sig = readRDS('data/interim/2017_tc_sightings.rds')
 cnp17_sig = readRDS('data/interim/2017_cnp_sightings.rds')
 
@@ -35,6 +36,7 @@ obs = Reduce(function(x, y) merge(x, y, all=TRUE), list(det,
                                                         noaa17_sig,
                                                         shelagh16_sig,
                                                         shelagh17_sig,
+                                                        dfo17_sig,
                                                         tc17_sig,
                                                         cnp17_sig))
 
@@ -57,13 +59,15 @@ saveRDS(obs, 'data/processed/observations.rds')
 dcs = readRDS('data/interim/dcs_tracks.rds')
 noaa15_tracks = readRDS('data/interim/2015_noaa_tracks.rds')
 noaa17_tracks = readRDS('data/interim/2017_noaa_tracks.rds')
+dfo17_tracks = readRDS('data/interim/2017_dfo_tracks.rds')
 shelagh16_tracks = readRDS('data/interim/2016_shelagh_tracks.rds')
 shelagh17_tracks = readRDS('data/interim/2017_shelagh_tracks.rds')
 
 # merge 
 tracks = Reduce(function(x, y) merge(x, y, all=TRUE), list(dcs, 
                                                            noaa15_tracks,
-                                                           noaa17_tracks, 
+                                                           noaa17_tracks,
+                                                           dfo17_tracks,
                                                            shelagh16_tracks, 
                                                            shelagh17_tracks))
 

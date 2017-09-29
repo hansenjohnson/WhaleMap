@@ -59,12 +59,14 @@ noaa = sig[sig$platform=='NOAA Twin Otter',]
 she = sig[sig$platform=='CWI- the Shelagh',]
 tc = sig[sig$platform=='TC-Dash 8',]
 cnp = sig[sig$platform=='C&P plane (DFO)'|sig$platform=='C&P plane',]
+dfo = sig[sig$platform=='DFO Twin Otter',]
 
 # clean up data
 noaa = clean_latlon(noaa)
 she = clean_latlon(she)
 tc = clean_latlon(tc)
 cnp = clean_latlon(cnp)
+dfo = clean_latlon(dfo)
 
 # add noaa metadata
 noaa$platform = 'plane'
@@ -86,8 +88,14 @@ cnp$platform = 'plane'
 cnp$name = 'cnp'
 cnp$id = paste0(cnp$date, '_plane_cnp')
 
+# add dfo metadata
+dfo$platform = 'plane'
+dfo$name = 'dfo'
+dfo$id = paste0(dfo$date, '_plane_dfo')
+
 # save
 saveRDS(noaa, paste0(output_dir, '2017_noaa_sightings.rds'))
 saveRDS(she, paste0(output_dir, '2017_shelagh_sightings.rds'))
 saveRDS(tc, paste0(output_dir, '2017_tc_sightings.rds'))
 saveRDS(cnp, paste0(output_dir, '2017_cnp_sightings.rds'))
+saveRDS(dfo, paste0(output_dir, '2017_dfo_sightings.rds'))
