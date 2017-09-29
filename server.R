@@ -157,7 +157,6 @@ function(input, output, session){
              var <- det()[,which(colnames(det())==input$colorby)]
              )
       
-
       # possible detections
       addCircleMarkers(map = proxy, data = pos(), ~lon, ~lat, group = 'possible',
                        radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5, 
@@ -183,6 +182,7 @@ function(input, output, session){
                        popup = ~paste(sep = "<br/>" ,
                                       paste0("Species: ", input$species),
                                       paste0("Score: ", score),
+                                      paste0("Number: ", number),
                                       paste0("Platform: ", platform),
                                       paste0("Name: ", name),
                                       paste0('Time: ', as.character(time)),
@@ -211,7 +211,7 @@ function(input, output, session){
   # inbounds stats ------------------------------------------------------  
   
   # determine deployments in map bounds
-  detInBounds <- reactive({
+  tInBounds <- reactive({
     if (is.null(input$map_bounds))
       return(TRACKS()[FALSE,])
     bounds <- input$map_bounds
@@ -224,7 +224,7 @@ function(input, output, session){
   })
   
   # determine detected calls in map bounds
-  detectedInBounds <- reactive({
+  dInBounds <- reactive({
     if (is.null(input$map_bounds))
       return(spp()[FALSE,])
     bounds <- input$map_bounds
@@ -236,32 +236,30 @@ function(input, output, session){
              lon >= lngRng[1] & lon <= lngRng[2])
   })
   
-  # # determine possible calls in map bounds
-  # possibleInBounds <- reactive({
-  #   if (is.null(input$map_bounds))
-  #     return(possible()[FALSE,])
-  #   bounds <- input$map_bounds
-  #   latRng <- range(bounds$north, bounds$south)
-  #   lngRng <- range(bounds$east, bounds$west)
-  #   
-  #   subset(possible(),
-  #          lat >= latRng[1] & lat <= latRng[2] &
-  #            lon >= lngRng[1] & lon <= lngRng[2])
-  # })
-  
   # create text summary
   output$summary <- renderUI({
     if(nrow(spp())==0){
       HTML('No data available...')
     } else {
-      str1 <- paste0('<strong>Deployment(s)</strong>: ', length(unique(detInBounds()$id)))
-      t = paste(unique(detInBounds()$id), collapse = ', ')
-      str2 <- paste('<strong>ID(s)</strong>:', t)
-      str3 <- paste0('<strong>Species</strong>: ', input$species)
-      str4 <- paste0('<strong>Definite detections</strong>: ', nrow(detectedInBounds()))
-      #str5 <- paste0('<strong>Possible detections</strong>: ', nrow(possibleInBounds()))
-      str6 <- paste0('<strong>Tally periods</strong>: ', nrow(detInBounds()))
-      HTML(paste(str1, str2, str3, str4,str6, sep = '<br/>'))
+      str1 <- paste0('<strong>Species</strong>: ', input$species)
+      str2 <- paste0('<strong>Number of sightings</strong>: ', 
+                     nrow(dInBounds()[dInBounds()$score=='sighted',]))
+      str3 <- paste0('<strong>Number of definite detections</strong>: ', 
+                     nrow(dInBounds()[dInBounds()$score=='detected',]))
+      
+      ifelse(input$possible, 
+             t<-nrow(dInBounds()[dInBounds()$score=='possibly detected',]),
+             t<-0)
+      
+      str4 <- paste0('<strong>Number of possible detections</strong>: ', t)
+      str5 <- paste0('<strong>Earliest observation</strong>: ', min(dInBounds()$time, na.rm = T))
+      str6 <- paste0('<strong>Latest observation</strong>: ', max(dInBounds()$time, na.rm = T))
+      str7 <- paste0('<strong>Number of survey(s)</strong>: ', length(unique(tInBounds()$id)))
+      str8 <- paste0('<strong>Number of track points</strong>: ', nrow(tInBounds()))
+      str9 <- paste('<strong>Survey ID(s)</strong>:', paste(unique(tInBounds()$id), collapse = ', '))
+      
+      # paste and render
+      HTML(paste(str1, str2, str3, str4, str5, str6, str7, str8, str9, sep = '<br/>'))
     }
   })
 }
