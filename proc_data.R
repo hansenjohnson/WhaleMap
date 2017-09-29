@@ -47,6 +47,7 @@ obs$platform = as.factor(obs$platform)
 obs$species = as.factor(obs$species)
 obs$score = as.factor(obs$score)
 obs$yday = as.numeric(obs$yday)
+obs$number = as.numeric(obs$number)
 obs$lat = as.numeric(obs$lat)
 obs$lon = as.numeric(obs$lon)
 

@@ -89,8 +89,14 @@ function(input, output, session){
     ind = as.numeric(input$pal)
     if(input$colorby == 'yday'){
       colorNumeric(palette_list[[ind]], spp()$yday)  
+    } else if (input$colorby == 'number'){
+      if(is.infinite(min(spp()$number, na.rm = T))){
+        colorNumeric(palette_list[[ind]], c(NA,0), na.color = 'darkgrey')
+      } else {
+        colorNumeric(palette_list[[ind]], spp()$number, na.color = 'darkgrey')
+      }
     } else if (input$colorby == 'score'){
-      colorFactor(c('red','yellow','darkgrey'), spp()$score)  
+      colorFactor(c('red','yellow','darkslategrey'), spp()$score)  
     } else {
       colorFactor(palette_list[[ind]], spp()[,which(colnames(spp())==input$colorby)])  
     }

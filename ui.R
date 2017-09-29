@@ -92,6 +92,7 @@ body <- dashboardBody(
                                'Day of year' = 'yday',
                                'Platform' = 'platform',
                                'Platform name' = 'name',
+                               'Number' = 'number',
                                'Deployment' = 'id'), selected = 'score'),
                
                # color palette
