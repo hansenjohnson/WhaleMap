@@ -124,9 +124,8 @@ body <- dashboardBody(
            
            # details
            box(width = NULL,title = 'About',collapsible = T,
-               p('These data were collected by various autonomous platforms equipped with the Low Frequency Detection and Classification System (LFDCS) developed by Dr. Mark Baumgartner at the Woods Hole Oceanographic Institution. For more details on the system, platforms, deployments, or research please visit the Robots4Whales site at: ', tags$a(href="dcs.whoi.edu", "dcs.whoi.edu")),
-               p('Please note that while Slocum gliders and moored buoys are considered reliable and operational platforms, the wave glider is still experimental. It likely has a lower probability of detection than the other platforms, so absent detections should be treated with even more caution.'),
-               p('Source code for this application is available ', tags$a(href="https://github.com/hansenjohnson/dcs_map", "here."), 'For more details, comments or suggestions, please contact Hansen Johnson at hansen(dot)johnson(at)dal.ca')
+               p('More details coming soon...'),
+               p('Please contact Hansen Johnson at hansen(dot)johnson(at)dal.ca for any questions, comments, suggestions, etc')
            )
     )
   ))
