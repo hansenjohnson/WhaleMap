@@ -90,7 +90,7 @@ function(input, output, session){
     if(input$colorby == 'yday'){
       colorNumeric(palette_list[[ind]], spp()$yday)  
     } else if (input$colorby == 'score'){
-      colorFactor(c('red','yellow','black'), spp()$score)  
+      colorFactor(c('red','yellow','darkgrey'), spp()$score)  
     } else {
       colorFactor(palette_list[[ind]], spp()[,which(colnames(spp())==input$colorby)])  
     }
@@ -115,13 +115,13 @@ function(input, output, session){
       if(tracks$platform[1] == 'slocum') {
         "blue"
       } else if(tracks$platform[1] == 'plane') {
-        "black"
+        "#8B6914"
       } else if(tracks$platform[1] == 'vessel'){
-        "red"
+        "#2E2E2E"
       } else if(tracks$platform[1] == 'wave'){
         "green"
       } else {
-        "darkgrey"
+        "black"
       }
   }
   
@@ -160,8 +160,7 @@ function(input, output, session){
 
       # possible detections
       addCircleMarkers(map = proxy, data = pos(), ~lon, ~lat, group = 'possible',
-                       radius = 4, fillOpacity = 1, stroke = T, col = 'black',
-                       weight = 0.5, 
+                       radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5, 
                        fillColor = pal(pos()[,which(colnames(pos())==input$colorby)]),
                        popup = ~paste(sep = "<br/>" ,
                                       paste0("Species: ", input$species),
@@ -178,7 +177,7 @@ function(input, output, session){
       
       # definite detections
       addCircleMarkers(map = proxy, data = det(), ~lon, ~lat, group = 'detected',
-                       radius = 4, fillOpacity = 1, stroke = T, col = 'black', weight = 0.5, 
+                       radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5, 
                        fillColor = pal(det()[,which(colnames(det())==input$colorby)]),
                        label = ~paste0( as.character(date), ': ', input$species,' whale ', score),
                        popup = ~paste(sep = "<br/>" ,
