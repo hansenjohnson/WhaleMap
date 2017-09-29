@@ -34,13 +34,15 @@ obs = Reduce(function(x, y) merge(x, y, all=TRUE), list(det,
                                                         shelagh16_sig,
                                                         shelagh17_sig))
 
-# convert to factors
+# adjust column types
 obs$year = as.factor(obs$year)
 obs$id = as.factor(obs$id)
 obs$platform = as.factor(obs$platform)
 obs$species = as.factor(obs$species)
 obs$score = as.factor(obs$score)
 obs$yday = as.numeric(obs$yday)
+obs$lat = as.numeric(obs$lat)
+obs$lon = as.numeric(obs$lon)
 
 # save
 saveRDS(obs, 'data/processed/observations.rds')
@@ -63,6 +65,14 @@ tracks = Reduce(function(x, y) merge(x, y, all=TRUE), list(dcs,
 
 # sort by time (important for plotting)
 tracks = tracks[order(tracks$id, tracks$time),]
+
+# adjust column types
+tracks$year = as.factor(tracks$year)
+# tracks$id = as.factor(tracks$id)
+tracks$platform = as.factor(tracks$platform)
+tracks$yday = as.numeric(tracks$yday)
+tracks$lat = as.numeric(tracks$lat)
+tracks$lon = as.numeric(tracks$lon)
 
 # save
 saveRDS(tracks, 'data/processed/tracks.rds')

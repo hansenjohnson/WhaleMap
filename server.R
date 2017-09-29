@@ -19,22 +19,22 @@ palette_list = list(heat.colors(200), oce.colorsTemperature(200),oce.colorsSalin
 
 function(input, output, session){
   
-  # # advance date -------------------------------------------------------
-  # 
-  # observeEvent(input$advance,{
-  #   val <- input$range
-  #   updateSliderInput(session, "range", value = c(val[1], val[2]+7),
-  #                     min = as.Date('2017-01-01'), max = as.Date('2017-12-30'))
-  # })
+  # advance date -------------------------------------------------------
+
+  observeEvent(input$advance,{
+    val <- input$range
+    updateSliderInput(session, "range", value = c(val[1], val[2]+7),
+                      min = as.Date('2016-01-01'), max = as.Date('2016-12-31'))
+  })
   
   # adjust date -------------------------------------------------------
   
   yday0 = reactive({
-    yday(input$range[1])
+    yday(as.Date(input$range[1]))
   })
   
   yday1 = reactive({
-    yday(input$range[2])
+    yday(as.Date(input$range[2]))
   })
   
   # trackline data -------------------------------------------------------
