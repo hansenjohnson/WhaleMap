@@ -36,7 +36,7 @@ body <- dashboardBody(
     jqui_sortabled(column(width = 3,
            
            # Choose year and date range
-           box(width = NULL, solidHeader = T, status = "warning", collapsible = T, title = 'Time Input',
+           box(width = NULL, solidHeader = F, status = "warning", collapsible = T, title = 'Time Input',
                # add year choice
                selectInput("year", "Choose year(s):", 
                            choices = c('2014',
@@ -58,7 +58,7 @@ body <- dashboardBody(
            ),
            
            # Choose species and platform
-           box(width = NULL, solidHeader = T, status = "warning", collapsible = T, title = 'Survey Input',
+           box(width = NULL, solidHeader = F, status = "warning", collapsible = T, title = 'Survey Input',
                
                # add platform choice
                selectInput("platform", "Choose platform(s):", 
@@ -83,7 +83,7 @@ body <- dashboardBody(
                checkboxInput("possible", label = 'Show possible detections?', value = F)
            ),
            
-           box(width = NULL, solidHeader = T, status = "warning", collapsible = T, title = 'Plot Input',
+           box(width = NULL, solidHeader = F, status = "warning", collapsible = T, title = 'Plot Input',
                
                #color by
                selectInput("colorby", "Color by:", choices =
@@ -91,6 +91,7 @@ body <- dashboardBody(
                                'Year' = 'year',
                                'Day of year' = 'yday',
                                'Platform' = 'platform',
+                               'Platform name' = 'name',
                                'Deployment' = 'id'), selected = 'score'),
                
                # color palette
@@ -112,17 +113,17 @@ body <- dashboardBody(
     jqui_sortabled(column(width = 9,
            
            # map
-           box(width = NULL, solidHeader = TRUE,collapsible = T, title = 'Map', status = 'primary',
+           box(width = NULL, solidHeader = T,collapsible = T, title = 'Map', status = 'primary',
                leafletOutput("map", height = 500)
            ),
            
            # stats
-           box(width = NULL, solidHeader = TRUE,collapsible = T, title = 'Currently viewing:', status = 'success',
+           box(width = NULL, solidHeader = T,collapsible = T, title = 'Currently viewing:', status = 'primary',
                htmlOutput("summary")
            ),
            
            # details
-           box(width = NULL, solidHeader = TRUE,collapsible = T, title = 'About', status = 'info',
+           box(width = NULL, solidHeader = T,collapsible = T, title = 'About', status = 'primary',
                p('More details coming soon...'),
                p('Please contact Hansen Johnson at hansen(dot)johnson(at)dal.ca for any questions, comments, suggestions, etc')
            )

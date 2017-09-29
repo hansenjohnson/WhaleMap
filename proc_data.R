@@ -26,13 +26,17 @@ noaa15_sig = readRDS('data/interim/2015_noaa_sightings.rds')
 noaa17_sig = readRDS('data/interim/2017_noaa_sightings.rds')
 shelagh16_sig = readRDS('data/interim/2016_shelagh_sightings.rds')
 shelagh17_sig = readRDS('data/interim/2017_shelagh_sightings.rds')
+tc17_sig = readRDS('data/interim/2017_tc_sightings.rds')
+cnp17_sig = readRDS('data/interim/2017_cnp_sightings.rds')
 
 # merge 
 obs = Reduce(function(x, y) merge(x, y, all=TRUE), list(det, 
                                                         noaa15_sig,
                                                         noaa17_sig,
                                                         shelagh16_sig,
-                                                        shelagh17_sig))
+                                                        shelagh17_sig,
+                                                        tc17_sig,
+                                                        cnp17_sig))
 
 # adjust column types
 obs$year = as.factor(obs$year)
@@ -68,7 +72,6 @@ tracks = tracks[order(tracks$id, tracks$time),]
 
 # adjust column types
 tracks$year = as.factor(tracks$year)
-# tracks$id = as.factor(tracks$id)
 tracks$platform = as.factor(tracks$platform)
 tracks$yday = as.numeric(tracks$yday)
 tracks$lat = as.numeric(tracks$lat)
