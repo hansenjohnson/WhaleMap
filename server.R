@@ -117,11 +117,11 @@ function(input, output, session){
       } else if(tracks$platform[1] == 'plane') {
         "#8B6914"
       } else if(tracks$platform[1] == 'vessel'){
-        "#2E2E2E"
-      } else if(tracks$platform[1] == 'wave'){
-        "green"
-      } else {
         "black"
+      } else if(tracks$platform[1] == 'wave'){
+        "purple"
+      } else {
+        "darkgrey"
       }
   }
   
