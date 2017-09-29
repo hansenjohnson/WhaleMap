@@ -169,7 +169,8 @@ function(input, output, session){
                                       paste0('Time: ', as.character(time)),
                                       paste0('Position: ',
                                              as.character(lat), ', ', as.character(lon))),
-                       label = ~paste0( as.character(date), ': ', input$species,' whale ', score))
+                       label = ~paste0( as.character(date), ': ', input$species,' whale ', 
+                                        score, ' by ', platform, ' ', name))
 
       # switch to show/hide possibles
       ifelse(input$possible, showGroup(proxy, 'possible'),hideGroup(proxy, 'possible'))
@@ -178,7 +179,6 @@ function(input, output, session){
       addCircleMarkers(map = proxy, data = det(), ~lon, ~lat, group = 'detected',
                        radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5, 
                        fillColor = pal(det()[,which(colnames(det())==input$colorby)]),
-                       label = ~paste0( as.character(date), ': ', input$species,' whale ', score),
                        popup = ~paste(sep = "<br/>" ,
                                       paste0("Species: ", input$species),
                                       paste0("Score: ", score),
@@ -187,7 +187,9 @@ function(input, output, session){
                                       paste0("Name: ", name),
                                       paste0('Time: ', as.character(time)),
                                       paste0('Position: ', 
-                                             as.character(lat), ', ', as.character(lon))))
+                                             as.character(lat), ', ', as.character(lon))),
+                       label = ~paste0( as.character(date), ': ', input$species,' whale ', 
+                                        score, ' by ', platform, ' ', name))
       
       # switch to show/hide detected
       ifelse(input$detected, showGroup(proxy, 'detected'),hideGroup(proxy, 'detected'))
