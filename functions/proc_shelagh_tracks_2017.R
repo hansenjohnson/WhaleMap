@@ -11,6 +11,7 @@ output_dir = 'data/interim/'
 # setup -------------------------------------------------------------------
 
 library(lubridate)
+source('functions/config_data.R')
 
 # list data files
 dfiles = list.files(data_dir, pattern = '*CWI-V*', full.names = T)
@@ -89,6 +90,9 @@ tracks$lon = tracks$TrkLongitude
 
 # remove unused columns
 tracks = tracks[,-c(1:47)]
+
+# config data types
+tracks = config_tracks(tracks)
 
 # save
 saveRDS(tracks, paste0(output_dir, '2017_shelagh_tracks.rds'))

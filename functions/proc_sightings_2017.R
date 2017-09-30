@@ -11,6 +11,7 @@ output_dir = 'data/interim/'
 # setup -------------------------------------------------------------------
 
 library(lubridate)
+source('functions/config_data.R')
 
 # define functions --------------------------------------------------------
 
@@ -28,6 +29,25 @@ clean_latlon = function(d){
   d$lon[which(d$lon>0)] = -d$lon[which(d$lon>0)]
   
   return(d)
+}
+
+
+# clean and save data
+clean_sig = function(subs, platform, name){
+
+  # clean up data
+  subs = clean_latlon(subs)
+
+  # add metadata
+  subs$platform = platform
+  subs$name = name
+  subs$id = paste0(subs$date, '_', platform, '_', name)
+
+  # config data types
+  subs = config_observations(subs)
+  
+  # save
+  saveRDS(subs, paste0(output_dir, '2017_', name, '_sightings.rds'))
 }
 
 # process data ------------------------------------------------------------
@@ -61,41 +81,9 @@ tc = sig[sig$platform=='TC-Dash 8',]
 cnp = sig[sig$platform=='C&P plane (DFO)'|sig$platform=='C&P plane',]
 dfo = sig[sig$platform=='DFO Twin Otter',]
 
-# clean up data
-noaa = clean_latlon(noaa)
-she = clean_latlon(she)
-tc = clean_latlon(tc)
-cnp = clean_latlon(cnp)
-dfo = clean_latlon(dfo)
-
-# add noaa metadata
-noaa$platform = 'plane'
-noaa$name = 'noaa'
-noaa$id = paste0(noaa$date, '_plane_noaa')
-
-# add shelagh metadata
-she$platform = 'vessel'
-she$name = 'shelagh'
-she$id = paste0(she$date, '_vessel_shelagh')
-
-# add transport canada metadata
-tc$platform = 'plane'
-tc$name = 'tc'
-tc$id = paste0(tc$date, '_plane_tc')
-
-# add CnP metadata
-cnp$platform = 'plane'
-cnp$name = 'cnp'
-cnp$id = paste0(cnp$date, '_plane_cnp')
-
-# add dfo metadata
-dfo$platform = 'plane'
-dfo$name = 'dfo'
-dfo$id = paste0(dfo$date, '_plane_dfo')
-
-# save
-saveRDS(noaa, paste0(output_dir, '2017_noaa_sightings.rds'))
-saveRDS(she, paste0(output_dir, '2017_shelagh_sightings.rds'))
-saveRDS(tc, paste0(output_dir, '2017_tc_sightings.rds'))
-saveRDS(cnp, paste0(output_dir, '2017_cnp_sightings.rds'))
-saveRDS(dfo, paste0(output_dir, '2017_dfo_sightings.rds'))
+# clean and save
+clean_sig(noaa, 'plane', 'noaa')
+clean_sig(she, 'vessel', 'shelagh')
+clean_sig(tc, 'plane', 'tc')
+clean_sig(cnp, 'plane', 'cnp')
+clean_sig(dfo, 'plane', 'dfo')

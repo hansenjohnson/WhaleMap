@@ -11,6 +11,7 @@ output_dir = 'data/interim/'
 # setup -------------------------------------------------------------------
 
 library(lubridate)
+source('functions/config_data.R')
 
 # read in spp and obs keys
 spp_key = read.csv(paste0(data_dir, '/noaa_species_key.csv'))
@@ -102,25 +103,20 @@ if(length(SIG)!=length(paths)){warning('Not all deployments were processed!')}
 
 # combine and save data ---------------------------------------------------
 
-# gps data
+# flatten data
 tracks = do.call(rbind, GPS)
-tracks$yday = as.factor(tracks$yday)
-tracks$year = as.factor(tracks$year)
-tracks$platform = as.factor(tracks$platform)
-tracks$name = as.factor(tracks$name)
-tracks$id = as.factor(tracks$id)
+
+# config data types
+tracks = config_tracks(tracks)
 
 # save
 saveRDS(tracks, paste0(output_dir, '2015_noaa_tracks.rds'))
 
-# sightings data
-sightings = do.call(rbind, SIG)
-sightings$yday = as.factor(sightings$yday)
-sightings$year = as.factor(sightings$year)
-sightings$platform = as.factor(sightings$platform)
-sightings$name = as.factor(sightings$name)
-sightings$id = as.factor(sightings$id)
+# add score
 sightings$score[which(sightings$number>0)] = 'sighted'
+
+# config data types
+sightings = config_observations(sightings)
 
 # save
 saveRDS(sightings, paste0(output_dir, '2015_noaa_sightings.rds'))

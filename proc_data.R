@@ -1,5 +1,10 @@
 # process all data for use in app
 
+
+# functions ---------------------------------------------------------------
+
+source('functions/config_data.R')
+
 # process each platform ---------------------------------------------------
 
 # dcs (gliders, buoys, etc)
@@ -20,67 +25,43 @@ source('functions/proc_sightings_2017.R')
 
 # combine and save observations -------------------------------------------
 
-# read in data
-det = readRDS('data/interim/dcs_detections.rds')
-noaa15_sig = readRDS('data/interim/2015_noaa_sightings.rds')
-noaa17_sig = readRDS('data/interim/2017_noaa_sightings.rds')
-shelagh16_sig = readRDS('data/interim/2016_shelagh_sightings.rds')
-shelagh17_sig = readRDS('data/interim/2017_shelagh_sightings.rds')
-dfo17_sig = readRDS('data/interim/2017_dfo_sightings.rds')
-tc17_sig = readRDS('data/interim/2017_tc_sightings.rds')
-cnp17_sig = readRDS('data/interim/2017_cnp_sightings.rds')
+# list sightings files
+obs_list = list.files('data/interim', pattern = 'sightings|detections', full.names = T)
 
-# merge 
-obs = Reduce(function(x, y) merge(x, y, all=TRUE), list(det, 
-                                                        noaa15_sig,
-                                                        noaa17_sig,
-                                                        shelagh16_sig,
-                                                        shelagh17_sig,
-                                                        dfo17_sig,
-                                                        tc17_sig,
-                                                        cnp17_sig))
+# read in files
+OBS = list()
+for(i in seq_along(obs_list)){
+  OBS[[i]] = readRDS(obs_list[[i]])
+}
+
+# merge files
+obs = Reduce(function(x, y) merge(x, y, all=TRUE), OBS)
 
 # adjust column types
-obs$year = as.factor(obs$year)
-obs$id = as.factor(obs$id)
-obs$platform = as.factor(obs$platform)
-obs$species = as.factor(obs$species)
-obs$score = as.factor(obs$score)
-obs$yday = as.numeric(obs$yday)
-obs$number = as.numeric(obs$number)
-obs$lat = as.numeric(obs$lat)
-obs$lon = as.numeric(obs$lon)
+obs = config_observations(obs)
 
 # save
 saveRDS(obs, 'data/processed/observations.rds')
 
 # combine and save tracklines ---------------------------------------------
 
-# read in data
-dcs = readRDS('data/interim/dcs_tracks.rds')
-noaa15_tracks = readRDS('data/interim/2015_noaa_tracks.rds')
-noaa17_tracks = readRDS('data/interim/2017_noaa_tracks.rds')
-dfo17_tracks = readRDS('data/interim/2017_dfo_tracks.rds')
-shelagh16_tracks = readRDS('data/interim/2016_shelagh_tracks.rds')
-shelagh17_tracks = readRDS('data/interim/2017_shelagh_tracks.rds')
+# list track files
+tracks_list = list.files('data/interim', pattern = 'tracks', full.names = T)
 
-# merge 
-tracks = Reduce(function(x, y) merge(x, y, all=TRUE), list(dcs, 
-                                                           noaa15_tracks,
-                                                           noaa17_tracks,
-                                                           dfo17_tracks,
-                                                           shelagh16_tracks, 
-                                                           shelagh17_tracks))
+# read in files
+TRACKS = list()
+for(i in seq_along(tracks_list)){
+  TRACKS[[i]] = readRDS(tracks_list[[i]])
+}
+
+# merge files
+tracks = Reduce(function(x, y) merge(x, y, all=TRUE), TRACKS)
 
 # sort by time (important for plotting)
 tracks = tracks[order(tracks$id, tracks$time),]
 
 # adjust column types
-tracks$year = as.factor(tracks$year)
-tracks$platform = as.factor(tracks$platform)
-tracks$yday = as.numeric(tracks$yday)
-tracks$lat = as.numeric(tracks$lat)
-tracks$lon = as.numeric(tracks$lon)
+tracks = config_tracks(tracks)
 
 # save
 saveRDS(tracks, 'data/processed/tracks.rds')

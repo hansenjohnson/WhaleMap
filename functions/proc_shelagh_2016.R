@@ -11,6 +11,7 @@ output_dir = 'data/interim/'
 # setup -------------------------------------------------------------------
 
 library(lubridate)
+source('functions/config_data.R')
 
 # read in spp and obs keys
 spp_key = read.csv(paste0(data_dir, '/shelagh_species_key.csv'))
@@ -69,6 +70,9 @@ tracks$lon = tracks$LONGITUDE
 # remove unused columns
 tracks = tracks[,-c(1:38)]
 
+# config data types
+tracks = config_tracks(tracks)
+
 # save
 saveRDS(tracks, paste0(output_dir, '2016_shelagh_tracks.rds'))
 
@@ -98,6 +102,9 @@ sig = sig[which(!is.na(sig$species)),]
 
 # remove unused columns
 sig = sig[,-c(1:38)]
+
+# config data types
+sig = config_observations(sig)
 
 # save
 saveRDS(sig, paste0(output_dir, '2016_shelagh_sightings.rds'))

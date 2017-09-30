@@ -14,6 +14,7 @@ output_dir = 'data/interim/'
 library(lubridate)
 library(sp)
 library(reshape2)
+source('functions/config_data.R')
 
 # define functions --------------------------------------------------------
 
@@ -138,6 +139,9 @@ all = droplevels(all)
 # remove species info and keep tracklines
 tracks = all[,-c(1:4)]
 
+# config data types
+tracks = config_tracks(tracks)
+
 # save output
 saveRDS(tracks, paste0(output_dir, 'dcs_tracks.rds'))
 
@@ -148,6 +152,12 @@ detections = melt(all, measure.vars = c('right', 'sei', 'fin', 'humpback'), vari
 
 # remove absences to reduce data frame size
 detections = detections[detections$score!='not detected',]
+
+# add number column
+detections$number = NA
+
+# config data types
+detections = config_observations(detections)
 
 # save output
 saveRDS(detections, paste0(output_dir, 'dcs_detections.rds'))

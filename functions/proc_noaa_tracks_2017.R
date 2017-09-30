@@ -11,6 +11,7 @@ output_dir = 'data/interim/'
 # setup -------------------------------------------------------------------
 
 library(lubridate)
+source('functions/config_data.R')
 
 # find all data files
 noaa_track_list = list.files(data_dir, pattern = '.gps', full.names = T)
@@ -47,6 +48,9 @@ norig = nrow(tracks)
 npoints = norig/10 # plot every 10 points, or every 20s
 nsub = round(norig/npoints,0)
 tracks = tracks[seq(1, nrow(tracks), nsub),] # subset to plot every other data point
+
+# configure column types
+tracks = config_tracks(tracks)
 
 # save
 saveRDS(tracks, paste0(output_dir, '2017_noaa_tracks.rds'))
