@@ -74,12 +74,12 @@ function(input, output, session){
   
   # only possible
   pos <- reactive({
-    spp()[spp()$score=='possibly detected',]
+    droplevels(spp()[spp()$score=='possibly detected',])
   })
 
   # only definite
   det <- reactive({
-    spp()[spp()$score!='possibly detected',]
+    droplevels(spp()[spp()$score!='possibly detected',])
   })
   
   # colorpal -----------------------------------------------------------------
@@ -121,7 +121,7 @@ function(input, output, session){
       addMeasure(primaryLengthUnit = "kilometers",secondaryLengthUnit = 'miles', primaryAreaUnit = "hectares",secondaryAreaUnit="acres", position = 'bottomleft')
   })
   
-  # map observer ------------------------------------------------------  
+  # extract trackline color ------------------------------------------------  
   
   getColor <- function(tracks) {
       if(tracks$platform[1] == 'slocum') {
@@ -137,6 +137,8 @@ function(input, output, session){
       }
   }
   
+  # map observer ------------------------------------------------------  
+  
   observe({
     
     # define proxy
@@ -145,7 +147,7 @@ function(input, output, session){
     
     # add tracklines
     if(nrow(TRACKS()) == 0){
-      return(NULL)
+      # skip plotting tracks...
     } else {
       
       # set up polyline plotting
@@ -162,58 +164,60 @@ function(input, output, session){
       
       # switch to show/hide tracks
       ifelse(input$tracks, showGroup(proxy, 'tracks'),hideGroup(proxy, 'tracks'))
-      
-      # set up color palette plotting
-      pal <- colorpal()
-      ifelse(input$possible,
-             var <- spp()[,which(colnames(spp())==input$colorby)],
-             var <- det()[,which(colnames(det())==input$colorby)]
-             )
-      
-      # possible detections
-      addCircleMarkers(map = proxy, data = pos(), ~lon, ~lat, group = 'possible',
-                       radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5, 
-                       fillColor = pal(pos()[,which(colnames(pos())==input$colorby)]),
-                       popup = ~paste(sep = "<br/>" ,
-                                      paste0("Species: ", input$species),
-                                      "Score: possible",
-                                      paste0("Platform: ", platform),
-                                      paste0("Name: ", name),
-                                      paste0('Time: ', as.character(time)),
-                                      paste0('Position: ',
-                                             as.character(lat), ', ', as.character(lon))),
-                       label = ~paste0( as.character(date), ': ', input$species,' whale ', 
-                                        score, ' by ', platform, ' ', name))
-
-      # switch to show/hide possibles
-      ifelse(input$possible, showGroup(proxy, 'possible'),hideGroup(proxy, 'possible'))
-      
-      # definite detections
-      addCircleMarkers(map = proxy, data = det(), ~lon, ~lat, group = 'detected',
-                       radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5, 
-                       fillColor = pal(det()[,which(colnames(det())==input$colorby)]),
-                       popup = ~paste(sep = "<br/>" ,
-                                      paste0("Species: ", input$species),
-                                      paste0("Score: ", score),
-                                      paste0("Number: ", number),
-                                      paste0("Platform: ", platform),
-                                      paste0("Name: ", name),
-                                      paste0('Time: ', as.character(time)),
-                                      paste0('Position: ', 
-                                             as.character(lat), ', ', as.character(lon))),
-                       label = ~paste0( as.character(date), ': ', input$species,' whale ', 
-                                        score, ' by ', platform, ' ', name))
-      
-      # switch to show/hide detected
-      ifelse(input$detected, showGroup(proxy, 'detected'),hideGroup(proxy, 'detected'))
-      
-      #proxy %>% clearControls()
-      if (input$legend) {
-        proxy %>% addLegend(position = "bottomright",
-                            pal = pal, values = var, layerId = 'legend', title = input$colorby)
-      } else {
-        proxy %>% clearControls()
-      }
+    }
+    
+    # add points
+    
+    # set up color palette plotting
+    pal <- colorpal()
+    ifelse(input$possible,
+           var <- spp()[,which(colnames(spp())==input$colorby)],
+           var <- det()[,which(colnames(det())==input$colorby)]
+    )
+    
+    # possible detections
+    addCircleMarkers(map = proxy, data = pos(), ~lon, ~lat, group = 'possible',
+                     radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
+                     fillColor = pal(pos()[,which(colnames(pos())==input$colorby)]),
+                     popup = ~paste(sep = "<br/>" ,
+                                    paste0("Species: ", input$species),
+                                    "Score: possible",
+                                    paste0("Platform: ", platform),
+                                    paste0("Name: ", name),
+                                    paste0('Time: ', as.character(time)),
+                                    paste0('Position: ',
+                                           as.character(lat), ', ', as.character(lon))),
+                     label = ~paste0( as.character(date), ': ', input$species,' whale ', 
+                                      score, ' by ', name))
+    
+    # switch to show/hide possibles
+    ifelse(input$possible, showGroup(proxy, 'possible'),hideGroup(proxy, 'possible'))
+    
+    # definite detections
+    addCircleMarkers(map = proxy, data = det(), ~lon, ~lat, group = 'detected',
+                     radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
+                     fillColor = pal(det()[,which(colnames(det())==input$colorby)]),
+                     popup = ~paste(sep = "<br/>" ,
+                                    paste0("Species: ", input$species),
+                                    paste0("Score: ", score),
+                                    paste0("Number: ", number),
+                                    paste0("Platform: ", platform),
+                                    paste0("Name: ", name),
+                                    paste0('Time: ', as.character(time)),
+                                    paste0('Position: ', 
+                                           as.character(lat), ', ', as.character(lon))),
+                     label = ~paste0( as.character(date), ': ', input$species,' whale ', 
+                                      score, ' by ', name))
+    
+    # switch to show/hide detected
+    ifelse(input$detected, showGroup(proxy, 'detected'),hideGroup(proxy, 'detected'))
+    
+    #proxy %>% clearControls()
+    if (input$legend) {
+      proxy %>% addLegend(position = "bottomright",
+                          pal = pal, values = var, layerId = 'legend', title = input$colorby)
+    } else {
+      proxy %>% clearControls()
     }
   })
   
@@ -256,25 +260,36 @@ function(input, output, session){
     if(nrow(spp())==0){
       HTML('No data available...')
     } else {
+      
+      # sighting/detection info
       str1 <- paste0('<strong>Species</strong>: ', input$species)
       str2 <- paste0('<strong>Number of sightings</strong>: ', 
                      nrow(dInBounds()[dInBounds()$score=='sighted',]))
       str3 <- paste0('<strong>Number of definite detections</strong>: ', 
                      nrow(dInBounds()[dInBounds()$score=='detected',]))
       
+      # possible detections (set to zero if button is turned off)
       ifelse(input$possible, 
              t<-nrow(dInBounds()[dInBounds()$score=='possibly detected',]),
              t<-0)
-      
       str4 <- paste0('<strong>Number of possible detections</strong>: ', t)
-      str5 <- paste0('<strong>Earliest observation</strong>: ', min(dInBounds()$time, na.rm = T))
-      str6 <- paste0('<strong>Latest observation</strong>: ', max(dInBounds()$time, na.rm = T))
-      str7 <- paste0('<strong>Number of survey(s)</strong>: ', length(unique(tInBounds()$id)))
-      str8 <- paste0('<strong>Number of track points</strong>: ', nrow(tInBounds()))
-      str9 <- paste('<strong>Survey ID(s)</strong>:', paste(unique(tInBounds()$id), collapse = ', '))
+      
+      # earliest and latest observation info
+      str5 <- paste0('<strong>Earliest observation</strong>: ', min(dInBounds()$date, na.rm = T))
+      rec_ind = which.max(dInBounds()$date)
+      str6 <- paste0('<strong>Most recent observation</strong>: ', dInBounds()$date[rec_ind])
+      str7 <- paste0('<strong>Most recent position</strong>: ', 
+                     dInBounds()$lat[rec_ind], ', ', dInBounds()$lon[rec_ind])
+      
+      # survey info
+      # str8 <- paste0('<strong>Number of survey(s)</strong>: ', length(unique(tInBounds()$id)))
+      # str9 <- paste0('<strong>Number of track points</strong>: ', nrow(tInBounds()))
+      # str10 <- paste('<strong>Survey ID(s)</strong>:<br/>', 
+      #               paste(unique(c(as.character(dInBounds()$id),
+      #                              as.character(tInBounds()$id))), collapse = '<br/>'))
       
       # paste and render
-      HTML(paste(str1, str2, str3, str4, str5, str6, str7, str8, str9, sep = '<br/>'))
+      HTML(paste(str1, str2, str3, str4, str5, str6, str7, sep = '<br/>'))
     }
   })
 }

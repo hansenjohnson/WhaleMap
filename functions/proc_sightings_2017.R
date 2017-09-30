@@ -41,7 +41,7 @@ clean_sig = function(subs, platform, name){
   # add metadata
   subs$platform = platform
   subs$name = name
-  subs$id = paste0(subs$date, '_', platform, '_', name)
+  subs$id = paste0(subs$date, '_', platform, '_', subs$name)
 
   # config data types
   subs = config_observations(subs)
@@ -74,16 +74,51 @@ sig$species = 'right'
 sig$photos = NULL
 sig$notes = NULL
 
-# isolate data
+
+# survey data -------------------------------------------------------------
+
+# isolate survey data
 noaa = sig[sig$platform=='NOAA Twin Otter',]
 she = sig[sig$platform=='CWI- the Shelagh',]
 tc = sig[sig$platform=='TC-Dash 8',]
 cnp = sig[sig$platform=='C&P plane (DFO)'|sig$platform=='C&P plane',]
 dfo = sig[sig$platform=='DFO Twin Otter',]
+neaq = sig[sig$platform=='Nereid -NEAq',]
 
-# clean and save
+# clean and save survey data
 clean_sig(noaa, 'plane', 'noaa')
 clean_sig(she, 'vessel', 'shelagh')
 clean_sig(tc, 'plane', 'tc')
 clean_sig(cnp, 'plane', 'cnp')
 clean_sig(dfo, 'plane', 'dfo')
+clean_sig(neaq, 'vessel', 'nereid')
+
+# opportunistic data ------------------------------------------------------
+
+# isolate opportunistic data
+opp = sig[sig$platform!='NOAA Twin Otter' & 
+            sig$platform!='CWI- the Shelagh' &
+            sig$platform!='TC-Dash 8' &
+            sig$platform!='C&P plane (DFO)' &
+            sig$platform!='C&P plane' &
+            sig$platform!='DFO Twin Otter' &
+            sig$platform!='Nereid -NEAq',]
+
+# clean and save opportunistic data
+
+# clean lat lons
+opp = clean_latlon(opp)
+
+# remove nas
+opp = opp[-c(which(is.na(opp$lat))),]
+
+# add metadata
+opp$name = opp$platform
+opp$platform = 'opportunistic'
+opp$id = paste0(opp$date, '_', opp$platform, '_', opp$name)
+
+# config data types
+opp = config_observations(opp)
+
+# save
+saveRDS(opp, paste0(output_dir, '2017_opportunistic_sightings.rds'))

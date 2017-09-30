@@ -64,9 +64,10 @@ body <- dashboardBody(
                selectInput("platform", "Choose platform(s):", 
                            c("Slocum Glider" = "slocum",
                              "Wave Glider" = "wave",
-                             "Buoy" = "buoy",
                              "Plane" = "plane",
-                             "Vessel" = "vessel"),
+                             "Vessel" = "vessel",
+                             "Buoy" = "buoy",
+                             "Opportunistic" = "opportunistic"),
                            selected = 'slocum', multiple = T),
                
                # add species choice
@@ -126,7 +127,7 @@ body <- dashboardBody(
            # details
            box(width = NULL, solidHeader = T,collapsible = T, title = 'About', status = 'primary',
                p('More details coming soon...'),
-               p('Please contact Hansen Johnson at hansen(dot)johnson(at)dal.ca for any questions, comments, suggestions, etc')
+               p('Please contact Hansen Johnson at hansen.johnson(AT)dal.ca for any questions, comments, suggestions, etc')
            )
     )
   ))
