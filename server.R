@@ -263,22 +263,24 @@ function(input, output, session){
       
       # sighting/detection info
       str1 <- paste0('<strong>Species</strong>: ', input$species)
-      str2 <- paste0('<strong>Number of sightings</strong>: ', 
+      str2 <- paste0('<strong>Number of sighting events</strong>: ', 
                      nrow(dInBounds()[dInBounds()$score=='sighted',]))
-      str3 <- paste0('<strong>Number of definite detections</strong>: ', 
+      str3 <- paste0('<strong>Number of whales sighted (includes duplicates)</strong>: ', 
+                     sum(dInBounds()$number[dInBounds()$score=='sighted'], na.rm = T))
+      str4 <- paste0('<strong>Number of definite detections</strong>: ', 
                      nrow(dInBounds()[dInBounds()$score=='detected',]))
       
       # possible detections (set to zero if button is turned off)
       ifelse(input$possible, 
              t<-nrow(dInBounds()[dInBounds()$score=='possibly detected',]),
              t<-0)
-      str4 <- paste0('<strong>Number of possible detections</strong>: ', t)
+      str5 <- paste0('<strong>Number of possible detections</strong>: ', t)
       
       # earliest and latest observation info
-      str5 <- paste0('<strong>Earliest observation</strong>: ', min(dInBounds()$date, na.rm = T))
+      str6 <- paste0('<strong>Earliest observation</strong>: ', min(dInBounds()$date, na.rm = T))
       rec_ind = which.max(dInBounds()$date)
-      str6 <- paste0('<strong>Most recent observation</strong>: ', dInBounds()$date[rec_ind])
-      str7 <- paste0('<strong>Most recent position</strong>: ', 
+      str7 <- paste0('<strong>Most recent observation</strong>: ', dInBounds()$date[rec_ind])
+      str8 <- paste0('<strong>Most recent position</strong>: ', 
                      dInBounds()$lat[rec_ind], ', ', dInBounds()$lon[rec_ind])
       
       # survey info
@@ -289,7 +291,51 @@ function(input, output, session){
       #                              as.character(tInBounds()$id))), collapse = '<br/>'))
       
       # paste and render
-      HTML(paste(str1, str2, str3, str4, str5, str6, str7, sep = '<br/>'))
+      HTML(paste(str1, str2, str3, str4, str5, str6, str7, str8, sep = '<br/>'))
     }
   })
+  
+  # bargraph ----------------------------------------------------------------
+  
+  output$graph <- renderPlotly({
+    
+    # name data
+    obs = dInBounds()
+    
+    # conditionally remove possibles for plotting
+    if(!input$possible){
+      obs = obs[obs$score!='possibly detected',]
+    }
+    
+    # set all numbers equal to 1
+    obs$number = 1
+    
+    # aggregate counts by day
+    daySums = aggregate(number~yday+year+date+platform+name+id+score, FUN = sum, data = obs)
+    
+    # length of colorpalette
+    ncol = length(unique(obs[,which(colnames(obs)==input$colorby)]))
+    
+    # color fill
+    colorby = unlist(daySums[which(colnames(daySums)==input$colorby)])
+    
+    # palette
+    pal = palette_list[[input$pal]]
+    
+    cols = c('detected' = 'red', 'possibly detected' = 'yellow', 'sighted' = 'darkslategrey')
+    
+    # construct ggplot
+    p <-ggplot(daySums, aes(x = yday, y = number, z = date))+
+      geom_bar(stat = "identity", aes(fill = colorby), position = 'stack')+
+      labs(x = 'Day of Year', y = 'Number of sightings or detections per day')+
+      scale_fill_manual(values = cols, name = input$colorby)+
+      theme_bw()
+    
+    # convert to plotly
+    ggplotly(p, dynamicTicks = T, tooltip = c("y", "x", "fill", "z"))
+  })
+  
 }
+
+
+

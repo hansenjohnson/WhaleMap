@@ -124,6 +124,11 @@ body <- dashboardBody(
                htmlOutput("summary")
            ),
            
+           # graph
+           box(width = NULL, solidHeader = T,collapsible = T, title = 'Graph', status = 'primary',
+               plotlyOutput("graph")
+           ),
+               
            # details
            box(width = NULL, solidHeader = T,collapsible = T, title = 'About', status = 'primary',
                p('More details coming soon...'),
