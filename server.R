@@ -377,7 +377,7 @@ function(input, output, session){
     # build plot
     g = ggplot(obs, aes(x = yday))+
       geom_histogram(stat = "count", binwidth =1, 
-                     colour="black", size = 0.05, aes_string(fill = paste0(input$colorby)))+
+                     colour="black", size = 0.1, aes_string(fill = paste0(input$colorby)))+
       labs(x = '', y = 'Sightings or Detections per day')+
       fillcols+
       facet_wrap(~cat, scales="free_y", nrow = 2)+
