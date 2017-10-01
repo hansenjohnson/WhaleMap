@@ -231,7 +231,7 @@ function(input, output, session){
   # re-center ------------------------------------------------------  
   
   observeEvent(input$zoom,{
-    leafletProxy("map") %>% fitBounds(max(TRACKS()$lon, na.rm = T), min(TRACKS()$lat, na.rm = T), min(TRACKS()$lon, na.rm = T), max(TRACKS()$lat, na.rm = T))
+    leafletProxy("map") %>% fitBounds(max(OBS()$lon, na.rm = T), min(OBS()$lat, na.rm = T), min(OBS()$lon, na.rm = T), max(OBS()$lat, na.rm = T))
   })
   
   # inbounds stats ------------------------------------------------------  
