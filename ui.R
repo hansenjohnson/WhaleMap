@@ -10,6 +10,7 @@ library(htmlwidgets)
 library(maptools)
 library(lubridate)
 library(oce)
+library(plotly)
 library(shinydashboard)
 library(shinyjqui)
 

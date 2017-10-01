@@ -11,6 +11,9 @@ library(maptools)
 library(lubridate)
 library(oce)
 library(shinydashboard)
+library(ggplot2)
+# devtools::install_github("ropensci/plotly")
+library(plotly)
 
 # define color palette list to choose from
 palette_list = list(heat.colors(200), oce.colorsTemperature(200),oce.colorsSalinity(200),oce.colorsDensity(200),oce.colorsChlorophyll(200),oce.colorsGebco(200),oce.colorsJet(200),rev(oceColorsViridis(200)))
@@ -69,7 +72,7 @@ function(input, output, session){
   
   # choose species
   spp <- reactive({
-    OBS()[OBS()$species %in% input$species,]
+    droplevels(OBS()[OBS()$species %in% input$species,])
   })
   
   # only possible
@@ -300,39 +303,54 @@ function(input, output, session){
   output$graph <- renderPlotly({
     
     # name data
-    obs = dInBounds()
+    obs = droplevels(dInBounds())
     
     # conditionally remove possibles for plotting
     if(!input$possible){
       obs = obs[obs$score!='possibly detected',]
     }
     
-    # set all numbers equal to 1
+    if(nrow(obs)==0){
+      return(NULL)
+    }
+    
     obs$number = 1
     
-    # aggregate counts by day
-    daySums = aggregate(number~yday+year+date+platform+name+id+score, FUN = sum, data = obs)
+    obs$cat = ''
+    obs$cat[obs$score == 'sighted'] = 'Sightings'
+    obs$cat[obs$score != 'sighted'] = 'Detections'
     
-    # length of colorpalette
     ncol = length(unique(obs[,which(colnames(obs)==input$colorby)]))
+    ind = as.numeric(input$pal)
     
-    # color fill
-    colorby = unlist(daySums[which(colnames(daySums)==input$colorby)])
+    # define colors
+    if(input$colorby=='score'){
+      cols = c('detected' = 'red', 'possibly detected' = 'yellow', 'sighted' = 'darkslategray')
+      fillcols = scale_fill_manual(values = cols, name = input$colorby)
+      
+    } else if(input$colorby=='yday'|input$colorby=='number'){
+      cols = palette_list[[ind]]
+      fillcols = scale_fill_gradientn(colours = cols, name = input$colorby)
+    } else{
+      
+      palette_list2 = list(heat.colors(ncol), oce.colorsTemperature(ncol),oce.colorsSalinity(ncol),oce.colorsDensity(ncol),oce.colorsChlorophyll(ncol),oce.colorsGebco(ncol),oce.colorsJet(ncol),oceColorsViridis(ncol))
+      
+      cols = palette_list2[[ind]]
+      fillcols = scale_fill_manual(values = cols, name = input$colorby)
+    }
     
-    # palette
-    pal = palette_list[[input$pal]]
-    
-    cols = c('detected' = 'red', 'possibly detected' = 'yellow', 'sighted' = 'darkslategrey')
-    
-    # construct ggplot
-    p <-ggplot(daySums, aes(x = yday, y = number, z = date))+
-      geom_bar(stat = "identity", aes(fill = colorby), position = 'stack')+
-      labs(x = 'Day of Year', y = 'Number of sightings or detections per day')+
-      scale_fill_manual(values = cols, name = input$colorby)+
+    # plot
+    g = ggplot(obs, aes(x = yday, y = number, z = date))+
+      geom_bar(stat = "identity", aes_string(fill = paste0(input$colorby)))+
+      labs(x = 'Day of Year', y = 'Sightings or Detections per day')+
+      fillcols+
+      facet_wrap(~cat, scales="free_y", nrow = 2)+
+      theme(strip.background = element_blank())+
       theme_bw()
     
-    # convert to plotly
-    ggplotly(p, dynamicTicks = T, tooltip = c("y", "x", "fill", "z"))
+    ggplotly(g, dynamicTicks = T, tooltip = c("x", "fill", "z")) %>%
+      layout(margin=list(r=120, l=70, t=20, b=70))
+    
   })
   
 }
