@@ -16,7 +16,10 @@ library(ggplot2)
 library(plotly)
 
 # define color palette list to choose from
-palette_list = list(heat.colors(200), oce.colorsTemperature(200),oce.colorsSalinity(200),oce.colorsDensity(200),oce.colorsChlorophyll(200),oce.colorsGebco(200),oce.colorsJet(200),rev(oceColorsViridis(200)))
+palette_list = list(heat.colors(200), oce.colorsTemperature(200),oce.colorsSalinity(200),oce.colorsDensity(200),oce.colorsChlorophyll(200),oce.colorsGebco(200),oce.colorsJet(200),oceColorsViridis(200))
+
+# define score colors
+score_cols = c('detected' = 'red', 'possibly detected' = 'yellow', 'sighted' = 'darkslategray')
 
 # server ------------------------------------------------------------------
 
@@ -99,7 +102,8 @@ function(input, output, session){
         colorNumeric(palette_list[[ind]], spp()$number, na.color = 'darkgrey')
       }
     } else if (input$colorby == 'score'){
-      colorFactor(c('red','yellow','darkslategrey'), spp()$score)  
+      colorFactor(levels = c('detected', 'possibly detected', 'sighted'), 
+                  palette = c('red', 'yellow', 'darkslategray'))  
     } else {
       colorFactor(palette_list[[ind]], spp()[,which(colnames(spp())==input$colorby)])  
     }
@@ -302,55 +306,88 @@ function(input, output, session){
   
   output$graph <- renderPlotly({
     
-    # name data
-    obs = droplevels(dInBounds())
+    # determine input data
+    if(input$plotInBounds){
+      
+      # use only data within map bounds
+      obs = dInBounds()
+      
+    } else {
+      
+      # use all input data
+      obs = spp()  
+      
+    }
     
     # conditionally remove possibles for plotting
     if(!input$possible){
       obs = obs[obs$score!='possibly detected',]
     }
     
+    # avoid error if no data selected or in map view
     if(nrow(obs)==0){
       return(NULL)
     }
     
+    # replace all sightings/detections with '1' to facilitate stacked plotting
     obs$number = 1
     
+    # make categories for facet plotting
     obs$cat = ''
     obs$cat[obs$score == 'sighted'] = 'Sightings'
     obs$cat[obs$score != 'sighted'] = 'Detections'
     
+    # determine number of factor levels to color
     ncol = length(unique(obs[,which(colnames(obs)==input$colorby)]))
+    
+    # get input for color palette choice
     ind = as.numeric(input$pal)
     
     # define colors
     if(input$colorby=='score'){
-      cols = c('detected' = 'red', 'possibly detected' = 'yellow', 'sighted' = 'darkslategray')
-      fillcols = scale_fill_manual(values = cols, name = input$colorby)
+      
+      # manually define colors based on score
+      fillcols = scale_fill_manual(values = score_cols, name = input$colorby)
+      
+      # order factors so possibles plot first
+      obs$score <- factor(obs$score, 
+                          levels=levels(obs$score)[order(levels(obs$score), decreasing = TRUE)])
       
     } else if(input$colorby=='yday'|input$colorby=='number'){
+      
+      # choose palette for continuous scale
       cols = palette_list[[ind]]
+      
+      # define colors for continuous scale
       fillcols = scale_fill_gradientn(colours = cols, name = input$colorby)
+      
     } else{
       
+      # list palettes for discrete scale
       palette_list2 = list(heat.colors(ncol), oce.colorsTemperature(ncol),oce.colorsSalinity(ncol),oce.colorsDensity(ncol),oce.colorsChlorophyll(ncol),oce.colorsGebco(ncol),oce.colorsJet(ncol),oceColorsViridis(ncol))
       
+      # choose palette for discrete scale
       cols = palette_list2[[ind]]
+      
+      # define palette for discrete scale
       fillcols = scale_fill_manual(values = cols, name = input$colorby)
+      
     }
     
-    # plot
-    g = ggplot(obs, aes(x = yday, y = number, z = date))+
-      geom_bar(stat = "identity", aes_string(fill = paste0(input$colorby)))+
-      labs(x = 'Day of Year', y = 'Sightings or Detections per day')+
+    # build plot
+    g = ggplot(obs, aes(x = yday))+
+      geom_histogram(stat = "count", binwidth =1, 
+                     colour="black", size = 0.05, aes_string(fill = paste0(input$colorby)))+
+      labs(x = '', y = 'Sightings or Detections per day')+
       fillcols+
       facet_wrap(~cat, scales="free_y", nrow = 2)+
-      theme(strip.background = element_blank())+
+      scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"))+
+      aes(text = paste('date: ', format(as.Date(as.character(yday), "%j"), "%d-%b")))+
       theme_bw()
     
-    ggplotly(g, dynamicTicks = T, tooltip = c("x", "fill", "z")) %>%
-      layout(margin=list(r=120, l=70, t=20, b=70))
-    
+    # plot
+    gg = ggplotly(g, dynamicTicks = F, tooltip = c("text", "count", "fill")) %>%
+      layout(margin=list(r=120, l=70, t=40, b=70), showlegend = input$legend)
   })
   
 }

@@ -82,7 +82,7 @@ body <- dashboardBody(
                h5(strong('Choose layer(s):')),
                checkboxInput("tracks", label = 'Show tracks?', value = T),
                checkboxInput("detected", label = 'Show definite detections/sightings?', value = T),
-               checkboxInput("possible", label = 'Show possible detections?', value = F)
+               checkboxInput("possible", label = 'Show possible detections?', value = T)
            ),
            
            box(width = NULL, solidHeader = F, status = "warning", collapsible = T, title = 'Plot Input',
@@ -106,9 +106,10 @@ body <- dashboardBody(
                              "Jet" = 7,
                              "Salinity" = 3,
                              "Density" = 4,
-                             "Chlorophyll" = 5), selected = 2),
+                             "Chlorophyll" = 5), selected = 8),
                
                checkboxInput("legend", label = 'Show legend?', value = T)
+               
            )
     )),
     
@@ -126,7 +127,9 @@ body <- dashboardBody(
            ),
            
            # graph
-           box(width = NULL, solidHeader = T,collapsible = T, title = 'Graph', status = 'primary',
+           box(width = NULL, solidHeader = T,collapsible = T, title = 'Plot', status = 'primary', collapsed = F,
+               
+               checkboxInput("plotInBounds", label = 'Plot only data within map bounds?', value = T),
                plotlyOutput("graph")
            ),
                
