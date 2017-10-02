@@ -376,8 +376,7 @@ function(input, output, session){
     
     # build plot
     g = ggplot(obs, aes(x = yday))+
-      geom_histogram(stat = "count", binwidth =1, 
-                     colour="black", size = 0.1, aes_string(fill = paste0(input$colorby)))+
+      geom_histogram(stat = "count", colour="black", size = 0.1, aes_string(fill = paste0(input$colorby)))+
       labs(x = '', y = '')+
       fillcols+
       facet_wrap(~cat, scales="free_y", nrow = 2)+

@@ -97,8 +97,14 @@ body <- dashboardBody(
                                'Number' = 'number',
                                'Deployment' = 'id'), selected = 'score'),
                
+               # legend switch
+               checkboxInput("legend", label = 'Show legend?', value = T),
+               
+               # plot inBounds switch
+               checkboxInput("plotInBounds", label = 'Plot only data within map bounds?', value = T),
+               
                # color palette
-               selectInput("pal", "Color palette:",
+               selectInput("pal", "Choose color palette:",
                            c("Temperature" = 2,
                              "Viridis" = 8,
                              "Gebco" = 6,
@@ -106,10 +112,7 @@ body <- dashboardBody(
                              "Jet" = 7,
                              "Salinity" = 3,
                              "Density" = 4,
-                             "Chlorophyll" = 5), selected = 8),
-               
-               checkboxInput("legend", label = 'Show legend?', value = T)
-               
+                             "Chlorophyll" = 5), selected = 8)
            )
     )),
     
@@ -128,8 +131,6 @@ body <- dashboardBody(
            
            # graph
            box(width = NULL, solidHeader = T,collapsible = T, title = 'Plot', status = 'primary', collapsed = F,
-               
-               checkboxInput("plotInBounds", label = 'Plot only data within map bounds?', value = T),
                plotlyOutput("graph")
            ),
                
