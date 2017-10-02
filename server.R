@@ -334,8 +334,8 @@ function(input, output, session){
     
     # make categories for facet plotting
     obs$cat = ''
-    obs$cat[obs$score == 'sighted'] = 'Sightings'
-    obs$cat[obs$score != 'sighted'] = 'Detections'
+    obs$cat[obs$score == 'sighted'] = 'Sightings per day'
+    obs$cat[obs$score != 'sighted'] = 'Detections per day'
     
     # determine number of factor levels to color
     ncol = length(unique(obs[,which(colnames(obs)==input$colorby)]))
@@ -378,7 +378,7 @@ function(input, output, session){
     g = ggplot(obs, aes(x = yday))+
       geom_histogram(stat = "count", binwidth =1, 
                      colour="black", size = 0.1, aes_string(fill = paste0(input$colorby)))+
-      labs(x = '', y = 'Sightings or Detections per day')+
+      labs(x = '', y = '')+
       fillcols+
       facet_wrap(~cat, scales="free_y", nrow = 2)+
       scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"))+
