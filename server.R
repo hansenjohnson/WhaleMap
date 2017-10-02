@@ -381,8 +381,8 @@ function(input, output, session){
       fillcols+
       facet_wrap(~cat, scales="free_y", nrow = 2)+
       scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"))+
-      aes(text = paste('date: ', format(as.Date(as.character(yday), "%j"), "%d-%b")))+
-      theme_bw()
+      aes(text = paste('date: ', format(as.Date(as.character(yday), "%j"), "%d-%b")))
+      # theme_bw()
     
     # plot
     gg = ggplotly(g, dynamicTicks = F, tooltip = c("text", "count", "fill")) %>%
