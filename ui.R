@@ -76,7 +76,8 @@ body <- dashboardBody(
                                                       "Opportunistic" = "opportunistic"), 
                                           selected = c('slocum', 
                                                        'wave', 
-                                                       'plane', 
+                                                       'plane',
+                                                       'vessel',
                                                        'buoy', 
                                                        'opportunistic')),
                               
