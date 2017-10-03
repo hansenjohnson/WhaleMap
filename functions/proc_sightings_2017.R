@@ -74,7 +74,6 @@ sig$species = 'right'
 sig$photos = NULL
 sig$notes = NULL
 
-
 # survey data -------------------------------------------------------------
 
 # isolate survey data
@@ -84,6 +83,7 @@ tc = sig[sig$platform=='TC-Dash 8',]
 cnp = sig[sig$platform=='C&P plane (DFO)'|sig$platform=='C&P plane',]
 dfo = sig[sig$platform=='DFO Twin Otter',]
 neaq = sig[sig$platform=='Nereid -NEAq',]
+mics = sig[sig$platform=='MICS',]
 
 # clean and save survey data
 clean_sig(noaa, 'plane', 'noaa')
@@ -92,6 +92,7 @@ clean_sig(tc, 'plane', 'tc')
 clean_sig(cnp, 'plane', 'cnp')
 clean_sig(dfo, 'plane', 'dfo')
 clean_sig(neaq, 'vessel', 'nereid')
+clean_sig(mics, 'vessel', 'mics')
 
 # opportunistic data ------------------------------------------------------
 
@@ -102,7 +103,8 @@ opp = sig[sig$platform!='NOAA Twin Otter' &
             sig$platform!='C&P plane (DFO)' &
             sig$platform!='C&P plane' &
             sig$platform!='DFO Twin Otter' &
-            sig$platform!='Nereid -NEAq',]
+            sig$platform!='Nereid -NEAq' &
+            sig$platform!='MICS',]
 
 # clean and save opportunistic data
 
