@@ -112,6 +112,9 @@ tracks = config_tracks(tracks)
 # save
 saveRDS(tracks, paste0(output_dir, '2015_noaa_tracks.rds'))
 
+# flatten data
+sightings = do.call(rbind, SIG)
+
 # add score
 sightings$score[which(sightings$number>0)] = 'sighted'
 
