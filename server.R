@@ -2,6 +2,7 @@
 
 # setup -------------------------------------------------------------------
 
+# required libraries
 library(shiny)
 library(leaflet)
 library(rgdal)
@@ -12,36 +13,45 @@ library(lubridate)
 library(oce)
 library(shinydashboard)
 library(ggplot2)
-# devtools::install_github("ropensci/plotly")
 library(plotly)
 
 # define color palette list to choose from
-palette_list = list(heat.colors(200), oce.colorsTemperature(200),oce.colorsSalinity(200),oce.colorsDensity(200),oce.colorsChlorophyll(200),oce.colorsGebco(200),oce.colorsJet(200),oceColorsViridis(200))
+palette_list = list(heat.colors(200), 
+                    oce.colorsTemperature(200),
+                    oce.colorsSalinity(200),
+                    oce.colorsDensity(200),
+                    oce.colorsChlorophyll(200),
+                    oce.colorsGebco(200),
+                    oce.colorsJet(200),
+                    oceColorsViridis(200))
 
 # define score colors
-score_cols = c('detected' = 'red', 'possibly detected' = 'yellow', 'sighted' = 'darkslategray')
+score_cols = c('detected' = 'red', 
+               'possibly detected' = 'yellow', 
+               'sighted' = 'darkslategray')
 
 # server ------------------------------------------------------------------
 
 function(input, output, session){
   
   # advance date -------------------------------------------------------
-
-  observeEvent(input$advance,{
-    val <- input$range
-    updateSliderInput(session, "range", value = c(val[1], val[2]+7),
-                      min = as.Date('2016-01-01'), max = as.Date('2016-12-31'))
-  })
+  
+  # observeEvent(input$advance,{
+  #   val <- input$range
+  #   updateSliderInput(session, "range", value = c(val[1], val[2]+7),
+  #                     min = as.Date('2016-01-01'), max = as.Date('2016-12-31'))
+  # })
   
   # adjust date -------------------------------------------------------
   
-  yday0 = reactive({
+  # reactive
+  yday0 = eventReactive(input$go, {
     yday(as.Date(input$range[1]))
-  })
+  }, ignoreNULL = F)
   
-  yday1 = reactive({
+  yday1 = eventReactive(input$go, {
     yday(as.Date(input$range[2]))
-  })
+  }, ignoreNULL = F)
   
   # trackline data -------------------------------------------------------
   
@@ -63,12 +73,13 @@ function(input, output, session){
     tmp = obs[obs$year %in% input$year,]
     tmp[tmp$platform %in% input$platform,]
   })
-    
-  # choose date range
+  
+  # choose track date range
   TRACKS <- reactive({
     Tracks()[Tracks()$yday >= yday0() & Tracks()$yday <= yday1(),]
   })
   
+  # choose species date range
   OBS <- reactive({
     Obs()[Obs()$yday >= yday0() & Obs()$yday <= yday1(),]
   })
@@ -82,30 +93,61 @@ function(input, output, session){
   pos <- reactive({
     droplevels(spp()[spp()$score=='possibly detected',])
   })
-
+  
   # only definite
   det <- reactive({
     droplevels(spp()[spp()$score!='possibly detected',])
   })
   
+  # combine track and observations
+  allBounds <- reactive({
+    
+    # combine limits
+    lat = c(spp()$lat, TRACKS()$lat)
+    lon = c(spp()$lon, TRACKS()$lon)
+    
+    # join in list
+    list(lat, lon)
+  })
+  
+  
   # colorpal -----------------------------------------------------------------
   
   # define color palette for any column variable
   colorpal <- reactive({
+    
+    # define index of color selection for use in palette list
     ind = as.numeric(input$pal)
-    if(input$colorby == 'yday'){
-      colorNumeric(palette_list[[ind]], spp()$yday)  
+    
+    if(input$colorby %in% c('yday', 'lat', 'lon')){
+      
+      # use continuous palette
+      colorNumeric(palette_list[[ind]], spp()[,which(colnames(spp())==input$colorby)])  
+      
     } else if (input$colorby == 'number'){
+      
       if(is.infinite(min(spp()$number, na.rm = T))){
+        
+        # define colorbar limits if 'number' is selected without sightings data
         colorNumeric(palette_list[[ind]], c(NA,0), na.color = 'darkgrey')
+        
       } else {
+        
+        # use continuous palette
         colorNumeric(palette_list[[ind]], spp()$number, na.color = 'darkgrey')
+        
       }
     } else if (input$colorby == 'score'){
+      
+      # hard wire colors for score factor levels
       colorFactor(levels = c('detected', 'possibly detected', 'sighted'), 
                   palette = c('red', 'yellow', 'darkslategray'))  
+      
     } else {
+      
+      # color by factor level
       colorFactor(palette_list[[ind]], spp()[,which(colnames(spp())==input$colorby)])  
+      
     }
   })
   
@@ -114,7 +156,10 @@ function(input, output, session){
   output$map <- renderLeaflet({
     leaflet(tracks) %>% 
       addProviderTiles(providers$Esri.OceanBasemap) %>%
-      fitBounds(~max(lon, na.rm = T), ~min(lat, na.rm = T), ~min(lon, na.rm = T), ~max(lat, na.rm = T)) %>%
+      fitBounds(~max(allBounds()[[2]], na.rm = T), 
+                ~min(allBounds()[[1]], na.rm = T), 
+                ~min(allBounds()[[2]], na.rm = T), 
+                ~max(allBounds()[[1]], na.rm = T)) %>%
       
       # use NOAA graticules
       addWMSTiles(
@@ -126,61 +171,72 @@ function(input, output, session){
       # add extra map features
       addScaleBar(position = 'bottomleft')%>%
       addMeasure(primaryLengthUnit = "kilometers",secondaryLengthUnit = 'miles', primaryAreaUnit = "hectares",secondaryAreaUnit="acres", position = 'bottomleft')
+    
   })
   
   # extract trackline color ------------------------------------------------  
   
   getColor <- function(tracks) {
-      if(tracks$platform[1] == 'slocum') {
-        "blue"
-      } else if(tracks$platform[1] == 'plane') {
-        "#8B6914"
-      } else if(tracks$platform[1] == 'vessel'){
-        "black"
-      } else if(tracks$platform[1] == 'wave'){
-        "purple"
-      } else {
-        "darkgrey"
-      }
+    if(tracks$platform[1] == 'slocum') {
+      "blue"
+    } else if(tracks$platform[1] == 'plane') {
+      "#8B6914"
+    } else if(tracks$platform[1] == 'vessel'){
+      "black"
+    } else if(tracks$platform[1] == 'wave'){
+      "purple"
+    } else {
+      "darkgrey"
+    }
   }
   
-  # map observer ------------------------------------------------------  
+  # track observer ------------------------------------------------------  
   
-  observe({
+  observe(priority = 3, {
     
     # define proxy
-    proxy = leafletProxy("map")
-    proxy %>% clearMarkers() %>% clearShapes()
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('tracks')
     
-    # add tracklines
-    if(nrow(TRACKS()) == 0){
-      # skip plotting tracks...
-    } else {
+    # tracks
+    
+    if(input$tracks){
       
-      # set up polyline plotting
-      tracks.df <- split(TRACKS(), TRACKS()$id)
+      # add tracklines
+      if(nrow(TRACKS()) == 0){
+        # skip plotting tracks...
+      } else {
+        
+        # set up polyline plotting
+        tracks.df <- split(TRACKS(), TRACKS()$id)
+        
+        # add lines
+        names(tracks.df) %>%
+          purrr::walk( function(df) {
+            proxy <<- proxy %>%
+              addPolylines(data=tracks.df[[df]], group = 'tracks',
+                           lng=~lon, lat=~lat, weight = 2,
+                           smoothFactor = 3, color = getColor(tracks.df[[df]]))
+          })
+        
+        # switch to show/hide tracks
+        ifelse(input$tracks, showGroup(proxy, 'tracks'),hideGroup(proxy, 'tracks'))
+      }
       
-      # add lines
-      names(tracks.df) %>%
-        purrr::walk( function(df) {
-          proxy <<- proxy %>%
-            addPolylines(data=tracks.df[[df]],
-                         lng=~lon, lat=~lat, weight = 2,
-                         group = 'tracks', smoothFactor = 3, color = getColor(tracks.df[[df]]))
-        })
-      
-      # switch to show/hide tracks
-      ifelse(input$tracks, showGroup(proxy, 'tracks'),hideGroup(proxy, 'tracks'))
     }
     
-    # add points
+  })
+  
+  # possible observer ------------------------------------------------------  
+  
+  observe(priority = 2,{
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('possible')
     
     # set up color palette plotting
     pal <- colorpal()
-    ifelse(input$possible,
-           var <- spp()[,which(colnames(spp())==input$colorby)],
-           var <- det()[,which(colnames(det())==input$colorby)]
-    )
     
     # possible detections
     addCircleMarkers(map = proxy, data = pos(), ~lon, ~lat, group = 'possible',
@@ -198,7 +254,20 @@ function(input, output, session){
                                       score, ' by ', name))
     
     # switch to show/hide possibles
-    ifelse(input$possible, showGroup(proxy, 'possible'),hideGroup(proxy, 'possible'))
+    ifelse(input$possible, showGroup(proxy, 'possible'),hideGroup(proxy, 'possible')) 
+    
+  })
+  
+  # definite observer ------------------------------------------------------  
+  
+  observe(priority = 1,{
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('detected')
+    
+    # set up color palette plotting
+    pal <- colorpal()
     
     # definite detections
     addCircleMarkers(map = proxy, data = det(), ~lon, ~lat, group = 'detected',
@@ -218,11 +287,35 @@ function(input, output, session){
     
     # switch to show/hide detected
     ifelse(input$detected, showGroup(proxy, 'detected'),hideGroup(proxy, 'detected'))
+  })
+  
+  # legend observer ------------------------------------------------------  
+  
+  observe({
     
-    #proxy %>% clearControls()
-    if (input$legend) {
-      proxy %>% addLegend(position = "bottomright",
-                          pal = pal, values = var, layerId = 'legend', title = input$colorby)
+    # define proxy
+    proxy <- leafletProxy("map")
+    
+    # determine which dataset to use based on display switches
+    if(input$detected & input$possible){
+      dat <- spp()
+    } else if(input$detected & !input$possible){
+      dat <- det()
+    } else if(!input$detected & input$possible){
+      dat <- pos()
+    } else {
+      proxy %>% clearControls()
+      return(NULL)
+    }
+    
+    # set up color palette plotting
+    pal <- colorpal()
+    var <- dat[,which(colnames(dat)==input$colorby)]
+    
+    # legend
+    if(input$legend){
+      proxy %>% clearControls() %>% addLegend(position = "bottomright",
+                                              pal = pal, values = var, title = input$colorby)
     } else {
       proxy %>% clearControls()
     }
@@ -231,10 +324,14 @@ function(input, output, session){
   # re-center ------------------------------------------------------  
   
   observeEvent(input$zoom,{
-    leafletProxy("map") %>% fitBounds(max(OBS()$lon, na.rm = T), min(OBS()$lat, na.rm = T), min(OBS()$lon, na.rm = T), max(OBS()$lat, na.rm = T))
+    leafletProxy("map") %>% 
+      fitBounds(max(allBounds()[[2]], na.rm = T), 
+                min(allBounds()[[1]], na.rm = T), 
+                min(allBounds()[[2]], na.rm = T), 
+                max(allBounds()[[1]], na.rm = T))
   })
   
-  # inbounds stats ------------------------------------------------------  
+  # inbounds data ------------------------------------------------------  
   
   # determine deployments in map bounds
   tInBounds <- reactive({
@@ -251,13 +348,31 @@ function(input, output, session){
   
   # determine detected calls in map bounds
   dInBounds <- reactive({
-    if (is.null(input$map_bounds))
-      return(spp()[FALSE,])
+    
+    # determine which dataset to use based on display switches
+    if(input$detected & input$possible){
+      dat <- spp()
+    } else if(input$detected & !input$possible){
+      dat <- det()
+    } else if(!input$detected & input$possible){
+      dat <- pos()
+    } else {
+      dat = data.frame()
+      return(dat[FALSE,])
+    }
+    
+    # catch error if no data is displayed
+    if (is.null(input$map_bounds)){
+      return(dat[FALSE,])
+    }
+    
+    # define map bounds
     bounds <- input$map_bounds
     latRng <- range(bounds$north, bounds$south)
     lngRng <- range(bounds$east, bounds$west)
     
-    subset(spp(),
+    # subset of data in bounds
+    subset(dat,
            lat >= latRng[1] & lat <= latRng[2] &
              lon >= lngRng[1] & lon <= lngRng[2])
   })
@@ -270,10 +385,13 @@ function(input, output, session){
       
       # sighting/detection info
       str1 <- paste0('<strong>Species</strong>: ', input$species)
+      
       str2 <- paste0('<strong>Number of sighting events</strong>: ', 
                      nrow(dInBounds()[dInBounds()$score=='sighted',]))
+      
       str3 <- paste0('<strong>Number of whales sighted (includes duplicates)</strong>: ', 
                      sum(dInBounds()$number[dInBounds()$score=='sighted'], na.rm = T))
+      
       str4 <- paste0('<strong>Number of definite detections</strong>: ', 
                      nrow(dInBounds()[dInBounds()$score=='detected',]))
       
@@ -281,16 +399,18 @@ function(input, output, session){
       ifelse(input$possible, 
              t<-nrow(dInBounds()[dInBounds()$score=='possibly detected',]),
              t<-0)
+      
       str5 <- paste0('<strong>Number of possible detections</strong>: ', t)
       
       # earliest and latest observation info
       str6 <- paste0('<strong>Earliest observation</strong>: ', min(dInBounds()$date, na.rm = T))
       rec_ind = which.max(dInBounds()$date)
+      
       str7 <- paste0('<strong>Most recent observation</strong>: ', dInBounds()$date[rec_ind])
+      
       str8 <- paste0('<strong>Most recent position</strong>: ', 
                      dInBounds()$lat[rec_ind], ', ', dInBounds()$lon[rec_ind])
       
-      # survey info
       # str8 <- paste0('<strong>Number of survey(s)</strong>: ', length(unique(tInBounds()$id)))
       # str9 <- paste0('<strong>Number of track points</strong>: ', nrow(tInBounds()))
       # str10 <- paste('<strong>Survey ID(s)</strong>:<br/>', 
@@ -308,15 +428,11 @@ function(input, output, session){
     
     # determine input data
     if(input$plotInBounds){
-      
       # use only data within map bounds
       obs = dInBounds()
-      
     } else {
-      
       # use all input data
       obs = spp()  
-      
     }
     
     # conditionally remove possibles for plotting
@@ -324,13 +440,13 @@ function(input, output, session){
       obs = obs[obs$score!='possibly detected',]
     }
     
+    # # remove na's for plotting (especially important for lat lons)
+    # obs = obs[-c(which(is.na(obs$lat))),]
+    
     # avoid error if no data selected or in map view
     if(nrow(obs)==0){
       return(NULL)
     }
-    
-    # replace all sightings/detections with '1' to facilitate stacked plotting
-    obs$number = 1
     
     # make categories for facet plotting
     obs$cat = ''
@@ -343,17 +459,11 @@ function(input, output, session){
     # get input for color palette choice
     ind = as.numeric(input$pal)
     
-    # define colors
-    if(input$colorby=='score'){
+    
+    if(input$colorby %in% c('number','lat','lon')){
       
-      # manually define colors based on score
-      fillcols = scale_fill_manual(values = score_cols, name = input$colorby)
-      
-      # order factors so possibles plot first
-      obs$score <- factor(obs$score, 
-                          levels=levels(obs$score)[order(levels(obs$score), decreasing = TRUE)])
-      
-    } else if(input$colorby=='yday'|input$colorby=='number'){
+      # replace all sightings/detections with '1' to facilitate stacked plotting
+      obs$counter = 1
       
       # choose palette for continuous scale
       cols = palette_list[[ind]]
@@ -361,35 +471,67 @@ function(input, output, session){
       # define colors for continuous scale
       fillcols = scale_fill_gradientn(colours = cols, name = input$colorby)
       
-    } else{
+      # build plot
+      g = ggplot(obs, aes(x = yday, y = counter))+
+        geom_histogram(stat = "identity", na.rm = T, aes_string(fill = paste0(input$colorby)))+
+        labs(x = '', y = '')+
+        fillcols+
+        facet_wrap(~cat, scales="free_y", nrow = 2)+
+        scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"))+
+        aes(text = paste('date: ', format(as.Date(as.character(yday), "%j"), "%d-%b")))
       
-      # list palettes for discrete scale
-      palette_list2 = list(heat.colors(ncol), oce.colorsTemperature(ncol),oce.colorsSalinity(ncol),oce.colorsDensity(ncol),oce.colorsChlorophyll(ncol),oce.colorsGebco(ncol),oce.colorsJet(ncol),oceColorsViridis(ncol))
+    } else {
+      if(input$colorby=='score'){
+        
+        # manually define colors based on score
+        fillcols = scale_fill_manual(values = score_cols, name = input$colorby)
+        
+        # order factors so possibles plot first
+        obs$score <- factor(obs$score, 
+                            levels=levels(obs$score)[order(levels(obs$score), decreasing = TRUE)])
+        
+      } else if(input$colorby=='yday'){
+        
+        # choose palette for continuous scale
+        cols = palette_list[[ind]]
+        
+        # define colors for continuous scale
+        fillcols = scale_fill_gradientn(colours = cols, name = input$colorby)
+        
+      } else {
+        
+        # list palettes for discrete scale (must be in the same order as palette_list)
+        palette_list2 = list(heat.colors(ncol), 
+                             oce.colorsTemperature(ncol),
+                             oce.colorsSalinity(ncol),
+                             oce.colorsDensity(ncol),
+                             oce.colorsChlorophyll(ncol),
+                             oce.colorsGebco(ncol),
+                             oce.colorsJet(ncol),
+                             oceColorsViridis(ncol))
+        
+        # choose palette for discrete scale
+        cols = palette_list2[[ind]]
+        
+        # define palette for discrete scale
+        fillcols = scale_fill_manual(values = cols, name = input$colorby)
+      }
       
-      # choose palette for discrete scale
-      cols = palette_list2[[ind]]
-      
-      # define palette for discrete scale
-      fillcols = scale_fill_manual(values = cols, name = input$colorby)
-      
+      # build plot
+      g = ggplot(obs, aes(x = yday))+
+        geom_histogram(stat = "count", na.rm = T, aes_string(fill = paste0(input$colorby)))+
+        labs(x = '', y = '')+
+        fillcols+
+        facet_wrap(~cat, scales="free_y", nrow = 2)+
+        scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"))+
+        aes(text = paste('date: ', format(as.Date(as.character(yday), "%j"), "%d-%b")))
     }
-    
-    # build plot
-    g = ggplot(obs, aes(x = yday))+
-      geom_histogram(stat = "count", colour="black", size = 0.1, aes_string(fill = paste0(input$colorby)))+
-      labs(x = '', y = '')+
-      fillcols+
-      facet_wrap(~cat, scales="free_y", nrow = 2)+
-      scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"))+
-      aes(text = paste('date: ', format(as.Date(as.character(yday), "%j"), "%d-%b")))
-      # theme_bw()
     
     # plot
     gg = ggplotly(g, dynamicTicks = F, tooltip = c("text", "count", "fill")) %>%
       layout(margin=list(r=120, l=70, t=40, b=70), showlegend = input$legend)
   })
-  
-}
+} # server
 
 
 
