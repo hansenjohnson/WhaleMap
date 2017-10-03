@@ -30,3 +30,7 @@ These data come from a variety of different sources, each with their own caveats
 * NOAA effort from GOM  
 * Fundy effort and tracklines from Kim  
 * Identify days with effort on barplot  
+* For each day of each deployment, calculate kilometers and time of survey effort  
+* set up glider database to update automatically  
+
+
