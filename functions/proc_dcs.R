@@ -1,4 +1,4 @@
-# process and save all dcs (glider, buoy, etc) tracklines and detections
+# process and save all live and archived dcs (glider, buoy, etc) deployment tracklines and detections
 
 # user input --------------------------------------------------------------
 
@@ -58,8 +58,9 @@ insert_NAs = function(d, thresh = 2*60*60){
 
 # process data ------------------------------------------------------------
 
-# list detection files
-detection_dir_list = list.files(path = data_dir, full.names = T)
+# list detection files (live and archived)
+detection_dir_list = c(list.files(path = paste0(data_dir, 'archived'), full.names = T),
+                       list.files(path = paste0(data_dir, 'live'), full.names = T))
 
 detection_list = list()
 for(i in seq_along(detection_dir_list)){
