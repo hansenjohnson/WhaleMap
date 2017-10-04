@@ -1,17 +1,23 @@
 # process all data for use in app
 
-
 # functions ---------------------------------------------------------------
 
 source('functions/config_data.R')
 
+# process map data --------------------------------------------------------
+
+source('functions/proc_map_polygons.R')
+
 # process each platform ---------------------------------------------------
+
+# narwc (all narwc historical data)
+source('functions/proc_narwc.R')
 
 # dcs (gliders, buoys, etc)
 source('functions/proc_dcs.R')
 
-# noaa (noaa plane) 2015
-source('functions/proc_noaa_2015.R')
+# # noaa (noaa plane) 2015 (THIS IS DUPLICATED BY NARWC HISTORICAL DATA, SO NOT INCLUDING ANYMORE)
+# source('functions/proc_noaa_2015.R')
 
 # shelagh (cwi boat) 2016
 source('functions/proc_shelagh_2016.R')
