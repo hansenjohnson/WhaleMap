@@ -49,16 +49,20 @@ function(input, output, session){
   
   output$yearChoice <- renderUI({
     
+    # define year choices based on input data
+    min_yr = min(as.numeric(obs$year), na.rm = T)
+    max_yr = max(as.numeric(obs$year), na.rm = T)
+    
     # change input depending on user choice
     switch(input$yearType,
            
            'select' = selectInput("year", label = NULL,
-                                  choices = as.character(seq(1950, 2017, 1)),
+                                  choices = as.character(seq(max_yr, min_yr, -1)),
                                   selected = '2017', multiple = T),
            
            'range' = sliderInput("year", label = NULL,
-                                 min = 1950, max = 2017, step = 1, 
-                                 value = c(1970, 2017), sep = "")
+                                 min = min_yr, max = max_yr, step = 1, 
+                                 value = c(min_yr, max_yr), sep = "")
     )
   })
   
@@ -75,16 +79,24 @@ function(input, output, session){
   
   # choose year -------------------------------------------------------
   
-  # reactive
-  years = eventReactive(input$go, {
+  years <- reactive({
     
-    if(input$yearType == 'select'){
-      as.character(input$year)
-    } else if(input$yearType == 'range'){
-      as.character(seq(input$year[1], input$year[2], 1))
+    # assign default year if action button hasn't been pushed yet  
+    if (input$go == 0){
+      as.character('2017')
+    } else {
+      
+      # choose year on action button click
+      isolate({
+        if(input$yearType == 'select'){
+          as.character(input$year)
+        } else if(input$yearType == 'range'){
+          as.character(seq(input$year[1], input$year[2], 1))
+        }
+      })
+      
     }
-    
-  }, ignoreNULL = T)
+  })
   
   # reactive data -----------------------------------------------------------
   
@@ -342,7 +354,7 @@ function(input, output, session){
                                       paste0("Number: ", number),
                                       paste0("Platform: ", platform),
                                       paste0("Name: ", name),
-                                      paste0('Time: ', as.character(time)),
+                                      paste0('Date: ', as.character(date)),
                                       paste0('Position: ', 
                                              as.character(lat), ', ', as.character(lon))),
                        label = ~paste0( as.character(date), ': ', input$species,' whale ', 
