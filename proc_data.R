@@ -46,6 +46,9 @@ obs = Reduce(function(x, y) merge(x, y, all=TRUE), OBS)
 # adjust column types
 obs = config_observations(obs)
 
+# remove duplicates
+obs = obs[which(!duplicated(obs)),]
+
 # save
 saveRDS(obs, 'data/processed/observations.rds')
 
@@ -68,6 +71,9 @@ tracks = tracks[order(tracks$id, tracks$time),]
 
 # adjust column types
 tracks = config_tracks(tracks)
+
+# remove duplicates
+tracks = tracks[which(!duplicated(tracks)),]
 
 # save
 saveRDS(tracks, 'data/processed/tracks.rds')
