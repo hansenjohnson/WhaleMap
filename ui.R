@@ -13,6 +13,7 @@ library(oce)
 library(plotly)
 library(shinydashboard)
 library(shinyjqui)
+library(shinycssloaders)
 
 # user input --------------------------------------------------------------
 
@@ -43,22 +44,21 @@ body <- dashboardBody(
                               
                               # add date range choice
                               sliderInput("range", "Choose date range:", begin_date, end_date,
-                                          value = c(Sys.Date()-14, Sys.Date()), timeFormat = '%b-%d',
+                                          value = c(Sys.Date()-30, Sys.Date()), timeFormat = '%b-%d',
                                           animate = F),
                               
-                              # add button to re-center
+                              # choose year input
+                              radioButtons("yearType", label = 'Choose years:', 
+                                           choiceNames = c('Specific year(s):','Range of years:'),
+                                           choiceValues = c('select', 'range')),
+                              
+                              uiOutput("yearChoice"),
+                              
+                              # add button to update date
                               actionButton("go", "Go!"),
                               
-                              # add year choice
-                              selectInput("year", "Choose year(s):", 
-                                          choices = c('2014',
-                                                      '2015',
-                                                      '2016',
-                                                      '2017'), 
-                                          selected = '2017', multiple = T),
-                              
                               # add button to re-center
-                              actionButton("zoom", "Re-center map")
+                              actionButton("zoom", "Center map")
                               
                           ),
                           
@@ -92,7 +92,10 @@ body <- dashboardBody(
                               checkboxInput("possible", label = 'Show possible detections?', value = T),
                               
                               checkboxInput("detected", 
-                                            label = 'Show definite detections/sightings?', value = T)
+                                            label = 'Show definite detections/sightings?', value = T),
+                              
+                              checkboxInput("poly", 
+                                            label = 'Show regions?', value = T)
                               
                           ),
                           
@@ -115,7 +118,8 @@ body <- dashboardBody(
                               checkboxInput("legend", label = 'Show legend?', value = T),
                               
                               # plot inBounds switch
-                              checkboxInput("plotInBounds", label = 'Plot only data within map bounds?', value = T),
+                              checkboxInput("plotInBounds", 
+                                            label = 'Plot only data within map bounds?', value = T),
                               
                               # color palette
                               selectInput("pal", "Choose color palette:",
@@ -137,14 +141,18 @@ body <- dashboardBody(
                           box(width = NULL, solidHeader = T,collapsible = T, title = 'Map', 
                               status = 'primary',
                               
-                              jqui_resizabled(leafletOutput("map", height = 500))
+                              jqui_resizabled(
+                                leafletOutput("map", height = 500) %>% withSpinner(color="#0dc5c1")
+                                )
                           ),
                           
                           # Plot
                           box(width = NULL, solidHeader = T,collapsible = T, title = 'Plot', 
                               status = 'primary',
                               
-                              jqui_resizabled(plotlyOutput("graph"))
+                              jqui_resizabled(
+                                plotlyOutput("graph") %>% withSpinner(color="#0dc5c1")
+                                )
                           ),
                           
                           # Currently viewing

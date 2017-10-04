@@ -30,19 +30,39 @@ score_cols = c('detected' = 'red',
                'possibly detected' = 'yellow', 
                'sighted' = 'darkslategray')
 
+# map polygons
+poly = readRDS('data/processed/map_polygons.rds')
+
 # server ------------------------------------------------------------------
 
 function(input, output, session){
   
-  # advance date -------------------------------------------------------
+  # read in data -------------------------------------------------------
   
-  # observeEvent(input$advance,{
-  #   val <- input$range
-  #   updateSliderInput(session, "range", value = c(val[1], val[2]+7),
-  #                     min = as.Date('2016-01-01'), max = as.Date('2016-12-31'))
-  # })
+  # tracklines
+  tracks = readRDS('data/processed/tracks.rds')
   
-  # adjust date -------------------------------------------------------
+  # sightings / detections
+  obs = readRDS('data/processed/observations.rds')
+  
+  # build year UI -------------------------------------------------------
+  
+  output$yearChoice <- renderUI({
+    
+    # change input depending on user choice
+    switch(input$yearType,
+           
+           'select' = selectInput("year", label = NULL,
+                                  choices = as.character(seq(1950, 2017, 1)),
+                                  selected = '2017', multiple = T),
+           
+           'range' = sliderInput("year", label = NULL,
+                                 min = 1950, max = 2017, step = 1, 
+                                 value = c(1970, 2017), sep = "")
+    )
+  })
+  
+  # choose date -------------------------------------------------------
   
   # reactive
   yday0 = eventReactive(input$go, {
@@ -53,24 +73,29 @@ function(input, output, session){
     yday(as.Date(input$range[2]))
   }, ignoreNULL = F)
   
-  # trackline data -------------------------------------------------------
+  # choose year -------------------------------------------------------
   
-  tracks = readRDS('data/processed/tracks.rds')
-  
-  # whale data -------------------------------------------------------
-  
-  obs = readRDS('data/processed/observations.rds')
+  # reactive
+  years = eventReactive(input$go, {
+    
+    if(input$yearType == 'select'){
+      as.character(input$year)
+    } else if(input$yearType == 'range'){
+      as.character(seq(input$year[1], input$year[2], 1))
+    }
+    
+  }, ignoreNULL = T)
   
   # reactive data -----------------------------------------------------------
   
   # choose year(s) and platform(s)
   Tracks <- reactive({
-    tmp = tracks[tracks$year %in% input$year,]
+    tmp = tracks[tracks$year %in% years(),]
     tmp[tmp$platform %in% input$platform,]
   })
   
   Obs <- reactive({
-    tmp = obs[obs$year %in% input$year,]
+    tmp = obs[obs$year %in% years(),]
     tmp[tmp$platform %in% input$platform,]
   })
   
@@ -127,16 +152,23 @@ function(input, output, session){
     } else if (input$colorby == 'number'){
       
       if(is.infinite(min(spp()$number, na.rm = T))){
-        
         # define colorbar limits if 'number' is selected without sightings data
         colorNumeric(palette_list[[ind]], c(NA,0), na.color = 'darkgrey')
-        
       } else {
-        
         # use continuous palette
         colorNumeric(palette_list[[ind]], spp()$number, na.color = 'darkgrey')
-        
       }
+      
+    } else if (input$colorby == 'year'){
+      
+      if(input$yearType=='range'){
+        # use discrete palette if years are selected as a range
+        colorNumeric(palette_list[[ind]], as.numeric(spp()$year))  
+      } else {
+        # use discrete palette if years are selected individually
+        colorFactor(palette_list[[ind]], spp()$year)  
+      }
+      
     } else if (input$colorby == 'score'){
       
       # hard wire colors for score factor levels
@@ -156,10 +188,10 @@ function(input, output, session){
   output$map <- renderLeaflet({
     leaflet(tracks) %>% 
       addProviderTiles(providers$Esri.OceanBasemap) %>%
-      fitBounds(~max(allBounds()[[2]], na.rm = T), 
-                ~min(allBounds()[[1]], na.rm = T), 
-                ~min(allBounds()[[2]], na.rm = T), 
-                ~max(allBounds()[[1]], na.rm = T)) %>%
+      fitBounds(~max(lon, na.rm = T), 
+                ~min(lat, na.rm = T), 
+                ~min(lon, na.rm = T), 
+                ~max(lat, na.rm = T)) %>%
       
       # use NOAA graticules
       addWMSTiles(
@@ -190,6 +222,38 @@ function(input, output, session){
     }
   }
   
+  # polygon observer ------------------------------------------------------  
+  
+  observe(priority = 4, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('poly')
+    
+    if(input$poly){
+      
+      # add polygons
+      
+      # set up polyline plotting
+      poly.df <- split(poly, poly$name)
+      
+      # add lines
+      names(poly.df) %>%
+        purrr::walk( function(df) {
+          proxy <<- proxy %>%
+            addPolygons(data=poly.df[[df]], group = 'poly',fill = T, fillOpacity = 0.05, stroke = T,
+                        dashArray = c(5,5),
+                        # label = ~paste0(name),
+                        popup = ~paste0(name),
+                        lng=~lon, lat=~lat, weight = 1, color = 'grey', fillColor = 'grey')
+        })
+      
+      # switch to show/hide tracks
+      ifelse(input$poly, showGroup(proxy, 'poly'),hideGroup(proxy, 'poly'))
+    }
+    
+  })
+  
   # track observer ------------------------------------------------------  
   
   observe(priority = 3, {
@@ -216,11 +280,9 @@ function(input, output, session){
             proxy <<- proxy %>%
               addPolylines(data=tracks.df[[df]], group = 'tracks',
                            lng=~lon, lat=~lat, weight = 2,
+                           popup = paste0('Track ID: ', unique(tracks.df[[df]]$id)),
                            smoothFactor = 3, color = getColor(tracks.df[[df]]))
           })
-        
-        # switch to show/hide tracks
-        ifelse(input$tracks, showGroup(proxy, 'tracks'),hideGroup(proxy, 'tracks'))
       }
       
     }
@@ -235,27 +297,26 @@ function(input, output, session){
     proxy <- leafletProxy("map")
     proxy %>% clearGroup('possible')
     
-    # set up color palette plotting
-    pal <- colorpal()
-    
-    # possible detections
-    addCircleMarkers(map = proxy, data = pos(), ~lon, ~lat, group = 'possible',
-                     radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
-                     fillColor = pal(pos()[,which(colnames(pos())==input$colorby)]),
-                     popup = ~paste(sep = "<br/>" ,
-                                    paste0("Species: ", input$species),
-                                    "Score: possible",
-                                    paste0("Platform: ", platform),
-                                    paste0("Name: ", name),
-                                    paste0('Time: ', as.character(time)),
-                                    paste0('Position: ',
-                                           as.character(lat), ', ', as.character(lon))),
-                     label = ~paste0( as.character(date), ': ', input$species,' whale ', 
-                                      score, ' by ', name))
-    
-    # switch to show/hide possibles
-    ifelse(input$possible, showGroup(proxy, 'possible'),hideGroup(proxy, 'possible')) 
-    
+    if(input$possible){
+      
+      # set up color palette plotting
+      pal <- colorpal()
+      
+      # possible detections
+      addCircleMarkers(map = proxy, data = pos(), ~lon, ~lat, group = 'possible',
+                       radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
+                       fillColor = pal(pos()[,which(colnames(pos())==input$colorby)]),
+                       popup = ~paste(sep = "<br/>" ,
+                                      paste0("Species: ", input$species),
+                                      "Score: possible",
+                                      paste0("Platform: ", platform),
+                                      paste0("Name: ", name),
+                                      paste0('Date: ', as.character(date)),
+                                      paste0('Position: ',
+                                             as.character(lat), ', ', as.character(lon))),
+                       label = ~paste0( as.character(date), ': ', input$species,' whale ', 
+                                        score, ' by ', name))
+    }
   })
   
   # definite observer ------------------------------------------------------  
@@ -266,27 +327,28 @@ function(input, output, session){
     proxy <- leafletProxy("map")
     proxy %>% clearGroup('detected')
     
-    # set up color palette plotting
-    pal <- colorpal()
-    
-    # definite detections
-    addCircleMarkers(map = proxy, data = det(), ~lon, ~lat, group = 'detected',
-                     radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
-                     fillColor = pal(det()[,which(colnames(det())==input$colorby)]),
-                     popup = ~paste(sep = "<br/>" ,
-                                    paste0("Species: ", input$species),
-                                    paste0("Score: ", score),
-                                    paste0("Number: ", number),
-                                    paste0("Platform: ", platform),
-                                    paste0("Name: ", name),
-                                    paste0('Time: ', as.character(time)),
-                                    paste0('Position: ', 
-                                           as.character(lat), ', ', as.character(lon))),
-                     label = ~paste0( as.character(date), ': ', input$species,' whale ', 
-                                      score, ' by ', name))
-    
-    # switch to show/hide detected
-    ifelse(input$detected, showGroup(proxy, 'detected'),hideGroup(proxy, 'detected'))
+    if(input$detected){
+      
+      # set up color palette plotting
+      pal <- colorpal()
+      
+      # definite detections
+      addCircleMarkers(map = proxy, data = det(), ~lon, ~lat, group = 'detected',
+                       radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
+                       fillColor = pal(det()[,which(colnames(det())==input$colorby)]),
+                       popup = ~paste(sep = "<br/>" ,
+                                      paste0("Species: ", input$species),
+                                      paste0("Score: ", score),
+                                      paste0("Number: ", number),
+                                      paste0("Platform: ", platform),
+                                      paste0("Name: ", name),
+                                      paste0('Time: ', as.character(time)),
+                                      paste0('Position: ', 
+                                             as.character(lat), ', ', as.character(lon))),
+                       label = ~paste0( as.character(date), ': ', input$species,' whale ', 
+                                        score, ' by ', name))
+      
+    }
   })
   
   # legend observer ------------------------------------------------------  
@@ -314,14 +376,16 @@ function(input, output, session){
     
     # legend
     if(input$legend){
-      proxy %>% clearControls() %>% addLegend(position = "bottomright",
-                                              pal = pal, values = var, title = input$colorby)
+      proxy %>% clearControls() %>% 
+        addLegend(position = "bottomright",labFormat = labelFormat(big.mark = ""),
+                  pal = pal, values = var, 
+                  title = input$colorby)
     } else {
       proxy %>% clearControls()
     }
   })
   
-  # re-center ------------------------------------------------------  
+  # center map ------------------------------------------------------  
   
   observeEvent(input$zoom,{
     leafletProxy("map") %>% 
@@ -459,17 +523,44 @@ function(input, output, session){
     # get input for color palette choice
     ind = as.numeric(input$pal)
     
+    # list palettes for discrete scale (must be in the same order as palette_list)
+    palette_list2 = list(heat.colors(ncol), 
+                         oce.colorsTemperature(ncol),
+                         oce.colorsSalinity(ncol),
+                         oce.colorsDensity(ncol),
+                         oce.colorsChlorophyll(ncol),
+                         oce.colorsGebco(ncol),
+                         oce.colorsJet(ncol),
+                         oceColorsViridis(ncol))
     
-    if(input$colorby %in% c('number','lat','lon')){
+    if(input$colorby %in% c('number','lat','lon', 'year')){
       
       # replace all sightings/detections with '1' to facilitate stacked plotting
       obs$counter = 1
       
-      # choose palette for continuous scale
-      cols = palette_list[[ind]]
-      
-      # define colors for continuous scale
-      fillcols = scale_fill_gradientn(colours = cols, name = input$colorby)
+      if(input$yearType == 'select' & input$colorby == 'year'){
+        # convert year to factor
+        obs$year = as.factor(obs$year)
+        
+        # choose palette for discrete scale
+        cols = palette_list2[[ind]]
+        
+        # define palette for discrete scale
+        fillcols = scale_fill_manual(values = cols, name = input$colorby)
+        
+      } else {
+        
+        # convert year to numeric
+        if(input$colorby == 'year'){
+          obs$year = as.numeric(obs$year)  
+        }
+        
+        # choose palette for continuous scale
+        cols = palette_list[[ind]]
+        
+        # define colors for continuous scale
+        fillcols = scale_fill_gradientn(colours = cols, name = input$colorby)
+      }
       
       # build plot
       g = ggplot(obs, aes(x = yday, y = counter))+
@@ -500,16 +591,6 @@ function(input, output, session){
         
       } else {
         
-        # list palettes for discrete scale (must be in the same order as palette_list)
-        palette_list2 = list(heat.colors(ncol), 
-                             oce.colorsTemperature(ncol),
-                             oce.colorsSalinity(ncol),
-                             oce.colorsDensity(ncol),
-                             oce.colorsChlorophyll(ncol),
-                             oce.colorsGebco(ncol),
-                             oce.colorsJet(ncol),
-                             oceColorsViridis(ncol))
-        
         # choose palette for discrete scale
         cols = palette_list2[[ind]]
         
@@ -532,6 +613,3 @@ function(input, output, session){
       layout(margin=list(r=120, l=70, t=40, b=70), showlegend = input$legend)
   })
 } # server
-
-
-
