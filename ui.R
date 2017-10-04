@@ -41,24 +41,31 @@ body <- dashboardBody(
                           box(width = NULL, solidHeader = F, status = "warning", 
                               collapsible = T, title = 'Time Input',
                               
+                              # choose year input
+                              radioButtons("yearType", label = 'Choose year(s):', 
+                                           choiceNames = c('Specific year(s):','Range of years:'),
+                                           choiceValues = c('select', 'range')),
+                              
+                              uiOutput("yearChoice"),
+                              
+                              hr(),
                               
                               # add date range choice
                               sliderInput("range", "Choose date range:", begin_date, end_date,
                                           value = c(Sys.Date()-30, Sys.Date()), timeFormat = '%b-%d',
                                           animate = F),
                               
-                              # choose year input
-                              radioButtons("yearType", label = 'Choose years:', 
-                                           choiceNames = c('Specific year(s):','Range of years:'),
-                                           choiceValues = c('select', 'range')),
-                              
-                              uiOutput("yearChoice"),
+                              hr(),
                               
                               # add button to update date
-                              actionButton("go", "Go!"),
+                              actionButton("go", "Go!",
+                                           style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
                               
                               # add button to re-center
-                              actionButton("zoom", "Center map")
+                              actionButton("zoom", "Center map"),
+                              
+                              helpText('Please be patient if viewing data from many years. 
+                                       Consider turning tracks \'off\' below to speed up plotting.')
                               
                           ),
                           
@@ -81,9 +88,13 @@ body <- dashboardBody(
                                                        'buoy', 
                                                        'opportunistic')),
                               
+                              hr(),
+                              
                               # add species choice
                               selectInput("species", "Choose species:", choices = species, 
                                           selected = "right", multiple = F),
+                              
+                              hr(),
                               
                               # checkboxes
                               h5(strong('Choose layer(s):')),
