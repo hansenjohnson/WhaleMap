@@ -33,6 +33,9 @@ score_cols = c('detected' = 'red',
 # map polygons
 poly = readRDS('data/processed/map_polygons.rds')
 
+# define track point plotting threshold
+npts = 150000
+
 # server ------------------------------------------------------------------
 
 function(input, output, session){
@@ -64,15 +67,6 @@ function(input, output, session){
                                  min = min_yr, max = max_yr, step = 1, 
                                  value = c(min_yr, max_yr), sep = "")
     )
-  })
-  
-  # update track UI ----------------------------------------------------
-  
-  # turn off tracks if using multi-year range selection
-  observe({
-    if(input$yearType=='range'){
-      updateCheckboxInput(session, "tracks", value = F) 
-    }
   })
   
   # choose date -------------------------------------------------------
@@ -153,6 +147,14 @@ function(input, output, session){
     
     # join in list
     list(lat, lon)
+  })
+  
+  # track warning --------------------------------------------------------
+  
+  observe({
+    if(nrow(TRACKS())>npts){
+      showNotification(paste0('Warning! Tracklines have been turned off because you have chosen to plot more data than this application can currently handle (i.e. more than ', as.character(npts), ' points). Please select less data to view tracks.'), duration = 7, closeButton = T, type = 'warning')
+    }
   })
   
   
@@ -284,7 +286,7 @@ function(input, output, session){
     
     # tracks
     
-    if(input$tracks & input$yearType!='range'){
+    if(input$tracks & nrow(TRACKS())<npts){
       
       # set up polyline plotting
       tracks.df <- split(TRACKS(), TRACKS()$id)
