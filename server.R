@@ -296,7 +296,7 @@ function(input, output, session){
         purrr::walk( function(df) {
           proxy <<- proxy %>%
             addPolygons(data=poly.df[[df]], group = 'poly',fill = T, fillOpacity = 0.05, stroke = T,
-                        dashArray = c(5,5),
+                        dashArray = c(5,5), options = pathOptions(clickable = F),
                         # label = ~paste0(name),
                         # popup = ~paste0(name),
                         lng=~lon, lat=~lat, weight = 1, color = 'grey', fillColor = 'grey')
