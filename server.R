@@ -66,6 +66,15 @@ function(input, output, session){
     )
   })
   
+  # update track UI ----------------------------------------------------
+  
+  # turn off tracks if using multi-year range selection
+  observe({
+    if(input$yearType=='range'){
+      updateCheckboxInput(session, "tracks", value = F) 
+    }
+  })
+  
   # choose date -------------------------------------------------------
   
   # reactive
@@ -94,7 +103,6 @@ function(input, output, session){
           as.character(seq(input$year[1], input$year[2], 1))
         }
       })
-      
     }
   })
   
@@ -256,7 +264,7 @@ function(input, output, session){
             addPolygons(data=poly.df[[df]], group = 'poly',fill = T, fillOpacity = 0.05, stroke = T,
                         dashArray = c(5,5),
                         # label = ~paste0(name),
-                        popup = ~paste0(name),
+                        # popup = ~paste0(name),
                         lng=~lon, lat=~lat, weight = 1, color = 'grey', fillColor = 'grey')
         })
       
@@ -352,7 +360,13 @@ function(input, output, session){
                                       paste0('Position: ', 
                                              as.character(lat), ', ', as.character(lon))),
                        label = ~paste0( as.character(date), ': ', input$species,' whale ', 
-                                        score, ' by ', name))
+                                        score, ' by ', name), 
+                       options = markerOptions(removeOutsideVisibleBounds=T))
+                       # clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T,
+                       #                        showCoverageOnHover = T,
+                       #                        zoomToBoundsOnClick = T,
+                       #                        disableClusteringAtZoom = 7,
+                       #                        maxClusterRadius = 25))
       
     }
   })
