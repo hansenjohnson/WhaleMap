@@ -152,7 +152,7 @@ body <- dashboardBody(
            box(width = NULL, solidHeader = T,collapsible = T, title = 'Map', 
                status = 'primary',
                
-               leafletOutput("map", height = 600)
+               leafletOutput("map", height = 550)
                
            ),
            
