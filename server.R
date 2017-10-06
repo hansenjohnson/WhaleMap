@@ -276,7 +276,7 @@ function(input, output, session){
     
     # tracks
     
-    if(input$tracks){
+    if(input$tracks & input$yearType!='range'){
       
       # set up polyline plotting
       tracks.df <- split(TRACKS(), TRACKS()$id)
