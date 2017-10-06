@@ -25,12 +25,11 @@ These data come from a variety of different sources, each with their own caveats
 * Tracklines only reflect times when the vessel was 'on effort'. There may be cases where they logged a sighting while 'off effort. These *should* still display on the map but will not have an associated trackline.  
 
 ## To Do
-* Roseway basin ATBA, and closure area in the GSL  
-* Sonobuoys on map  
-* NOAA effort from GOM  
-* Fundy effort and tracklines from Kim  
 * Identify days with effort on barplot  
 * For each day of each deployment, calculate kilometers and time of survey effort  
-* set up glider database to update automatically  
+* Help page / documentation  
+* Data info page  
+* Reduce sampling frequency of 2017 NOAA GPS to improve plotting efficiency  
+
 
 
