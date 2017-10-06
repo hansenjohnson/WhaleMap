@@ -160,7 +160,7 @@ body <- dashboardBody(
            box(width = NULL, solidHeader = T,collapsible = T, title = 'Plot', 
                status = 'primary', collapsed = T,
                
-               plotlyOutput("graph")
+               plotOutput("graph")
                
            ),
            
