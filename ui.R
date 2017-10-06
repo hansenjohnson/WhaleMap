@@ -12,7 +12,7 @@ library(lubridate)
 library(oce)
 library(plotly)
 library(shinydashboard)
-library(shinyjqui)
+# library(shinyjqui)
 #library(shinycssloaders)
 
 # user input --------------------------------------------------------------
@@ -152,18 +152,16 @@ body <- dashboardBody(
            box(width = NULL, solidHeader = T,collapsible = T, title = 'Map', 
                status = 'primary',
                
-               jqui_resizabled(
-                 leafletOutput("map", height = 500)
-               )
+               leafletOutput("map", height = 500)
+               
            ),
            
            # Plot
            box(width = NULL, solidHeader = T,collapsible = T, title = 'Plot', 
                status = 'primary', collapsed = T,
                
-               jqui_resizabled(
-                 plotlyOutput("graph")
-               )
+               plotlyOutput("graph")
+               
            ),
            
            # Currently viewing
