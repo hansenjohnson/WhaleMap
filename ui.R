@@ -25,10 +25,9 @@ species = c('right', 'sei', 'fin', 'humpback')
 
 # ui ----------------------------------------------------------------------
 
-header <- dashboardHeader(
-  title = "Whale Surveys"
-)
-
+header <-  dashboardHeader(title = list(tags$a(href='https://leviathan.ocean.dal.ca',
+                                 icon("home")), 'Whale Surveys'))
+  
 # body --------------------------------------------------------------------
 
 body <- dashboardBody(
