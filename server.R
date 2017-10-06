@@ -278,24 +278,18 @@ function(input, output, session){
     
     if(input$tracks){
       
-      # add tracklines
-      if(nrow(TRACKS()) == 0){
-        # skip plotting tracks...
-      } else {
-        
-        # set up polyline plotting
-        tracks.df <- split(TRACKS(), TRACKS()$id)
-        
-        # add lines
-        names(tracks.df) %>%
-          purrr::walk( function(df) {
-            proxy <<- proxy %>%
-              addPolylines(data=tracks.df[[df]], group = 'tracks',
-                           lng=~lon, lat=~lat, weight = 2,
-                           popup = paste0('Track ID: ', unique(tracks.df[[df]]$id)),
-                           smoothFactor = 3, color = getColor(tracks.df[[df]]))
-          })
-      }
+      # set up polyline plotting
+      tracks.df <- split(TRACKS(), TRACKS()$id)
+      
+      # add lines
+      names(tracks.df) %>%
+        purrr::walk( function(df) {
+          proxy <<- proxy %>%
+            addPolylines(data=tracks.df[[df]], group = 'tracks',
+                         lng=~lon, lat=~lat, weight = 2,
+                         popup = paste0('Track ID: ', unique(tracks.df[[df]]$id)),
+                         smoothFactor = 3, color = getColor(tracks.df[[df]]))
+        })
       
     }
     
