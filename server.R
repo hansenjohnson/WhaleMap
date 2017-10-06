@@ -36,6 +36,13 @@ poly = readRDS('data/processed/map_polygons.rds')
 # define track point plotting threshold
 npts = 150000
 
+# make dcs icons
+dcsIcons = iconList(
+  slocum = makeIcon("icons/slocum.png", iconWidth = 40, iconHeight = 40),
+  wave = makeIcon("icons/wave.png", iconWidth = 40, iconHeight = 30),
+  buoy = makeIcon("icons/buoy.png", iconWidth = 50, iconHeight = 40)
+)
+
 # server ------------------------------------------------------------------
 
 function(input, output, session){
@@ -44,6 +51,9 @@ function(input, output, session){
   
   # tracklines
   tracks = readRDS('data/processed/tracks.rds')
+  
+  # latest dcs positions
+  latest = readRDS('data/interim/dcs_live_latest_position.rds')
   
   # sightings / detections
   obs = readRDS('data/processed/observations.rds')
@@ -116,6 +126,13 @@ function(input, output, session){
   # choose track date range
   TRACKS <- reactive({
     Tracks()[Tracks()$yday >= yday0() & Tracks()$yday <= yday1(),]
+  })
+  
+  # position for live dcs platform
+  LATEST <- reactive({
+    tmp = latest[latest$year %in% years(),]
+    tmp = tmp[tmp$platform %in% input$platform,]
+    tmp[tmp$yday >= yday0() & tmp$yday <= yday1(),]
   })
   
   # choose species date range
@@ -244,6 +261,21 @@ function(input, output, session){
     }
   }
   
+  get <- function(tracks) {
+    if(tracks$platform[1] == 'slocum') {
+      "blue"
+    } else if(tracks$platform[1] == 'plane') {
+      "#8B6914"
+    } else if(tracks$platform[1] == 'vessel'){
+      "black"
+    } else if(tracks$platform[1] == 'wave'){
+      "purple"
+    } else {
+      "darkgrey"
+    }
+  }
+  
+  
   # polygon observer ------------------------------------------------------  
   
   observe(priority = 4, {
@@ -300,6 +332,17 @@ function(input, output, session){
                          popup = paste0('Track ID: ', unique(tracks.df[[df]]$id)),
                          smoothFactor = 3, color = getColor(tracks.df[[df]]))
         })
+      
+      # add icons for latest position of live dcs platforms
+      proxy %>% addMarkers(data = LATEST(), ~lon, ~lat, icon = ~dcsIcons[platform],
+                 popup = ~paste(sep = "<br/>",
+                                'Latest position',
+                                paste0('Platform: ', as.character(platform)),
+                                paste0('Name: ', as.character(name)),
+                                paste0('Time: ', as.character(time)),
+                                paste0('Position: ', 
+                                       as.character(lat), ', ', as.character(lon))),
+                 label = ~paste0('Latest position: ', as.character(time)), group = 'tracks')
       
     }
     

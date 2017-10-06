@@ -86,7 +86,7 @@ for(i in seq_along(detection_dir_list)){
   d$year = year(d$time)
   
   # add deployment metadata
-  d$id = basename(dir)
+  d$id = paste0(basename(dir), '-live')
   # d$start_date = basename(strsplit(dir, '_')[[1]][1])
   d$platform = strsplit(dir, '_')[[1]][2]
   d$name = strsplit(dir, '_')[[1]][3]
@@ -145,6 +145,22 @@ tracks = config_tracks(tracks)
 # save output
 saveRDS(tracks, paste0(output_dir, 'dcs_live_tracks.rds'))
 
+# create latest position file ---------------------------------------------
+
+# split tracks by deployment
+dep = split(tracks, tracks$id)
+
+# determnine latest observation from each deployment
+latest = lapply(dep, function(x){
+  x[nrow(x),]
+})
+
+# flatten list
+latest = do.call(rbind,latest)
+
+# save output
+saveRDS(latest, paste0(output_dir, 'dcs_live_latest_position.rds'))
+
 # create detections file --------------------------------------------------
 
 # convert detections to long form
@@ -161,3 +177,5 @@ detections = config_observations(detections)
 
 # save output
 saveRDS(detections, paste0(output_dir, 'dcs_live_detections.rds'))
+
+
