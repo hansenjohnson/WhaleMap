@@ -39,7 +39,7 @@ npts = 150000
 # make dcs icons
 dcsIcons = iconList(
   slocum = makeIcon("icons/slocum.png", iconWidth = 40, iconHeight = 40),
-  wave = makeIcon("icons/wave.png", iconWidth = 40, iconHeight = 30),
+  wave = makeIcon("icons/wave.png", iconWidth = 35, iconHeight = 30),
   buoy = makeIcon("icons/buoy.png", iconWidth = 50, iconHeight = 40)
 )
 
@@ -85,7 +85,7 @@ function(input, output, session){
   yday0 = eventReactive(input$go, {
     yday(as.Date(input$range[1]))
   }, ignoreNULL = F)
-  
+
   yday1 = eventReactive(input$go, {
     yday(as.Date(input$range[2]))
   }, ignoreNULL = F)
@@ -110,29 +110,41 @@ function(input, output, session){
     }
   })
   
+  # choose species -----------------------------------------------------------
+  
+  species <- eventReactive(input$go|input$go == 0,{
+    input$species
+  })
+  
+  # choose platform -----------------------------------------------------------
+  
+  platform <- eventReactive(input$go|input$go == 0,{
+    input$platform
+  })
+  
   # reactive data -----------------------------------------------------------
   
   # choose year(s) and platform(s)
-  Tracks <- reactive({
+  Tracks <- eventReactive(input$go|input$go == 0, {
     tmp = tracks[tracks$year %in% years(),]
-    tmp[tmp$platform %in% input$platform,]
+    tmp[tmp$platform %in% platform(),]
   })
   
-  Obs <- reactive({
+  Obs <- eventReactive(input$go|input$go == 0, {
     tmp = obs[obs$year %in% years(),]
-    tmp[tmp$platform %in% input$platform,]
+    tmp[tmp$platform %in% platform(),]
+  })
+  
+  # position for live dcs platform
+  LATEST <- eventReactive(input$go|input$go == 0, {
+    tmp = latest[latest$year %in% years(),]
+    tmp = tmp[tmp$platform %in% platform(),]
+    tmp[tmp$yday >= yday0() & tmp$yday <= yday1(),]
   })
   
   # choose track date range
   TRACKS <- reactive({
     Tracks()[Tracks()$yday >= yday0() & Tracks()$yday <= yday1(),]
-  })
-  
-  # position for live dcs platform
-  LATEST <- reactive({
-    tmp = latest[latest$year %in% years(),]
-    tmp = tmp[tmp$platform %in% input$platform,]
-    tmp[tmp$yday >= yday0() & tmp$yday <= yday1(),]
   })
   
   # choose species date range
@@ -142,7 +154,7 @@ function(input, output, session){
   
   # choose species
   spp <- reactive({
-    droplevels(OBS()[OBS()$species %in% input$species,])
+    droplevels(OBS()[OBS()$species %in% species(),])
   })
   
   # only possible
@@ -261,21 +273,6 @@ function(input, output, session){
     }
   }
   
-  get <- function(tracks) {
-    if(tracks$platform[1] == 'slocum') {
-      "blue"
-    } else if(tracks$platform[1] == 'plane') {
-      "#8B6914"
-    } else if(tracks$platform[1] == 'vessel'){
-      "black"
-    } else if(tracks$platform[1] == 'wave'){
-      "purple"
-    } else {
-      "darkgrey"
-    }
-  }
-  
-  
   # polygon observer ------------------------------------------------------  
   
   observe(priority = 4, {
@@ -366,14 +363,14 @@ function(input, output, session){
                        radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
                        fillColor = pal(pos()[,which(colnames(pos())==input$colorby)]),
                        popup = ~paste(sep = "<br/>" ,
-                                      paste0("Species: ", input$species),
+                                      paste0("Species: ", species),
                                       "Score: possible",
                                       paste0("Platform: ", platform),
                                       paste0("Name: ", name),
                                       paste0('Date: ', as.character(date)),
                                       paste0('Position: ',
                                              as.character(lat), ', ', as.character(lon))),
-                       label = ~paste0( as.character(date), ': ', input$species,' whale ', 
+                       label = ~paste0( as.character(date), ': ', species,' whale ', 
                                         score, ' by ', name))
     }
   })
@@ -396,7 +393,7 @@ function(input, output, session){
                        radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
                        fillColor = pal(det()[,which(colnames(det())==input$colorby)]),
                        popup = ~paste(sep = "<br/>" ,
-                                      paste0("Species: ", input$species),
+                                      paste0("Species: ", species),
                                       paste0("Score: ", score),
                                       paste0("Number: ", number),
                                       paste0("Platform: ", platform),
@@ -404,7 +401,7 @@ function(input, output, session){
                                       paste0('Date: ', as.character(date)),
                                       paste0('Position: ', 
                                              as.character(lat), ', ', as.character(lon))),
-                       label = ~paste0( as.character(date), ': ', input$species,' whale ', 
+                       label = ~paste0( as.character(date), ': ', species,' whale ', 
                                         score, ' by ', name), 
                        options = markerOptions(removeOutsideVisibleBounds=T))
                        # clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T,
@@ -513,7 +510,7 @@ function(input, output, session){
     } else {
       
       # sighting/detection info
-      str1 <- paste0('<strong>Species</strong>: ', input$species)
+      str1 <- paste0('<strong>Species</strong>: ', species())
       
       str2 <- paste0('<strong>Number of sighting events</strong>: ', 
                      nrow(dInBounds()[dInBounds()$score=='sighted',]))

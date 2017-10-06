@@ -37,9 +37,9 @@ body <- dashboardBody(
     # sidebar --------------------------------------------------------------------
     column(width = 3,
            
-           # Time Input
+           # Select Data
            box(width = NULL, solidHeader = F, status = "warning", 
-               collapsible = T, title = 'Time Input',
+               collapsible = T, title = 'Select Data',
                
                # choose year input
                radioButtons("yearType", label = 'Choose year(s):', 
@@ -57,21 +57,11 @@ body <- dashboardBody(
                
                hr(),
                
-               # add button to update date
-               actionButton("go", "Go!",
-                            style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
+               # add species choice
+               selectInput("species", "Choose species:", choices = species, 
+                           selected = "right", multiple = F),
                
-               # add button to re-center
-               actionButton("zoom", "Center map"),
-               
-               helpText('Please be patient if viewing data from many years. 
-                                       Consider turning tracks \'off\' below to speed up plotting.')
-               
-           ),
-           
-           # Survey Input
-           box(width = NULL, solidHeader = F, status = "warning", 
-               collapsible = T, title = 'Survey Input',
+               hr(),
                
                # add platform choice
                selectInput("platform", "Choose platform(s):", multiple = T,
@@ -90,28 +80,21 @@ body <- dashboardBody(
                
                hr(),
                
-               # add species choice
-               selectInput("species", "Choose species:", choices = species, 
-                           selected = "right", multiple = F),
+               # add button to update date
+               actionButton("go", "Go!",
+                            style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
                
-               hr(),
+               # add button to re-center
+               actionButton("zoom", "Center map"),
                
-               # checkboxes
-               h5(strong('Choose layer(s):')),
-               checkboxInput("tracks", label = 'Show tracks?', value = T),
-               
-               checkboxInput("possible", label = 'Show possible detections?', value = T),
-               
-               checkboxInput("detected", 
-                             label = 'Show definite detections/sightings?', value = T),
-               
-               checkboxInput("poly", 
-                             label = 'Show regions?', value = T)
+               helpText('Please be patient if viewing data from many years. 
+                                       Consider turning tracks \'off\' below to speed up plotting.')
                
            ),
            
+           # Customize plotting
            box(width = NULL, solidHeader = F, status = "warning", 
-               collapsible = T, title = 'Plot Input',
+               collapsible = T, title = 'Customize plots',
                
                #color by
                selectInput("colorby", "Color by:", choices =
@@ -125,13 +108,6 @@ body <- dashboardBody(
                                'Longitude' = 'lon',
                                'Deployment' = 'id'), selected = 'score'),
                
-               # legend switch
-               checkboxInput("legend", label = 'Show legend?', value = T),
-               
-               # plot inBounds switch
-               checkboxInput("plotInBounds", 
-                             label = 'Plot only data within map bounds?', value = T),
-               
                # color palette
                selectInput("pal", "Choose color palette:",
                            c("Temperature" = 2,
@@ -141,7 +117,23 @@ body <- dashboardBody(
                              "Jet" = 7,
                              "Salinity" = 3,
                              "Density" = 4,
-                             "Chlorophyll" = 5), selected = 8)
+                             "Chlorophyll" = 5), selected = 8),
+               
+               hr(),
+               
+               h5(strong('Choose layer(s):')),
+               checkboxInput("tracks", label = 'Tracks', value = T),
+               
+               checkboxInput("possible", label = 'Possible detections', value = T),
+               
+               checkboxInput("detected", 
+                             label = 'Definite detections/sightings', value = T),
+               
+               checkboxInput("poly", 
+                             label = 'Regions', value = T),
+               
+               # legend switch
+               checkboxInput("legend", label = 'Legends', value = T)
            )
     ),
     
@@ -158,9 +150,13 @@ body <- dashboardBody(
            
            # Plot
            box(width = NULL, solidHeader = T,collapsible = T, title = 'Plot', 
-               status = 'primary', collapsed = T,
+               status = 'primary', collapsed = F,
                
-               plotlyOutput("graph")
+               plotlyOutput("graph"),
+               
+               # plot inBounds switch
+               checkboxInput("plotInBounds", 
+                             label = 'Only plot data within map bounds?', value = T)
                
            ),
            
