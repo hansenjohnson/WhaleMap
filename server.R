@@ -494,7 +494,7 @@ function(input, output, session){
   
   # bargraph ----------------------------------------------------------------
   
-  output$graph <- renderPlot({
+  output$graph <- renderPlotly({
     
     # determine input data
     if(input$plotInBounds){
@@ -614,10 +614,8 @@ function(input, output, session){
         aes(text = paste('date: ', format(as.Date(as.character(yday), "%j"), "%d-%b")))
     }
     
-    g
-    
-    # # plot
-    # gg = ggplotly(g, dynamicTicks = F, tooltip = c("text", "count", "fill")) %>%
-    #   layout(margin=list(r=120, l=70, t=40, b=70), showlegend = input$legend)
+    # plot
+    gg = ggplotly(g, dynamicTicks = F, tooltip = c("text", "count", "fill")) %>%
+      layout(margin=list(r=120, l=70, t=40, b=70), showlegend = input$legend)
   })
 } # server
