@@ -25,8 +25,26 @@ species = c('right', 'sei', 'fin', 'humpback')
 
 # ui ----------------------------------------------------------------------
 
-header <-  dashboardHeader(title = list(tags$a(href='https://leviathan.ocean.dal.ca',
-                                 icon("home")), 'Whale Surveys'))
+# header <-  dashboardHeader(title = list(tags$a(href='https://leviathan.ocean.dal.ca',
+#                                  icon("home")), 'Whale Surveys'))
+
+header <-  dashboardHeader(title = 'Whale Surveys',
+                            dropdownMenu(
+                              type = "notifications",
+                              icon = 'leviathan.ocean.dal.ca',
+                              badgeStatus = NULL,
+                              headerText = "",
+                              notificationItem("Home",
+                                               icon = icon("home"),
+                                               href = "http://leviathan.ocean.dal.ca"),
+                              notificationItem("2017 right whale map",
+                                               icon = icon("map"),
+                                               href = "http://leviathan.ocean.dal.ca/right_whale_map/"),
+                              notificationItem("Live Glider",
+                                               icon = icon("plane"),
+                                               href = "http://leviathan.ocean.dal.ca/live_glider/")
+                            )
+)
   
 # body --------------------------------------------------------------------
 
