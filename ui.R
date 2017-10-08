@@ -36,12 +36,12 @@ header <-  dashboardHeader(title = 'Whale Surveys',
                               icon = icon('info-sign', lib = 'glyphicon'),
                               badgeStatus = NULL,
                               headerText = "",
-                              notificationItem("User manual",
+                              notificationItem("User manual / help",
                                                icon = icon('question-sign', lib = 'glyphicon'),
-                                               href = "http://leviathan.ocean.dal.ca"),
+                                               href = "http://leviathan.ocean.dal.ca/WhaleMap/help.html"),
                               notificationItem("Data details",
                                                icon = icon('signal', lib = 'glyphicon'),
-                                               href = "http://leviathan.ocean.dal.ca/right_whale_map/")
+                                               href = "http://leviathan.ocean.dal.ca/WhaleMap/data_details.html")
                               ),
                            
                            # leviathan
