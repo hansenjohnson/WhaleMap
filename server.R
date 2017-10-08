@@ -333,13 +333,14 @@ function(input, output, session){
       # add icons for latest position of live dcs platforms
       proxy %>% addMarkers(data = LATEST(), ~lon, ~lat, icon = ~dcsIcons[platform],
                  popup = ~paste(sep = "<br/>",
-                                'Latest position',
+                                strong('Latest position'),
                                 paste0('Platform: ', as.character(platform)),
                                 paste0('Name: ', as.character(name)),
-                                paste0('Time: ', as.character(time)),
+                                paste0('Time: ', as.character(time), ' UTC'),
                                 paste0('Position: ', 
                                        as.character(lat), ', ', as.character(lon))),
-                 label = ~paste0('Latest position: ', as.character(time)), group = 'tracks')
+                 label = ~paste0('Latest position of ', as.character(name), ': ', 
+                                 as.character(time), ' UTC'), group = 'tracks')
       
     }
     
@@ -363,6 +364,7 @@ function(input, output, session){
                        radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
                        fillColor = pal(pos()[,which(colnames(pos())==input$colorby)]),
                        popup = ~paste(sep = "<br/>" ,
+                                      strong("Sighting/Detection Details:"),
                                       paste0("Species: ", species),
                                       "Score: possible",
                                       paste0("Platform: ", platform),
@@ -393,6 +395,7 @@ function(input, output, session){
                        radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
                        fillColor = pal(det()[,which(colnames(det())==input$colorby)]),
                        popup = ~paste(sep = "<br/>" ,
+                                      strong("Sighting/Detection Details:"),
                                       paste0("Species: ", species),
                                       paste0("Score: ", score),
                                       paste0("Number: ", number),
