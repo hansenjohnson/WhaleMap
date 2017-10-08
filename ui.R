@@ -29,20 +29,37 @@ species = c('right', 'sei', 'fin', 'humpback')
 #                                  icon("home")), 'Whale Surveys'))
 
 header <-  dashboardHeader(title = 'Whale Surveys',
-                            dropdownMenu(
+                            
+                           # data
+                           dropdownMenu(
                               type = "notifications",
-                              icon = 'leviathan.ocean.dal.ca',
+                              icon = icon('info-sign', lib = 'glyphicon'),
                               badgeStatus = NULL,
                               headerText = "",
-                              notificationItem("Home",
-                                               icon = icon("home"),
+                              notificationItem("User manual",
+                                               icon = icon('question-sign', lib = 'glyphicon'),
                                                href = "http://leviathan.ocean.dal.ca"),
-                              notificationItem("2017 right whale map",
-                                               icon = icon("map"),
-                                               href = "http://leviathan.ocean.dal.ca/right_whale_map/"),
-                              notificationItem("Live Glider",
-                                               icon = icon("plane"),
-                                               href = "http://leviathan.ocean.dal.ca/live_glider/")
+                              notificationItem("Data details",
+                                               icon = icon('signal', lib = 'glyphicon'),
+                                               href = "http://leviathan.ocean.dal.ca/right_whale_map/")
+                              ),
+                           
+                           # leviathan
+                              dropdownMenu(
+                                type = "notifications",
+                                icon = 'leviathan.ocean.dal.ca',
+                                badgeStatus = NULL,
+                                headerText = "",
+                                notificationItem("Home",
+                                                 icon = icon("home"),
+                                                 href = "http://leviathan.ocean.dal.ca"),
+                                notificationItem("2017 right whale map",
+                                                 icon = icon("map"),
+                                                 href = "http://leviathan.ocean.dal.ca/right_whale_map/"),
+                                notificationItem("Live Glider",
+                                                 icon = icon("plane", lib = 'glyphicon'),
+                                                 href = "http://leviathan.ocean.dal.ca/live_glider/")
+                              
                             )
 )
   
