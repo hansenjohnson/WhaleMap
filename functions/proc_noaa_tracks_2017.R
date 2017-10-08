@@ -45,7 +45,7 @@ tracks$id = paste0(tracks$date, '_plane_noaa')
 
 # subsample
 norig = nrow(tracks)
-npoints = norig/20 # initially plotted every 10 points, or every 20s. Trying only every 20 pts now...
+npoints = norig/30 # initially plotted every 10 points, or every 20s. Trying only every 30 pts now, which should correspond to every minute
 
 nsub = round(norig/npoints,0)
 tracks = tracks[seq(1, nrow(tracks), nsub),] # subset to plot every other data point
