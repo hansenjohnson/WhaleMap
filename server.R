@@ -682,7 +682,7 @@ function(input, output, session){
   
   # system call to pull in live data
   observeEvent(input$update, {
-    system('./get_live_dcs.sh')
+    system('/srv/shiny-server/WhaleMap/get_live_dcs.sh')
   })
   
 } # server
