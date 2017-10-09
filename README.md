@@ -2,7 +2,7 @@
 Interactive map to visualize whale surveys in Atlantic Canada since 1951.
 
 ## Overview
-This app us intented to be used as a visual tool for exploring and gaining intuition about the data we have already collected on baleen whales in the Northwest Atlantic. It is particularly geared towards visualizing seasonal shifts over single and multiple years in an attempt to understand seasonal whale distribution and gaps in our knowledge. This app is intended only intended for convenient visualization and coordination of fieldwork efforts. Tt includes data with varying degrees of quality control and should therefore be treated with caution.
+This app us intented to be used as a visual tool for exploring and gaining intuition about the data we have already collected on baleen whales in the Northwest Atlantic. It is particularly geared towards visualizing seasonal shifts over single and multiple years in an attempt to understand seasonal whale distribution and gaps in our knowledge. This app is intended only intended for convenient visualization and coordination of fieldwork efforts. It includes data with varying degrees of quality control and should therefore be treated with caution.
 
 ## Demonstration
 
