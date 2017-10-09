@@ -38,10 +38,10 @@ header <-  dashboardHeader(title = 'Whale Surveys',
                               headerText = "",
                               notificationItem("User manual / help",
                                                icon = icon('question-sign', lib = 'glyphicon'),
-                                               href = "http://leviathan.ocean.dal.ca/WhaleMap/help.html"),
+                                               href = "http://leviathan.ocean.dal.ca/leviathan_docs/WhaleMap_help.html"),
                               notificationItem("Data details",
                                                icon = icon('signal', lib = 'glyphicon'),
-                                               href = "http://leviathan.ocean.dal.ca/WhaleMap/data_details.html")
+                                               href = "http://leviathan.ocean.dal.ca/leviathan_docs/WhaleMap_data.html")
                               ),
                            
                            # leviathan
