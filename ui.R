@@ -36,13 +36,19 @@ header <-  dashboardHeader(title = 'WhaleMap',
                               icon = icon('info-sign', lib = 'glyphicon'),
                               badgeStatus = NULL,
                               headerText = "",
-                              notificationItem("User manual / help",
+                              notificationItem("Help",
                                                icon = icon('question-sign', lib = 'glyphicon'),
                                                href = "http://leviathan.ocean.dal.ca/leviathan_docs/WhaleMap-help.html"),
                               notificationItem("Data details",
                                                icon = icon('signal', lib = 'glyphicon'),
-                                               href = "http://leviathan.ocean.dal.ca/leviathan_docs/WhaleMap-data.html")
-                              ),
+                                               href = "http://leviathan.ocean.dal.ca/leviathan_docs/WhaleMap-data.html"),
+                              notificationItem("Code",
+                                               icon = icon('console', lib = 'glyphicon'),
+                                               href = "https://github.com/hansenjohnson/WhaleMap"),
+                              notificationItem("View/Report Issues",
+                                               icon = icon('remove-sign', lib = 'glyphicon'),
+                                               href = "https://github.com/hansenjohnson/WhaleMap/issues")
+                           ),
                            
                            # leviathan
                               dropdownMenu(
