@@ -677,4 +677,12 @@ function(input, output, session){
     gg = ggplotly(g, dynamicTicks = F, tooltip = c("text", "count", "fill")) %>%
       layout(margin=list(r=120, l=70, t=40, b=70), showlegend = input$legend)
   })
+  
+  # update glider data -------------------------------------------------------
+  
+  # system call to pull in live data
+  observeEvent(input$update, {
+    system('./get_live_dcs.sh')
+  })
+  
 } # server
