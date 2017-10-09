@@ -682,7 +682,16 @@ function(input, output, session){
   
   # system call to pull in live data
   observeEvent(input$update, {
+    
+    # determine time of last modification
+    old_mod = file.mtime('data/raw/dcs/live/')
+    
+    # old time notification
+    showNotification(paste0('Data was last updated at ', old_mod, '. Updating now...'))
+    
+    # run system command to get and process new data
     system('/srv/shiny-server/WhaleMap/get_live_dcs.sh')
+    
   })
   
 } # server
