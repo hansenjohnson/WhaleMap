@@ -128,14 +128,15 @@ body <- dashboardBody(
                actionButton("zoom", "Center map"),
                
                helpText('Please be patient if viewing data from many years. 
-                                       Consider turning tracks \'off\' below to speed up plotting.'),
+                                       Consider turning tracks \'off\' below to speed up plotting.')
                
-               hr(),
-
-               # update live glider
-               actionButton("update", label = 'Update glider data'),
-               
-               helpText('This feature is still under development...')
+           #     hr(),
+           # 
+           #     # update live glider
+           #     actionButton("update", label = 'Update glider data'),
+           #     
+           #     helpText('This feature is still under development...')
+           
            ),
            
            # Customize plotting
