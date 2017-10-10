@@ -2,7 +2,7 @@
 
 # user input --------------------------------------------------------------
 
-infile = 'data/interim/dcs_live_detections.rds'
+infile = 'data/interim/dcs_live_tracks.rds'
 
 outfile = 'data/processed/dcs_live_latest_position.rds'
 
