@@ -11,7 +11,7 @@ output_dir = 'data/interim/'
 # setup -------------------------------------------------------------------
 
 library(lubridate)
-library(plotKML)
+library(rgdal)
 source('functions/config_data.R')
 
 # prepare loop
@@ -22,13 +22,14 @@ DFO = list()
 for(i in seq_along(dfo_track_list)){
   
   # read in file
-  tmp = readGPX(dfo_track_list[i])$tracks
+  tmp = readOGR(dsn = dfo_track_list[i], layer="track_points", verbose = F)
   
   # convert to data frame
-  tmp = tmp[[1]]; tmp = tmp[[1]] # unsure why this needs to be run twice...
+  tmp = as.data.frame(tmp)
   
-  # remove unused column
-  tmp$ele = NULL
+  # select and rename important columns
+  tmp = data.frame(tmp$time, tmp$coords.x1, tmp$coords.x2)
+  colnames(tmp) = c('time', 'lon', 'lat')
   
   # add to list
   DFO[[i]] = tmp
@@ -41,7 +42,8 @@ if(length(DFO)!=length(dfo_track_list)){stop('Not all tracks were processed!')}
 tracks = do.call(rbind, DFO)
 
 # wrangle time
-tracks$time = as.POSIXct(tracks$time, format = '%Y-%m-%dT%H:%M:%SZ', tz = 'UTC')
+tracks$time = strtrim(tracks$time, 19) # remove unused characters (miliseconds)
+tracks$time = as.POSIXct(tracks$time, format = '%Y/%m/%d %H:%M:%S', tz = 'UTC')
 tracks$date = as.Date(tracks$time)
 tracks$yday = yday(tracks$time)
 tracks$year = year(tracks$time)
