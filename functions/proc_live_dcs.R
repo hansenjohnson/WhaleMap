@@ -147,8 +147,11 @@ saveRDS(tracks, paste0(output_dir, 'dcs_live_tracks.rds'))
 
 # create latest position file ---------------------------------------------
 
+# remove NAs
+dep = tracks[complete.cases(tracks),]
+
 # split tracks by deployment
-dep = split(tracks, tracks$id)
+dep = split(dep, dep$id)
 
 # determnine latest observation from each deployment
 latest = lapply(dep, function(x){
