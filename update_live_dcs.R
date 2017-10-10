@@ -6,7 +6,11 @@ source('functions/config_data.R')
 
 # process live data --------------------------------------------------------
 
+# process live data
 source('functions/proc_live_dcs.R')
+
+# extract latest position
+source('functions/proc_dcs_latest_position.R')
 
 # read in data ------------------------------------------------------------
 
@@ -23,8 +27,8 @@ tracks_live = readRDS('data/interim/dcs_live_tracks.rds')
 # combine observations
 obs_merged = rbind.data.frame(obs, obs_live)
 
-# remove duplicates
-obs = obs_merged[which(!duplicated(obs_merged)),]
+# remove duplicates (excluding id column to avoid keeping both live and archived)
+obs = obs_merged[which(!duplicated(obs_merged[,c(1:6, 8:12)])),]
 
 # save
 saveRDS(obs, file = 'data/processed/observations.rds')
@@ -34,8 +38,8 @@ saveRDS(obs, file = 'data/processed/observations.rds')
 # combine tracks
 tracks_merged = rbind.data.frame(tracks, tracks_live)
 
-# remove duplicates
-tracks = tracks_merged[which(!duplicated(tracks_merged)),]
+# remove duplicates (excluding id column to avoid keeping both live and archived)
+tracks = tracks_merged[which(!duplicated(tracks_merged[,c(1:6, 8:9)])),]
 
 # save
 saveRDS(tracks, file = 'data/processed/tracks.rds')
