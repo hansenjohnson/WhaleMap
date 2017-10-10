@@ -14,7 +14,9 @@ source('functions/proc_map_polygons.R')
 source('functions/proc_narwc.R')
 
 # dcs (gliders, buoys, etc)
-source('functions/proc_dcs.R')
+source('functions/proc_archived_dcs.R')
+source('functions/proc_live_dcs.R')
+source('functions/proc_dcs_latest_position.R')
 
 # # noaa (noaa plane) 2015 (THIS IS DUPLICATED BY NARWC HISTORICAL DATA, SO NOT INCLUDING ANYMORE)
 # source('functions/proc_noaa_2015.R')
