@@ -53,7 +53,7 @@ function(input, output, session){
   tracks = readRDS('data/processed/tracks.rds')
   
   # latest dcs positions
-  latest = readRDS('data/interim/dcs_live_latest_position.rds')
+  latest = readRDS('data/processed/dcs_live_latest_position.rds')
   
   # sightings / detections
   obs = readRDS('data/processed/observations.rds')
