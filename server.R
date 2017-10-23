@@ -252,7 +252,7 @@ function(input, output, session){
         attribution = "NOAA") %>%
       
       # add extra map features
-      addScaleBar(position = 'bottomleft')%>%
+      addScaleBar(position = 'topright')%>%
       addMeasure(primaryLengthUnit = "kilometers",secondaryLengthUnit = 'miles', primaryAreaUnit = "hectares",secondaryAreaUnit="acres", position = 'bottomleft')
     
   })
