@@ -179,8 +179,9 @@ body <- dashboardBody(
                checkboxInput("poly", 
                              label = 'Regions', value = T),
                
-               # legend switch
-               checkboxInput("legend", label = 'Legends', value = T)
+               checkboxInput("legend", label = 'Legends', value = T),
+               
+               checkboxInput("latest", label = 'Latest robot positions', value = T)
                
            )
     ),

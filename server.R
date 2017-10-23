@@ -340,7 +340,35 @@ function(input, output, session){
                                 paste0('Position: ', 
                                        as.character(lat), ', ', as.character(lon))),
                  label = ~paste0('Latest position of ', as.character(name), ': ', 
-                                 as.character(time), ' UTC'), group = 'tracks')
+                                 as.character(time), ' UTC'), group = 'latest')
+      
+    }
+    
+  })
+  
+  # latest observer ------------------------------------------------------  
+  
+  observe(priority = 2, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('latest')
+    
+    # tracks
+    
+    if(input$latest){
+      
+      # add icons for latest position of live dcs platforms
+      proxy %>% addMarkers(data = LATEST(), ~lon, ~lat, icon = ~dcsIcons[platform],
+                           popup = ~paste(sep = "<br/>",
+                                          strong('Latest position'),
+                                          paste0('Platform: ', as.character(platform)),
+                                          paste0('Name: ', as.character(name)),
+                                          paste0('Time: ', as.character(time), ' UTC'),
+                                          paste0('Position: ', 
+                                                 as.character(lat), ', ', as.character(lon))),
+                           label = ~paste0('Latest position of ', as.character(name), ': ', 
+                                           as.character(time), ' UTC'), group = 'latest')
       
     }
     
