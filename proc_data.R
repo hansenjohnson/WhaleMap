@@ -8,6 +8,10 @@ source('functions/config_data.R')
 
 source('functions/proc_map_polygons.R')
 
+# process ancillary data --------------------------------------------------------
+
+source('functions/proc_sonobuoys.R')
+
 # process each platform ---------------------------------------------------
 
 # all narwc (historical tracks and sightings 1951 - 2015)
