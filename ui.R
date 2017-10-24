@@ -181,7 +181,9 @@ body <- dashboardBody(
                
                checkboxInput("legend", label = 'Legends', value = T),
                
-               checkboxInput("latest", label = 'Latest robot positions', value = T)
+               checkboxInput("latest", label = 'Latest robot positions', value = T),
+               
+               checkboxInput("sono", label = 'Sonobuoys', value = F)
                
            )
     ),

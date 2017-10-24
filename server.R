@@ -58,6 +58,9 @@ function(input, output, session){
   # sightings / detections
   obs = readRDS('data/processed/observations.rds')
   
+  # sonobuoys
+  sono = readRDS('data/processed/sonobuoys.rds')
+  
   # build year UI -------------------------------------------------------
   
   output$yearChoice <- renderUI({
@@ -139,6 +142,12 @@ function(input, output, session){
   LATEST <- eventReactive(input$go|input$go == 0, {
     tmp = latest[latest$year %in% years(),]
     tmp = tmp[tmp$platform %in% platform(),]
+    tmp[tmp$yday >= yday0() & tmp$yday <= yday1(),]
+  })
+  
+  # position for live dcs platform
+  SONO <- eventReactive(input$go|input$go == 0, {
+    tmp = sono[sono$year %in% years(),]
     tmp[tmp$yday >= yday0() & tmp$yday <= yday1(),]
   })
   
@@ -369,6 +378,35 @@ function(input, output, session){
                                                  as.character(lat), ', ', as.character(lon))),
                            label = ~paste0('Latest position of ', as.character(name), ': ', 
                                            as.character(time), ' UTC'), group = 'latest')
+      
+    }
+    
+  })
+  
+  # sono observer ------------------------------------------------------  
+  
+  observe(priority = 1, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('sono')
+    
+    # tracks
+    
+    if(input$sono){
+      
+      # add icons for latest position of live dcs platforms
+      proxy %>% addMarkers(data = SONO(), ~lon, ~lat,
+                           popup = ~paste(sep = "<br/>",
+                                          strong('Sonobuoy position'),
+                                          paste0('Date: ', as.character(date)),
+                                          paste0('Time: ', as.character(time), ' UTC'),
+                                          paste0('ID: ', as.character(stn_id)),
+                                          paste0('SN: ', as.character(sn)),
+                                          paste0('Position: ', 
+                                                 as.character(lat), ', ', as.character(lon))),
+                           label = ~paste0('sonobuoy ', as.character(stn_id), ': ', 
+                                           as.character(date), ' UTC'), group = 'sono')
       
     }
     
