@@ -404,9 +404,10 @@ function(input, output, session){
                                           paste0('ID: ', as.character(stn_id)),
                                           paste0('SN: ', as.character(sn)),
                                           paste0('Position: ', 
-                                                 as.character(lat), ', ', as.character(lon))),
-                           label = ~paste0('sonobuoy ', as.character(stn_id), ': ', 
-                                           as.character(date), ' UTC'), group = 'sono')
+                                                 as.character(lat), ', ', as.character(lon)))
+                           # label = ~paste0('sonobuoy ', as.character(stn_id), ': ', 
+                           #                 as.character(date), ' UTC'), group = 'sono'
+                           )
       
     }
     
@@ -437,9 +438,10 @@ function(input, output, session){
                                       paste0("Name: ", name),
                                       paste0('Date: ', as.character(date)),
                                       paste0('Position: ',
-                                             as.character(lat), ', ', as.character(lon))),
-                       label = ~paste0( as.character(date), ': ', species,' whale ', 
-                                        score, ' by ', name))
+                                             as.character(lat), ', ', as.character(lon)))
+                       # label = ~paste0( as.character(date), ': ', species,' whale ', 
+                       #                  score, ' by ', name)
+                       )
     }
   })
   
@@ -470,8 +472,8 @@ function(input, output, session){
                                       paste0('Date: ', as.character(date)),
                                       paste0('Position: ', 
                                              as.character(lat), ', ', as.character(lon))),
-                       label = ~paste0( as.character(date), ': ', species,' whale ', 
-                                        score, ' by ', name), 
+                       # label = ~paste0( as.character(date), ': ', species,' whale ', 
+                       #                  score, ' by ', name), 
                        options = markerOptions(removeOutsideVisibleBounds=T))
                        # clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = T,
                        #                        showCoverageOnHover = T,
