@@ -10,8 +10,7 @@ declare -A URL
 
 # assign paths to detection data for each deployment
 URL=(
-	# live	
-	[2017-08-02_slocum_otn200]=http://dcs.whoi.edu/dal0817/dal0817_otn200_html/ptracks/manual_analysis.csv		
+	# live		
 	[2016-06-23_buoy_nybight]=http://dcs.whoi.edu/nyb0616/dmon009_html/ptracks/manual_analysis.csv		
 )
 
