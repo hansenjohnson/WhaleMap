@@ -192,7 +192,8 @@ body <- dashboardBody(
     column(width = 9,
            
            # Map
-           box(width = NULL, solidHeader = T,collapsible = T, title = 'Map', 
+           box(width = NULL, solidHeader = T,collapsible = T, 
+               title = 'Map - NOTE: this is a prototype tool using preliminary, available data', 
                status = 'primary',
                
                leafletOutput("map", height = 550)
@@ -200,7 +201,8 @@ body <- dashboardBody(
            ),
            
            # Plot
-           box(width = NULL, solidHeader = T,collapsible = T, title = 'Plot', 
+           box(width = NULL, solidHeader = T,collapsible = T, 
+               title = 'Plot - NOTE: this is a prototype tool using preliminary, available data', 
                status = 'primary', collapsed = F,
                
                plotlyOutput("graph"),
