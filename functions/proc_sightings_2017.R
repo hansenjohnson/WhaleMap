@@ -74,6 +74,11 @@ sig$species = 'right'
 sig$photos = NULL
 sig$notes = NULL
 
+# convert number to numeric
+sig$number = as.character(sig$number)
+sig$number = gsub(pattern = "\\?", replacement = NA, x = sig$number)
+sig$number = as.numeric(sig$number)
+
 # survey data -------------------------------------------------------------
 
 # isolate survey data
