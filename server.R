@@ -396,7 +396,7 @@ function(input, output, session){
     if(input$sono){
       
       # add icons for latest position of live dcs platforms
-      proxy %>% addMarkers(data = SONO(), ~lon, ~lat,
+      proxy %>% addMarkers(data = SONO(), ~lon, ~lat,group='sono',
                            popup = ~paste(sep = "<br/>",
                                           strong('Sonobuoy position'),
                                           paste0('Date: ', as.character(date)),
