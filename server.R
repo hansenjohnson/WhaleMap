@@ -253,12 +253,12 @@ function(input, output, session){
                 ~min(lon, na.rm = T), 
                 ~max(lat, na.rm = T)) %>%
       
-      # use NOAA graticules
-      addWMSTiles(
-        "https://maps.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer/",
-        layers = c("1-degree grid", "5-degree grid"),
-        options = WMSTileOptions(format = "image/png8", transparent = TRUE),
-        attribution = "NOAA") %>%
+      # # use NOAA graticules (link is defunct)
+      # addWMSTiles(
+      #   "https://maps.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer/",
+      #   layers = c("1-degree grid", "5-degree grid"),
+      #   options = WMSTileOptions(format = "image/png8", transparent = TRUE),
+      #   attribution = "NOAA") %>%
       
       # add extra map features
       addScaleBar(position = 'topright')%>%
@@ -282,6 +282,27 @@ function(input, output, session){
     }
   }
   
+  # graticule observer ------------------------------------------------------  
+  
+  observe(priority = 4, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('graticules')
+    
+    if(input$graticules){
+      
+      # add graticule
+      proxy %>% addSimpleGraticule(interval = 5, 
+                         showOriginLabel = F, group = 'graticules')
+      
+      # switch to show/hide graticules
+      ifelse(input$graticules, showGroup(proxy, 'graticules'), hideGroup(proxy, 'graticules'))
+    }
+    
+  })
+  
+  
   # polygon observer ------------------------------------------------------  
   
   observe(priority = 4, {
@@ -301,7 +322,8 @@ function(input, output, session){
       names(poly.df) %>%
         purrr::walk( function(df) {
           proxy <<- proxy %>%
-            addPolygons(data=poly.df[[df]], group = 'poly',fill = T, fillOpacity = 0.05, stroke = T,
+            addPolygons(data=poly.df[[df]], group = 'poly',
+                        fill = T, fillOpacity = 0.05, stroke = T,
                         dashArray = c(5,5), options = pathOptions(clickable = F),
                         # label = ~paste0(name),
                         # popup = ~paste0(name),
