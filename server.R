@@ -293,7 +293,7 @@ function(input, output, session){
     if(input$graticules){
       
       # add graticule
-      proxy %>% addSimpleGraticule(interval = 1, 
+      proxy %>% addSimpleGraticule(interval = 1,
                          showOriginLabel = F, group = 'graticules')
       
       # switch to show/hide graticules
