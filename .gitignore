@@ -10,3 +10,5 @@ dev/
 .gpx
 .xlsx
 .xls
+.DS_Store
+WhaleMap.Rproj
