@@ -253,12 +253,12 @@ function(input, output, session){
                 ~min(lon, na.rm = T), 
                 ~max(lat, na.rm = T)) %>%
       
-      # # use NOAA graticules (link is defunct)
-      # addWMSTiles(
-      #   "https://maps.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer/",
-      #   layers = c("1-degree grid", "5-degree grid"),
-      #   options = WMSTileOptions(format = "image/png8", transparent = TRUE),
-      #   attribution = "NOAA") %>%
+      # add graticules
+      addWMSTiles(
+        'https://gis.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer',
+        layers = c('1', '2', '3'),
+        options = WMSTileOptions(format = "image/png8", transparent = TRUE),
+        attribution = "NOAA") %>%
       
       # add extra map features
       addScaleBar(position = 'topright')%>%
@@ -284,23 +284,24 @@ function(input, output, session){
   
   # graticule observer ------------------------------------------------------  
   
-  observe(priority = 4, {
-    
-    # define proxy
-    proxy <- leafletProxy("map")
-    proxy %>% clearGroup('graticules')
-    
-    if(input$graticules){
-      
-      # add graticule
-      proxy %>% addSimpleGraticule(interval = 1,
-                         showOriginLabel = F, group = 'graticules')
-      
-      # switch to show/hide graticules
-      ifelse(input$graticules, showGroup(proxy, 'graticules'), hideGroup(proxy, 'graticules'))
-    }
-    
-  })
+  # observe(priority = 4, {
+  #   
+  #   # define proxy
+  #   proxy <- leafletProxy("map")
+  #   proxy %>% clearGroup('graticules')
+  #   
+  #   if(input$graticules){
+  #     
+  #     # add graticule
+  #     proxy %>% addSimpleGraticule(interval = 1,
+  #                        showOriginLabel = F, group = 'graticules')
+  #     
+  #     # switch to show/hide graticules
+  #     ifelse(input$graticules, showGroup(proxy, 'graticules'), 
+  #            hideGroup(proxy, 'graticules'))
+  #   }
+  #   
+  # })
   
   
   # polygon observer ------------------------------------------------------  
