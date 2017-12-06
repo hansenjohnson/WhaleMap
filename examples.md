@@ -69,3 +69,21 @@ scp hansen@taggart3.ocean.dal.ca:/home/hansen 2017_narw_sightings.csv
 # transfer to WhaleMap
 scp whalemap:/srv/shiny-server/WhaleMap/data/raw/22017_sightings 2017_narw_sightings.csv
 ```
+***
+
+## crontab
+Automate tasks
+
+```
+# open crontab
+crontab -e
+
+# enable edits to crontab
+a # this means 'append' in vim
+
+# set crontab to run this script to download and process glider data every hour
+0 * * * * sh /home/hansen/shiny-server/WhaleMap/get_live_dcs.sh
+
+# quit and save crontab
+:x
+```
