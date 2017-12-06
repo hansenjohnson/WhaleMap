@@ -3,6 +3,7 @@
 .RData
 .Ruserdata
 data/
+dev/
 .csv
 .gps
 .gpx
