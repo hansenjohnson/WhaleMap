@@ -262,7 +262,14 @@ function(input, output, session){
       
       # add extra map features
       addScaleBar(position = 'topright')%>%
-      addMeasure(primaryLengthUnit = "kilometers",secondaryLengthUnit = 'miles', primaryAreaUnit = "hectares",secondaryAreaUnit="acres", position = 'bottomleft')
+      addMeasure(
+        primaryLengthUnit = "kilometers",
+        secondaryLengthUnit = 'miles', 
+        primaryAreaUnit = "hectares",
+        secondaryAreaUnit="acres", 
+        activeColor = "darkslategray",
+        completedColor = "darkslategray",
+        position = 'bottomleft')
     
   })
   
