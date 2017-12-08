@@ -11,6 +11,7 @@ library(maptools)
 library(lubridate)
 library(oce)
 library(leaflet.extras)
+library(purrr)
 
 # definitions -------------------------------------------------------------
 
