@@ -98,14 +98,13 @@ map <- leaflet(spp) %>%
             ~max(lat, na.rm = T)) %>%
   
   # layer control
-  addLayersControl(
-    overlayGroups = c('names',
-                      'tracks',
-                      'latest', 
-                      'possible',
-                      'detected',
-                      'legend'),
-    options = layersControlOptions(collapsed = TRUE), position = 'topright') %>%
+  addLayersControl(overlayGroups = c('names',
+                                     'tracks',
+                                     'latest', 
+                                     'possible',
+                                     'detected',
+                                     'legend'),
+                   options = layersControlOptions(collapsed = TRUE), position = 'topright') %>%
 
   # hide groups
   hideGroup('names') %>%
