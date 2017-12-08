@@ -14,6 +14,7 @@ library(oce)
 library(shinydashboard)
 library(ggplot2)
 library(plotly)
+library(leaflet.extras)
 
 # define color palette list to choose from
 palette_list = list(heat.colors(200), 
@@ -262,6 +263,7 @@ function(input, output, session){
       
       # add extra map features
       addScaleBar(position = 'topright')%>%
+      addFullscreenControl(pseudoFullscreen = TRUE) %>%
       addMeasure(
         primaryLengthUnit = "kilometers",
         secondaryLengthUnit = 'miles', 
