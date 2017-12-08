@@ -11,7 +11,7 @@ http://leviathan.ocean.dal.ca/WhaleMap/
 
 ## Data details
 
-For a description of the data, go here: 
+For a description of the data, go here:
 http://leviathan.ocean.dal.ca/leviathan_docs/WhaleMap-data.html
 
 ## Help / Issues
@@ -25,8 +25,7 @@ https://github.com/hansenjohnson/WhaleMap
 To report an issue, or request a feature, visit the project's issues page here:
 https://github.com/hansenjohnson/WhaleMap/issues
 
+For server-side help and setup, see the wiki page here:
+http://taggart3.ocean.dal.ca/wiki/Webapps/Webapps
+
 Or send an email to hansen.johnson@dal.ca
-
-
-
-
