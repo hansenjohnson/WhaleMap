@@ -179,8 +179,6 @@ body <- dashboardBody(
                checkboxInput("poly", 
                              label = 'Regions', value = T),
                
-               checkboxInput("graticules", label = 'Graticules [1 deg]', value = F),
-               
                checkboxInput("legend", label = 'Legends', value = T),
                
                checkboxInput("latest", label = 'Latest robot positions', value = T),

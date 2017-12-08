@@ -291,28 +291,6 @@ function(input, output, session){
     }
   }
   
-  # graticule observer ------------------------------------------------------  
-  
-  # observe(priority = 4, {
-  #   
-  #   # define proxy
-  #   proxy <- leafletProxy("map")
-  #   proxy %>% clearGroup('graticules')
-  #   
-  #   if(input$graticules){
-  #     
-  #     # add graticule
-  #     proxy %>% addSimpleGraticule(interval = 1,
-  #                        showOriginLabel = F, group = 'graticules')
-  #     
-  #     # switch to show/hide graticules
-  #     ifelse(input$graticules, showGroup(proxy, 'graticules'), 
-  #            hideGroup(proxy, 'graticules'))
-  #   }
-  #   
-  # })
-  
-  
   # polygon observer ------------------------------------------------------  
   
   observe(priority = 4, {
