@@ -11,7 +11,6 @@ library(maptools)
 library(lubridate)
 library(oce)
 library(leaflet.extras)
-library(purrr)
 
 # definitions -------------------------------------------------------------
 
@@ -170,7 +169,7 @@ names(tracks.df) %>%
 # add platform icons ------------------------------------------------------
 
 # add icons for latest position of live dcs platforms
-map <<- map %>% addMarkers(data = latest, ~lon, ~lat, icon = ~dcsIcons[platform],
+map <- map %>% addMarkers(data = latest, ~lon, ~lat, icon = ~dcsIcons[platform],
                      popup = ~paste(sep = "<br/>",
                                     strong('Latest position'),
                                     paste0('Platform: ', as.character(platform)),
@@ -219,5 +218,5 @@ addCircleMarkers(data = det, ~lon, ~lat, group = 'detected',
 
 # save widget -------------------------------------------------------------
 
-htmlwidgets::saveWidget(widget = map, file = fout, selfcontained = F)
+saveWidget(widget = map, file = fout, selfcontained = T)
 
