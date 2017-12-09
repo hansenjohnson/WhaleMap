@@ -96,6 +96,14 @@ map <- leaflet(spp) %>%
             ~min(lon, na.rm = T), 
             ~max(lat, na.rm = T)) %>%
   
+  # title and last updated message
+  addControl(position = "topright", 
+             paste0(
+               '<div align="center">',
+               '<strong>Right Whale Surveys</strong>','<br>',
+               '<small>Last updated: ', Sys.time(), '</small>',
+               '</div>')) %>%
+  
   # layer control
   addLayersControl(overlayGroups = c('names',
                                      'tracks',
@@ -119,11 +127,11 @@ map <- leaflet(spp) %>%
     'https://gis.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer',
     layers = c('1', '2', '3'),
     options = WMSTileOptions(format = "image/png8", transparent = TRUE),
-    attribution = "NOAA", group = 'graticules') %>%
+    attribution = NULL, group = 'graticules') %>%
   
   # add extra map features
   addScaleBar(position = 'bottomleft')%>%
-  addFullscreenControl(pseudoFullscreen = TRUE) %>%
+  addFullscreenControl(pseudoFullscreen = F) %>%
   addMeasure(
     primaryLengthUnit = "kilometers",
     secondaryLengthUnit = 'miles', 
