@@ -112,15 +112,9 @@ map <- leaflet(spp) %>%
                                      'detected',
                                      'legend'),
                    options = layersControlOptions(collapsed = TRUE), position = 'topright') %>%
-
+  
   # hide groups
   hideGroup('names') %>%
-  
-  # add legend
-  addLegend(position = "bottomright",
-            group = 'legend',
-            pal = pal, values = obs_levs,
-            title = 'Score') %>%
   
   # add graticules
   addWMSTiles(
@@ -139,7 +133,14 @@ map <- leaflet(spp) %>%
     secondaryAreaUnit="acres", 
     activeColor = "darkslategray",
     completedColor = "darkslategray",
-    position = 'bottomleft')
+    position = 'bottomleft') %>%
+  
+  # add legend
+  addLegend(position = "bottomright",
+            pal = pal, 
+            values = obs_levs,
+            title = 'Score',
+            group = 'legend')
 
 # plot polygons -----------------------------------------------------------
 
