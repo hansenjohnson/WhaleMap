@@ -43,6 +43,19 @@ rclone sync drive:data/ . --drive-formats csv
 
 ***
 
+## chmod
+Make a shell script executable
+
+```
+# add the following to the first line of the file
+#!/bin/bash
+
+# run this line to make executable
+chmod u+x scriptname.sh
+```
+
+***
+
 ## ssh
 Remote connections
 
