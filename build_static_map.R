@@ -88,7 +88,7 @@ map <- leaflet(spp) %>%
   addProviderTiles(providers$Esri.OceanBasemap) %>%
   
   # add place names layer
-  addProviderTiles(providers$Hydda.RoadsAndLabels, group = 'names') %>%
+  addProviderTiles(providers$Hydda.RoadsAndLabels, group = 'Place names') %>%
   
   # center on observations
   fitBounds(~max(lon, na.rm = T), 
@@ -105,23 +105,24 @@ map <- leaflet(spp) %>%
                '</div>')) %>%
   
   # layer control
-  addLayersControl(overlayGroups = c('names',
-                                     'tracks',
-                                     'latest', 
-                                     'possible',
-                                     'detected',
-                                     'legend'),
+  addLayersControl(overlayGroups = c('Place names',
+                                     'Regions',
+                                     'Graticules',
+                                     'Survey tracks',
+                                     'Latest robot positions', 
+                                     'Possible detections',
+                                     'Definite detections/sightings'),
                    options = layersControlOptions(collapsed = TRUE), position = 'topright') %>%
   
   # hide groups
-  hideGroup('names') %>%
+  hideGroup('Place names') %>%
   
   # add graticules
   addWMSTiles(
     'https://gis.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer',
     layers = c('1', '2', '3'),
     options = WMSTileOptions(format = "image/png8", transparent = TRUE),
-    attribution = NULL, group = 'graticules') %>%
+    attribution = NULL, group = 'Graticules') %>%
   
   # add extra map features
   addScaleBar(position = 'bottomleft')%>%
@@ -150,7 +151,7 @@ poly.df <- split(poly, poly$name)
 names(poly.df) %>%
   purrr::walk( function(df) {
     map <<- map %>%
-      addPolygons(data=poly.df[[df]], group = 'poly',
+      addPolygons(data=poly.df[[df]], group = 'Regions',
                   fill = T, fillOpacity = 0.05, stroke = T,
                   dashArray = c(5,5), options = pathOptions(clickable = F),
                   # label = ~paste0(name),
@@ -168,7 +169,7 @@ tracks.df <- split(Tracks, Tracks$id)
 names(tracks.df) %>%
   purrr::walk( function(df) {
     map <<- map %>%
-      addPolylines(data=tracks.df[[df]], group = 'tracks',
+      addPolylines(data=tracks.df[[df]], group = 'Survey tracks',
                    lng=~lon, lat=~lat, weight = 2,
                    popup = paste0('Track ID: ', unique(tracks.df[[df]]$id)),
                    smoothFactor = 3, color = getColor(tracks.df[[df]]))
@@ -186,12 +187,13 @@ map <- map %>% addMarkers(data = latest, ~lon, ~lat, icon = ~dcsIcons[platform],
                                     paste0('Position: ', 
                                            as.character(lat), ', ', as.character(lon))),
                      label = ~paste0('Latest position of ', as.character(name), ': ', 
-                                     as.character(time), ' UTC'), group = 'latest') %>%
+                                     as.character(time), ' UTC'), 
+                     group = 'Latest robot positions') %>%
 
 # add possible detections -------------------------------------------------
 
 # possible detections
-addCircleMarkers(data = pos, ~lon, ~lat, group = 'possible',
+addCircleMarkers(data = pos, ~lon, ~lat, group = 'Possible detections',
                  radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
                  fillColor = pal(pos$score),
                  popup = ~paste(sep = "<br/>" ,
@@ -208,7 +210,7 @@ addCircleMarkers(data = pos, ~lon, ~lat, group = 'possible',
                  
 # add definite detections/sightings ---------------------------------------
 
-addCircleMarkers(data = det, ~lon, ~lat, group = 'detected',
+addCircleMarkers(data = det, ~lon, ~lat, group = 'Definite detections/sightings',
                  radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
                  fillColor = pal(det$score),
                  popup = ~paste(sep = "<br/>" ,
