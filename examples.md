@@ -63,11 +63,26 @@ File transfers
 # move to data dir
 cd ~/Projects/WhaleMap/data/raw/2017_sightings/
 
+## Single file
+
+# transfer to SAMBA
+scp 2017_narw_sightings.csv hansen@taggart3.ocean.dal.ca:/home/hansen
+
+# transfer to WhaleMap
+scp 2017_narw_sightings.csv whalemap:/srv/shiny-server/WhaleMap/data/raw/22017_sightings
+
+## Directory
+
+# move to data dir
+cd ~/Projects/server_index/
+
 # transfer to SAMBA
 scp hansen@taggart3.ocean.dal.ca:/home/hansen 2017_narw_sightings.csv
 
 # transfer to WhaleMap
 scp whalemap:/srv/shiny-server/WhaleMap/data/raw/22017_sightings 2017_narw_sightings.csv
+
+
 ```
 ***
 
