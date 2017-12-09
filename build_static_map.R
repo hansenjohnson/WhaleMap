@@ -126,7 +126,7 @@ map <- leaflet(spp) %>%
   
   # add extra map features
   addScaleBar(position = 'bottomleft')%>%
-  addFullscreenControl(pseudoFullscreen = T) %>%
+  addFullscreenControl(pseudoFullscreen = F) %>%
   addMeasure(
     primaryLengthUnit = "kilometers",
     secondaryLengthUnit = 'miles', 
