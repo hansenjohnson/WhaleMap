@@ -21,8 +21,8 @@ lag = 30
 fout = '../server_index/whale_map.html'
 
 # define score color palette
-obs_levs = c('detected', 'possibly detected', 'sighted')
-obs_pal = c('red', 'yellow', 'darkslategray')
+obs_levs = c('detected', 'possibly detected', 'sighted', 'possibly sighted')
+obs_pal = c('red', 'yellow', 'darkslategray', 'grey')
 pal = colorFactor(levels = obs_levs, 
                   palette = obs_pal)
 
@@ -64,20 +64,25 @@ obs = readRDS('data/processed/observations.rds')
 
 # subset data -------------------------------------------------------------
 
+# tracklines
+Tracks = tracks[tracks$date >= Sys.Date()-lag,]; rm(tracks)
+
 # observations
 Obs = obs[obs$date >= Sys.Date()-lag,]; rm(obs)
 
 # select species
 spp = Obs[Obs$species == 'right',]
 
-# tracklines
-Tracks = tracks[tracks$date >= Sys.Date()-lag,]; rm(tracks)
+# new category for possible sightings
+spp$score = as.character(spp$score)
+spp$score[spp$platform == 'opportunistic'] = 'possibly sighted'
+spp$score = as.factor(spp$score)
 
-# only possible
-pos = droplevels(spp[spp$score=='possibly detected',])
+# only possible detections
+pos = droplevels(spp[spp$score %in% c('possibly detected', 'possibly sighted'),])
 
 # only definite
-det = droplevels(spp[spp$score!='possibly detected',])
+det = droplevels(spp[!spp$score %in% c('possibly detected', 'possibly sighted'),])
 
 # basemap -----------------------------------------------------------------
 
