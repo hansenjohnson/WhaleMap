@@ -139,8 +139,7 @@ map <- leaflet(spp) %>%
   addLegend(position = "bottomright",
             pal = pal, 
             values = obs_levs,
-            title = 'Score',
-            group = 'legend')
+            title = 'Score')
 
 # plot polygons -----------------------------------------------------------
 
