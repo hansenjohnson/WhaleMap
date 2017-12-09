@@ -116,11 +116,11 @@ map <- leaflet(spp) %>%
   # hide groups
   hideGroup('names') %>%
   
-  # add legend
-  addLegend(position = "bottomright",
-            group = 'legend',
-            pal = pal, values = obs_levs, 
-            title = 'Score') %>%
+  # # add legend
+  # addLegend(position = "bottomright",
+  #           group = 'legend',
+  #           pal = pal, values = obs_levs, 
+  #           title = 'Score') %>%
   
   # add graticules
   addWMSTiles(
