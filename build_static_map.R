@@ -16,6 +16,7 @@ library(leaflet.extras)
 
 # time period to show (days)
 lag = 30
+start_date = Sys.Date()-lag
 
 # output path
 fout = '../server_index/whale_map.html'
@@ -65,10 +66,10 @@ obs = readRDS('data/processed/observations.rds')
 # subset data -------------------------------------------------------------
 
 # tracklines
-Tracks = tracks[tracks$date >= Sys.Date()-lag,]; rm(tracks)
+Tracks = tracks[tracks$date >= start_date,]; rm(tracks)
 
 # observations
-Obs = obs[obs$date >= Sys.Date()-lag,]; rm(obs)
+Obs = obs[obs$date >= start_date,]; rm(obs)
 
 # select species
 spp = Obs[Obs$species == 'right',]
@@ -106,7 +107,11 @@ map <- leaflet(spp) %>%
              paste0(
                '<div align="center">',
                '<strong>Right Whale Surveys</strong>','<br>',
-               '<small>Last updated: ', Sys.time(), '</small>',
+               '<small>Last updated: ', 
+               format(Sys.time(), '%b-%d at %H:%M:%S'), '</small>','<br>',
+               '<small>Data from: ', 
+               format(start_date, '%b-%d'), ' to ', 
+               format(Sys.Date(), '%b-%d'), '</small>',
                '</div>')) %>%
   
   # layer control
