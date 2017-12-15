@@ -87,14 +87,13 @@ scp 2017_narw_sightings.csv whalemap:/srv/shiny-server/WhaleMap/data/raw/22017_s
 ## Directory
 
 # move to data dir
-cd ~/Projects/server_index/
+cd ~/Projects/WhaleMap/data/raw
 
 # transfer to SAMBA
-scp hansen@taggart3.ocean.dal.ca:/home/hansen 2017_narw_sightings.csv
+scp -r 2017_tc_tracks hansen@taggart3.ocean.dal.ca:/home/hansen
 
 # transfer to WhaleMap
-scp whalemap:/srv/shiny-server/WhaleMap/data/raw/22017_sightings 2017_narw_sightings.csv
-
+scp -r 2017_tc_tracks whalemap:/srv/shiny-server/WhaleMap/data/raw/
 
 ```
 ***
