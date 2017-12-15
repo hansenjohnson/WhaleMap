@@ -108,7 +108,7 @@ map <- leaflet(spp) %>%
                '<div align="center">',
                '<strong>Right Whale Surveys</strong>','<br>',
                '<small>Last updated: ', 
-               format(Sys.time(), '%b-%d at %H:%M:%S', tz = 'UTC', usetz = T), 
+               format(Sys.time(), '%b-%d at %H:%M', tz = 'UTC', usetz = T), 
                '</small>','<br>',
                '<small>Data from: ', 
                format(start_date, '%b-%d'), ' to ', 
