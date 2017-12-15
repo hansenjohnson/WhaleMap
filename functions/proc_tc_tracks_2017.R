@@ -223,62 +223,11 @@ tracks = tracks[seq(1, nrow(tracks), nsub),] # subset to only plot every n data 
 # add to list
 TC[[j]] = tracks
 
-# 2017-10 ----------------------------------------------------------------
+# 2017-final ----------------------------------------------------------------
 j = j+1
 
 # directory to look for files
-data_dir = 'data/raw/2017_tc_tracks/2017-10/'
-
-# prepare loop
-track_list = list.files(data_dir, '*.*', full.names = T)
-TRK = list()
-
-# read files
-for(i in seq_along(track_list)){
-  
-  # read in file
-  tmp = read.csv(track_list[i], skip = 2)
-  
-  # select and rename important columns
-  tmp = data.frame(tmp$Timestamp, tmp$Longitude, tmp$Latitude)
-  colnames(tmp) = c('time', 'lon', 'lat')
-  
-  # Correct for variable precision (or errors) in gps
-  f = roundTen(tmp$time)/10^9
-  tmp$time = tmp$time/f
-  
-  # add to list
-  TRK[[i]] = tmp
-}
-
-# catch error
-if(length(TRK)!=length(track_list)){stop('Not all tracks were processed!')}
-
-# flatten list
-tracks = do.call(rbind, TRK)
-
-# add timestamp
-tracks$time = as.POSIXct(tracks$time, origin = '1970-01-01', tz = 'UTC')
-
-# subsample
-norig = nrow(tracks)
-n = 50
-npoints = norig/n
-nsub = round(norig/npoints,0)
-# # compare subsample
-# t = tracks[seq(1, nrow(tracks), nsub),] # subset to only plot every n data points
-# plot(tracks$lon, tracks$lat, type = 'l')
-# lines(t$lon, t$lat, col = 'blue')
-tracks = tracks[seq(1, nrow(tracks), nsub),] # subset to only plot every n data points
-
-# add to list
-TC[[j]] = tracks
-
-# 2017-12 ----------------------------------------------------------------
-j = j+1
-
-# directory to look for files
-data_dir = 'data/raw/2017_tc_tracks/2017-12/'
+data_dir = 'data/raw/2017_tc_tracks/2017-final/'
 
 # prepare loop
 track_list = list.files(data_dir, '*.*', full.names = T)
