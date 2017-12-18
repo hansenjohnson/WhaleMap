@@ -2,9 +2,9 @@
 
 # user input --------------------------------------------------------------
 
-data_dir = 'data/raw/sonobuoys/NERW_2017_Sonobuoy_Log.Canada.csv'
+data_dir = 'data/raw/sonobuoys/'
 
-output_dir = 'data/processed/sonobuoys.rds'
+output_dir = 'data/processed/'
 
 # process -----------------------------------------------------------------
 
@@ -13,7 +13,7 @@ library(lubridate)
 
 # read in data
 # dat = read_excel(data_dir)
-dat = read.csv(data_dir)
+dat = read.csv(paste0(data_dir, '/NERW_2017_Sonobuoy_Log.Canada.csv'))
 
 # remove top 2 lines (dead sonos)
 dat = dat[-c(1:2),]
@@ -58,7 +58,7 @@ done$year = year(done$date)
 done$yday = yday(done$date)
 
 # save
-saveRDS(done, file = output_dir)
+saveRDS(done, file = paste0(output_dir, '/sonobuoys.rds'))
 
 
 

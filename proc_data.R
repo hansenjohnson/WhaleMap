@@ -1,8 +1,14 @@
 # process all data for use in app
 
-# functions ---------------------------------------------------------------
 
+# setup -------------------------------------------------------------------
+
+# functions
 source('functions/config_data.R')
+
+# create data directories
+interim_dir = 'data/interim'; if(!dir.exists(interim_dir)) dir.create(interim_dir)
+proc_dir = 'data/processed'; if(!dir.exists(proc_dir)) dir.create(proc_dir)
 
 # process map data --------------------------------------------------------
 
