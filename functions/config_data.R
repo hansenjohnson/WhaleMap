@@ -1,23 +1,23 @@
 config_tracks = function(tracks){
   
-  # list required column names
-  columns = c('time',
-              'lat',
-              'lon',
-              'date', 
-              'yday',
-              'year',
-              'platform',
-              'name',
-              'id')
-  
-  # test column names
-  test = columns %in% colnames(tracks)
-  
-  if(FALSE %in% test){
-    ind = which(!columns %in% colnames(tracks))
-    stop('No column(s) called ', paste(as.character(columns[ind]), collapse = " or ") , '!')
-  }
+  # # list required column names
+  # columns = c('time',
+  #             'lat',
+  #             'lon',
+  #             'date', 
+  #             'yday',
+  #             'year',
+  #             'platform',
+  #             'name',
+  #             'id')
+  # 
+  # # test column names
+  # test = columns %in% colnames(tracks)
+  # 
+  # if(FALSE %in% test){
+  #   ind = which(!columns %in% colnames(tracks))
+  #   stop('No column(s) called ', paste(as.character(columns[ind]), collapse = " or ") , '!')
+  # }
   
   # configure column types
   tracks$time = as.POSIXct(tracks$time, tz = 'UTC', usetz = T)

@@ -9,15 +9,20 @@ data_dir = 'data/raw/noaa_twin_otter_tracks/'
 # output directory
 output_dir = 'data/interim/'
 
+# plot tracks?
+plot_tracks = T
+
 # setup -------------------------------------------------------------------
 
 # libraries
 library(lubridate)
 library(rgdal)
+library(tools)
 
 # functions
 # source('functions/config_data.R')
 source('functions/subsample_gps.R')
+source('functions/plot_save_track.R')
 
 # list files to process
 flist = list.files(data_dir, pattern = '.gps', full.names = T)
@@ -54,8 +59,16 @@ for(i in seq_along(flist)){
   tracks$name = 'noaa'
   tracks$id = paste0(tracks$date, '_plane_noaa')
   
+  # plot track
+  if(plot_tracks){
+    plot_save_track(tracks, flist[i])
+  }
+  
   # add to list
   TRK[[i]] = tracks
+  
+  # catch null error
+  if(is.null(TRK[[i]])){stop('Track in ', flist[i], ' not processed correctly!')}
   
 }
 
@@ -68,4 +81,4 @@ if(length(TRK)!=length(flist)){stop('Not all tracks were processed!')}
 TRACKS = do.call(rbind, TRK)
 
 # save
-saveRDS(tracks, paste0(output_dir, 'noaa_twin_otter_tracks.rds'))
+saveRDS(TRACKS, paste0(output_dir, 'noaa_twin_otter_tracks.rds'))

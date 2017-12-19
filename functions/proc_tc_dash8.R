@@ -9,16 +9,21 @@ data_dir = 'data/raw/tc_dash8_tracks/'
 # output directory
 output_dir = 'data/interim/'
 
+# plot tracks?
+plot_tracks = T
+
 # setup -------------------------------------------------------------------
 
 # libraries
 library(lubridate)
 library(rgdal)
+library(tools)
 
 # functions
 # source('functions/config_data.R')
 source('functions/roundTen.R')
 source('functions/subsample_gps.R')
+source('functions/plot_save_track.R')
 
 # list files to process
 flist = list.files(data_dir, pattern = '.csv', full.names = T)
@@ -147,8 +152,16 @@ for(i in seq_along(flist)){
   tracks$name = 'tc'
   tracks$id = paste0(tracks$date, '_plane_tc')
   
+  # plot track
+  if(plot_tracks){
+    plot_save_track(tracks, flist[i])
+  }
+  
   # add to list
   TRK[[i]] = tracks
+  
+  # catch null error
+  if(is.null(TRK[[i]])){stop('Track in ', flist[i], ' not processed correctly!')}
   
 }
 
