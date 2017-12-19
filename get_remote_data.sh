@@ -2,8 +2,8 @@
 # download survey data from remote repository
 
 # Move to project data directory
-cd ~/Projects/WhaleMap/data/raw/ # local
-# cd /srv/shiny-server/WhaleMap/data/raw/ # server
+# cd ~/Projects/WhaleMap/data/raw/ # local
+cd /srv/shiny-server/WhaleMap/data/raw/ # server
 
 # NOAA twin otter gps data
 rclone sync drive:Aerial_Surveys_GPS/NOAA_Twin_Otter/ noaa_twin_otter_tracks/ --backup-dir backups
