@@ -55,6 +55,9 @@ for(i in seq_along(flist)){
   tmp = data.frame(tmp$time, tmp$coords.x1, tmp$coords.x2, tmp$speed, tmp$ele)
   colnames(tmp) = cnames
   
+  # remove columns without timestamp
+  tmp = tmp[which(!is.na(tmp$time)),]
+  
   # add timestamp
   tmp$time = as.POSIXct(tmp$time, format = '%Y/%m/%d %H:%M:%OS', tz = 'UTC')
   

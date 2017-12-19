@@ -53,6 +53,9 @@ for(i in seq_along(flist)){
     f = roundTen(tmp$time)/10^9
     tmp$time = tmp$time/f
     
+    # remove columns without timestamp
+    tmp = tmp[which(!is.na(tmp$time)),]
+    
     # add timestamp
     tmp$time = as.POSIXct(tmp$time, origin = '1970-01-01', tz = 'UTC')
     

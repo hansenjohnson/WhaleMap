@@ -45,6 +45,9 @@ for(i in seq_along(flist)){
   tmp = data.frame(tmp$V1, tmp$V3, tmp$V2, tmp$V4, tmp$V6)
   colnames(tmp) = cnames
   
+  # remove columns without timestamp
+  tmp = tmp[which(!is.na(tmp$time)),]
+  
   # add timestamp
   tmp$time = as.POSIXct(tmp$time, format = '%d/%m/%Y %H:%M:%S', tz="UTC", usetz=TRUE)
   
