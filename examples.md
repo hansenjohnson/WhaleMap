@@ -14,13 +14,18 @@ rclone config
 
 ```
 
+
+*** NOTE - *** By default, shared folders are not accessible via rclone. In order to be made available they must be manually 'added to my drive' (achieved via right click on the directory in question). I'm hopeful that once a directory is added to my drive, all changes will be synced with my drive. That will be very important for all this to work.
+
 ### List
 List all files in given remote directory
 
 ```
-# list files
+# list all files (recursively) in 'data'
 rclone ls drive:data/
 
+# list all accessible directories in 'drive'
+rclone lsd drive:
 ```
 
 ### Copy
@@ -36,8 +41,13 @@ rclone copy drive:data/ . --drive-formats csv
 Make destination identical to source
 
 ```
-# sync files
+# sync files (test)
 rclone sync drive:data/ . --drive-formats csv
+
+# sync files (Aerial survey GPS)
+cd Projects/WhaleMap/data/raw/Aerial_Surveys_GPS
+rclone sync drive:Aerial_Surveys_GPS/ . -n
+
 
 ```
 
