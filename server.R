@@ -35,7 +35,7 @@ score_cols = c('detected' = 'red',
 poly = readRDS('data/processed/map_polygons.rds')
 
 # define track point plotting threshold
-npts = 150000
+npts = 250000
 
 # make dcs icons
 dcsIcons = iconList(
@@ -367,7 +367,7 @@ function(input, output, session){
   
   # latest observer ------------------------------------------------------  
   
-  observe(priority = 2, {
+  observe(priority = 3, {
     
     # define proxy
     proxy <- leafletProxy("map")
