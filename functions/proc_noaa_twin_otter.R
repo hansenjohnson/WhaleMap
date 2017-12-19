@@ -10,7 +10,7 @@ data_dir = 'data/raw/noaa_twin_otter_tracks/'
 output_dir = 'data/interim/'
 
 # plot tracks?
-plot_tracks = T
+plot_tracks = F
 
 # setup -------------------------------------------------------------------
 
