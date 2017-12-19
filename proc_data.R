@@ -1,6 +1,5 @@
 # process all data for use in app
 
-
 # setup -------------------------------------------------------------------
 
 # functions
@@ -35,9 +34,9 @@ source('functions/proc_dcs_latest_position.R')
 source('functions/proc_shelagh_2016.R')
 
 # 2017 aerial survey tracks
-source('functions/proc_noaa_tracks_2017.R')
-source('functions/proc_dfo_tracks_2017.R')
-source('functions/proc_tc_tracks_2017.R')
+source('functions/proc_noaa_twin_otter.R')
+source('functions/proc_dfo_twin_otter.R')
+source('functions/proc_tc_dash8.R')
 
 # 2017 shelagh (vessel) tracks
 source('functions/proc_shelagh_tracks_2017.R')
