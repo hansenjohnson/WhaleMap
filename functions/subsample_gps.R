@@ -1,4 +1,4 @@
-subsample_gps = function(gps=gps,n=45,plot_comparison=F){
+subsample_gps = function(gps=gps,n=60,plot_comparison=F){
 # Subsample aerial gps data frame to only include 1 sample every (n) seconds. If n=0, no subsampling...
   
   if(n>0){
