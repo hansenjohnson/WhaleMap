@@ -36,9 +36,9 @@
 
  % Use custom title	
 \begin{center}
-	\Large \textbf{WhaleMap}: A tool for collating and disseminating whale survey data in near real-time \\
+	\Large \textbf{WhaleMap}: A tool for collating and disseminating whale survey data in near real-time [DRAFT] \\
 	\bigskip
-	\normalsize 18 December 2017 \\
+	\normalsize 20 December 2017 \\
 	\normalsize Hansen Johnson and Pam Emery\\
 	\bigskip
 \end{center}
@@ -57,7 +57,7 @@ The unusual mortality event in the Gulf of St Lawrence (GoSL) in 2017 prompted u
 
 One such challenge is clear: we need a system to rapidly and efficiently disseminate survey information within and between research, government, industry, and public sectors. This is crucial for three key reasons. First, communication among survey teams allows dynamic response to the latest information, which maximizes survey efficiency. Second, communication between survey teams, government regulators, and industry stakeholders expedites informed, transparent management decisions. Third, making this information available to the media and broader public raises awareness and reduces the spread of misinformation. 
 
-In the past, when the community was relatively small and/or localized, a daily or weekly email list (i.e., the `MarWhales' list administered by DFO Maritimes) was sufficient to share information. As the user community grew to include more researchers, DFO regions, industries, and more, `MarWhales' became too unwieldy and inefficient to keep everyone informed in a timely manner.  The email list became problematic for two reasons. The first problem was that all the incoming survey data, information requests, quality control, outgoing emails, and other associated work all fell to a single DFO employee with other responsibilities. The timeliness of the updates fell entirely on them and their ability to juggle their other responsibilities. The second set of issues arose from sending data (either as maps or tables of lat/lon positions) out to the listserv. Relinquishing direct control over the data in this way made it difficult to correct errors and maintain consistency in the dataset. These formats were also difficult to extract meaningful information from. The urgency of NARW conservation, importance of effective communication, and inefficiency of previous communication mechanisms propel us towards alternative tools for the 2018 season.
+In the past, when the community was relatively small and/or localized, a daily or weekly email list (i.e., the `MarWhales' list administered by DFO Maritimes) was sufficient to share information. As the user community grew to include more researchers, DFO regions, industries, and more, `MarWhales' became too unwieldy and inefficient to keep everyone informed in a timely manner.  The email list became problematic for two reasons. The first problem was that all the incoming survey data, information requests, quality control, outgoing emails, and other associated work all fell to a single DFO employee. The second set of issues arose from sending data (either as maps or tables of lat/lon positions) out to the listserv. Relinquishing direct control over the data in this way made it difficult to correct errors and maintain consistency in the dataset. These formats were also difficult to extract meaningful information from. The urgency of NARW conservation, importance of effective communication, and inefficiency of previous communication mechanisms propel us towards alternative tools for the 2018 season.
 
 % Section 2 ------------------------------------------------------------------
 \newpage
@@ -80,7 +80,7 @@ The system, which we're calling \textbf{WhaleMap}, is essentially a computer pro
 
 \subsubsection{Efficiency}
 
-The \textbf{WhaleMap} system eliminates the requirement for a person to mediate the dissemination of the latest information. It also has several features designed to minimize impacts on the survey teams. First, it to synchronize with remote repositories because virtually every survey team already uses a system like Google Drive or Dropbox to organize and share their data. Second, it does not require survey teams to change the format in which they collect their data. Instead, it is capable of ingesting and collating data in a variety of forms, which avoids imposing a standardized system on each survey team. The results of these features mean that survey teams need to merely upload their data onto their Google Drive or Dropbox folder, as they normally do, and the results becomes nearly instantly viewable online.
+The \textbf{WhaleMap} system eliminates the requirement for a person to mediate the dissemination of the latest information. It also has several features designed to minimize impacts on the survey teams. First, it can synchronize with remote repositories, like Google Drive or Dropbox, which every survey team already use to organize and share their data. Second, it does not require survey teams to change the format in which they collect their data. Instead, it is capable of ingesting and collating data in a variety of forms, which avoids imposing a standardized system (i.e. extra work) on each survey team. The results of these features mean that survey teams need to merely upload their data onto their Google Drive or Dropbox folder, as they normally do, and the results becomes nearly instantly viewable online.
 
 \subsubsection{Data control}
 
@@ -88,7 +88,7 @@ Critically, \textbf{WhaleMap} reacts to changes made to the raw data in each sur
 
 \subsubsection{Accessibility}
 
-Perhaps the greatest benefit of \textbf{WhaleMap} is its ability to consolidate all data streams and make them available in a user-friendly format in a single location. Instead of requesting the latest data from DFO or relying on a potentially outdated static map, an interested stakeholder can simply refer to a single source for the latest information. Furthermore, interactive online maps are an incredibly powerful way to view and gain intuition from data. The maps produced by \textbf{WhaleMap} are designed to be user-friendly and intuitive, with controls to zoom in and out, measure distances, draw, view metadata, turn data layers off/on, and more. All of these features attempt to maximize the usability of the data. 
+Perhaps the greatest benefit of \textbf{WhaleMap} is its ability to consolidate all data streams and make them available in a user-friendly format in a single location. Instead of requesting the latest data from DFO or relying on a potentially outdated static map, an interested stakeholder can simply refer to a single source for the latest information. Furthermore, interactive online maps are an incredibly powerful way to view and gain intuition from data. The maps produced by \textbf{WhaleMap} are designed to be user-friendly and intuitive, with controls to zoom in and out, measure distances, draw, view metadata, turn data layers off/on, and more. All of these features attempt to maximize the usability of the information generated by right whale surveys. 
 
 Some concerns have arisen regarding the widespread sharing of data that has not been quality controlled. This is particularly critical with aerial surveys that often generate a large number of duplicate sightings. \textbf{WhaleMap} can overcome this issue by producing two separate online maps, one that is publically available containing only quality controlled data, and a second for internal use (e.g., password protected or secret link) that includes all raw data. A great benefit of \textbf{WhaleMap} is that virtually every aspect of the system can be tailored to meet our specific needs. It is, first and foremost, a tool built by scientists for scientists. 
 
@@ -163,7 +163,7 @@ All of this work has been done with the hope that this system, or something like
 \begin{description}
 	\item[Public map:] \url{https://leviathan.ocean.dal.ca	}
 	\item[Internal map:] \url{https://leviathan.ocean.dal.ca/WhaleMap}
-	\item[Help for internal map:] \url{http://leviathan.ocean.dal.ca/leviathan_docs/WhaleMap-help.html}
+	\item[Help for internal map:] \url{https://leviathan.ocean.dal.ca/leviathan_docs/WhaleMap-help.html}
 	\item[Source code:] \url{https://github.com/hansenjohnson/WhaleMap}
 	\item[Issue tracking:] \url{https://github.com/hansenjohnson/WhaleMap/issues}
 \end{description}
