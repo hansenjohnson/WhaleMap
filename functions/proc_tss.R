@@ -1,0 +1,170 @@
+wrangle_tss = function(file_name, lon_col, lat_col, lstart, lend, pstart, pend, plot_tss = F){
+  # libraries
+  library(tools)
+  library(oce)
+  library(ocedata)
+  data("coastlineWorldFine")
+  
+  #functions
+  source('dev/assign_groups.R')
+  
+  # read in data
+  f = read.csv(file = file_name, header = F, colClasses = 'character')
+  
+  # determine location name
+  name = file_path_sans_ext(basename(file_name))
+  
+  # polygons
+  if(pend-pstart>0){
+    p = f[pstart:pend,]
+    plon = as.numeric(p[,lon_col])
+    plat = as.numeric(p[,lat_col])
+    
+    pd = data.frame(lon = plon, lat = plat, name = name, type = 'polygons')
+    
+    # configure map
+    clon = mean(pd$lon, na.rm = T) 
+    clat = mean(pd$lat, na.rm = T)
+    span = 6 * 111 * diff(range(pd$lat, na.rm = T))
+  } else {
+    pd = NULL
+  }
+  
+  # lines
+  if(lend-lstart>0){
+    l = f[lstart:lend,]
+    llon = as.numeric(l[,lon_col])
+    llat = as.numeric(l[,lat_col])
+    
+    ld = data.frame(lon = llon, lat = llat, name = name, type = 'lines')
+    
+    # configure map
+    clon = mean(ld$lon, na.rm = T) 
+    clat = mean(ld$lat, na.rm = T)
+    span = 6 * 111 * diff(range(ld$lat, na.rm = T))
+    
+  } else {
+    ld = NULL
+  }
+  
+  # plot tss
+  if(plot_tss){
+    plot(coastlineWorldFine, 
+         clon = clon,
+         clat = clat,
+         span = span
+    )
+    lines(ld$lon, ld$lat)
+    polygon(pd$lon, pd$lat, col = 'blue')
+    mtext(side = 3, adj = 0, text = paste0(basename(file_name)))
+  }
+  
+  # combine into data frame list
+  out = list(tss_lines = ld, tss_polygons = pd)
+  
+  return(out)
+}
+
+# process each tss files --------------------------------------------------
+
+# initialize list for gathering output
+TSS = list()
+
+# anticosti
+ifile = 'data/raw/tss/Anticosti_and_more.csv'
+TSS[[1]] = wrangle_tss(ifile, lon_col = 1, lat_col = 2, lstart = 1, lend = 36, pstart = 38, pend = 103)
+
+# fundy
+ifile = 'data/raw/tss/Bay_of_Fundy.csv'
+TSS[[2]] = wrangle_tss(ifile, lon_col = 2, lat_col = 3, lstart = 28, lend = 44, pstart = 2, pend = 28)
+
+# belle isle
+ifile = 'data/raw/tss/Belle_Isle.csv'
+TSS[[3]] = wrangle_tss(ifile, lon_col = 5, lat_col = 6, lstart = 65, lend = 112, pstart = 4, pend = 57)
+
+# boston
+ifile = 'data/raw/tss/Boston.csv'
+TSS[[4]] = wrangle_tss(ifile, lon_col = 1, lat_col = 2, lstart = 6, lend = 16, pstart = 0, pend = 0)
+
+# canso
+ifile = 'data/raw/tss/Canso.csv'
+TSS[[5]] = wrangle_tss(ifile, lon_col = 1, lat_col = 2, lstart = 20, lend = 41, pstart = 5, pend = 16)
+
+# chedabucto
+ifile = 'data/raw/tss/Chedabucto_bay.csv'
+TSS[[6]] = wrangle_tss(ifile, lon_col = 1, lat_col = 2, lstart = 2, lend = 24, pstart = 27, pend = 48)
+
+# chesapeake
+ifile = 'data/raw/tss/Chesapeake_Bay.csv'
+TSS[[7]] = wrangle_tss(ifile, lon_col = 1, lat_col = 2, lstart = 6, lend = 32, pstart = 0, pend = 0)
+
+# gulf
+ifile = 'data/raw/tss/Gulf.csv'
+TSS[[8]] = wrangle_tss(ifile, lon_col = 4, lat_col = 5, lstart = 45, lend = 79, pstart = 5, pend = 43)
+
+# halifax
+ifile = 'data/raw/tss/Halifax.csv'
+TSS[[9]] = wrangle_tss(ifile, lon_col = 2, lat_col = 3, lstart = 43, lend = 66, pstart = 2, pend = 38)
+
+# marine park st lawrence
+ifile = 'data/raw/tss/Marine Park _ St Lawrence.csv'
+TSS[[10]] = wrangle_tss(ifile, lon_col = 3, lat_col = 4, lstart = 0, lend = 0, pstart = 3, pend = 277)
+
+# mpas
+ifile = 'data/raw/tss/MPAs.csv'
+TSS[[11]] = wrangle_tss(ifile, lon_col = 1, lat_col = 2, lstart = 0, lend = 0, pstart = 4, pend = 25)
+
+# northumberland
+ifile = 'data/raw/tss/Northumberland_Strait.csv'
+TSS[[12]] = wrangle_tss(ifile, lon_col = 3, lat_col = 4, lstart = 4, lend = 20, pstart = 0, pend = 0)
+
+# placentia
+ifile = 'data/raw/tss/Placentia_Bay.csv'
+TSS[[13]] = wrangle_tss(ifile, lon_col = 9, lat_col = 10, lstart = 49, lend = 106, pstart = 3, pend = 48)
+
+# portland
+ifile = 'data/raw/tss/Portland.csv'
+TSS[[14]] = wrangle_tss(ifile, lon_col = 2, lat_col = 3, lstart = 6, lend = 10, pstart = 0, pend = 0)
+
+# st georges bay
+ifile = 'data/raw/tss/St_Georges_Bay.csv'
+TSS[[15]] = wrangle_tss(ifile, lon_col = 4, lat_col = 5, lstart = 29, lend = 43, pstart = 6, pend = 22)
+
+# st lawrence river - needs to be customized because it's taken from a shape file
+
+pfile = 'data/raw/tss/StLawrenceRiver_from_Shapefile.csv'
+ifile = paste0(file_path_sans_ext(pfile), '-corr.csv')
+  
+# pre-processing (stick an NA row between each id)
+f = read.csv(pfile, header = T)
+f$id = as.factor(f$id)
+sf = split(f, f$id)
+lst = lapply(sf, function(x) rbind(x, rep(NA,3)))
+out = do.call(rbind, lst)
+write.csv(x = out, file = ifile, row.names = F)
+
+# processing
+TSS[[16]] = wrangle_tss(ifile, lon_col = 1, lat_col = 2, lstart = 1, lend = 133, pstart = 133, pend = 274)
+
+# combine all data --------------------------------------------------------
+
+# combine all lines
+tl1 = lapply(TSS, function(x) x$tss_lines)
+tl1[sapply(tl1, is.null)] <- NULL
+tl2 = lapply(tl1, function(x) rbind(x, rep(NA,4)))
+tss_lines = do.call(rbind, tl2)
+
+# combine all polygons
+tp1 = lapply(TSS, function(x) x$tss_polygons)
+tp1[sapply(tp1, is.null)] <- NULL
+tp2 = lapply(tp1, function(x) rbind(x, rep(NA,4)))
+tss_polygons = do.call(rbind, tp2)
+
+# # test with leaflet
+# leaflet() %>%
+#   addTiles() %>%
+#   addPolylines(tss_lines$lon, tss_lines$lat, weight = .5) %>%
+#   addPolygons(tss_polygons$lon, tss_polygons$lat, weight = .5)
+
+# save output
+save(tss_polygons, tss_lines, file = 'data/processed/tss_polygons.rda')
