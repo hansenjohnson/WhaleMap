@@ -22,9 +22,6 @@ tracks = join_all(TRACKS, type = 'full')
 # remove duplicates
 tracks = tracks[which(!duplicated(tracks)),]
 
-# # sort by time (important for plotting) - MOVE THIS TO DCS ONLY
-# tracks = tracks[order(tracks$id, tracks$time),]
-
 # adjust column types
 # tracks = config_tracks(tracks)
 

@@ -12,7 +12,7 @@ proc_dcs = function(data_dir, output_dir, det_fname, track_fname, ext = ""){
   
   # define functions --------------------------------------------------------
   
-  insert_NAs = function(d, thresh = 2*60*60){
+  insert_NAs = function(d, thresh = 4*60*60){
     # insert an NA into the data frame when the time between observations exceeds a threshold
     
     # create time vector
@@ -131,6 +131,9 @@ proc_dcs = function(data_dir, output_dir, det_fname, track_fname, ext = ""){
   
   # remove species info and keep tracklines
   tracks = all[,-c(1:4)]
+  
+  # sort by time (important for plotting)
+  tracks = tracks[order(tracks$id, tracks$time),]
   
   # config data types
   tracks = config_tracks(tracks)
