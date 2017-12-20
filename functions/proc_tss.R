@@ -5,9 +5,6 @@ wrangle_tss = function(file_name, lon_col, lat_col, lstart, lend, pstart, pend, 
   library(ocedata)
   data("coastlineWorldFine")
   
-  #functions
-  source('dev/assign_groups.R')
-  
   # read in data
   f = read.csv(file = file_name, header = F, colClasses = 'character')
   
