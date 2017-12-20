@@ -51,8 +51,9 @@ getColor <- function(tracks) {
 
 # read in data -------------------------------------------------------
 
-# map polygons
-poly = readRDS('data/processed/map_polygons.rds')
+# read in map polygons
+mpa = readRDS('data/processed/mpa.rds')
+load('data/processed/tss.rda')
 
 # tracklines
 tracks = readRDS('data/processed/tracks.rds')
@@ -117,11 +118,12 @@ map <- leaflet(spp) %>%
   
   # layer control
   addLayersControl(overlayGroups = c('Place names',
-                                     'Regions',
+                                     'Protected areas',
+                                     'Shipping lanes',
                                      'Graticules',
                                      'Survey tracks',
                                      'Latest robot positions', 
-                                     'Possible detections',
+                                     'Possible detections/sightings',
                                      'Definite detections/sightings'),
                    options = layersControlOptions(collapsed = TRUE), position = 'topright') %>%
   
@@ -155,20 +157,30 @@ map <- leaflet(spp) %>%
 
 # plot polygons -----------------------------------------------------------
 
-# set up polyline plotting
-poly.df <- split(poly, poly$name)
 
-# add lines
-names(poly.df) %>%
-  purrr::walk( function(df) {
-    map <<- map %>%
-      addPolygons(data=poly.df[[df]], group = 'Regions',
-                  fill = T, fillOpacity = 0.05, stroke = T,
-                  dashArray = c(5,5), options = pathOptions(clickable = F),
-                  # label = ~paste0(name),
-                  # popup = ~paste0(name),
-                  lng=~lon, lat=~lat, weight = 1, color = 'grey', fillColor = 'grey')
-  })
+# add mpas
+map <- map %>%
+  addPolygons(data=mpa, group = 'Protected areas',
+              fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 3,
+              dashArray = c(5,5), options = pathOptions(clickable = F),
+              lng=~lon, lat=~lat, weight = 1, color = 'grey', fillColor = 'grey')
+
+# plot shipping lanes
+
+map <- map %>%
+  addPolylines(tss_lines$lon, tss_lines$lat,
+               weight = .5,
+               color = 'red',
+               smoothFactor = 3,
+               options = pathOptions(clickable = F),
+               group = 'Shipping lanes') %>%
+  addPolygons(tss_polygons$lon, tss_polygons$lat,
+              weight = .5,
+              color = 'red',
+              fillColor = 'red',
+              smoothFactor = 3,
+              options = pathOptions(clickable = F),
+              group = 'Shipping lanes')
 
 
 # add tracks --------------------------------------------------------------
@@ -201,10 +213,11 @@ map <- map %>% addMarkers(data = latest, ~lon, ~lat, icon = ~dcsIcons[platform],
                                      as.character(time), ' UTC'), 
                      group = 'Latest robot positions') %>%
 
-# add possible detections -------------------------------------------------
+
+# add possible detections/sightings ---------------------------------------
 
 # possible detections
-addCircleMarkers(data = pos, ~lon, ~lat, group = 'Possible detections',
+addCircleMarkers(data = pos, ~lon, ~lat, group = 'Possible detections/sightings',
                  radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
                  fillColor = pal(pos$score),
                  popup = ~paste(sep = "<br/>" ,
