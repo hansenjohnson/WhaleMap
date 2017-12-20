@@ -1,7 +1,12 @@
 # process live data and merge with processed data
 
-# functions ---------------------------------------------------------------
 
+# setup -------------------------------------------------------------------
+
+# libraries
+library(plyr)
+
+# functions
 source('functions/config_data.R')
 
 # process live data --------------------------------------------------------
@@ -25,7 +30,7 @@ tracks_live = readRDS('data/interim/dcs_live_tracks.rds')
 # merge and save obs ------------------------------------------------------
 
 # combine observations
-obs_merged = rbind.data.frame(obs, obs_live)
+obs_merged = join(obs, obs_live, type = 'full')
 
 # remove duplicates (excluding id column to avoid keeping both live and archived)
 obs = obs_merged[which(!duplicated(obs_merged[,c(1:6, 8:12)])),]
@@ -36,7 +41,7 @@ saveRDS(obs, file = 'data/processed/observations.rds')
 # merge and save tracks ---------------------------------------------------
 
 # combine tracks
-tracks_merged = rbind.data.frame(tracks, tracks_live)
+tracks_merged = join(tracks, tracks_live, type = 'full')
 
 # remove duplicates (excluding id column to avoid keeping both live and archived)
 tracks = tracks_merged[which(!duplicated(tracks_merged[,c(1:6, 8:9)])),]
