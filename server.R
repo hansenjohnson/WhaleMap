@@ -31,9 +31,9 @@ score_cols = c('detected' = 'red',
                'possibly detected' = 'yellow', 
                'sighted' = 'darkslategray')
 
-# map polygons
-poly = readRDS('data/processed/map_polygons.rds')
-# load('data/processed/tss_polygons.rda')
+# read in map polygons
+mpa = readRDS('data/processed/mpa.rds')
+load('data/processed/tss.rda')
 
 # define track point plotting threshold
 npts = 250000
@@ -292,55 +292,62 @@ function(input, output, session){
     }
   }
   
-  # polygon observer ------------------------------------------------------  
+  # mpa observer ------------------------------------------------------  
   
   observe(priority = 4, {
     
     # define proxy
     proxy <- leafletProxy("map")
-    proxy %>% clearGroup('poly')
+    proxy %>% clearGroup('mpa')
     
-    if(input$poly){
+    if(input$mpa){
       
-      # add polygons
+      # add mpas
+      proxy %>%
+        addPolygons(data=mpa, group = 'mpa',
+                    fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 3,
+                    dashArray = c(5,5), options = pathOptions(clickable = F),
+                    lng=~lon, lat=~lat, weight = 1, color = 'grey', fillColor = 'grey')
       
-      # set up polyline plotting
-      poly.df <- split(poly, poly$name)
-
-      # add lines
-      names(poly.df) %>%
-        purrr::walk( function(df) {
-          proxy <<- proxy %>%
-            addPolygons(data=poly.df[[df]], group = 'poly',
-                        fill = T, fillOpacity = 0.05, stroke = T,
-                        dashArray = c(5,5), options = pathOptions(clickable = F),
-                        # label = ~paste0(name),
-                        # popup = ~paste0(name),
-                        lng=~lon, lat=~lat, weight = 1, color = 'grey', fillColor = 'grey')
-        })
-      
-      # # plot shipping lanes
-      # 
-      # proxy %>%
-      #   addPolylines(tss_lines$lon, tss_lines$lat, 
-      #                weight = .5, 
-      #                color = 'grey',
-      #                smoothFactor = 3,
-      #                options = pathOptions(clickable = F),
-      #                group = 'poly') %>%
-      #   addPolygons(tss_polygons$lon, tss_polygons$lat, 
-      #               weight = .5, 
-      #               color = 'grey', 
-      #               fillColor = 'grey',
-      #               smoothFactor = 3,
-      #               options = pathOptions(clickable = F),
-      #               group = 'poly')
-      
-      # switch to show/hide tracks
-      ifelse(input$poly, showGroup(proxy, 'poly'),hideGroup(proxy, 'poly'))
+      # switch to show/hide
+      ifelse(input$mpa, showGroup(proxy, 'mpa'),hideGroup(proxy, 'mpa'))
     }
     
   })
+  
+  # tss observer ------------------------------------------------------  
+  
+  observe(priority = 4, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('tss')
+    
+    if(input$tss){
+      
+      # plot shipping lanes
+
+      proxy %>%
+        addPolylines(tss_lines$lon, tss_lines$lat,
+                     weight = .5,
+                     color = 'red',
+                     smoothFactor = 3,
+                     options = pathOptions(clickable = F),
+                     group = 'tss') %>%
+        addPolygons(tss_polygons$lon, tss_polygons$lat,
+                    weight = .5,
+                    color = 'red',
+                    fillColor = 'red',
+                    smoothFactor = 3,
+                    options = pathOptions(clickable = F),
+                    group = 'tss')
+      
+      # switch to show/hide
+      ifelse(input$tss, showGroup(proxy, 'tss'),hideGroup(proxy, 'tss'))
+    }
+  
+  })
+  
   
   # track observer ------------------------------------------------------  
   

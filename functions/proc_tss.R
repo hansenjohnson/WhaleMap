@@ -95,9 +95,9 @@ TSS[[3]] = wrangle_tss(ifile, lon_col = 5, lat_col = 6, lstart = 65, lend = 112,
 ifile = 'data/raw/tss/Boston.csv'
 TSS[[4]] = wrangle_tss(ifile, lon_col = 1, lat_col = 2, lstart = 6, lend = 16, pstart = 0, pend = 0)
 
-# canso
-ifile = 'data/raw/tss/Canso.csv'
-TSS[[5]] = wrangle_tss(ifile, lon_col = 1, lat_col = 2, lstart = 20, lend = 41, pstart = 5, pend = 16)
+# # canso - duplicated with chedabucto
+# ifile = 'data/raw/tss/Canso.csv'
+# TSS[[5]] = wrangle_tss(ifile, lon_col = 1, lat_col = 2, lstart = 20, lend = 41, pstart = 5, pend = 16)
 
 # chedabucto
 ifile = 'data/raw/tss/Chedabucto_bay.csv'
@@ -115,13 +115,13 @@ TSS[[8]] = wrangle_tss(ifile, lon_col = 4, lat_col = 5, lstart = 45, lend = 79, 
 ifile = 'data/raw/tss/Halifax.csv'
 TSS[[9]] = wrangle_tss(ifile, lon_col = 2, lat_col = 3, lstart = 43, lend = 66, pstart = 2, pend = 38)
 
-# marine park st lawrence
-ifile = 'data/raw/tss/Marine Park _ St Lawrence.csv'
-TSS[[10]] = wrangle_tss(ifile, lon_col = 3, lat_col = 4, lstart = 0, lend = 0, pstart = 3, pend = 277)
+# # marine park st lawrence (included separately)
+# ifile = 'data/raw/tss/Marine Park _ St Lawrence.csv'
+# TSS[[10]] = wrangle_tss(ifile, lon_col = 3, lat_col = 4, lstart = 0, lend = 0, pstart = 3, pend = 277)
 
-# mpas
-ifile = 'data/raw/tss/MPAs.csv'
-TSS[[11]] = wrangle_tss(ifile, lon_col = 1, lat_col = 2, lstart = 0, lend = 0, pstart = 4, pend = 25)
+# # mpas (included separately)
+# ifile = 'data/raw/tss/MPAs.csv'
+# TSS[[11]] = wrangle_tss(ifile, lon_col = 1, lat_col = 2, lstart = 0, lend = 0, pstart = 4, pend = 25)
 
 # northumberland
 ifile = 'data/raw/tss/Northumberland_Strait.csv'
@@ -176,4 +176,4 @@ tss_polygons = do.call(rbind, tp2)
 #   addPolygons(tss_polygons$lon, tss_polygons$lat, weight = .5)
 
 # save output
-save(tss_polygons, tss_lines, file = 'data/processed/tss_polygons.rda')
+save(tss_polygons, tss_lines, file = 'data/processed/tss.rda')
