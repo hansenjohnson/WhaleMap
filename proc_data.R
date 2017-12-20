@@ -35,7 +35,8 @@ source('functions/proc_sightings_2017.R')
 
 # processed data ----------------------------------------------------------
 
-source('functions/proc_map_polygons.R')
+source('functions/proc_mpa.R')
+source('functions/proc_tss.R')
 source('functions/proc_sonobuoys.R')
 source('functions/proc_observations.R')
 source('functions/proc_tracks.R')
