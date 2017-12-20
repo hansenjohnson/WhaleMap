@@ -174,7 +174,7 @@ body <- dashboardBody(
                              label = 'Definite detections/sightings', value = T),
                
                checkboxInput("poly", 
-                             label = 'Regions', value = T),
+                             label = 'Regions/Shipping lanes', value = T),
                
                checkboxInput("legend", label = 'Legends', value = T),
                
