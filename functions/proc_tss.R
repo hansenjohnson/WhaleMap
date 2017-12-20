@@ -1,4 +1,12 @@
-wrangle_tss = function(file_name, lon_col, lat_col, lstart, lend, pstart, pend, plot_tss = F){
+wrangle_tss = function(file_name, lon_col, lat_col, lstart, lend, pstart, pend, plot_tss = F, fig_dir = 'figures/tss/'){
+  # This function will, with some supervision, parse a 'tss file' to extract the lat-lon positions of lines and polygons in a consistent format. It will also optionally attempt to plot the processed tss coordinates.
+  # file_name -> path to input file ('.csv')
+  # lon_col -> column index (integer) of csv where longitude values are stored
+  # lat_col -> column index (integer) of csv where latitude values are stored
+  # l/pstart, l/pend -> start and stop row indices of polygons (p) or lines (l)
+  # plot_tss -> switch to plot
+  # fig_dir -> directory to save figures
+  
   # libraries
   library(tools)
   library(oce)
@@ -46,6 +54,9 @@ wrangle_tss = function(file_name, lon_col, lat_col, lstart, lend, pstart, pend, 
   
   # plot tss
   if(plot_tss){
+    if(!dir.exists(fig_dir)) dir.create(fig_dir, recursive = T)
+    
+    png(paste0(fig_dir, name, '.png'), height = 5, width = 5, units = 'in', res = 100)
     plot(coastlineWorldFine, 
          clon = clon,
          clat = clat,
@@ -54,6 +65,7 @@ wrangle_tss = function(file_name, lon_col, lat_col, lstart, lend, pstart, pend, 
     lines(ld$lon, ld$lat)
     polygon(pd$lon, pd$lat, col = 'blue')
     mtext(side = 3, adj = 0, text = paste0(basename(file_name)))
+    dev.off()
   }
   
   # combine into data frame list
