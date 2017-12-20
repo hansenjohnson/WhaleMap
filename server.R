@@ -323,11 +323,15 @@ function(input, output, session){
         addPolylines(tss_lines$lon, tss_lines$lat, 
                      weight = .5, 
                      color = 'grey',
+                     smoothFactor = 3,
+                     options = pathOptions(clickable = F),
                      group = 'poly') %>%
         addPolygons(tss_polygons$lon, tss_polygons$lat, 
                     weight = .5, 
                     color = 'grey', 
                     fillColor = 'grey',
+                    smoothFactor = 3,
+                    options = pathOptions(clickable = F),
                     group = 'poly')
       
       # switch to show/hide tracks
