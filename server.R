@@ -32,8 +32,8 @@ score_cols = c('detected' = 'red',
                'sighted' = 'darkslategray')
 
 # map polygons
-# poly = readRDS('data/processed/map_polygons.rds')
-load('data/processed/tss_polygons.rda')
+poly = readRDS('data/processed/map_polygons.rds')
+# load('data/processed/tss_polygons.rda')
 
 # define track point plotting threshold
 npts = 250000
@@ -304,35 +304,37 @@ function(input, output, session){
       
       # add polygons
       
-      # # set up polyline plotting
-      # poly.df <- split(poly, poly$name)
-      # 
-      # # add lines
-      # names(poly.df) %>%
-      #   purrr::walk( function(df) {
-      #     proxy <<- proxy %>%
-      #       addPolygons(data=poly.df[[df]], group = 'poly',
-      #                   fill = T, fillOpacity = 0.05, stroke = T,
-      #                   dashArray = c(5,5), options = pathOptions(clickable = F),
-      #                   # label = ~paste0(name),
-      #                   # popup = ~paste0(name),
-      #                   lng=~lon, lat=~lat, weight = 1, color = 'grey', fillColor = 'grey')
-      #   })
+      # set up polyline plotting
+      poly.df <- split(poly, poly$name)
+
+      # add lines
+      names(poly.df) %>%
+        purrr::walk( function(df) {
+          proxy <<- proxy %>%
+            addPolygons(data=poly.df[[df]], group = 'poly',
+                        fill = T, fillOpacity = 0.05, stroke = T,
+                        dashArray = c(5,5), options = pathOptions(clickable = F),
+                        # label = ~paste0(name),
+                        # popup = ~paste0(name),
+                        lng=~lon, lat=~lat, weight = 1, color = 'grey', fillColor = 'grey')
+        })
       
-      proxy %>%
-        addPolylines(tss_lines$lon, tss_lines$lat, 
-                     weight = .5, 
-                     color = 'grey',
-                     smoothFactor = 3,
-                     options = pathOptions(clickable = F),
-                     group = 'poly') %>%
-        addPolygons(tss_polygons$lon, tss_polygons$lat, 
-                    weight = .5, 
-                    color = 'grey', 
-                    fillColor = 'grey',
-                    smoothFactor = 3,
-                    options = pathOptions(clickable = F),
-                    group = 'poly')
+      # # plot shipping lanes
+      # 
+      # proxy %>%
+      #   addPolylines(tss_lines$lon, tss_lines$lat, 
+      #                weight = .5, 
+      #                color = 'grey',
+      #                smoothFactor = 3,
+      #                options = pathOptions(clickable = F),
+      #                group = 'poly') %>%
+      #   addPolygons(tss_polygons$lon, tss_polygons$lat, 
+      #               weight = .5, 
+      #               color = 'grey', 
+      #               fillColor = 'grey',
+      #               smoothFactor = 3,
+      #               options = pathOptions(clickable = F),
+      #               group = 'poly')
       
       # switch to show/hide tracks
       ifelse(input$poly, showGroup(proxy, 'poly'),hideGroup(proxy, 'poly'))
