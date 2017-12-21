@@ -123,6 +123,7 @@ opp = opp[-c(which(is.na(opp$lat))),]
 opp$name = opp$platform
 opp$platform = 'opportunistic'
 opp$id = paste0(opp$date, '_', opp$platform, '_', opp$name)
+opp$score = 'possibly sighted'
 
 # config data types
 opp = config_observations(opp)

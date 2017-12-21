@@ -29,7 +29,8 @@ palette_list = list(heat.colors(200),
 # define score colors
 score_cols = c('detected' = 'red', 
                'possibly detected' = 'yellow', 
-               'sighted' = 'darkslategray')
+               'sighted' = 'darkslategray',
+               'possibly sighted' = 'gray')
 
 # read in map polygons
 mpa = readRDS('data/processed/mpa.rds')
@@ -170,12 +171,12 @@ function(input, output, session){
   
   # only possible
   pos <- reactive({
-    droplevels(spp()[spp()$score=='possibly detected',])
+    droplevels(spp()[spp()$score=='possibly detected'|spp()$score=='possibly sighted',])
   })
   
   # only definite
   det <- reactive({
-    droplevels(spp()[spp()$score!='possibly detected',])
+    droplevels(spp()[spp()$score=='detected'|spp()$score=='sighted',])
   })
   
   # combine track and observations
@@ -618,29 +619,40 @@ function(input, output, session){
       # sighting/detection info
       str1 <- paste0('<strong>Species</strong>: ', species())
       
-      str2 <- paste0('<strong>Number of sighting events</strong>: ', 
+      str2 <- paste0('<strong>Number of definite sighting events</strong>: ', 
                      nrow(dInBounds()[dInBounds()$score=='sighted',]))
       
       str3 <- paste0('<strong>Number of whales sighted (includes duplicates)</strong>: ', 
                      sum(dInBounds()$number[dInBounds()$score=='sighted'], na.rm = T))
       
-      str4 <- paste0('<strong>Number of definite detections</strong>: ', 
-                     nrow(dInBounds()[dInBounds()$score=='detected',]))
-      
-      # possible detections (set to zero if button is turned off)
       ifelse(input$possible, 
-             t<-nrow(dInBounds()[dInBounds()$score=='possibly detected',]),
+             t<-nrow(dInBounds()[dInBounds()$score=='possibly sighted',]),
              t<-0)
       
-      str5 <- paste0('<strong>Number of possible detections</strong>: ', t)
+      str4 <- paste0('<strong>Number of possible sighting events</strong>: ', t)
+      
+      ifelse(input$possible, 
+             u<-sum(dInBounds()$number[dInBounds()$score=='possibly sighted'], na.rm = T),
+             u<-0)
+      
+      str5 <- paste0('<strong>Number of whales possibly sighted</strong>: ', u)
+      
+      str6 <- paste0('<strong>Number of definite detections</strong>: ', 
+                     nrow(dInBounds()[dInBounds()$score=='detected',]))
+      
+      ifelse(input$possible, 
+             v<-nrow(dInBounds()[dInBounds()$score=='possibly detected',]),
+             v<-0)
+      
+      str7 <- paste0('<strong>Number of possible detections</strong>: ', v)
       
       # earliest and latest observation info
-      str6 <- paste0('<strong>Earliest observation</strong>: ', min(dInBounds()$date, na.rm = T))
+      str8 <- paste0('<strong>Earliest observation</strong>: ', min(dInBounds()$date, na.rm = T))
       rec_ind = which.max(dInBounds()$date)
       
-      str7 <- paste0('<strong>Most recent observation</strong>: ', dInBounds()$date[rec_ind])
+      str9 <- paste0('<strong>Most recent observation</strong>: ', dInBounds()$date[rec_ind])
       
-      str8 <- paste0('<strong>Most recent position</strong>: ', 
+      str10 <- paste0('<strong>Most recent position</strong>: ', 
                      dInBounds()$lat[rec_ind], ', ', dInBounds()$lon[rec_ind])
       
       # str8 <- paste0('<strong>Number of survey(s)</strong>: ', length(unique(tInBounds()$id)))
@@ -650,7 +662,7 @@ function(input, output, session){
       #                              as.character(tInBounds()$id))), collapse = '<br/>'))
       
       # paste and render
-      HTML(paste(str1, str2, str3, str4, str5, str6, str7, str8, sep = '<br/>'))
+      HTML(paste(str1, str2, str3, str4, str5, str6, str7, str8, str9, str10, sep = '<br/>'))
     }
   })
   
@@ -669,7 +681,7 @@ function(input, output, session){
     
     # conditionally remove possibles for plotting
     if(!input$possible){
-      obs = obs[obs$score!='possibly detected',]
+      obs = obs[obs$score!='possibly detected' & obs$score!='possibly sighted',]
     }
     
     # # remove na's for plotting (especially important for lat lons)
@@ -682,8 +694,8 @@ function(input, output, session){
     
     # make categories for facet plotting
     obs$cat = ''
-    obs$cat[obs$score == 'sighted'] = 'Sightings per day'
-    obs$cat[obs$score != 'sighted'] = 'Detections per day'
+    obs$cat[obs$score == 'sighted' | obs$score == 'possibly sighted'] = 'Sightings per day'
+    obs$cat[obs$score == 'detected' | obs$score == 'possibly detected'] = 'Detections per day'
     
     # determine number of factor levels to color
     ncol = length(unique(obs[,which(colnames(obs)==input$colorby)]))

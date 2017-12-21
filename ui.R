@@ -168,7 +168,7 @@ body <- dashboardBody(
                h5(strong('Choose layer(s):')),
                checkboxInput("tracks", label = 'Tracks', value = T),
                
-               checkboxInput("possible", label = 'Possible detections', value = T),
+               checkboxInput("possible", label = 'Possible detections/sightings', value = T),
                
                checkboxInput("detected", 
                              label = 'Definite detections/sightings', value = T),
