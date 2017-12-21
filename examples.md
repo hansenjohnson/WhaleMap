@@ -128,3 +128,10 @@ a # this means 'append' in vim
 # quit and save crontab
 :x
 ```
+***
+## Shiny server
+
+```
+# restart the shiny server
+sudo systemctl restart shiny-server
+```
