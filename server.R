@@ -305,10 +305,16 @@ function(input, output, session){
       
       # add mpas
       proxy %>%
-        addPolygons(data=mpa, group = 'mpa',
-                    fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 3,
-                    dashArray = c(5,5), options = pathOptions(clickable = F),
-                    lng=~lon, lat=~lat, weight = 1, color = 'grey', fillColor = 'grey')
+        addPolygons(data=mpa, lng=~lon, lat=~lat, group = 'mpa',
+                    fill = T, 
+                    fillOpacity = 0.25, 
+                    stroke = T, 
+                    # smoothFactor = 3,
+                    dashArray = c(5,5), 
+                    options = pathOptions(clickable = F),
+                    weight = 1, 
+                    color = 'grey', 
+                    fillColor = 'grey')
       
       # switch to show/hide
       ifelse(input$mpa, showGroup(proxy, 'mpa'),hideGroup(proxy, 'mpa'))
@@ -332,14 +338,14 @@ function(input, output, session){
         addPolylines(tss_lines$lon, tss_lines$lat,
                      weight = .5,
                      color = 'red',
-                     smoothFactor = 3,
+                     # smoothFactor = 3,
                      options = pathOptions(clickable = F),
                      group = 'tss') %>%
         addPolygons(tss_polygons$lon, tss_polygons$lat,
                     weight = .5,
                     color = 'red',
                     fillColor = 'red',
-                    smoothFactor = 3,
+                    # smoothFactor = 3,
                     options = pathOptions(clickable = F),
                     group = 'tss')
       
