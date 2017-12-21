@@ -75,10 +75,10 @@ Obs = obs[obs$date >= start_date,]; rm(obs)
 # select species
 spp = Obs[Obs$species == 'right',]
 
-# new category for possible sightings
-spp$score = as.character(spp$score)
-spp$score[spp$platform == 'opportunistic'] = 'possibly sighted'
-spp$score = as.factor(spp$score)
+# # new category for possible sightings
+# spp$score = as.character(spp$score)
+# spp$score[spp$platform == 'opportunistic'] = 'possibly sighted'
+# spp$score = as.factor(spp$score)
 
 # only possible detections
 pos = droplevels(spp[spp$score %in% c('possibly detected', 'possibly sighted'),])
