@@ -12,6 +12,7 @@ library(lubridate)
 library(oce)
 library(plotly)
 library(shinydashboard)
+library(rhandsontable)
 # library(shinyjqui)
 #library(shinycssloaders)
 
