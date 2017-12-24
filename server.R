@@ -15,6 +15,7 @@ library(shinydashboard)
 library(ggplot2)
 library(plotly)
 library(leaflet.extras)
+# devtools::install_github("jrowen/rhandsontable")
 library(rhandsontable)
 
 # define color palette list to choose from
