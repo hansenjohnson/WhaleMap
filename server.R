@@ -15,6 +15,7 @@ library(shinydashboard)
 library(ggplot2)
 library(plotly)
 library(leaflet.extras)
+library(rhandsontable)
 
 # define color palette list to choose from
 palette_list = list(heat.colors(200), 
@@ -273,7 +274,17 @@ function(input, output, session){
         secondaryAreaUnit="acres", 
         activeColor = "darkslategray",
         completedColor = "darkslategray",
-        position = 'bottomleft')
+        position = 'bottomleft') %>%
+      addDrawToolbar(position = "topleft",
+                     polylineOptions = F,
+                     polygonOptions = F,
+                     circleOptions = F,
+                     rectangleOptions = F,
+                     markerOptions = drawMarkerOptions(repeatMode = T), 
+                     editOptions = editToolbarOptions(),
+                     targetGroup = 'grp',
+                     singleFeature = F
+      )
     
   })
   
@@ -799,20 +810,92 @@ function(input, output, session){
       layout(margin=list(r=120, l=70, t=40, b=70), showlegend = input$legend)
   })
   
-  # update glider data -------------------------------------------------------
+  # coordinate editor ----------------------------------------------------------  
   
-  # # system call to pull in live data
-  # observeEvent(input$update, {
-  #   
-  #   # determine time of last modification
-  #   old_mod = file.mtime('data/raw/dcs/live/')
-  #   
-  #   # old time notification
-  #   showNotification(paste0('Data was last updated at ', old_mod, '. Updating now...'))
-  #   
-  #   # run system command to get and process new data
-  #   system('/srv/shiny-server/WhaleMap/get_live_dcs.sh')
-  #   
-  # })
+  observeEvent(input$map_draw_all_features,{
+    
+    # extract lat lons of drawn objects
+    f = input$map_draw_all_features
+    lng = sapply(f$features, FUN = function(x) x$geometry$coordinates[[1]])
+    lat = sapply(f$features, FUN = function(x) x$geometry$coordinates[[2]])
+    DF = data.frame(lat, lng)
+    
+    # construct table
+    output$hot = renderRHandsontable({
+      rhandsontable(DF) %>%
+        hot_table(highlightCol = TRUE, highlightRow = TRUE)
+      
+    })
+  })
+  
+  # round coordinates
+  observeEvent(input$round,{
+    DF = hot_to_r(input$hot)
+    DF = round(DF, digits = input$dig)
+    
+    output$hot = renderRHandsontable({
+      rhandsontable(DF) %>%
+        hot_table(highlightCol = TRUE, highlightRow = TRUE)
+    })
+  })
+  
+  # update map after editing coordinates
+  observe({
+    if (is.null(input$hot))
+      return()
+    
+    # read in values from table
+    DF = hot_to_r(input$hot)
+    
+    # catch error for blank DF (e.g. after deleting all points)
+    if(is.null(DF$lng)){
+      leafletProxy("map") %>% clearGroup('add')
+      return()
+    }
+    
+    # replace old positions on map
+    proxy = leafletProxy("map")
+    
+    proxy %>%
+      removeDrawToolbar(clearFeatures=TRUE) %>%
+      addDrawToolbar(position = "topleft",
+                     polylineOptions = F,
+                     polygonOptions = F,
+                     circleOptions = F,
+                     rectangleOptions = F,
+                     markerOptions = drawMarkerOptions(repeatMode = T), 
+                     editOptions = editToolbarOptions(),
+                     targetGroup = 'grp',
+                     singleFeature = F
+      ) %>%
+      addMarkers(data = DF, lng = ~lng, lat = ~lat, group = 'grp', 
+                 label = ~paste0(lat, ', ', lng))
+    
+    if(input$shp == 'None'){
+      proxy %>% 
+        clearGroup('add')
+    } else if (input$shp == 'Line'){
+      proxy %>% 
+        clearGroup('add')%>%
+        addPolylines(data = DF, lng = ~lng, lat = ~lat, group = 'add')
+    }else if (input$shp == 'Polygon'){
+      proxy %>% 
+        clearGroup('add')%>%
+        addPolygons(data = DF, lng = ~lng, lat = ~lat, group = 'add')
+    }
+  })
+  
+  # download csv
+  output$downloadData <- downloadHandler(
+    filename = function() {
+      "WhaleMap.csv"
+    },
+    content = function(file) {
+      write.csv(hot_to_r(input$hot), file, row.names = FALSE)
+    }
+  )
   
 } # server
+
+
+

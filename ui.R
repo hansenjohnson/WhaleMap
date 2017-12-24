@@ -127,13 +127,29 @@ body <- dashboardBody(
                helpText('Please be patient if viewing data from many years. 
                                        Consider turning tracks \'off\' below to speed up plotting.')
                
-           #     hr(),
-           # 
-           #     # update live glider
-           #     actionButton("update", label = 'Update glider data'),
-           #     
-           #     helpText('This feature is still under development...')
+           ),
            
+           # Coordinate editor
+           box(width = NULL, solidHeader = T,collapsible = T, collapsed = T, 
+               title = 'Coordinate editor', 
+               status = 'primary',
+               helpText('Drop new points with ',icon("map-marker", lib = 'glyphicon'), 
+                        '. Edit points with ', icon("edit", lib = 'glyphicon'),
+                        ' or via the table below. Remove one or all points with', 
+                        icon("trash", lib = 'glyphicon')),
+               strong('Coordinate list'),
+               rHandsontableOutput("hot", height = 250),
+               helpText('Hint: minimize this window to add points more quickly'),
+               strong('Round coordinates'),
+               helpText('Choose number of decimal places'),
+               numericInput('dig', label = NULL, value = 1,
+                            min = 0, max = 6, step=1, width = 50),
+               actionButton('round', 'Round'),
+               radioButtons('shp', label = 'Connection between points', 
+                            choices = c('None', 'Line', 'Polygon'), 
+                            selected = 'None', inline = F),
+               strong('Save coordinates'), br(),
+               downloadButton("downloadData", "Save")
            ),
            
            # Customize plotting
