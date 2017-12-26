@@ -819,11 +819,25 @@ function(input, output, session){
     f = input$map_draw_all_features
     lng = sapply(f$features, FUN = function(x) x$geometry$coordinates[[1]])
     lat = sapply(f$features, FUN = function(x) x$geometry$coordinates[[2]])
-    DF = data.frame(lat, lng)
+    
+    # calculate along-path distance
+    if(input$dist){
+      
+      # catch error if plot is cleared
+      if(is.numeric(lng)){
+        dist = geodDist(longitude1 = lng, latitude1 = lat, alongPath = T)
+      } else {
+        dist = NULL
+      }
+      
+      DF = data.frame(lat, lng, dist)
+    } else {
+      DF = data.frame(lat, lng)
+    }
     
     # construct table
     output$hot = renderRHandsontable({
-      rhandsontable(DF) %>%
+      rhandsontable(DF, rowHeaders = NULL) %>%
         hot_table(highlightCol = TRUE, highlightRow = TRUE)
       
     })
@@ -835,7 +849,7 @@ function(input, output, session){
     DF = round(DF, digits = input$dig)
     
     output$hot = renderRHandsontable({
-      rhandsontable(DF) %>%
+      rhandsontable(DF, rowHeaders = NULL) %>%
         hot_table(highlightCol = TRUE, highlightRow = TRUE)
     })
   })
