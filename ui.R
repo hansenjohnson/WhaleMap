@@ -152,7 +152,7 @@ body <- dashboardBody(
                   ),
                   
                   # Customize plotting
-                  tabPanel(title = 'Map',
+                  tabPanel(title = 'Layers',
                            
                            #color by
                            selectInput("colorby", "Color by:", choices =
@@ -205,25 +205,25 @@ body <- dashboardBody(
     
     # main display --------------------------------------------------------------------
     column(width = 9,
-           tabBox(title = 'Viewer', width = NULL,
-                  
-                  # Map
-                  tabPanel(title = 'Map', 
-                           
-                           leafletOutput("map", height = 550)
-                           
-                  ),
-                  
-                  # Plot
-                  tabPanel(title = 'Plot', 
-                           
-                           plotlyOutput("graph"),
-                           
-                           # plot inBounds switch
-                           checkboxInput("plotInBounds", 
-                                         label = 'Only plot data within map bounds?', value = T)
-                           
-                  )
+           
+           # Map
+           box(width = NULL, solidHeader = T,collapsible = T, 
+               status = 'primary', title = 'Map', 
+               
+               leafletOutput("map", height = 550)
+               
+           ),
+           
+           # Plot
+           box(width = NULL, solidHeader = T,collapsible = T, 
+               status = 'primary', title = 'Plot', 
+               
+               plotlyOutput("graph"),
+               
+               # plot inBounds switch
+               checkboxInput("plotInBounds", 
+                             label = 'Only plot data within map bounds?', value = T)
+               
            ),
            
            # Currently viewing
