@@ -138,7 +138,7 @@ body <- dashboardBody(
                                     icon("trash", lib = 'glyphicon')),
                            strong('Coordinate list'),
                            rHandsontableOutput("hot", height = 250),
-                           helpText('Hint: minimize this window to add points more quickly'),
+                           helpText('Hint: switch tabs to add points more quickly'),
                            strong('Round coordinates'),
                            helpText('Choose number of decimal places'),
                            numericInput('dig', label = NULL, value = 1,
