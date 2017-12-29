@@ -129,29 +129,6 @@ body <- dashboardBody(
                            
                   ),
                   
-                  # Coordinate editor
-                  tabPanel(title = 'Draw', 
-                           
-                           helpText('Drop new points with ',icon("map-marker", lib = 'glyphicon'), 
-                                    '. Edit points with ', icon("edit", lib = 'glyphicon'),
-                                    ' or via the table below. Remove one or all points with', 
-                                    icon("trash", lib = 'glyphicon'), '. Distances are along-path [km]'),
-                           strong('Coordinate list'),
-                           rHandsontableOutput("hot", height = 250),
-                           helpText('Hint: switch tabs to add points more quickly'),
-                           checkboxInput("dist", label = 'Calculate distance?', value = T),
-                           strong('Round coordinates'),
-                           helpText('Choose number of decimal places'),
-                           numericInput('dig', label = NULL, value = 1,
-                                        min = 0, max = 6, step=1, width = 50),
-                           actionButton('round', 'Round'),
-                           radioButtons('shp', label = 'Connection between points', 
-                                        choices = c('None', 'Line', 'Polygon'), 
-                                        selected = 'None', inline = F),
-                           strong('Save coordinates'), br(),
-                           downloadButton("downloadData", "Save")
-                  ),
-                  
                   # Customize plotting
                   tabPanel(title = 'Layers',
                            
@@ -200,7 +177,30 @@ body <- dashboardBody(
                            
                            checkboxInput("sono", label = 'Sonobuoys', value = F)
                            
-                  )
+                  ),
+                  
+                  # Coordinate editor
+                  tabPanel(title = 'Draw', 
+                           
+                           helpText('Drop new points with ',icon("map-marker", lib = 'glyphicon'), 
+                                    '. Edit points with ', icon("edit", lib = 'glyphicon'),
+                                    ' or via the table below. Remove one or all points with', 
+                                    icon("trash", lib = 'glyphicon'), '. Distances are along-path [km]'),
+                           strong('Coordinate list'),
+                           rHandsontableOutput("hot", height = 250),
+                           helpText('Hint: switch tabs to add points more quickly'),
+                           checkboxInput("dist", label = 'Calculate distance?', value = T),
+                           strong('Round coordinates'),
+                           helpText('Choose number of decimal places'),
+                           numericInput('dig', label = NULL, value = 1,
+                                        min = 0, max = 6, step=1, width = 50),
+                           actionButton('round', 'Round'),
+                           radioButtons('shp', label = 'Connection between points', 
+                                        choices = c('None', 'Line', 'Polygon'), 
+                                        selected = 'None', inline = F),
+                           strong('Save coordinates'), br(),
+                           downloadButton("downloadData", "Save")
+                  )    
            )
     ),
     
