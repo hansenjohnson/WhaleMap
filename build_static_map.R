@@ -15,7 +15,7 @@ library(leaflet.extras)
 # definitions -------------------------------------------------------------
 
 # time period to show (days)
-lag = 30
+lag = 14
 start_date = Sys.Date()-lag
 
 # output path
