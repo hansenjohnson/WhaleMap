@@ -89,19 +89,13 @@ det = droplevels(spp[!spp$score %in% c('possibly detected', 'possibly sighted'),
 # basemap -----------------------------------------------------------------
 
 # start basemap
-map <- leaflet(spp) %>% 
+map <- leaflet() %>% 
   
   # add ocean basemap
   addProviderTiles(providers$Esri.OceanBasemap) %>%
   
   # add place names layer
   addProviderTiles(providers$Hydda.RoadsAndLabels, group = 'Place names') %>%
-  
-  # center on observations
-  fitBounds(~max(lon, na.rm = T), 
-            ~min(lat, na.rm = T), 
-            ~min(lon, na.rm = T), 
-            ~max(lat, na.rm = T)) %>%
   
   # title and last updated message
   addControl(position = "topright", 
@@ -155,8 +149,18 @@ map <- leaflet(spp) %>%
             values = obs_levs,
             title = 'Score')
 
-# plot polygons -----------------------------------------------------------
+# center on observations (if present)
+if(nrow(Tracks)==0){
+  map <- fitBounds(map = map,
+            max(Tracks$lon, na.rm = T), 
+            min(Tracks$lat, na.rm = T), 
+            min(Tracks$lon, na.rm = T), 
+            max(Tracks$lat, na.rm = T))
+} else {
+  map <- setView(map = map, lng = -65, lat = 45, zoom = 5)
+}
 
+# plot polygons -----------------------------------------------------------
 
 # add mpas
 map <- map %>%
