@@ -59,6 +59,23 @@ for(i in seq_along(flist)){
     # add timestamp
     tmp$time = as.POSIXct(tmp$time, origin = '1970-01-01', tz = 'UTC')
     
+    # format: 'MART_Dash8_tracks_2017-12-29.csv'
+  } else if(grepl(pattern = 'MART_Dash8_tracks_(\\d{4}).(\\d{2}).(\\d{2}).csv', x = flist[i], ignore.case = T)){
+    
+    # read in file
+    tmp = read.csv(flist[i], skip = 2)
+    
+    # select and rename important columns
+    tmp = data.frame(tmp$Timestamp, tmp$Longitude, tmp$Latitude, tmp$Speed, tmp$Altitude)
+    colnames(tmp) = cnames
+    
+    # Correct for variable precision (or errors) in gps
+    f = roundTen(tmp$time)/10^9
+    tmp$time = tmp$time/f
+    
+    # add timestamp
+    tmp$time = as.POSIXct(tmp$time, origin = '1970-01-01', tz = 'UTC')
+    
   # format: 'MART_Flights_31-08-2017_GPS.csv' or 'MART_Flights_22_08_2015_GPS.csv'
   } else if(grepl(pattern = 'MART_Flights_(\\d{2}).(\\d{2}).(\\d{4})_GPS.csv', x = flist[i], ignore.case = T)){
     
