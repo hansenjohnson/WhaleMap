@@ -18,13 +18,13 @@ library(rhandsontable)
 
 # user input --------------------------------------------------------------
 
-begin_date = as.Date('2017-01-01')
-end_date = as.Date('2017-12-30')
+begin_date = as.Date('2018-01-01')
+end_date = as.Date('2018-12-30')
 
 years = c('2014', '2015', '2016', '2017')
 species = c('right', 'sei', 'fin', 'humpback')
 
-# ui ----------------------------------------------------------------------
+# header ----------------------------------------------------------------------
 
 header <-  dashboardHeader(title = 'WhaleMap',
                            

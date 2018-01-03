@@ -79,7 +79,7 @@ function(input, output, session){
            
            'select' = selectInput("year", label = NULL,
                                   choices = as.character(seq(max_yr, min_yr, -1)),
-                                  selected = '2017', multiple = T),
+                                  selected = '2018', multiple = T),
            
            'range' = sliderInput("year", label = NULL,
                                  min = min_yr, max = max_yr, step = 1, 
@@ -104,7 +104,7 @@ function(input, output, session){
     
     # assign default year if action button hasn't been pushed yet  
     if (input$go == 0){
-      as.character('2017')
+      as.character('2018')
     } else {
       
       # choose year on action button click
