@@ -59,7 +59,10 @@ load('data/processed/tss.rda')
 tracks = readRDS('data/processed/tracks.rds')
 
 # latest dcs positions
-latest = readRDS('data/processed/dcs_live_latest_position.rds')
+lfile = 'data/processed/dcs_live_latest_position.rds'
+if(file.exists(lfile)){
+  latest = readRDS(lfile) 
+}
 
 # sightings / detections
 obs = readRDS('data/processed/observations.rds')
@@ -204,24 +207,26 @@ names(tracks.df) %>%
 
 # add platform icons ------------------------------------------------------
 
-# add icons for latest position of live dcs platforms
-map <- map %>% addMarkers(data = latest, ~lon, ~lat, icon = ~dcsIcons[platform],
-                     popup = ~paste(sep = "<br/>",
-                                    strong('Latest position'),
-                                    paste0('Platform: ', as.character(platform)),
-                                    paste0('Name: ', as.character(name)),
-                                    paste0('Time: ', as.character(time), ' UTC'),
-                                    paste0('Position: ', 
-                                           as.character(lat), ', ', as.character(lon))),
-                     label = ~paste0('Latest position of ', as.character(name), ': ', 
-                                     as.character(time), ' UTC'), 
-                     group = 'Latest robot positions') %>%
-
+if(file.exists(lfile)){
+  
+  # add icons for latest position of live dcs platforms
+  map <- map %>% addMarkers(data = latest, ~lon, ~lat, icon = ~dcsIcons[platform],
+                            popup = ~paste(sep = "<br/>",
+                                           strong('Latest position'),
+                                           paste0('Platform: ', as.character(platform)),
+                                           paste0('Name: ', as.character(name)),
+                                           paste0('Time: ', as.character(time), ' UTC'),
+                                           paste0('Position: ', 
+                                                  as.character(lat), ', ', as.character(lon))),
+                            label = ~paste0('Latest position of ', as.character(name), ': ', 
+                                            as.character(time), ' UTC'), 
+                            group = 'Latest robot positions')
+}
 
 # add possible detections/sightings ---------------------------------------
 
 # possible detections
-addCircleMarkers(data = pos, ~lon, ~lat, group = 'Possible detections/sightings',
+map <- map %>% addCircleMarkers(data = pos, ~lon, ~lat, group = 'Possible detections/sightings',
                  radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
                  fillColor = pal(pos$score),
                  popup = ~paste(sep = "<br/>" ,
