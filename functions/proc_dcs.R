@@ -55,6 +55,12 @@ proc_dcs = function(data_dir, output_dir, det_fname, track_fname, ext = ""){
   # list detection files
   detection_dir_list = list.files(path = data_dir, full.names = T)
   
+  # return if there are no files
+  if(length(detection_dir_list)==0){
+    return()
+  }
+  
+  # process each file
   detection_list = list()
   for(i in seq_along(detection_dir_list)){
     

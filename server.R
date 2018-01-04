@@ -58,7 +58,10 @@ function(input, output, session){
   tracks = readRDS('data/processed/tracks.rds')
   
   # latest dcs positions
-  latest = readRDS('data/processed/dcs_live_latest_position.rds')
+  lfile = 'data/processed/dcs_live_latest_position.rds'
+  if(file.exists(lfile)){
+    latest = readRDS(lfile) 
+  }
   
   # sightings / detections
   obs = readRDS('data/processed/observations.rds')
@@ -144,11 +147,13 @@ function(input, output, session){
   })
   
   # position for live dcs platform
-  LATEST <- eventReactive(input$go|input$go == 0, {
-    tmp = latest[latest$year %in% years(),]
-    tmp = tmp[tmp$platform %in% platform(),]
-    tmp[tmp$yday >= yday0() & tmp$yday <= yday1(),]
-  })
+  if(file.exists(lfile)){
+    LATEST <- eventReactive(input$go|input$go == 0, {
+      tmp = latest[latest$year %in% years(),]
+      tmp = tmp[tmp$platform %in% platform(),]
+      tmp[tmp$yday >= yday0() & tmp$yday <= yday1(),]
+    })
+  }
   
   # position for live dcs platform
   SONO <- eventReactive(input$go|input$go == 0, {
@@ -392,50 +397,39 @@ function(input, output, session){
                          popup = paste0('Track ID: ', unique(tracks.df[[df]]$id)),
                          smoothFactor = 3, color = getColor(tracks.df[[df]]))
         })
-      
-      # add icons for latest position of live dcs platforms
-      proxy %>% addMarkers(data = LATEST(), ~lon, ~lat, icon = ~dcsIcons[platform],
-                 popup = ~paste(sep = "<br/>",
-                                strong('Latest position'),
-                                paste0('Platform: ', as.character(platform)),
-                                paste0('Name: ', as.character(name)),
-                                paste0('Time: ', as.character(time), ' UTC'),
-                                paste0('Position: ', 
-                                       as.character(lat), ', ', as.character(lon))),
-                 label = ~paste0('Latest position of ', as.character(name), ': ', 
-                                 as.character(time), ' UTC'), group = 'latest')
-      
     }
     
   })
   
   # latest observer ------------------------------------------------------  
-  
-  observe(priority = 3, {
+  if(file.exists(lfile)){
     
-    # define proxy
-    proxy <- leafletProxy("map")
-    proxy %>% clearGroup('latest')
-    
-    # tracks
-    
-    if(input$latest){
+    observe(priority = 3, {
       
-      # add icons for latest position of live dcs platforms
-      proxy %>% addMarkers(data = LATEST(), ~lon, ~lat, icon = ~dcsIcons[platform],
-                           popup = ~paste(sep = "<br/>",
-                                          strong('Latest position'),
-                                          paste0('Platform: ', as.character(platform)),
-                                          paste0('Name: ', as.character(name)),
-                                          paste0('Time: ', as.character(time), ' UTC'),
-                                          paste0('Position: ', 
-                                                 as.character(lat), ', ', as.character(lon))),
-                           label = ~paste0('Latest position of ', as.character(name), ': ', 
-                                           as.character(time), ' UTC'), group = 'latest')
+      # define proxy
+      proxy <- leafletProxy("map")
+      proxy %>% clearGroup('latest')
       
-    }
-    
-  })
+      # tracks
+      
+      if(input$latest){
+        
+        # add icons for latest position of live dcs platforms
+        proxy %>% addMarkers(data = LATEST(), ~lon, ~lat, icon = ~dcsIcons[platform],
+                             popup = ~paste(sep = "<br/>",
+                                            strong('Latest position'),
+                                            paste0('Platform: ', as.character(platform)),
+                                            paste0('Name: ', as.character(name)),
+                                            paste0('Time: ', as.character(time), ' UTC'),
+                                            paste0('Position: ', 
+                                                   as.character(lat), ', ', as.character(lon))),
+                             label = ~paste0('Latest position of ', as.character(name), ': ', 
+                                             as.character(time), ' UTC'), group = 'latest')
+        
+      }
+      
+    })
+  }
   
   # sono observer ------------------------------------------------------  
   
@@ -445,8 +439,7 @@ function(input, output, session){
     proxy <- leafletProxy("map")
     proxy %>% clearGroup('sono')
     
-    # tracks
-    
+    # add sonobuoys
     if(input$sono){
       
       # add icons for latest position of live dcs platforms
