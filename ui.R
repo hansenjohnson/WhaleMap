@@ -168,6 +168,9 @@ body <- dashboardBody(
                            checkboxInput("mpa", 
                                          label = 'Protected areas', value = T),
                            
+                           helpText('NOTE - The Gulf of St Lawrence Mandatory Slow-Down Zone is no 
+                                    longer active. It was in effect from 11 Aug 2017 to 11 Jan 2018'),
+                           
                            checkboxInput("tss", 
                                          label = 'Shipping lanes', value = T),
                            
