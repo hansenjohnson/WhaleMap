@@ -153,7 +153,7 @@ map <- leaflet() %>%
             title = 'Score')
 
 # center on observations (if present)
-if(nrow(Tracks)==0){
+if(nrow(Tracks)!=0){
   map <- fitBounds(map = map,
             max(Tracks$lon, na.rm = T), 
             min(Tracks$lat, na.rm = T), 
