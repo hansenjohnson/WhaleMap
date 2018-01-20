@@ -127,12 +127,19 @@ map <- leaflet() %>%
   # hide groups
   hideGroup('Place names') %>%
   
-  # add graticules
+  # # add graticules
+  # addWMSTiles(
+  #   'https://gis.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer',
+  #   layers = c('1', '2', '3'),
+  #   options = WMSTileOptions(format = "image/png8", transparent = TRUE),
+  #   attribution = NULL, group = 'Graticules') %>%
+  
+  # use NOAA graticules
   addWMSTiles(
-    'https://gis.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer',
-    layers = c('1', '2', '3'),
+    "https://maps.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer/",
+    layers = c("1-degree grid", "5-degree grid"),
     options = WMSTileOptions(format = "image/png8", transparent = TRUE),
-    attribution = NULL, group = 'Graticules') %>%
+    attribution = NULL,group = 'Graticules') %>%
   
   # add extra map features
   addScaleBar(position = 'bottomleft')%>%

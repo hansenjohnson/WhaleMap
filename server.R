@@ -264,11 +264,18 @@ function(input, output, session){
                 ~max(lat, na.rm = T)) %>%
       
       # add graticules
+      # addWMSTiles(
+      #   'https://gis.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer',
+      #   layers = c('1', '2', '3'),
+      #   options = WMSTileOptions(format = "image/png8", transparent = TRUE),
+      #   attribution = "NOAA") %>%
+      
+      # use NOAA graticules
       addWMSTiles(
-        'https://gis.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer',
-        layers = c('1', '2', '3'),
+        "https://maps.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer/",
+        layers = c("1-degree grid", "5-degree grid"),
         options = WMSTileOptions(format = "image/png8", transparent = TRUE),
-        attribution = "NOAA") %>%
+        attribution = NULL) %>%
       
       # add extra map features
       addScaleBar(position = 'topright')%>%
