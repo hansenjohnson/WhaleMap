@@ -1,8 +1,8 @@
 # WhaleMap
-Interactive map to visualize whale surveys in Atlantic Canada since 1951.
+Interactive map to visualize whale survey results in Atlantic Canada in near real-time
 
 ## Overview
-This app us intented to be used as a visual tool for exploring and gaining intuition about the data we have already collected on baleen whales in the Northwest Atlantic. It is particularly geared towards visualizing seasonal shifts over single and multiple years in an attempt to understand seasonal whale distribution and gaps in our knowledge. This app is intended only intended for convenient visualization and coordination of fieldwork efforts. It includes data with varying degrees of quality control and should therefore be treated with caution.
+The goal of this application is to rapidly and effectively disseminate whale survey information within and between research, government, industry, and public sectors. Our hope is that it will improve survey efficiency, increase public awareness, and inform impactful, transparent management decisions. It is still in active development, so please report any problems or suggestions via this site's issue page. Follow the links below for more information and a live demonstration.
 
 ## Demonstration
 
