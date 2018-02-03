@@ -1,4 +1,5 @@
 # ui.R
+# WhaleMap - a Shiny app for visualizing whale survey data
 
 # setup -------------------------------------------------------------------
 
