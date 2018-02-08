@@ -70,7 +70,7 @@ header <-  dashboardHeader(title = 'WhaleMap',
 body <- dashboardBody(
   fluidRow(
     
-    # sidebar --------------------------------------------------------------------
+    # editor tab ----------------------------------------------------------
     column(width = 3,
            
            
@@ -118,6 +118,16 @@ body <- dashboardBody(
                            
                            hr(),
                            
+                           # unlock preliminary data
+                           passwordInput("password", 'Show unverified data:', value = "",
+                                         placeholder = 'Enter password'),
+                           helpText('By default the map only displays verified data 
+                                    to avoid the spread of misinformation'),
+                           helpText('NOTE - currently this feature is not operational. 
+                                    All data are shown regardless of password input'),
+                           
+                           hr(),
+                           
                            # add button to update date
                            actionButton("go", "Go!",
                                         style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
@@ -129,6 +139,8 @@ body <- dashboardBody(
                                        Consider turning tracks \'off\' below to speed up plotting.')
                            
                   ),
+                  
+                  # layers tab ----------------------------------------------------------
                   
                   # Customize plotting
                   tabPanel(title = 'Layers',
@@ -183,26 +195,39 @@ body <- dashboardBody(
                            
                   ),
                   
+                  # draw tab ----------------------------------------------------------
+                  
                   # Coordinate editor
                   tabPanel(title = 'Draw', 
                            
+                           # help text
                            helpText('Drop new points with ',icon("map-marker", lib = 'glyphicon'), 
                                     '. Edit points with ', icon("edit", lib = 'glyphicon'),
                                     ' or via the table below. Remove one or all points with', 
                                     icon("trash", lib = 'glyphicon'), '. Distances are along-path [km]'),
+                           
+                           # coordinate table
                            strong('Coordinate list'),
                            rHandsontableOutput("hot", height = 250),
                            helpText('Hint: switch tabs to add points more quickly'),
+                           
+                           # calculate distance
                            checkboxInput("dist", label = 'Calculate distance?', value = T),
+                           
+                           # round coordinates
                            strong('Round coordinates'),
                            helpText('Choose number of decimal places'),
                            numericInput('dig', label = NULL, value = 1,
                                         min = 0, max = 6, step=1, width = 50),
                            actionButton('round', 'Round'),
+                           
+                           # connect points
                            radioButtons('shp', label = 'Connection between points', 
                                         choices = c('None', 'Line', 'Polygon'), 
                                         selected = 'None', inline = F),
                            strong('Save coordinates'), br(),
+                           
+                           # download
                            downloadButton("downloadData", "Save")
                   )    
            )

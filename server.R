@@ -49,6 +49,9 @@ dcsIcons = iconList(
   buoy = makeIcon("icons/buoy.png", iconWidth = 50, iconHeight = 40)
 )
 
+# read in password file
+load('password.rda')
+
 # server ------------------------------------------------------------------
 
 function(input, output, session){
@@ -196,6 +199,23 @@ function(input, output, session){
     
     # join in list
     list(lat, lon)
+  })
+  
+  # password protected data -----------------------------------------------
+  
+  observeEvent(input$go,{
+    if(input$password == password){
+      showNotification('Password was correct! Showing unverified data...\n
+                       NOTE - this feature is not yet operational', 
+                       duration = 7, closeButton = T, type = 'message')
+    } else {
+      showNotification('Password not provided or incorrect. Hiding unverified data...\n
+                       NOTE - this feature is not yet operational', 
+                       duration = 7, closeButton = T, type = 'warning')
+      
+      # REMOVE UNVERIFIED DATA
+      
+    }
   })
   
   # track warning --------------------------------------------------------
