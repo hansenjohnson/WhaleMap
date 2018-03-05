@@ -181,9 +181,6 @@ body <- dashboardBody(
                            checkboxInput("mpa", 
                                          label = 'Protected areas', value = T),
                            
-                           helpText('NOTE - The Gulf of St Lawrence Mandatory Slow-Down Zone is no 
-                                    longer active. It was in effect from 11 Aug 2017 to 11 Jan 2018'),
-                           
                            checkboxInput("tss", 
                                          label = 'Shipping lanes', value = T),
                            
@@ -230,6 +227,16 @@ body <- dashboardBody(
                            # download
                            downloadButton("downloadData", "Save")
                   )    
+           ),
+           
+           box(title = 'Share', width = NULL,
+             
+             # bookmarking
+             bookmarkButton(),
+             
+             helpText('Use the above button to bookmark the app in its current state 
+                                    so you can easily share it with others')
+             
            )
     ),
     
