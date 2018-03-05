@@ -92,7 +92,7 @@ cd ~/Projects/WhaleMap/data/raw/2017_sightings/
 scp 2017_narw_sightings.csv hansen@taggart3.ocean.dal.ca:/home/hansen
 
 # transfer to WhaleMap
-scp 2017_narw_sightings.csv whalemap:/srv/shiny-server/WhaleMap/data/raw/22017_sightings
+scp 2017_narw_sightings.csv whalemap:/srv/shiny-server/WhaleMap/data/raw/2017_sightings
 
 ## Directory
 
