@@ -227,17 +227,17 @@ body <- dashboardBody(
                            # download
                            downloadButton("downloadData", "Save")
                   )    
-           ),
-           
-           box(title = 'Share', width = NULL,
-             
-             # bookmarking
-             bookmarkButton(),
-             
-             helpText('Use the above button to bookmark the app in its current state 
-                                    so you can easily share it with others')
-             
            )
+           
+           # box(title = 'Share', width = NULL,
+           #   
+           #   # bookmarking
+           #   bookmarkButton(),
+           #   
+           #   helpText('Use the above button to bookmark the app in its current state 
+           #                          so you can easily share it with others')
+           #   
+           # )
     ),
     
     # main display --------------------------------------------------------------------
