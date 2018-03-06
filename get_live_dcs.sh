@@ -11,7 +11,8 @@ declare -A URL
 # assign paths to detection data for each deployment
 URL=(
 	# live		
-	#[2017-12-16_slocum_otn200]=http://dcs.whoi.edu/dal1217/dal1217_otn200_html/ptracks/manual_analysis.csv
+	[2018-02-22_slocum_we03]=http://dcs.whoi.edu/hatteras0218/hatteras0218_we03_html/ptracks/manual_analysis.csv
+	[2018-02-13_buoy_nybight]=http://dcs.whoi.edu/nyb0218/nyb0218_buoy_html/ptracks/manual_analysis.csv
 )
 
 # download data
