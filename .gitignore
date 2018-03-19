@@ -1,13 +1,30 @@
+# R / system
 .Rproj.user
 .Rproj
 .Rhistory
 .RData
 .Ruserdata
-data/
-.csv
-.gps
-.gpx
-.xlsx
-.xls
 .DS_Store
-WhaleMap.Rproj
+
+# directories
+data/
+dev/
+figures/
+shiny_bookmarks/
+
+# sensitive
+password.rda
+
+# latex
+*.out
+*.log
+*.synctex.gz
+*.aux
+*.docx
+
+# data files
+*.csv
+*.gps
+*.gpx
+*.xlsx
+*.xls
