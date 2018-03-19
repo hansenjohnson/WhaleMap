@@ -33,7 +33,7 @@ tracks_live = readRDS('data/interim/dcs_live_tracks.rds')
 obs = obs[-c(which(obs$id %in% unique(obs_live$id))),]
 
 # combine live and archived observations
-obs_merged = join(obs, obs_live, type = 'full')
+obs = join(obs, obs_live, type = 'full')
 
 # remove duplicates (excluding id column to avoid keeping both live and archived)
 # obs = obs_merged[which(!duplicated(obs_merged[,c(1:6, 8:12)])),]
@@ -47,7 +47,7 @@ saveRDS(obs, file = 'data/processed/observations.rds')
 tracks = tracks[-c(which(tracks$id %in% unique(tracks_live$id))),]
 
 # combine tracks
-tracks_merged = join(tracks, tracks_live, type = 'full')
+tracks = join(tracks, tracks_live, type = 'full')
 
 # remove duplicates (excluding id column to avoid keeping both live and archived)
 # tracks = tracks_merged[which(!duplicated(tracks_merged[,c(1:6, 8:9)])),]
