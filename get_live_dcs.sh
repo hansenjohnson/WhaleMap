@@ -10,14 +10,13 @@ declare -A URL
 
 # assign paths to detection data for each deployment
 URL=(
-	# live		
-	[2018-02-22_slocum_we03]=http://dcs.whoi.edu/hatteras0218/hatteras0218_we03_html/ptracks/manual_analysis.csv
+	# live			
 	[2018-02-13_buoy_nybight]=http://dcs.whoi.edu/nyb0218/nyb0218_buoy_html/ptracks/manual_analysis.csv
 )
 
 # download data
-for i in "${!URL[@]}"; do   	
-	
+for i in "${!URL[@]}"; do
+
 	# define data directory
 	DATADIR=${DESTDIR}/data/raw/dcs/live/${i}
 
@@ -26,7 +25,7 @@ for i in "${!URL[@]}"; do
 
 	# download glider detections
 	wget -q -N ${URL[$i]} -P ${DATADIR}
-		
+
 done
 
 # process data

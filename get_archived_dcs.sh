@@ -9,9 +9,10 @@ DESTDIR=/srv/shiny-server/WhaleMap # server
 declare -A URL
 
 # assign paths to detection data for each deployment
-URL=(		
-	[2016-06-23_buoy_nybight]=http://dcs.whoi.edu/nyb0616/dmon009_html/ptracks/manual_analysis.csv		
-	[2017-08-02_slocum_otn200]=http://dcs.whoi.edu/dal0817/dal0817_otn200_html/ptracks/manual_analysis.csv	
+URL=(
+	[2018-02-22_slocum_we03]=http://dcs.whoi.edu/hatteras0218/hatteras0218_we03_html/ptracks/manual_analysis.csv
+	[2016-06-23_buoy_nybight]=http://dcs.whoi.edu/nyb0616/dmon009_html/ptracks/manual_analysis.csv
+	[2017-08-02_slocum_otn200]=http://dcs.whoi.edu/dal0817/dal0817_otn200_html/ptracks/manual_analysis.csv
 	[2017-10-03_slocum_dal556]=http://dcs.whoi.edu/dal1017/dal1017_dal556_html/ptracks/manual_analysis.csv
 	[2016-09-28_buoy_nomans]=http://dcs.whoi.edu/nomans0916/dmon028_html/ptracks/manual_analysis.csv
 	[2017-06-23_wave_crispusattucks]=http://dcs.whoi.edu/gom0717/gom0717_crispusattucks_html/ptracks/manual_analysis.csv
@@ -26,7 +27,7 @@ URL=(
 	[2016-06-24_buoy_mdr]=http://dcs.whoi.edu/mdr0616/dmon011_html/ptracks/manual_analysis.csv
 	[2016-04-13_slocum_we03]=http://dcs.whoi.edu/gsc0416/we03_html/ptracks/manual_analysis.csv
 	[2016-03-30_slocum_we03]=http://dcs.whoi.edu/gsc0316/we03_html/ptracks/manual_analysis.csv
-	[2015-03-24_buoy_nomans]=http://dcs.whoi.edu/nomans0315/dmon008_html/ptracks/manual_analysis.csv	
+	[2015-03-24_buoy_nomans]=http://dcs.whoi.edu/nomans0315/dmon008_html/ptracks/manual_analysis.csv
 	[2015-09-05_buoy_mdr]=http://dcs.whoi.edu/mdr0915/dmon010_html/ptracks/manual_analysis.csv
 	[2015-09-14_slocum_dal556]=http://dcs.whoi.edu/rb0915_dal556/dal556_html/ptracks/manual_analysis.csv
 	[2015-10-27_slocum_otn200]=http://dcs.whoi.edu/rb1015_otn200/otn200_html/ptracks/manual_analysis.csv
@@ -38,8 +39,8 @@ URL=(
 )
 
 # download data
-for i in "${!URL[@]}"; do   	
-	
+for i in "${!URL[@]}"; do
+
 	# define data directory
 	DATADIR=${DESTDIR}/data/raw/dcs/archived/${i}
 
@@ -48,7 +49,7 @@ for i in "${!URL[@]}"; do
 
 	# download glider detections
 	wget -q -N ${URL[$i]} -P ${DATADIR}
-		
+
 done
 
 # process data
