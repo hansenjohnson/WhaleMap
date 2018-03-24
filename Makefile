@@ -111,5 +111,5 @@ data/processed/mpa.rds : functions/proc_mpa.R data/raw/mpa/*
 ## CLEAN ##
 .PHONY : clean
 clean :
-	rm -f data/interim/*.rds
-	rm -f data/processed/*.rds
+	rm -f data/interim/*.*
+	rm -f data/processed/*.*
