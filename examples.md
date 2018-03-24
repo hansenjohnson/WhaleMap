@@ -124,6 +124,8 @@ a # this means 'append' in vim
 # run every 5 min (usually just for testing)
 */5 * * * * sh /home/hansen/shiny-server/WhaleMap/get_live_dcs.sh
 
+# server side example
+0 * * * * /srv/shiny-server/WhaleMap/get_remote_data.sh
 
 # quit and save crontab
 :x
