@@ -2,8 +2,8 @@
 # download survey data from remote repository
 
 # Move to project data directory
-cd ~/Projects/WhaleMap/data/raw/ # local
-# cd /srv/shiny-server/WhaleMap/data/raw/ # server
+# cd ~/Projects/WhaleMap/data/raw/ # local
+cd /srv/shiny-server/WhaleMap/data/raw/ # server
 
 # Make backup directory
 mkdir -p backups
