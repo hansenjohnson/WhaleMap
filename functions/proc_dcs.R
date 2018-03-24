@@ -5,9 +5,9 @@ proc_dcs = function(data_dir, output_dir, det_fname, track_fname, ext = ""){
   # setup -------------------------------------------------------------------
   
   # libraries
-  library(lubridate)
-  library(sp)
-  library(reshape2)
+  library(lubridate, quietly = T, warn.conflicts = F)
+  library(sp, quietly = T, warn.conflicts = F)
+  library(reshape2, quietly = T, warn.conflicts = F)
   source('functions/config_data.R')
   
   # define functions --------------------------------------------------------
