@@ -77,6 +77,13 @@ config_observations = function(obs){
               'name',
               'id')
   
+  # return blank table if input is empty
+  if(nrow(obs)==0){
+    obs = data.frame(matrix(nrow = 0, ncol = length(columns)))
+    colnames(obs) = columns
+    return(obs)
+  }
+  
   # # test column names
   # test = columns %in% colnames(obs)
   # 
