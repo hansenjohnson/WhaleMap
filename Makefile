@@ -28,11 +28,11 @@ data/interim/2017_shelagh_tracks.rds : functions/proc_shelagh_tracks_2017.R data
 	Rscript $<
 
 # DCS archived tracks
-data/interim/dcs_archived_tracks.rds : functions/proc_archived_dcs.R data/raw/dcs/archived/*
+data/interim/dcs_archived_tracks.rds : functions/proc_archived_dcs.R data/raw/dcs/archived/*/*
 	Rscript $<
 
 # DCS live tracks
-data/interim/dcs_live_tracks.rds : functions/proc_live_dcs.R data/raw/dcs/live/*
+data/interim/dcs_live_tracks.rds : functions/proc_live_dcs.R data/raw/dcs/live/*/*
 	Rscript $<
 
 # Process DFO twin otter tracks
