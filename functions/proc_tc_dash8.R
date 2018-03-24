@@ -15,12 +15,12 @@ plot_tracks = F
 # setup -------------------------------------------------------------------
 
 # libraries
-library(lubridate)
-library(rgdal)
-library(tools)
+library(lubridate, quietly = T, warn.conflicts = F)
+library(rgdal, quietly = T, warn.conflicts = F)
+library(tools, quietly = T, warn.conflicts = F)
 
 # functions
-# source('functions/config_data.R')
+source('functions/config_data.R')
 source('functions/roundTen.R')
 source('functions/subsample_gps.R')
 source('functions/plot_save_track.R')
@@ -193,6 +193,9 @@ if(length(TRK)!=length(flist)){stop('Not all tracks were processed!')}
 # combine all flights
 TRACKS = do.call(rbind, TRK)
 
+# config flight data
+tracks = config_tracks(TRACKS)
+
 # save
-saveRDS(TRACKS, paste0(output_dir, 'tc_dash8_tracks.rds'))
+saveRDS(tracks, paste0(output_dir, 'tc_dash8_tracks.rds'))
 
