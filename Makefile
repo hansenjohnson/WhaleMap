@@ -121,7 +121,7 @@ data/processed/mpa.rds : functions/proc_mpa.R data/raw/mpa/*
 map : ../server_index/whale_map.html
 
 # Build map
-../server_index/whale_map.html : functions/build_static_map.R tracks obs sono latest tss mpa
+../server_index/whale_map.html : functions/build_static_map.R data/processed/*
 	Rscript $<
 
 ## CLEAN ##
