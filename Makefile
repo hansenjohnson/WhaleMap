@@ -1,7 +1,7 @@
 
 ## ALL ##
 .PHONY : all
-all : tracks obs sono latest tss mpa
+all : tracks obs sono latest tss mpa map
 
 ## TRACKS ##
 .PHONY : tracks
@@ -114,6 +114,14 @@ tss : data/processed/mpa.rds
 
 # Process mpa
 data/processed/mpa.rds : functions/proc_mpa.R data/raw/mpa/*
+	Rscript $<
+
+## MAP ##
+.PHONY : map
+map : ../server_index/whale_map.html
+
+# Build map
+../server_index/whale_map.html : functions/build_static_map.R tracks obs sono latest tss mpa
 	Rscript $<
 
 ## CLEAN ##
