@@ -1,7 +1,7 @@
 
 ## ALL ##
 .PHONY : all
-all : tracks obs sono tss mpa
+all : tracks obs sono latest tss mpa
 
 ## TRACKS ##
 .PHONY : tracks
@@ -90,6 +90,14 @@ sono : data/processed/sonobuoys.rds
 
 # Process sonobuoys
 data/processed/sonobuoys.rds : functions/proc_sonobuoys.R data/raw/sonobuoys/*
+	Rscript $<
+
+## DCS latest positions ##
+.PHONY : latest
+latest : data/processed/dcs_live_latest_position.rds
+
+# Process dcs positions
+data/processed/dcs_live_latest_position.rds : functions/proc_dcs_latest_position.R data/interim/dcs_live_tracks.rds
 	Rscript $<
 
 ## SHIPPING LANES ##
