@@ -22,8 +22,8 @@ start_date = Sys.Date()-lag
 fout = '../server_index/whale_map.html'
 
 # define score color palette
-obs_levs = c('detected', 'possibly detected', 'sighted', 'possibly sighted')
-obs_pal = c('red', 'yellow', 'darkslategray', 'grey')
+obs_levs = c('detected', 'possibly detected', 'sighted')
+obs_pal = c('red', 'yellow', 'darkslategray')
 pal = colorFactor(levels = obs_levs, 
                   palette = obs_pal)
 
@@ -84,7 +84,8 @@ spp = Obs[Obs$species == 'right',]
 # spp$score = as.factor(spp$score)
 
 # only possible detections
-pos = droplevels(spp[spp$score %in% c('possibly detected', 'possibly sighted'),])
+# pos = droplevels(spp[spp$score %in% c('possibly detected', 'possibly sighted'),])
+pos = droplevels(spp[spp$score == 'possibly detected',])
 
 # only definite
 det = droplevels(spp[!spp$score %in% c('possibly detected', 'possibly sighted'),])
