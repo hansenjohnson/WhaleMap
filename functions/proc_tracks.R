@@ -1,8 +1,5 @@
 ## proc_tracks ##
-# process all trackline data
-
-# libraries
-library(plyr)
+# combine all trackline data
 
 # functions
 source('functions/config_data.R')
@@ -11,19 +8,22 @@ source('functions/config_data.R')
 tracks_list = list.files('data/interim', pattern = 'tracks', full.names = T)
 
 # read in files
-TRACKS = list()
 for(i in seq_along(tracks_list)){
-  TRACKS[[i]] = readRDS(tracks_list[[i]])
+  
+  # get data
+  itrack = readRDS(tracks_list[[i]])
+  # itrack = config_tracks(itrack)
+  
+  if(i==1){
+    tracks = itrack
+  }
+  
+  # add to list
+  tracks = rbind(tracks, itrack)
 }
-
-# merge files
-tracks = join_all(TRACKS, type = 'full')
 
 # remove duplicates
 tracks = tracks[which(!duplicated(tracks)),]
-
-# adjust column types
-# tracks = config_tracks(tracks)
 
 # save
 saveRDS(tracks, 'data/processed/tracks.rds')
