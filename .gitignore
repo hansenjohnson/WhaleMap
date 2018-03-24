@@ -8,7 +8,6 @@
 
 # directories
 data/
-dev/
 figures/
 shiny_bookmarks/
 
@@ -28,3 +27,5 @@ password.rda
 *.gpx
 *.xlsx
 *.xls
+*.rds
+*.rda
