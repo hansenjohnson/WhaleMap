@@ -3,14 +3,14 @@
 # setup -------------------------------------------------------------------
 
 # required libraries
-library(leaflet)
-library(rgdal)
-library(htmltools)
-library(htmlwidgets)
-library(maptools)
-library(lubridate)
-library(oce)
-library(leaflet.extras)
+library(leaflet, quietly = T, warn.conflicts = F)
+library(rgdal, quietly = T, warn.conflicts = F)
+library(htmltools, quietly = T, warn.conflicts = F)
+library(htmlwidgets, quietly = T, warn.conflicts = F)
+library(maptools, quietly = T, warn.conflicts = F)
+library(lubridate, quietly = T, warn.conflicts = F)
+library(oce, quietly = T, warn.conflicts = F)
+library(leaflet.extras, quietly = T, warn.conflicts = F)
 
 # definitions -------------------------------------------------------------
 
