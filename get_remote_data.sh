@@ -11,7 +11,7 @@ cd /srv/shiny-server/WhaleMap/data/raw/ # server
 mkdir -p backups
 
 # Sightings
-rclone sync drive:2018-narw-opportunistic-sightings/ 2018_opportunistic_sightings/ --drive-formats csv --backup-dir backups --no-update-modtime -v
+rclone sync drive:2018-narw-opportunistic-sightings/ 2018_opportunistic_sightings/ --drive-formats csv --backup-dir backups -v
 
 ## Update map ##
 
