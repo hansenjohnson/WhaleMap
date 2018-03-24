@@ -59,6 +59,7 @@ obs : data/processed/observations.rds
 data/processed/observations.rds : functions/proc_observations.R \
 																	data/interim/2016_shelagh_sightings.rds \
 																	data/interim/2017_*_sightings.rds \
+																	data/interim/2018_opportunistic_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds \
 																	data/interim/narwc_sightings.rds
@@ -70,6 +71,10 @@ data/interim/2016_shelagh_sightings.rds : functions/proc_shelagh_2016.R data/raw
 
 # 2017 sightings
 data/interim/2017_*_sightings.rds : functions/proc_sightings_2017.R data/raw/2017_sightings/*
+	Rscript $<
+
+# 2018 opportunistic sightings
+data/interim/2018_opportunistic_sightings.rds : functions/proc_opportunistic_2018.R data/raw/2018_opportunistic_sightings/*
 	Rscript $<
 
 # DCS archived tracks
