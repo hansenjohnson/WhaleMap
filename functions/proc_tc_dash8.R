@@ -16,7 +16,7 @@ plot_tracks = F
 
 # libraries
 library(lubridate, quietly = T, warn.conflicts = F)
-suppressWarnings(library(rgdal, quietly = T, warn.conflicts = F))
+suppressMessages(library(rgdal, quietly = T, warn.conflicts = F))
 library(tools, quietly = T, warn.conflicts = F)
 
 # functions
