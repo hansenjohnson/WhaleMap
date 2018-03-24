@@ -10,7 +10,7 @@ declare -A URL
 
 # assign paths to detection data for each deployment
 URL=(
-	# live			
+	# live
 	[2018-02-13_buoy_nybight]=http://dcs.whoi.edu/nyb0218/nyb0218_buoy_html/ptracks/manual_analysis.csv
 )
 
@@ -29,4 +29,5 @@ for i in "${!URL[@]}"; do
 done
 
 # process data
-( cd ${DESTDIR}; Rscript -e "source('update_live_dcs.R')" )
+# ( cd ${DESTDIR}; Rscript -e "source('update_live_dcs.R')" )
+( cd ${DESTDIR}; make )
