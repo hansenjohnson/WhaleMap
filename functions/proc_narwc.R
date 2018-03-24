@@ -10,7 +10,7 @@ output_dir = 'data/interim/'
 
 # setup -------------------------------------------------------------------
 
-library(lubridate)
+library(lubridate, quietly = T, warn.conflicts = F)
 source('functions/config_data.R')
 
 # read in data ------------------------------------------------------------
