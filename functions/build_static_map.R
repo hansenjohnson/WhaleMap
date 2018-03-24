@@ -4,7 +4,7 @@
 
 # required libraries
 library(leaflet, quietly = T, warn.conflicts = F)
-library(rgdal, quietly = T, warn.conflicts = F)
+suppressWarnings(library(rgdal, quietly = T, warn.conflicts = F))
 library(htmltools, quietly = T, warn.conflicts = F)
 library(htmlwidgets, quietly = T, warn.conflicts = F)
 library(maptools, quietly = T, warn.conflicts = F)
