@@ -8,9 +8,9 @@ wrangle_tss = function(file_name, lon_col, lat_col, lstart, lend, pstart, pend, 
   # fig_dir -> directory to save figures
   
   # libraries
-  library(tools)
-  library(oce)
-  library(ocedata)
+  library(tools, quietly = T, warn.conflicts = F)
+  library(oce, quietly = T, warn.conflicts = F)
+  library(ocedata, quietly = T, warn.conflicts = F)
   data("coastlineWorldFine")
   
   # read in data

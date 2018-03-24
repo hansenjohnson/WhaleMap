@@ -8,8 +8,8 @@ output_dir = 'data/processed/'
 
 # process -----------------------------------------------------------------
 
-library(readxl)
-library(lubridate)
+library(readxl, quietly = T, warn.conflicts = F)
+library(lubridate, quietly = T, warn.conflicts = F)
 
 # read in data
 # dat = read_excel(data_dir)
