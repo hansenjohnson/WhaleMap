@@ -14,7 +14,6 @@ rclone config
 
 ```
 
-
 *** NOTE - *** By default, shared folders are not accessible via rclone. In order to be made available they must be manually 'added to my drive' (achieved via right click on the directory in question). I'm hopeful that once a directory is added to my drive, all changes will be synced with my drive. That will be very important for all this to work.
 
 ### List
@@ -136,4 +135,15 @@ a # this means 'append' in vim
 ```
 # restart the shiny server
 sudo systemctl restart shiny-server
+```
+
+***
+
+## Cron mail
+
+```
+# Delete
+cat /dev/null >/var/mail/hansenjohnson # local
+cat /dev/null >/var/mail/hansen # server
+
 ```
