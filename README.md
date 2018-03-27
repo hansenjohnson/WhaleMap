@@ -27,5 +27,3 @@ https://github.com/hansenjohnson/WhaleMap/issues
 
 For server-side help and setup, see the wiki page here:
 http://taggart3.ocean.dal.ca/wiki/Webapps/Webapps
-
-Or send an email to hansen.johnson@dal.ca
