@@ -161,19 +161,22 @@ map <- leaflet() %>%
             title = 'Score')
 
 # center on observations (if present)
-if(nrow(Tracks)!=0){
-  
-  # define an offset (in deg) to buffer bounds around latest observations
-  offset = 0.05
-  
-  map <- fitBounds(map = map,
-            max(Tracks$lon, na.rm = T)+offset, 
-            min(Tracks$lat, na.rm = T)-offset, 
-            min(Tracks$lon, na.rm = T)-offset, 
-            max(Tracks$lat, na.rm = T)+offset)
-} else {
-  map <- setView(map = map, lng = -65, lat = 45, zoom = 5)
-}
+# if(nrow(Tracks)!=0){
+#   
+#   # define an offset (in deg) to buffer bounds around latest observations
+#   offset = 0.05
+#   
+#   map <- fitBounds(map = map,
+#             max(Tracks$lon, na.rm = T)+offset, 
+#             min(Tracks$lat, na.rm = T)-offset, 
+#             min(Tracks$lon, na.rm = T)-offset, 
+#             max(Tracks$lat, na.rm = T)+offset)
+# } else {
+#   map <- setView(map = map, lng = -65, lat = 45, zoom = 5)
+# }
+
+# center on entire region
+map <- setView(map = map, lng = -65, lat = 45, zoom = 4)
 
 # plot polygons -----------------------------------------------------------
 
