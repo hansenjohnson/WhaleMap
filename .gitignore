@@ -10,6 +10,7 @@
 data/
 figures/
 shiny_bookmarks/
+job/
 
 # sensitive
 password.rda
