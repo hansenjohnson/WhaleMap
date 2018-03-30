@@ -293,7 +293,7 @@ function(input, output, session){
       
       # use NOAA graticules
       addWMSTiles(
-        "https://maps.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer/",
+        "https://gis.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer/",
         layers = c("1-degree grid", "5-degree grid"),
         options = WMSTileOptions(format = "image/png8", transparent = TRUE),
         attribution = NULL) %>%
