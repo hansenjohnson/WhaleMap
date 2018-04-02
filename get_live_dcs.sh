@@ -3,7 +3,7 @@
 
 # Select app directory
 DESTDIR=/srv/shiny-server/WhaleMap # server
-#DESTDIR=/Users/hansenjohnson/Projects/WhaleMap # local
+# DESTDIR=/Users/hansenjohnson/Projects/WhaleMap # local
 
 # initiate array
 declare -A URL
