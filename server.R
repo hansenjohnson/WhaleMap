@@ -508,7 +508,7 @@ function(input, output, session){
                        popup = ~paste(sep = "<br/>" ,
                                       strong("Sighting/Detection Details:"),
                                       paste0("Species: ", species),
-                                      "Score: possible",
+                                      paste0("Score: ", score),
                                       paste0("Platform: ", platform),
                                       paste0("Name: ", name),
                                       paste0('Date: ', as.character(date)),
