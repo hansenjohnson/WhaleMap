@@ -11,7 +11,6 @@ cd /srv/shiny-server/WhaleMap/data/raw/2017_sightings/
 
 # verify/setup remote
 rclone config
-
 ```
 
 *** NOTE - *** By default, shared folders are not accessible via rclone. In order to be made available they must be manually 'added to my drive' (achieved via right click on the directory in question). I'm hopeful that once a directory is added to my drive, all changes will be synced with my drive. That will be very important for all this to work.
@@ -46,8 +45,6 @@ rclone sync drive:data/ . --drive-formats csv
 # sync files (Aerial survey GPS)
 cd Projects/WhaleMap/data/raw/Aerial_Surveys_GPS
 rclone sync drive:Aerial_Surveys_GPS/ . -n
-
-
 ```
 
 ***
@@ -103,7 +100,6 @@ scp -r 2017_tc_tracks hansen@taggart3.ocean.dal.ca:/home/hansen
 
 # transfer to WhaleMap
 scp -r 2017_tc_tracks whalemap:/srv/shiny-server/WhaleMap/data/raw/
-
 ```
 ***
 
@@ -145,5 +141,12 @@ sudo systemctl restart shiny-server
 # Delete
 cat /dev/null >/var/mail/hansenjohnson # local
 cat /dev/null >/var/mail/hansen # server
+```
+***
 
+## Git
+
+```
+# reset branch to master (delete local commits)
+git reset --hard
 ```
