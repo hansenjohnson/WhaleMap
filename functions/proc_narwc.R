@@ -3,7 +3,7 @@
 # user input --------------------------------------------------------------
 
 # directory to look for files
-data_dir = 'data/raw/historical/'
+data_dir = 'data/raw/narwc/'
 
 # directory for output
 output_dir = 'data/interim/'

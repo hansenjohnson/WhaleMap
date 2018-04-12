@@ -1,5 +1,5 @@
 # directory to look for files
-data_dir = 'data/raw/2018_opportunistic_sightings/'
+data_dir = 'data/raw/2018_whalemapdata/2018_opportunistic_sightings/'
 
 # directory for output
 output_dir = 'data/interim/'

@@ -10,8 +10,8 @@ cd /srv/shiny-server/WhaleMap/data/raw/ # server
 # Make backup directory
 mkdir -p backups
 
-# Sightings
-rclone sync whalemapdata:"2018 Opportunistic Sightings/" 2018_opportunistic_sightings/ --drive-formats csv --backup-dir backups -v
+# Opportunistic sightings
+rclone sync whalemapdata:"/" "2018_whalemapdata/" --drive-formats csv --backup-dir backups -v
 
 ## Update map ##
 

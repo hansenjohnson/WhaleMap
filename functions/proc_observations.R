@@ -12,14 +12,13 @@ for(i in seq_along(obs_list)){
   
   # get data
   iobs = readRDS(obs_list[[i]])
-  # iobs = config_observations(iobs)
   
+  # combine
   if(i==1){
     obs = iobs
+  } else {
+    obs = rbind(obs, iobs) # add to list 
   }
-  
-  # add to list
-  obs = rbind(obs, iobs)
 }
 
 # remove duplicates

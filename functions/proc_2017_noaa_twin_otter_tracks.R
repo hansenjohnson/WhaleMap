@@ -1,10 +1,10 @@
-## dfo_twin_otter ##
-# Process gps data from DFO Twin Otter survey plane
+## proc_2017_noaa_twin_otter ##
+# Process gps data from NOAA Twin Otter survey plane
 
 # user input --------------------------------------------------------------
 
 # data directory
-data_dir = 'data/raw/dfo_twin_otter_tracks/'
+data_dir = 'data/raw/2017_noaa_twin_otter_tracks/'
 
 # output directory
 output_dir = 'data/interim/'
@@ -25,11 +25,7 @@ source('functions/subsample_gps.R')
 source('functions/plot_save_track.R')
 
 # list files to process
-flist = list.files(data_dir, pattern = '.gpx', full.names = T)
-
-# remove known problem files from list
-flist = flist[-which(basename(flist) == '20171007_corr.gpx')]
-flist = flist[-which(basename(flist) == '20171007.gpx')]
+flist = list.files(data_dir, pattern = '.gps', full.names = T)
 
 # specify column names
 cnames = c('time', 'lon', 'lat', 'speed', 'altitude')
@@ -42,24 +38,18 @@ TRK = list()
 # read files
 for(i in seq_along(flist)){
   
-  # read in file
-  tmp = readOGR(dsn = flist[i], layer="track_points", verbose = F)
-  
-  # convert to data frame
-  tmp = as.data.frame(tmp)
-  
-  # dummy variable for speed
-  tmp$speed = NA
+  # read in data
+  tmp = read.table(flist[i], sep = ',')
   
   # select and rename important columns
-  tmp = data.frame(tmp$time, tmp$coords.x1, tmp$coords.x2, tmp$speed, tmp$ele)
+  tmp = data.frame(tmp$V1, tmp$V3, tmp$V2, tmp$V4, tmp$V6)
   colnames(tmp) = cnames
   
   # remove columns without timestamp
   tmp = tmp[which(!is.na(tmp$time)),]
   
   # add timestamp
-  tmp$time = as.POSIXct(tmp$time, format = '%Y/%m/%d %H:%M:%OS', tz = 'UTC')
+  tmp$time = as.POSIXct(tmp$time, format = '%d/%m/%Y %H:%M:%S', tz="UTC", usetz=TRUE)
   
   # subsample (use default subsample rate)
   tracks = subsample_gps(gps = tmp)
@@ -69,8 +59,8 @@ for(i in seq_along(flist)){
   tracks$yday = yday(tracks$date)
   tracks$year = year(tracks$date)
   tracks$platform = 'plane'
-  tracks$name = 'dfo'
-  tracks$id = paste0(tracks$date, '_plane_dfo')
+  tracks$name = 'noaa'
+  tracks$id = paste0(tracks$date, '_plane_noaa')
   
   # plot track
   if(plot_tracks){
@@ -97,4 +87,4 @@ TRACKS = do.call(rbind, TRK)
 tracks = config_tracks(TRACKS)
 
 # save
-saveRDS(tracks, paste0(output_dir, 'dfo_twin_otter_tracks.rds'))
+saveRDS(tracks, paste0(output_dir, '2017_noaa_twin_otter_tracks.rds'))

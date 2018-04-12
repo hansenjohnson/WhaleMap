@@ -4,7 +4,7 @@
 # user input --------------------------------------------------------------
 
 # data directory
-data_dir = 'data/raw/tc_dash8_tracks/'
+data_dir = 'data/raw/2017_tc_dash8_tracks/'
 
 # output directory
 output_dir = 'data/interim/'
@@ -197,5 +197,5 @@ TRACKS = do.call(rbind, TRK)
 tracks = config_tracks(TRACKS)
 
 # save
-saveRDS(tracks, paste0(output_dir, 'tc_dash8_tracks.rds'))
+saveRDS(tracks, paste0(output_dir, '2017_tc_dash8_tracks.rds'))
 
