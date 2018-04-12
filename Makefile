@@ -15,7 +15,7 @@ data/processed/tracks.rds : functions/proc_tracks.R \
 														data/interim/2017_dfo_twin_otter_tracks.rds \
 														data/interim/2017_noaa_twin_otter_tracks.rds \
 														data/interim/2017_tc_dash8_tracks.rds \
-														data/interim/2018_dfo_twin_otter_tracks.rds \														
+														data/interim/2018_dfo_twin_otter_tracks.rds \
 														data/interim/dcs_archived_tracks.rds \
 														data/interim/dcs_live_tracks.rds
 	Rscript $<
@@ -45,7 +45,7 @@ data/interim/2017_tc_dash8_tracks.rds : functions/proc_2017_tc_dash8_tracks.R da
 	Rscript $<
 
 # 2018 DFO twin otter tracks
-data/interim/2018_dfo_twin_otter_tracks.rds : functions/proc_2018_dfo_twin_otter_tracks.R data/raw/2018_dfo_twin_otter_tracks/*
+data/interim/2018_dfo_twin_otter_tracks.rds : functions/proc_2018_dfo_twin_otter_tracks.R data/raw/2018_whalemapdata/DFO_twin_otter/*
 	Rscript $<
 
 # DCS archived tracks
