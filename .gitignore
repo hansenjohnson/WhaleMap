@@ -11,6 +11,8 @@ data/
 figures/
 shiny_bookmarks/
 job/
+issues/
+test/
 
 # sensitive
 password.rda
