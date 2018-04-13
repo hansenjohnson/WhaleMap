@@ -217,7 +217,7 @@ names(tracks.df) %>%
       addPolylines(data=tracks.df[[df]], group = 'Survey tracks',
                    lng=~lon, lat=~lat, weight = 2,
                    popup = paste0('Track ID: ', unique(tracks.df[[df]]$id)),
-                   smoothFactor = 3, color = getColor(tracks.df[[df]]))
+                   smoothFactor = 1, color = getColor(tracks.df[[df]]))
   })
 
 # add platform icons ------------------------------------------------------
