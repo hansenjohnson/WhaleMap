@@ -11,7 +11,7 @@ cd /srv/shiny-server/WhaleMap/data/raw/ # server
 mkdir -p backups
 
 # Opportunistic sightings
-rclone sync whalemapdata:"/" "2018_whalemapdata/" --drive-formats csv --backup-dir backups -v
+rclone sync whalemapdata:"WhaleMapData_Master/" "2018_whalemapdata/" --drive-formats csv --backup-dir backups -v
 
 ## Update map ##
 
