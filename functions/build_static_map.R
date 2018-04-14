@@ -123,7 +123,7 @@ map <- leaflet() %>%
                                      'Latest robot positions', 
                                      'Possible detections/sightings',
                                      'Definite detections/sightings'),
-                   options = layersControlOptions(collapsed = TRUE), position = 'topright') %>%
+                   options = layersControlOptions(collapsed = FALSE), position = 'topright') %>%
   
   # hide groups
   hideGroup('Place names') %>%
