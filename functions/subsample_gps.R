@@ -1,37 +1,93 @@
-subsample_gps = function(gps=gps,n=60,plot_comparison=F){
-# Subsample aerial gps data frame to only include 1 sample every (n) seconds. If n=0, no subsampling...
+subsample_gps = function(gps, n=60, tol = 0.0075, plot_comparison=F, full_res=F, simplify = FALSE){
+  # 'gps' is a data frame that has columns named 'lat' and 'lon' in decimal degrees
+  # 'n' is the desired gps sampling interval in seconds (only when simplify=FALSE)
+  # 'tol' is a tolerance for simplifying where larger values provide fewer points (only when simplify=TRUE)
+  # 'plot_comparison' is a switch to produce a plot of the original and new track
+  # 'full_res' is a switch to skip subsampling and maintain full gps resolution
+  # 'simplify' is a switch to choose the method for simplifying the tracks. TRUE simplifies with the Douglas-Peuker algorithm (rgeos::gSimplify), and FALSE subsamples the gps to a given time interval
   
-  if(n>0){
+  if(simplify){
+    # simplify ----------------------------------------------------------------
+    # simplify the geometry using Douglas-Peuker algorithm
+    
+    library(sp)
+    library(rgeos)
+    
+    # return full resolution tracks if desired
+    if(full_res){
+      return(gps)
+    }
+    
+    # remove columns without lat or lon
+    gps = gps[which(!is.na(gps$lat)),]
+    gps = gps[which(!is.na(gps$lon)),]
+    
+    # create lines object
+    ln = Line(cbind(gps$lat, gps$lon))
+    
+    # convert to Lines
+    lns = Lines(ln, ID = 'track')
+    
+    # convert to Spatial Lines
+    slns = SpatialLines(list(lns))
+    
+    # simplify
+    sim = gSimplify(slns, tol = tol)
+    
+    # warning if not simple
+    if(!gIsSimple(sim)){
+      warning('Line is not simple! Duplicates will be removed, but watch for consequences. Consider lowering subset tolerance...')
+    }
+    
+    # extract coordinates in data frame
+    df = as.data.frame(coordinates(sim)[[1]][[1]])
+    colnames(df) = c('lat', 'lon')
+    
+    # match appropriate rows in original data
+    new = gps[match(round(df$lon,5),round(gps$lon,5)),]
+    
+    # remove duplicates
+    new = new[which(!duplicated(new)),]
+    
+    # order by time
+    new = new[order(new$time),]
+    
+  } else {
+    # downsample ----------------------------------------------------------------
+    # downsample gps to lower sampling rate
+    
+    # return full resolution tracks if desired
+    if(full_res){
+      return(gps)
+    }
+    
     # determine sample rate
     ts = as.numeric(round(median(diff(gps$time), na.rm = T), 1))
     
     # subsample
     if(ts>0 & n>ts){
-      tracks = gps[seq(1, nrow(gps), n/ts),]
+      new = gps[seq(1, nrow(gps), n/ts),]
     } else {
-      # message('No subsampling occured - unable to determine gps sampling rate')
+      message('No subsampling occured - unable to determine gps sampling rate')
       return(gps)
     }
-    
-    # compare subsample
-    if(plot_comparison){
-      source('functions/plot_track.R')
-      
-      plot_track(gps)
-      
-      lines(tracks$lon, tracks$lat, col = 'red')
-      
-      legend('bottomright', lty = c(1,1), col = c('blue', 'red'), cex = .7, bty = 'n',
-             legend = c(paste0('Original (', nrow(gps), ' pts, 1 pt every ', ts, ' sec)'),
-                        paste0('Subsample (', nrow(tracks), ' pts, 1 pt every ', n, ' sec)')))
-    }
-    
-    return(tracks)
-    
-  } else {
-    
-    # message('No subsampling occured - please choose a value >0')
-    return(gps)
-    
   }
+  
+  # plot comparison ---------------------------------------------------------
+  if(plot_comparison & !full_res){
+    par(mfrow=c(1,2))
+    
+    # plot original
+    plot(gps$lon, gps$lat, type = 'l', col = 'red', xlab = '', ylab = '',main = 'Original')
+    mtext(paste0('Points: ', nrow(gps), ', Size (bytes): ', object.size(gps)), side = 3, adj = 0)
+    
+    # plot new
+    plot(gps$lon, gps$lat, type = 'l', col = 'red', xlab = '', ylab = '',main = 'Subsampled')
+    lines(new$lon, new$lat, type = 'l', col = 'blue')
+    mtext(paste0('Points: ', nrow(new), ', Size (bytes): ', object.size(new)), side = 3, adj = 0)
+  }
+  
+  # return data
+  return(new)
+  
 }
