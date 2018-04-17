@@ -4,15 +4,15 @@ plot_track = function(gps, span = 'default', verbose = F){
   data("coastlineWorldFine")
   
   if(span=='default'){
-    span = 3 * 111 * diff(range(gps$lat))
+    span = 3 * 111 * diff(range(gps$lat, na.rm = T))
     if(verbose){
       message('Using span = ', span)
     }
   }
   
   plot(coastlineWorldFine, 
-       clon = mean(gps$lon), 
-       clat = mean(gps$lat), 
+       clon = mean(gps$lon, na.rm = T), 
+       clat = mean(gps$lat, na.rm = T), 
        span = span
   )
   
