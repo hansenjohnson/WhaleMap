@@ -29,7 +29,6 @@ for(i in seq_along(dfiles)){
 # combine into single table
 she = do.call(rbind.data.frame, SHE)
 
-
 # fill in legstage info ---------------------------------------------------
 
 # identify start and end rows when 'on effort'

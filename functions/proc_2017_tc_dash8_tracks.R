@@ -9,9 +9,6 @@ data_dir = 'data/raw/2017_tc_dash8_tracks/'
 # output directory
 output_dir = 'data/interim/'
 
-# plot tracks?
-plot_tracks = F
-
 # setup -------------------------------------------------------------------
 
 # libraries
@@ -24,6 +21,10 @@ source('functions/config_data.R')
 source('functions/roundTen.R')
 source('functions/subsample_gps.R')
 source('functions/plot_save_track.R')
+source('functions/on_server.R')
+
+# plot tracks?
+plot_tracks = !on_server()
 
 # list files to process
 flist = list.files(data_dir, pattern = '.csv', full.names = T)

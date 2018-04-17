@@ -9,9 +9,6 @@ data_dir = 'data/raw/2017_dfo_twin_otter_tracks/'
 # output directory
 output_dir = 'data/interim/'
 
-# plot tracks?
-plot_tracks = F
-
 # setup -------------------------------------------------------------------
 
 # libraries
@@ -23,6 +20,10 @@ library(tools, quietly = T, warn.conflicts = F)
 source('functions/config_data.R')
 source('functions/subsample_gps.R')
 source('functions/plot_save_track.R')
+source('functions/on_server.R')
+
+# plot tracks?
+plot_tracks = !on_server()
 
 # list files to process
 flist = list.files(data_dir, pattern = '.gpx', full.names = T)
