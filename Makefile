@@ -16,6 +16,7 @@ data/processed/tracks.rds : functions/proc_tracks.R \
 														data/interim/2017_noaa_twin_otter_tracks.rds \
 														data/interim/2017_tc_dash8_tracks.rds \
 														data/interim/2018_dfo_twin_otter_tracks.rds \
+														data/interim/2018_tc_dash8_tracks.rds \
 														data/interim/dcs_archived_tracks.rds \
 														data/interim/dcs_live_tracks.rds
 	Rscript $<
@@ -48,6 +49,10 @@ data/interim/2017_tc_dash8_tracks.rds : functions/proc_2017_tc_dash8_tracks.R da
 data/interim/2018_dfo_twin_otter_tracks.rds : functions/proc_2018_dfo_twin_otter_tracks.R data/raw/2018_whalemapdata/DFO_twin_otter/*
 	Rscript $<
 
+# 2018 TC dash8 tracks
+data/interim/2018_tc_dash8_tracks.rds : functions/proc_2018_tc_dash8_tracks.R data/raw/2018_whalemapdata/TC_dash8/*
+	Rscript $<
+
 # DCS archived tracks
 data/interim/dcs_archived_tracks.rds : functions/proc_archived_dcs.R data/raw/dcs/archived/*/*
 	Rscript $<
@@ -66,6 +71,8 @@ data/processed/observations.rds : functions/proc_observations.R \
 																	data/interim/2016_shelagh_sightings.rds \
 																	data/interim/2017_*_sightings.rds \
 																	data/interim/2018_opportunistic_sightings.rds \
+																	data/interim/2018_dfo_twin_otter_sightings.rds \
+																	data/interim/2018_tc_dash8_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
 	Rscript $<
@@ -84,6 +91,14 @@ data/interim/2017_*_sightings.rds : functions/proc_2017_sightings.R data/raw/201
 
 # 2018 opportunistic sightings
 data/interim/2018_opportunistic_sightings.rds : functions/proc_2018_opportunistic.R data/raw/2018_whalemapdata/2018_opportunistic_sightings/*
+	Rscript $<
+
+# 2018 dfo twin otter sightings
+data/interim/2018_dfo_twin_otter_sightings.rds : functions/proc_2018_dfo_twin_otter_sightings.R data/raw/2018_whalemapdata/DFO_twin_otter/*
+	Rscript $<
+
+# 2018 tc dash8 sightings
+data/interim/2018_tc_dash8_sightings.rds : functions/proc_2018_tc_dash8_sightings.R data/raw/2018_whalemapdata/TC_dash8/*
 	Rscript $<
 
 # DCS archived detections
