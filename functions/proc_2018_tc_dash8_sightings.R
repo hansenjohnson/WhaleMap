@@ -1,13 +1,13 @@
-## proc_2018_dfo_twin_otter_sightings ##
-# Process sightings data from DFO Twin Otter survey plane
+## proc_2018_tc_dash8_sightings ##
+# Process sightings data from TC Dash-8 survey plane
 
 # user input --------------------------------------------------------------
 
 # data directory
-data_dir = 'data/raw/2018_whalemapdata/DFO_twin_otter/'
+data_dir = 'data/raw/2018_whalemapdata/TC_dash8/'
 
 # output file name
-ofile = '2018_dfo_twin_otter_sightings.rds'
+ofile = '2018_tc_dash8_sightings.rds'
 
 # output directory
 output_dir = 'data/interim/'
@@ -18,12 +18,13 @@ output_dir = 'data/interim/'
 library(lubridate, quietly = T, warn.conflicts = F)
 suppressMessages(library(rgdal, quietly = T, warn.conflicts = F))
 library(tools, quietly = T, warn.conflicts = F)
+library(measurements, quietly = T, warn.conflicts = F)
 
 # functions
 source('functions/config_data.R')
 
 # list files to process
-flist = list.files(data_dir, pattern = '.sig', full.names = T, recursive = T)
+flist = list.files(data_dir, pattern = 'Aerial_Survey_data_.*.csv$', full.names = T, recursive = T)
 
 # list to hold loop output
 SIG = list()
@@ -37,23 +38,33 @@ for(i in seq_along(flist)){
   if (file.size(flist[i]) == 0) next
   
   # read in data
-  tmp = read.table(flist[i], sep = ',')
-  
-  # assign column names
-  colnames(tmp) = c('transect', 'unk1', 'unk2', 'time', 'observer', 'declination', 'species', 'number', 'unk4', 'bearing', 'unk5', 'unk6', 'comments', 'side', 'lat', 'lon', 'audio', 'unk7', 'photo', 'unk8', 'unk9')
+  tmp = read.csv(flist[i], stringsAsFactors = F)
   
   # select important columns
-  tmp = tmp[,c('time', 'lat', 'lon', 'species', 'number')]
+  tmp = tmp[,c(1,2,12,13,17,18)]
+  
+  # rename
+  colnames(tmp) = c('date','time', 'species', 'number', 'lat', 'lon')
+  
+  # fix date
+  tmp$date = as.Date(tmp$date[1], format = '%m/%d/%Y')
+  
+  # remove columns without species
+  tmp = tmp[!tmp$species == '',]
   
   # remove columns without timestamp
   tmp = tmp[which(!is.na(tmp$time)),]
   
   # add timestamp
-  tmp$time = as.POSIXct(tmp$time, format = '%d/%m/%Y %H:%M:%S', tz="UTC", usetz=TRUE)
+  tmp$time = as.POSIXct(paste0(tmp$date, ' ', tmp$time), format = '%Y-%m-%d %H:%M:%S', tz="UTC", usetz=TRUE)
   
-  # fix blank species rows
-  tmp$species = as.character(tmp$species)
-  tmp$species[tmp$species==""] = NA
+  # fix lat
+  tmp$lat = gsub(pattern = 'N', replacement = '', tmp$lat)
+  tmp$lat = round(as.numeric(measurements::conv_unit(tmp$lat, from = 'deg_dec_min', to = 'dec_deg')), 5)
+  
+  # fix lon
+  tmp$lon = gsub(pattern = 'W', replacement = '', tmp$lon)
+  tmp$lon = round(as.numeric(measurements::conv_unit(tmp$lon, from = 'deg_dec_min', to = 'dec_deg'))*-1, 5)
   
   # add species identifiers
   tmp$species[tmp$species == 'EG'] = 'right'
@@ -63,7 +74,7 @@ for(i in seq_along(flist)){
   tmp$species[tmp$species == 'FS'] = 'fin/sei'
   tmp$species[tmp$species == 'BA'] = 'minke'
   tmp$species[tmp$species == 'BM'] = 'blue'
-  tmp$species[tmp$species == 'UW'] = 'unknown whale'
+  tmp$species[tmp$species == 'LGWH'] = 'unknown whale'
   
   # add metadata
   tmp$date = as.Date(tmp$time)
@@ -71,7 +82,7 @@ for(i in seq_along(flist)){
   tmp$year = year(tmp$date)
   tmp$score = 'sighted'
   tmp$platform = 'plane'
-  tmp$name = 'dfo'
+  tmp$name = 'tc'
   tmp$id = paste(tmp$date, tmp$platform, tmp$name, sep = '_')
   
   # add to list

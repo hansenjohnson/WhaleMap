@@ -1,13 +1,13 @@
-## proc_2018_dfo_twin_otter_tracks ##
-# Process gps data from DFO Twin Otter survey plane
+## proc_2018_tc_dash8_tracks ##
+# Process gps data from TC Dash-8 survey plane
 
 # user input --------------------------------------------------------------
 
 # data directory
-data_dir = 'data/raw/2018_whalemapdata/DFO_twin_otter/'
+data_dir = 'data/raw/2018_whalemapdata/TC_dash8/'
 
 # output file name
-ofile = '2018_dfo_twin_otter_tracks.rds'
+ofile = '2018_tc_dash8_tracks.rds'
 
 # output directory
 output_dir = 'data/interim/'
@@ -22,6 +22,7 @@ library(tools, quietly = T, warn.conflicts = F)
 # functions
 source('functions/config_data.R')
 source('functions/subsample_gps.R')
+source('functions/roundTen.R')
 source('functions/plot_save_track.R')
 source('functions/on_server.R')
 
@@ -29,7 +30,7 @@ source('functions/on_server.R')
 plot_tracks = !on_server()
 
 # list files to process
-flist = list.files(data_dir, pattern = '.gps', full.names = T, recursive = T)
+flist = list.files(data_dir, pattern = 'tracklog*', full.names = T, recursive = T)
 
 # specify column names
 cnames = c('time', 'lon', 'lat', 'speed', 'altitude')
@@ -42,18 +43,22 @@ TRK = list()
 # read files
 for(i in seq_along(flist)){
   
-  # read in data
-  tmp = read.table(flist[i], sep = ',')
+  # read in file
+  tmp = read.csv(flist[i], skip = 2)
   
   # select and rename important columns
-  tmp = data.frame(tmp$V1, tmp$V3, tmp$V2, tmp$V4, tmp$V6)
+  tmp = data.frame(tmp$Timestamp, tmp$Longitude, tmp$Latitude, tmp$Speed, tmp$Altitude)
   colnames(tmp) = cnames
+  
+  # Correct for variable precision (or errors) in gps
+  f = roundTen(tmp$time)/10^9
+  tmp$time = tmp$time/f
+  
+  # add timestamp
+  tmp$time = as.POSIXct(tmp$time, origin = '1970-01-01', tz = 'UTC', usetz=TRUE)
   
   # remove columns without timestamp
   tmp = tmp[which(!is.na(tmp$time)),]
-  
-  # add timestamp
-  tmp$time = as.POSIXct(tmp$time, format = '%d/%m/%Y %H:%M:%S', tz="UTC", usetz=TRUE)
   
   # subsample (use default subsample rate)
   tracks = subsample_gps(gps = tmp)
@@ -63,7 +68,7 @@ for(i in seq_along(flist)){
   tracks$yday = yday(tracks$date)
   tracks$year = year(tracks$date)
   tracks$platform = 'plane'
-  tracks$name = 'dfo'
+  tracks$name = 'tc'
   tracks$id = paste(tracks$date, tracks$platform, tracks$name, sep = '_')
   
   # plot track
@@ -86,7 +91,7 @@ if(length(TRK)!=length(flist)){stop('Not all tracks were processed!')}
 
 # combine all flights
 TRACKS = do.call(rbind, TRK)
-  
+
 # config flight data
 tracks = config_tracks(TRACKS)
 
