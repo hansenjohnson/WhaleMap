@@ -49,11 +49,18 @@ for(i in seq_along(flist)){
   tmp = data.frame(tmp$V1, tmp$V3, tmp$V2, tmp$V4, tmp$V6)
   colnames(tmp) = cnames
   
-  # remove columns without timestamp
-  tmp = tmp[which(!is.na(tmp$time)),]
+  # remove bogus lat
+  tmp[tmp$lat<30,] = NA
   
   # add timestamp
   tmp$time = as.POSIXct(tmp$time, format = '%d/%m/%Y %H:%M:%S', tz="UTC", usetz=TRUE)
+  
+  # remove columns without timestamp
+  tmp = tmp[!is.na(tmp$time),]
+  
+  # remove columns without lat lon
+  tmp = tmp[!is.na(tmp$lat),]
+  tmp = tmp[!is.na(tmp$lon),]
   
   # subsample (use default subsample rate)
   tracks = subsample_gps(gps = tmp)

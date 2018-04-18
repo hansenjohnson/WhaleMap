@@ -58,7 +58,11 @@ for(i in seq_along(flist)){
   tmp$time = as.POSIXct(tmp$time, origin = '1970-01-01', tz = 'UTC', usetz=TRUE)
   
   # remove columns without timestamp
-  tmp = tmp[which(!is.na(tmp$time)),]
+  tmp = tmp[!is.na(tmp$time),]
+  
+  # remove columns without lat lon
+  tmp = tmp[!is.na(tmp$lat),]
+  tmp = tmp[!is.na(tmp$lon),]
   
   # subsample (use default subsample rate)
   tracks = subsample_gps(gps = tmp)
