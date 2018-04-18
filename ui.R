@@ -118,15 +118,15 @@ body <- dashboardBody(
                            
                            hr(),
                            
-                           # unlock preliminary data
-                           passwordInput("password", 'Show unverified data:', value = "",
-                                         placeholder = 'Enter password'),
-                           helpText('By default the map only displays verified data 
-                                    to avoid the spread of misinformation'),
-                           helpText('NOTE - currently this feature is not operational. 
-                                    All data are shown regardless of password input'),
-                           
-                           hr(),
+                           # # unlock preliminary data
+                           # passwordInput("password", 'Show unverified data:', value = "",
+                           #               placeholder = 'Enter password'),
+                           # helpText('By default the map only displays verified data 
+                           #          to avoid the spread of misinformation'),
+                           # helpText('NOTE - currently this feature is not operational. 
+                           #          All data are shown regardless of password input'),
+                           # 
+                           # hr(),
                            
                            # add button to update date
                            actionButton("go", "Go!",

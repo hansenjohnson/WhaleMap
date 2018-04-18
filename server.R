@@ -203,20 +203,20 @@ function(input, output, session){
   
   # password protected data -----------------------------------------------
   
-  observeEvent(input$go,{
-    if(input$password == password){
-      showNotification('Password was correct! Showing unverified data...\n
-                       NOTE - this feature is not yet operational', 
-                       duration = 7, closeButton = T, type = 'message')
-    } else {
-      showNotification('Password not provided or incorrect. Hiding unverified data...\n
-                       NOTE - this feature is not yet operational', 
-                       duration = 7, closeButton = T, type = 'warning')
-      
-      # REMOVE UNVERIFIED DATA
-      
-    }
-  })
+  # observeEvent(input$go,{
+  #   if(input$password == password){
+  #     showNotification('Password was correct! Showing unverified data...\n
+  #                      NOTE - this feature is not yet operational', 
+  #                      duration = 7, closeButton = T, type = 'message')
+  #   } else {
+  #     showNotification('Password not provided or incorrect. Hiding unverified data...\n
+  #                      NOTE - this feature is not yet operational', 
+  #                      duration = 7, closeButton = T, type = 'warning')
+  #     
+  #     # REMOVE UNVERIFIED DATA
+  #     
+  #   }
+  # })
   
   # track warning --------------------------------------------------------
   
