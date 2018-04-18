@@ -1,4 +1,4 @@
-subsample_gps = function(gps, n=60, tol = 0.0075, plot_comparison=F, full_res=F, simplify = FALSE){
+subsample_gps = function(gps, n=60, tol = 0.001, plot_comparison=F, full_res=F, simplify = TRUE){
   # 'gps' is a data frame that has columns named 'lat' and 'lon' in decimal degrees
   # 'n' is the desired gps sampling interval in seconds (only when simplify=FALSE)
   # 'tol' is a tolerance for simplifying where larger values provide fewer points (only when simplify=TRUE)
@@ -34,10 +34,10 @@ subsample_gps = function(gps, n=60, tol = 0.0075, plot_comparison=F, full_res=F,
     # simplify
     sim = gSimplify(slns, tol = tol)
     
-    # warning if not simple
-    if(!gIsSimple(sim)){
-      warning('Line is not simple! Duplicates will be removed, but watch for consequences. Consider lowering subset tolerance...')
-    }
+    # # warning if not simple
+    # if(!gIsSimple(sim)){
+    #   warning('Line is not simple! Duplicates will be removed, but watch for consequences. Consider lowering subset tolerance...')
+    # }
     
     # extract coordinates in data frame
     df = as.data.frame(coordinates(sim)[[1]][[1]])
@@ -75,6 +75,10 @@ subsample_gps = function(gps, n=60, tol = 0.0075, plot_comparison=F, full_res=F,
   
   # plot comparison ---------------------------------------------------------
   if(plot_comparison & !full_res){
+    
+    # start plot
+    png(paste0('figures/track_comparison/', min(gps$time), '.png'), width = 8, height = 5, units = 'in', res = 100)
+    
     par(mfrow=c(1,2))
     
     # plot original
@@ -85,6 +89,8 @@ subsample_gps = function(gps, n=60, tol = 0.0075, plot_comparison=F, full_res=F,
     plot(gps$lon, gps$lat, type = 'l', col = 'red', xlab = '', ylab = '',main = 'Subsampled')
     lines(new$lon, new$lat, type = 'l', col = 'blue')
     mtext(paste0('Points: ', nrow(new), ', Size (bytes): ', object.size(new)), side = 3, adj = 0)
+    
+    dev.off()
   }
   
   # return data

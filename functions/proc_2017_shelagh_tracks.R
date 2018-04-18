@@ -12,6 +12,7 @@ output_dir = 'data/interim/'
 
 library(lubridate, quietly = T, warn.conflicts = F)
 source('functions/config_data.R')
+source('functions/subsample_gps.R')
 
 # list data files
 dfiles = list.files(data_dir, pattern = '*CWI-V*', full.names = T)
@@ -89,6 +90,9 @@ tracks$lon = tracks$TrkLongitude
 
 # remove unused columns
 tracks = tracks[,-c(1:47)]
+
+# subsample (use default subsample rate)
+tracks = subsample_gps(gps = tracks)
 
 # config data types
 tracks = config_tracks(tracks)

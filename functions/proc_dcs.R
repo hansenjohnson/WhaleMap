@@ -9,6 +9,7 @@ proc_dcs = function(data_dir, output_dir, det_fname, track_fname, ext = ""){
   library(sp, quietly = T, warn.conflicts = F)
   library(reshape2, quietly = T, warn.conflicts = F)
   source('functions/config_data.R')
+  # source('functions/subsample_gps.R')
   
   # define functions --------------------------------------------------------
   
@@ -140,6 +141,9 @@ proc_dcs = function(data_dir, output_dir, det_fname, track_fname, ext = ""){
   
   # sort by time (important for plotting)
   tracks = tracks[order(tracks$id, tracks$time),]
+  
+  # # subsample (use default subsample rate)
+  # tracks = subsample_gps(gps = tracks)
   
   # config data types
   tracks = config_tracks(tracks)

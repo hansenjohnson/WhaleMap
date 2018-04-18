@@ -12,6 +12,7 @@ output_dir = 'data/interim/'
 
 library(lubridate, quietly = T, warn.conflicts = F)
 source('functions/config_data.R')
+source('functions/subsample_gps.R')
 
 # read in spp and obs keys
 spp_key = read.csv(paste0(data_dir, '/shelagh_species_key.csv'))
@@ -69,6 +70,9 @@ tracks$lon = tracks$LONGITUDE
 
 # remove unused columns
 tracks = tracks[,-c(1:38)]
+
+# subsample (use default subsample rate)
+tracks = subsample_gps(gps = tracks)
 
 # config data types
 tracks = config_tracks(tracks)
