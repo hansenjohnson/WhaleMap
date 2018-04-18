@@ -183,7 +183,7 @@ map <- setView(map = map, lng = -65, lat = 45, zoom = 5)
 # add mpas
 map <- map %>%
   addPolygons(data=mpa, group = 'Protected areas',
-              fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 3,
+              fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
               dashArray = c(5,5), options = pathOptions(clickable = F),
               lng=~lon, lat=~lat, weight = 1, color = 'grey', fillColor = 'grey')
 
@@ -193,14 +193,14 @@ map <- map %>%
   addPolylines(tss_lines$lon, tss_lines$lat,
                weight = .5,
                color = 'red',
-               smoothFactor = 3,
+               smoothFactor = 0,
                options = pathOptions(clickable = F),
                group = 'Shipping lanes') %>%
   addPolygons(tss_polygons$lon, tss_polygons$lat,
               weight = .5,
               color = 'red',
               fillColor = 'red',
-              smoothFactor = 3,
+              smoothFactor = 0,
               options = pathOptions(clickable = F),
               group = 'Shipping lanes')
 
