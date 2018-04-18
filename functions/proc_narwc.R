@@ -8,10 +8,15 @@ data_dir = 'data/raw/narwc/'
 # directory for output
 output_dir = 'data/interim/'
 
+# subset only recent years
+subset_years = T
+yr = 2014
+
 # setup -------------------------------------------------------------------
 
 library(lubridate, quietly = T, warn.conflicts = F)
 source('functions/config_data.R')
+source('functions/subsample_gps.R')
 
 # read in data ------------------------------------------------------------
 
@@ -141,6 +146,16 @@ tracks = tracks[-which(is.na(tracks$time)),]
 # remove species column
 tracks$species = NULL
 
+# subset
+if(subset_years){
+  tracks = tracks[tracks$year >= yr,]
+}
+
+# simplify tracks
+stracks = split(tracks, f = tracks$id)
+ltracks = lapply(stracks, subsample_gps)
+tracks = do.call(rbind,ltracks)
+
 # config data types
 tracks = config_tracks(tracks)
 
@@ -168,6 +183,11 @@ sig = sig[,-c(1:17)]
 
 # remove NAs
 sig = sig[-which(is.na(sig$score)),]
+
+# subset
+if(subset_years){
+  sig = sig[sig$year >= yr,]
+}
 
 # config data types
 sig = config_observations(sig)
