@@ -85,7 +85,7 @@ for(i in seq_along(flist)){
 # combine and save --------------------------------------------------------
 
 # catch errors
-if(length(SIG)!=length(flist)){stop('Not all sightings were processed!')}
+# if(length(SIG)!=length(flist)){stop('Not all sightings were processed!')}
 
 # combine all flights
 SIGS = do.call(rbind, SIG)

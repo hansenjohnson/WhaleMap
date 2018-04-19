@@ -42,8 +42,10 @@ TRK = list()
 # read files
 for(i in seq_along(flist)){
   
-  # read in data
-  tmp = read.table(flist[i], sep = ',')
+  # read in data (method below is slower but more robust to errors in gps file)
+  textLines = readLines(flist[i])
+  counts = count.fields(textConnection(textLines), sep=",")
+  tmp = read.table(text=textLines[counts == 7], header=FALSE, sep=",")
   
   # select and rename important columns
   tmp = data.frame(tmp$V1, tmp$V3, tmp$V2, tmp$V4, tmp$V6)
