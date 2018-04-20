@@ -24,7 +24,7 @@ fout = '../server_index/whale_map.html'
 # define score color palette
 obs_levs = c('detected', 'possibly detected', 'sighted')
 obs_pal = c('red', 'yellow', 'darkslategray')
-pal = colorFactor(levels = obs_levs, 
+pal = colorFactor(levels = obs_levs,
                   palette = obs_pal)
 
 # make dcs icons
@@ -61,7 +61,7 @@ tracks = readRDS('data/processed/tracks.rds')
 # latest dcs positions
 lfile = 'data/processed/dcs_live_latest_position.rds'
 if(file.exists(lfile)){
-  latest = readRDS(lfile) 
+  latest = readRDS(lfile)
 }
 
 # sightings / detections
@@ -93,83 +93,83 @@ det = droplevels(spp[!spp$score %in% c('possibly detected', 'possibly sighted'),
 # basemap -----------------------------------------------------------------
 
 # start basemap
-map <- leaflet() %>% 
-  
+map <- leaflet() %>%
+
   # add ocean basemap
   addProviderTiles(providers$Esri.OceanBasemap) %>%
-  
+
   # add place names layer
   addProviderTiles(providers$Hydda.RoadsAndLabels, group = 'Place names') %>%
-  
+
   # title and last updated message
-  addControl(position = "topright", 
+  addControl(position = "topright",
              paste0(
                '<div align="center">',
                '<strong>Right Whale Surveys</strong>','<br>',
-               '<small>Last updated: ', 
-               format(Sys.time(), '%b-%d at %H:%M', tz = 'UTC', usetz = T), 
+               '<small>Last updated: ',
+               format(Sys.time(), '%b-%d at %H:%M', tz = 'UTC', usetz = T),
                '</small>','<br>',
-               '<small>Data from: ', 
-               format(start_date, '%b-%d'), ' to ', 
+               '<small>Data from: ',
+               format(start_date, '%b-%d'), ' to ',
                format(Sys.Date(), '%b-%d'), '</small>',
                '</div>')) %>%
-  
+
   # layer control
   addLayersControl(overlayGroups = c('Place names',
                                      'Protected areas',
                                      'Shipping lanes',
                                      'Graticules',
                                      'Survey tracks',
-                                     'Latest robot positions', 
+                                     'Latest robot positions',
                                      'Possible detections/sightings',
                                      'Definite detections/sightings'),
-                   options = layersControlOptions(collapsed = FALSE), position = 'topright') %>%
-  
+                   options = layersControlOptions(collapsed = TRUE), position = 'topright') %>%
+
   # hide groups
   hideGroup('Place names') %>%
-  
+
   # # add graticules
   # addWMSTiles(
   #   'https://gis.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer',
   #   layers = c('1', '2', '3'),
   #   options = WMSTileOptions(format = "image/png8", transparent = TRUE),
   #   attribution = NULL, group = 'Graticules') %>%
-  
+
   # use NOAA graticules
   addWMSTiles(
     "https://gis.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer/",
     layers = c("1-degree grid", "5-degree grid"),
     options = WMSTileOptions(format = "image/png8", transparent = TRUE),
     attribution = NULL,group = 'Graticules') %>%
-  
+
   # add extra map features
   addScaleBar(position = 'bottomleft')%>%
   addFullscreenControl(pseudoFullscreen = F) %>%
   addMeasure(
     primaryLengthUnit = "kilometers",
-    secondaryLengthUnit = 'miles', 
+    secondaryLengthUnit = 'miles',
     primaryAreaUnit = "hectares",
-    secondaryAreaUnit="acres", 
+    secondaryAreaUnit="acres",
     activeColor = "darkslategray",
     completedColor = "darkslategray",
     position = 'bottomleft') %>%
-  
+
   # add legend
   addLegend(position = "bottomright",
-            pal = pal, 
+            pal = pal,
             values = obs_levs,
             title = 'Score')
 
 # center on observations (if present)
 # if(nrow(Tracks)!=0){
-#   
+#
 #   # define an offset (in deg) to buffer bounds around latest observations
 #   offset = 0.05
-#   
+#
 #   map <- fitBounds(map = map,
-#             max(Tracks$lon, na.rm = T)+offset, 
-#             min(Tracks$lat, na.rm = T)-offset, 
-#             min(Tracks$lon, na.rm = T)-offset, 
+#             max(Tracks$lon, na.rm = T)+offset,
+#             min(Tracks$lat, na.rm = T)-offset,
+#             min(Tracks$lon, na.rm = T)-offset,
 #             max(Tracks$lat, na.rm = T)+offset)
 # } else {
 #   map <- setView(map = map, lng = -65, lat = 45, zoom = 5)
@@ -223,7 +223,7 @@ names(tracks.df) %>%
 # add platform icons ------------------------------------------------------
 
 if(file.exists(lfile)){
-  
+
   # add icons for latest position of live dcs platforms
   map <- map %>% addMarkers(data = latest, ~lon, ~lat, icon = ~dcsIcons[platform],
                             popup = ~paste(sep = "<br/>",
@@ -231,10 +231,10 @@ if(file.exists(lfile)){
                                            paste0('Platform: ', as.character(platform)),
                                            paste0('Name: ', as.character(name)),
                                            paste0('Time: ', as.character(time), ' UTC'),
-                                           paste0('Position: ', 
+                                           paste0('Position: ',
                                                   as.character(lat), ', ', as.character(lon))),
-                            label = ~paste0('Latest position of ', as.character(name), ': ', 
-                                            as.character(time), ' UTC'), 
+                            label = ~paste0('Latest position of ', as.character(name), ': ',
+                                            as.character(time), ' UTC'),
                             group = 'Latest robot positions')
 }
 
@@ -255,7 +255,7 @@ map <- map %>% addCircleMarkers(data = pos, ~lon, ~lat, group = 'Possible detect
                                        as.character(lat), ', ', as.character(lon))),
                  label = ~paste0(as.character(date), ': ', species,' whale ', score, ' by ', name),
                  options = markerOptions(removeOutsideVisibleBounds=T)) %>%
-                 
+
 # add definite detections/sightings ---------------------------------------
 
 addCircleMarkers(data = det, ~lon, ~lat, group = 'Definite detections/sightings',
@@ -269,7 +269,7 @@ addCircleMarkers(data = det, ~lon, ~lat, group = 'Definite detections/sightings'
                                 paste0("Platform: ", platform),
                                 paste0("Name: ", name),
                                 paste0('Date: ', as.character(date)),
-                                paste0('Position: ', 
+                                paste0('Position: ',
                                        as.character(lat), ', ', as.character(lon))),
                  label = ~paste0(as.character(date), ': ', species,' whale ', score, ' by ', name),
                  options = markerOptions(removeOutsideVisibleBounds=T))
@@ -277,4 +277,3 @@ addCircleMarkers(data = det, ~lon, ~lat, group = 'Definite detections/sightings'
 # save widget -------------------------------------------------------------
 
 saveWidget(widget = map, file = fout, selfcontained = T)
-
