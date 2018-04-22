@@ -423,7 +423,7 @@ function(input, output, session){
             addPolylines(data=tracks.df[[df]], group = 'tracks',
                          lng=~lon, lat=~lat, weight = 2,
                          popup = paste0('Track ID: ', unique(tracks.df[[df]]$id)),
-                         smoothFactor = 3, color = getColor(tracks.df[[df]]))
+                         smoothFactor = 1, color = getColor(tracks.df[[df]]))
         })
     }
     
