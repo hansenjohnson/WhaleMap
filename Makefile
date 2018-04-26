@@ -78,6 +78,7 @@ data/processed/observations.rds : functions/proc_observations.R \
 																	data/interim/2018_opportunistic_sightings.rds \
 																	data/interim/2018_dfo_twin_otter_sightings.rds \
 																	data/interim/2018_tc_dash8_sightings.rds \
+																	data/interim/2018_dfo_partenavia_cessna_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
 	Rscript $<
@@ -104,6 +105,10 @@ data/interim/2018_dfo_twin_otter_sightings.rds : functions/proc_2018_dfo_twin_ot
 
 # 2018 tc dash8 sightings
 data/interim/2018_tc_dash8_sightings.rds : functions/proc_2018_tc_dash8_sightings.R data/raw/2018_whalemapdata/TC_dash8/*
+	Rscript $<
+
+# 2018 dfo partenavia cessna sightings
+data/interim/2018_dfo_partenavia_cessna_sightings.rds : functions/proc_2018_dfo_partenavia_cessna_sightings.R data/raw/2018_whalemapdata/DFO_partenavia_cessna/PartenaviaDailyObs.xlsx
 	Rscript $<
 
 # DCS archived detections
