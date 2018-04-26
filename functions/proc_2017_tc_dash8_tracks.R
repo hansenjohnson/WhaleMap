@@ -170,8 +170,8 @@ for(i in seq_along(flist)){
   tracks$yday = yday(tracks$date)
   tracks$year = year(tracks$date)
   tracks$platform = 'plane'
-  tracks$name = 'tc'
-  tracks$id = paste0(tracks$date, '_plane_tc')
+  tracks$name = 'tc_dash8'
+  tracks$id = paste0(tracks$date, '_plane_tc_dash8')
   
   # plot track
   if(plot_tracks){

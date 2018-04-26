@@ -71,7 +71,7 @@ for(i in seq_along(flist)){
   tmp$year = year(tmp$date)
   tmp$score = 'sighted'
   tmp$platform = 'plane'
-  tmp$name = 'dfo'
+  tmp$name = 'dfo_twin_otter'
   tmp$id = paste(tmp$date, tmp$platform, tmp$name, sep = '_')
   
   # add to list

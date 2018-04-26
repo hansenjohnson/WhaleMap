@@ -85,7 +85,7 @@ if(length(flist)!=0){
     tmp$year = year(tmp$date)
     tmp$score = 'sighted'
     tmp$platform = 'plane'
-    tmp$name = 'tc'
+    tmp$name = 'tc_dash8'
     tmp$id = paste(tmp$date, tmp$platform, tmp$name, sep = '_')
     
     # add to list

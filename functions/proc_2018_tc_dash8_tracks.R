@@ -72,7 +72,7 @@ for(i in seq_along(flist)){
   tracks$yday = yday(tracks$date)
   tracks$year = year(tracks$date)
   tracks$platform = 'plane'
-  tracks$name = 'tc'
+  tracks$name = 'tc_dash8'
   tracks$id = paste(tracks$date, tracks$platform, tracks$name, sep = '_')
   
   # plot track

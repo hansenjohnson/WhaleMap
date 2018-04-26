@@ -60,8 +60,8 @@ tracks$date = as.Date(tracks$time)
 tracks$yday = yday(tracks$date)
 tracks$year = year(tracks$date)
 tracks$platform = 'plane'
-tracks$name = 'dfo'
-tracks$id = paste0(tracks$date, '_plane_dfo')
+tracks$name = 'dfo_twin_otter'
+tracks$id = paste0(tracks$date, '_plane_dfo_twin_otter')
 
 # config flight data
 tracks = config_tracks(tracks)
