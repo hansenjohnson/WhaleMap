@@ -1,13 +1,13 @@
-## proc_2018_tc_dash8_tracks ##
-# Process gps data from TC Dash-8 survey plane
+## proc_2018_tc_dash7_tracks ##
+# Process gps data from TC Dash-7 survey plane
 
 # user input --------------------------------------------------------------
 
 # data directory
-data_dir = 'data/raw/2018_whalemapdata/TC_dash8/'
+data_dir = 'data/raw/2018_whalemapdata/TC_dash7/'
 
 # output file name
-ofile = '2018_tc_dash8_tracks.rds'
+ofile = '2018_tc_dash7_tracks.rds'
 
 # output directory
 output_dir = 'data/interim/'
@@ -30,7 +30,7 @@ source('functions/on_server.R')
 plot_tracks = !on_server()
 
 # list files to process
-flist = list.files(data_dir, pattern = 'tracklog*', full.names = T, recursive = T)
+flist = list.files(data_dir, pattern = '*.csv', full.names = T, recursive = T)
 
 # list to hold loop output
 TRK = list()
@@ -41,18 +41,18 @@ TRK = list()
 for(i in seq_along(flist)){
   
   # read in file
-  tmp = read.csv(flist[i], skip = 2)
+  tmp = read.csv(flist[i])
   
   # select and rename important columns
-  tmp = data.frame(tmp$Timestamp, tmp$Longitude, tmp$Latitude, tmp$Speed, tmp$Altitude)
-  colnames(tmp) = c('time', 'lon', 'lat', 'speed', 'altitude')
-  
-  # Correct for variable precision (or errors) in gps
-  f = roundTen(tmp$time)/10^9
-  tmp$time = tmp$time/f
-  
-  # add timestamp
-  tmp$time = as.POSIXct(tmp$time, origin = '1970-01-01', tz = 'UTC', usetz=TRUE)
+  tmp = data.frame(tmp$UTC.Time..hhmmss., tmp$UTC.Date..yyyymmdd., 
+                   tmp$Longitude.in.decimal.degrees..negative.is.west., 
+                   tmp$Latitude.in.decimal.degrees..negative.is.south., 
+                   tmp$Speed..km.h., tmp$Altitude.in.meters)
+  colnames(tmp) = c('time', 'date', 'lon', 'lat', 'speed', 'altitude')
+    
+  # Correct time and date
+  tmp$time = as.POSIXct(as.character(paste0(tmp$date, tmp$time)), 
+                        format = '%Y%m%d%H%M%S', tz = 'UTC', usetz=T)
   
   # remove columns without timestamp
   tmp = tmp[!is.na(tmp$time),]
@@ -69,7 +69,7 @@ for(i in seq_along(flist)){
   tracks$yday = yday(tracks$date)
   tracks$year = year(tracks$date)
   tracks$platform = 'plane'
-  tracks$name = 'tc_dash8'
+  tracks$name = 'tc_dash7'
   tracks$id = paste(tracks$date, tracks$platform, tracks$name, sep = '_')
   
   # plot track

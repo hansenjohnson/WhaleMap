@@ -17,6 +17,7 @@ data/processed/tracks.rds : functions/proc_tracks.R \
 														data/interim/2017_tc_dash8_tracks.rds \
 														data/interim/2018_dfo_twin_otter_tracks.rds \
 														data/interim/2018_dfo_partenavia_cessna_tracks.rds \
+														data/interim/2018_tc_dash7_tracks.rds \
 														data/interim/2018_tc_dash8_tracks.rds \
 														data/interim/dcs_archived_tracks.rds \
 														data/interim/dcs_live_tracks.rds
@@ -54,6 +55,10 @@ data/interim/2018_dfo_twin_otter_tracks.rds : functions/proc_2018_dfo_twin_otter
 data/interim/2018_dfo_partenavia_cessna_tracks.rds : functions/proc_2018_dfo_partenavia_cessna_tracks.R data/raw/2018_whalemapdata/DFO_partenavia_cessna/*
 	Rscript $<
 
+# 2018 TC dash7 tracks
+data/interim/2018_tc_dash7_tracks.rds : functions/proc_2018_tc_dash7_tracks.R data/raw/2018_whalemapdata/TC_dash7/*
+	Rscript $<
+
 # 2018 TC dash8 tracks
 data/interim/2018_tc_dash8_tracks.rds : functions/proc_2018_tc_dash8_tracks.R data/raw/2018_whalemapdata/TC_dash8/*
 	Rscript $<
@@ -77,6 +82,7 @@ data/processed/observations.rds : functions/proc_observations.R \
 																	data/interim/2017_*_sightings.rds \
 																	data/interim/2018_opportunistic_sightings.rds \
 																	data/interim/2018_dfo_twin_otter_sightings.rds \
+																	data/interim/2018_tc_dash7_sightings.rds \
 																	data/interim/2018_tc_dash8_sightings.rds \
 																	data/interim/2018_dfo_partenavia_cessna_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
@@ -101,6 +107,10 @@ data/interim/2018_opportunistic_sightings.rds : functions/proc_2018_opportunisti
 
 # 2018 dfo twin otter sightings
 data/interim/2018_dfo_twin_otter_sightings.rds : functions/proc_2018_dfo_twin_otter_sightings.R data/raw/2018_whalemapdata/DFO_twin_otter/*
+	Rscript $<
+
+# 2018 tc dash7 sightings
+data/interim/2018_tc_dash7_sightings.rds : functions/proc_2018_tc_dash7_sightings.R data/raw/2018_whalemapdata/TC_dash7/*
 	Rscript $<
 
 # 2018 tc dash8 sightings
