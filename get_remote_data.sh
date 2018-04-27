@@ -10,7 +10,7 @@ cd /srv/shiny-server/WhaleMap/data/raw/ # server
 # Make backup directory
 mkdir -p backups
 
-# Opportunistic sightings
+# Sync Canadian aerial data Google drive
 rclone sync whalemapdata:"WhaleMapData_Master/" "2018_whalemapdata/" --drive-formats csv --backup-dir backups -v
 
 ## Update map ##
