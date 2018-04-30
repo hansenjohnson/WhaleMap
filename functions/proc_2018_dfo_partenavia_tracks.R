@@ -1,13 +1,13 @@
-## proc_2018_dfo_partenavia_cessna_tracks ##
-# Process gps data from DFO partenavia cessna survey plane
+## proc_2018_dfo_partenavia_tracks ##
+# Process gps data from DFO partenavia survey plane
 
 # user input --------------------------------------------------------------
 
 # data directory
-data_dir = 'data/raw/2018_whalemapdata/DFO_partenavia_cessna/'
+data_dir = 'data/raw/2018_whalemapdata/DFO_partenavia/'
 
 # output file name
-ofile = '2018_dfo_partenavia_cessna_tracks.rds'
+ofile = '2018_dfo_partenavia_tracks.rds'
 
 # output directory
 output_dir = 'data/interim/'
@@ -70,7 +70,7 @@ for(i in seq_along(flist)){
   tracks$yday = yday(tracks$date)
   tracks$year = year(tracks$date)
   tracks$platform = 'plane'
-  tracks$name = 'dfo_partenavia_cessna'
+  tracks$name = 'dfo_partenavia'
   tracks$id = paste(tracks$date, tracks$platform, tracks$name, sep = '_')
   
   # plot track
