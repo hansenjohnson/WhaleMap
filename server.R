@@ -166,23 +166,27 @@ function(input, output, session){
   })
   
   # choose track date range
-  TRACKS <- reactive({
+  TRACKS <- eventReactive(input$go|input$go == 0, {
     Tracks()[Tracks()$yday >= yday0() & Tracks()$yday <= yday1(),]
   })
   
   # choose species date range
-  OBS <- reactive({
+  OBS <- eventReactive(input$go|input$go == 0, {
     Obs()[Obs()$yday >= yday0() & Obs()$yday <= yday1(),]
   })
   
   # choose species
-  spp <- reactive({
+  spp <- eventReactive(input$go|input$go == 0, {
     droplevels(OBS()[OBS()$species %in% species(),])
   })
   
   # only possible
-  pos <- reactive({
-    droplevels(spp()[spp()$score=='possibly detected'|spp()$score=='possibly sighted',])
+  pos <- eventReactive(input$go|input$go == 0, {
+    if(input$password == password){
+      droplevels(spp()[spp()$score=='possibly detected'|spp()$score=='possibly sighted',])
+    } else {
+      droplevels(spp()[spp()$score=='possibly detected',])
+    }
   })
   
   # only definite
@@ -203,20 +207,16 @@ function(input, output, session){
   
   # password protected data -----------------------------------------------
   
-  # observeEvent(input$go,{
-  #   if(input$password == password){
-  #     showNotification('Password was correct! Showing unverified data...\n
-  #                      NOTE - this feature is not yet operational', 
-  #                      duration = 7, closeButton = T, type = 'message')
-  #   } else {
-  #     showNotification('Password not provided or incorrect. Hiding unverified data...\n
-  #                      NOTE - this feature is not yet operational', 
-  #                      duration = 7, closeButton = T, type = 'warning')
-  #     
-  #     # REMOVE UNVERIFIED DATA
-  #     
-  #   }
-  # })
+  observeEvent(input$go,{
+    if(input$password == password){
+      showNotification('Password was correct! Showing unverified data...',
+                       duration = 7, closeButton = T, type = 'message')
+
+    } else {
+      showNotification('Password not provided or incorrect. Hiding unverified data...',
+                       duration = 7, closeButton = T, type = 'warning')
+    }
+  })
   
   # track warning --------------------------------------------------------
   
@@ -263,8 +263,8 @@ function(input, output, session){
     } else if (input$colorby == 'score'){
       
       # hard wire colors for score factor levels
-      colorFactor(levels = c('detected', 'possibly detected', 'sighted'), 
-                  palette = c('red', 'yellow', 'darkslategray'))  
+      colorFactor(levels = c('detected', 'possibly detected', 'possibly sighted', 'sighted'), 
+                  palette = c('red', 'yellow', 'grey', 'darkslategray'))  
       
     } else {
       
@@ -623,7 +623,7 @@ function(input, output, session){
     
     # determine which dataset to use based on display switches
     if(input$detected & input$possible){
-      dat <- spp()
+      dat <- rbind(det(),pos())
     } else if(input$detected & !input$possible){
       dat <- det()
     } else if(!input$detected & input$possible){
