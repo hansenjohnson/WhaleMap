@@ -13,6 +13,7 @@ shiny_bookmarks/
 job/
 issues/
 test/
+reports/
 
 # sensitive
 password.rda
