@@ -121,8 +121,8 @@ body <- dashboardBody(
                            # unlock preliminary data
                            passwordInput("password", 'Show unverified data:', value = "",
                                          placeholder = 'Enter password'),
-                           helpText('By default the map only displays verified data
-                                    to avoid the spread of misinformation'),
+                           helpText('To request the password please send a brief description 
+                                    of your affiliation and intentions to hansen.johnson@dal.ca'),
 
                            hr(),
                            
@@ -131,11 +131,7 @@ body <- dashboardBody(
                                         style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
                            
                            # add button to re-center
-                           actionButton("zoom", "Center map"),
-                           
-                           helpText('Please be patient if viewing data from many years. 
-                                       Consider turning tracks \'off\' below to speed up plotting.')
-                           
+                           actionButton("zoom", "Center map")
                   ),
                   
                   # layers tab ----------------------------------------------------------
