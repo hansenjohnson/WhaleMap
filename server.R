@@ -931,6 +931,10 @@ function(input, output, session){
     }
   )
   
+  # Set this to "force" instead of TRUE for testing locally
+  # (without Shiny Server)
+  session$allowReconnect(TRUE)
+  
 } # server
 
 
