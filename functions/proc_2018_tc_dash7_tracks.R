@@ -30,7 +30,7 @@ source('functions/on_server.R')
 plot_tracks = !on_server()
 
 # list files to process
-flist = list.files(data_dir, pattern = '(\\d{8}).*.csv', full.names = T, recursive = T)
+flist = list.files(data_dir, pattern = '*_Dash7.csv', full.names = T, recursive = T)
 
 # list to hold loop output
 TRK = list()
@@ -40,19 +40,43 @@ TRK = list()
 # read files
 for(i in seq_along(flist)){
   
-  # read in file
-  tmp = read.csv(flist[i])
-  
-  # select and rename important columns
-  tmp = data.frame(tmp$UTC.Time..hhmmss., tmp$UTC.Date..yyyymmdd., 
-                   tmp$Longitude.in.decimal.degrees..negative.is.west., 
-                   tmp$Latitude.in.decimal.degrees..negative.is.south., 
-                   tmp$Speed..km.h., tmp$Altitude.in.meters)
-  colnames(tmp) = c('time', 'date', 'lon', 'lat', 'speed', 'altitude')
+  # format: '20180423_gps_Dash7.csv'
+  if(grepl(pattern = '(\\d{8})_gps_Dash7.csv', x = flist[i])){
     
-  # Correct time and date
-  tmp$time = as.POSIXct(as.character(paste0(tmp$date, tmp$time)), 
-                        format = '%Y%m%d%H%M%S', tz = 'UTC', usetz=T)
+    # read in file
+    tmp = read.csv(flist[i])
+    
+    # select and rename important columns
+    tmp = data.frame(tmp$UTC.Time..hhmmss., tmp$UTC.Date..yyyymmdd., 
+                     tmp$Longitude.in.decimal.degrees..negative.is.west., 
+                     tmp$Latitude.in.decimal.degrees..negative.is.south., 
+                     tmp$Speed..km.h., tmp$Altitude.in.meters)
+    colnames(tmp) = c('time', 'date', 'lon', 'lat', 'speed', 'altitude')
+    
+    # Correct time and date
+    tmp$time = as.POSIXct(as.character(paste0(tmp$date, tmp$time)), 
+                          format = '%Y%m%d%H%M%S', tz = 'UTC', usetz=T)
+    
+    # format: 'TC_FLights_09-08-2017_GPS.csv'  
+  } else if(grepl(pattern = '(\\d{8})_tracklog_Dash7.csv', x = flist[i], ignore.case = T)){
+    
+    # read in file
+    tmp = read.csv(flist[i], skip = 2)
+    
+    # select and rename important columns
+    tmp = data.frame(tmp$Timestamp, tmp$Longitude, tmp$Latitude, tmp$Speed, tmp$Altitude)
+    colnames(tmp) = c('time', 'lon', 'lat', 'speed', 'altitude')
+    
+    # Correct for variable precision (or errors) in gps
+    f = roundTen(tmp$time)/10^9
+    tmp$time = tmp$time/f
+    
+    # add timestamp
+    tmp$time = as.POSIXct(tmp$time, origin = '1970-01-01', tz = 'UTC', usetz=TRUE)
+    
+  } else {
+    stop('Format not known!')
+  }
   
   # remove columns without timestamp
   tmp = tmp[!is.na(tmp$time),]
