@@ -129,6 +129,8 @@ a # this means 'append' in vim
 ## Shiny server
 
 ```
+# reload the shiny server
+sudo systemctl reload shiny-server
 # restart the shiny server
 sudo systemctl restart shiny-server
 ```
