@@ -568,7 +568,7 @@ function(input, output, session){
     
     # determine which dataset to use based on display switches
     if(input$detected & input$possible){
-      dat <- spp()
+      dat <- rbind(det(),pos())
     } else if(input$detected & !input$possible){
       dat <- det()
     } else if(!input$detected & input$possible){
