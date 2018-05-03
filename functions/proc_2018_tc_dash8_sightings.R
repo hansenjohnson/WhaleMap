@@ -24,7 +24,7 @@ library(measurements, quietly = T, warn.conflicts = F)
 source('functions/config_data.R')
 
 # list files to process
-flist = list.files(data_dir, pattern = 'Aerial_Survey_data_.*.csv$', full.names = T, recursive = T)
+flist = list.files(data_dir, pattern = '(\\d{8})_Dash7.csv', full.names = T, recursive = T)
 
 # only proceed if sightings files exist
 if(length(flist)!=0){
