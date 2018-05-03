@@ -26,7 +26,7 @@ library(stringr)
 source('functions/config_data.R')
 
 # list files to process
-flist = list.files(data_dir, pattern = '(\\d{8})_Dash7.xlsx$', full.names = T, recursive = T)
+flist = list.files(data_dir, pattern = '(\\d{8})_Dash7_sightings.xlsx$', full.names = T, recursive = T)
 
 # only proceed if sightings files exist
 if(length(flist)!=0){
@@ -77,10 +77,18 @@ if(length(flist)!=0){
     tmp$time = as.POSIXct(paste0(tmp$date, ' ', hour(tmp$time), ':', minute(tmp$time), ':', second(tmp$time)), 
                           tz = 'UTC', usetz = T)
     
+    # convert lat lon data type
+    tmp$lat = as.character(tmp$lat)
+    tmp$lon = as.character(tmp$lon)
+    
     # add zeros to lat lons if necessary
-    if(str_count(tmp$lat[1], ' ') == 0){
-      tmp$lat = paste0(substr(tmp$lat, 1, 2), ' ', substr(tmp$lat, 3, 8))
-      tmp$lon = paste0(substr(tmp$lon, 1, 2), ' ', substr(tmp$lon, 3, 8))
+    for(idf in 1:nrow(tmp)){
+      if(str_count(tmp$lat[idf], ' ') == 0){
+        tmp$lat[idf] = paste0(substr(tmp$lat[idf], 1, 2), ' ', substr(tmp$lat[idf], 3, 8))
+      }
+      if(str_count(tmp$lon[idf], ' ') == 0){
+        tmp$lon[idf] = paste0(substr(tmp$lon[idf], 1, 2), ' ', substr(tmp$lon[idf], 3, 8))
+      }
     }
     
     # fix lat

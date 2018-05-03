@@ -30,7 +30,7 @@ source('functions/on_server.R')
 plot_tracks = !on_server()
 
 # list files to process
-flist = list.files(data_dir, pattern = '*_Dash7.csv', full.names = T, recursive = T)
+flist = list.files(data_dir, pattern = '(\\d{8})_Dash7_.*.csv$', full.names = T, recursive = T)
 
 # list to hold loop output
 TRK = list()
@@ -40,8 +40,8 @@ TRK = list()
 # read files
 for(i in seq_along(flist)){
   
-  # format: '20180423_gps_Dash7.csv'
-  if(grepl(pattern = '(\\d{8})_gps_Dash7.csv', x = flist[i])){
+  # format: '20180423_Dash7_gps.csv'
+  if(grepl(pattern = '(\\d{8})_Dash7_gps.csv', x = flist[i])){
     
     # read in file
     tmp = read.csv(flist[i])
@@ -57,8 +57,8 @@ for(i in seq_along(flist)){
     tmp$time = as.POSIXct(as.character(paste0(tmp$date, tmp$time)), 
                           format = '%Y%m%d%H%M%S', tz = 'UTC', usetz=T)
     
-    # format: 'TC_FLights_09-08-2017_GPS.csv'  
-  } else if(grepl(pattern = '(\\d{8})_tracklog_Dash7.csv', x = flist[i], ignore.case = T)){
+    # format: '20180402_Dash7_tracklog.csv'  
+  } else if(grepl(pattern = '(\\d{8})_Dash7_tracklog.csv', x = flist[i], ignore.case = T)){
     
     # read in file
     tmp = read.csv(flist[i], skip = 2)

@@ -30,7 +30,7 @@ source('functions/on_server.R')
 plot_tracks = !on_server()
 
 # list files to process
-flist = list.files(data_dir, pattern = 'tracklog*', full.names = T, recursive = T)
+flist = list.files(data_dir, pattern = '(\\d{8})_Dash8_tracklog.*.csv$', full.names = T, recursive = T)
 
 # list to hold loop output
 TRK = list()
