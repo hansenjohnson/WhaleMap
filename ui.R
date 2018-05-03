@@ -98,6 +98,8 @@ body <- dashboardBody(
                            # add species choice
                            selectInput("species", "Choose species:", choices = species, 
                                        selected = "right", multiple = F),
+                           helpText('Right whales are the focal species of these surveys; other species
+                                    information is incomplete'),
                            
                            hr(),
                            
