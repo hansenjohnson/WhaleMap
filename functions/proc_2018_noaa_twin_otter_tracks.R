@@ -1,13 +1,13 @@
-## proc_2017_noaa_twin_otter_tracks ##
+## proc_2018_noaa_twin_otter_tracks ##
 # Process gps data from NOAA Twin Otter survey plane
 
 # user input --------------------------------------------------------------
 
 # data directory
-data_dir = 'data/raw/2017_noaa_twin_otter/edit_data/'
+data_dir = 'data/raw/2018_noaa_twin_otter/edit_data/'
 
 # output file name
-ofile = '2017_noaa_twin_otter_tracks.rds'
+ofile = '2018_noaa_twin_otter_tracks.rds'
 
 # output directory
 output_dir = 'data/interim/'
@@ -39,8 +39,10 @@ TRK = list()
 # read files
 for(i in seq_along(flist)){
   
-  # read in data
-  tmp = read.table(flist[i], sep=",")
+  # read in data (method below is slower but more robust to errors in gps file)
+  textLines = readLines(flist[i])
+  counts = count.fields(textConnection(textLines), sep=",")
+  tmp = read.table(text=textLines[counts == 7], header=FALSE, sep=",")
   
   # select and rename important columns
   tmp = data.frame(tmp$V1, tmp$V3, tmp$V2, tmp$V4, tmp$V6)
@@ -61,7 +63,7 @@ for(i in seq_along(flist)){
   tracks$year = year(tracks$date)
   tracks$platform = 'plane'
   tracks$name = 'noaa_twin_otter'
-  tracks$id = paste0(tracks$date, '_plane_noaa_twin_otter')
+  tracks$id = paste(tracks$date, tracks$platform, tracks$name, sep = '_')
   
   # plot track
   if(plot_tracks){
