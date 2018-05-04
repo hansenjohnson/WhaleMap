@@ -24,5 +24,8 @@ for(i in seq_along(obs_list)){
 # remove duplicates
 obs = obs[which(!duplicated(obs)),]
 
+# select only focal species
+obs = obs[obs$species %in% c('right', 'fin', 'sei', 'humpback'),]
+
 # save
 saveRDS(obs, 'data/processed/observations.rds')
