@@ -782,13 +782,15 @@ function(input, output, session){
       }
       
       # build plot
-      g = ggplot(obs, aes(x = yday, y = counter))+
-        geom_histogram(stat = "identity", na.rm = T, aes_string(fill = paste0(input$colorby)))+
-        labs(x = '', y = '')+
-        fillcols+
-        facet_wrap(~cat, scales="free_y", nrow = 2)+
-        scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"))+
-        aes(text = paste('date: ', format(as.Date(as.character(yday), "%j"), "%d-%b")))
+      suppressWarnings({
+        g = ggplot(obs, aes(x = yday, y = counter))+
+          geom_histogram(stat = "identity", na.rm = T, aes_string(fill = paste0(input$colorby)))+
+          labs(x = '', y = '')+
+          fillcols+
+          facet_wrap(~cat, scales="free_y", nrow = 2)+
+          scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"))+
+          aes(text = paste('date: ', format(as.Date(as.character(yday), "%j"), "%d-%b")))
+      })
       
     } else {
       if(input$colorby=='score'){
@@ -818,15 +820,17 @@ function(input, output, session){
       }
       
       # build plot
-      g = ggplot(obs, aes(x = yday))+
-        geom_histogram(stat = "count", na.rm = T, aes_string(fill = paste0(input$colorby)))+
-        labs(x = '', y = '')+
-        fillcols+
-        facet_wrap(~cat, scales="free_y", nrow = 2)+
-        scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"))+
-        aes(text = paste('date: ', format(as.Date(as.character(yday), "%j"), "%d-%b")))
+      suppressWarnings({
+        g = ggplot(obs, aes(x = yday))+
+          geom_histogram(stat = "count", na.rm = T, aes_string(fill = paste0(input$colorby)))+
+          labs(x = '', y = '')+
+          fillcols+
+          facet_wrap(~cat, scales="free_y", nrow = 2)+
+          scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"))+
+          aes(text = paste('date: ', format(as.Date(as.character(yday), "%j"), "%d-%b")))
+        
+      })
     }
-    
     # plot
     gg = ggplotly(g, dynamicTicks = F, tooltip = c("text", "count", "fill")) %>%
       layout(margin=list(r=120, l=70, t=40, b=70), showlegend = input$legend)
