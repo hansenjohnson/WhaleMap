@@ -23,7 +23,7 @@ library(tools, quietly = T, warn.conflicts = F)
 source('functions/config_data.R')
 
 # list files to process
-flist = list.files(data_dir, pattern = '.sig', full.names = T, recursive = T)
+flist = list.files(data_dir, pattern = '.sig$', full.names = T, recursive = T)
 
 # list to hold loop output
 SIG = list()
@@ -56,6 +56,7 @@ for(i in seq_along(flist)){
   tmp$species[tmp$species==""] = NA
   
   # add species identifiers
+  tmp$species = toupper(tmp$species)
   tmp$species[tmp$species == 'EG'] = 'right'
   tmp$species[tmp$species == 'MN'] = 'humpback'
   tmp$species[tmp$species == 'BB'] = 'sei'

@@ -31,9 +31,6 @@ plot_tracks = !on_server()
 # list files to process
 flist = list.files(data_dir, pattern = '.gps', full.names = T, recursive = T)
 
-# specify column names
-cnames = c('time', 'lon', 'lat', 'speed', 'altitude')
-
 # list to hold loop output
 TRK = list()
 
@@ -49,7 +46,7 @@ for(i in seq_along(flist)){
   
   # select and rename important columns
   tmp = data.frame(tmp$V1, tmp$V3, tmp$V2, tmp$V4, tmp$V6)
-  colnames(tmp) = cnames
+  colnames(tmp) = c('time', 'lon', 'lat', 'speed', 'altitude')
   
   # remove bogus lat
   tmp[tmp$lat<30,] = NA
