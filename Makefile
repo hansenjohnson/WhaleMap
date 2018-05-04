@@ -19,6 +19,7 @@ data/processed/tracks.rds : functions/proc_tracks.R \
 														data/interim/2018_dfo_partenavia_tracks.rds \
 														data/interim/2018_tc_dash7_tracks.rds \
 														data/interim/2018_tc_dash8_tracks.rds \
+														data/interim/2018_noaa_twin_otter_tracks.rds \
 														data/interim/dcs_archived_tracks.rds \
 														data/interim/dcs_live_tracks.rds
 	Rscript $<
@@ -40,7 +41,7 @@ data/interim/2017_dfo_twin_otter_tracks.rds : functions/proc_2017_dfo_twin_otter
 	Rscript $<
 
 # 2017 NOAA twin otter tracks
-data/interim/2017_noaa_twin_otter_tracks.rds : functions/proc_2017_noaa_twin_otter_tracks.R data/raw/2017_noaa_twin_otter_tracks/*
+data/interim/2017_noaa_twin_otter_tracks.rds : functions/proc_2017_noaa_twin_otter_tracks.R data/raw/2017_noaa_twin_otter/edit_data/*
 	Rscript $<
 
 # 2017 TC dash 8 tracks
@@ -61,6 +62,10 @@ data/interim/2018_tc_dash7_tracks.rds : functions/proc_2018_tc_dash7_tracks.R da
 
 # 2018 TC dash8 tracks
 data/interim/2018_tc_dash8_tracks.rds : functions/proc_2018_tc_dash8_tracks.R data/raw/2018_whalemapdata/TC_dash8/*
+	Rscript $<
+
+# 2018 NOAA twin otter tracks
+data/interim/2018_noaa_twin_otter_tracks.rds : functions/proc_2018_noaa_twin_otter_tracks.R data/raw/2018_noaa_twin_otter/edit_data/*
 	Rscript $<
 
 # DCS archived tracks
@@ -85,6 +90,7 @@ data/processed/observations.rds : functions/proc_observations.R \
 																	data/interim/2018_tc_dash7_sightings.rds \
 																	data/interim/2018_tc_dash8_sightings.rds \
 																	data/interim/2018_dfo_partenavia_sightings.rds \
+																	data/interim/2018_noaa_twin_otter_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
 	Rscript $<
@@ -98,8 +104,10 @@ data/interim/2016_shelagh_sightings.rds : functions/proc_2016_shelagh.R data/raw
 	Rscript $<
 
 # 2017 sightings
-data/interim/2017_*_sightings.rds : functions/proc_2017_sightings.R data/raw/2017_sightings/*
-	Rscript $<
+data/interim/2017_*_sightings.rds : functions/proc_2017_sightings.R data/raw/2017_sightings/* \
+																		functions/proc_2017_noaa_twin_otter_sightings.R data/raw/2017_noaa_twin_otter/canada2017_ap.csv
+	Rscript functions/proc_2017_sightings.R \
+	Rscript functions/proc_2017_noaa_twin_otter_sightings.R
 
 # 2018 opportunistic sightings
 data/interim/2018_opportunistic_sightings.rds : functions/proc_2018_opportunistic.R data/raw/2018_whalemapdata/2018_opportunistic_sightings/*
@@ -119,6 +127,10 @@ data/interim/2018_tc_dash8_sightings.rds : functions/proc_2018_tc_dash8_sighting
 
 # 2018 dfo partenavia sightings
 data/interim/2018_dfo_partenavia_sightings.rds : functions/proc_2018_dfo_partenavia_sightings.R data/raw/2018_whalemapdata/DFO_partenavia/*
+	Rscript $<
+
+# 2018 noaa twin otter sightings
+data/interim/2018_noaa_twin_otter_sightings.rds : functions/proc_2018_noaa_twin_otter_sightings.R data/raw/2018_noaa_twin_otter/edit_data/*
 	Rscript $<
 
 # DCS archived detections
