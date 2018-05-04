@@ -10,8 +10,8 @@ subsample_gps = function(gps, n=60, tol = 0.001, plot_comparison=F, full_res=F, 
     # simplify ----------------------------------------------------------------
     # simplify the geometry using Douglas-Peuker algorithm
     
-    library(sp)
-    library(rgeos)
+    suppressPackageStartupMessages(library(sp))
+    suppressPackageStartupMessages(library(rgeos))
     
     # return full resolution tracks if desired
     if(full_res){
