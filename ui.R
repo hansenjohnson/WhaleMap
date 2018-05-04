@@ -57,10 +57,10 @@ header <-  dashboardHeader(title = 'WhaleMap',
                              headerText = "",
                              notificationItem("Home",
                                               icon = icon("home"),
-                                              href = "http://leviathan.ocean.dal.ca"),
-                             notificationItem("Live Glider",
-                                              icon = icon("plane", lib = 'glyphicon'),
-                                              href = "http://leviathan.ocean.dal.ca/live_glider/")
+                                              href = "http://leviathan.ocean.dal.ca")
+                             # notificationItem("Live Glider",
+                             #                  icon = icon("plane", lib = 'glyphicon'),
+                             #                  href = "http://leviathan.ocean.dal.ca/live_glider/")
                              
                            )
 )
@@ -85,6 +85,8 @@ body <- dashboardBody(
                                         choiceValues = c('select', 'range')),
                            
                            uiOutput("yearChoice"),
+                           
+                           helpText('Data before 2017 are incomplete...'),
                            
                            hr(),
                            
