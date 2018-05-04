@@ -65,11 +65,29 @@ header <-  dashboardHeader(title = 'WhaleMap',
                            )
 )
 
+jscode <- '
+$(function() {
+  var $els = $("[data-proxy-click]");
+  $.each(
+    $els,
+    function(idx, el) {
+      var $el = $(el);
+      var $proxy = $("#" + $el.data("proxyClick"));
+      $el.keydown(function (e) {
+        if ((e.keyCode || e.which) == 13) {
+          $proxy.click();
+        }
+      });
+    }
+  );
+});
+'
+
 # body --------------------------------------------------------------------
 
 body <- dashboardBody(
   fluidRow(
-    
+    tags$head(tags$script(HTML(jscode))),
     # editor tab ----------------------------------------------------------
     column(width = 3,
            
@@ -123,8 +141,11 @@ body <- dashboardBody(
                            hr(),
                            
                            # unlock preliminary data
-                           passwordInput("password", 'Show unverified data:', value = "",
+                           tagAppendAttributes(
+                               passwordInput("password", 'Show unverified data:', value = "",
                                          placeholder = 'Enter password'),
+                               `data-proxy-click` = "go"
+                           ),
                            helpText('To request the password please send a brief description 
                                     of your affiliation and intentions to hansen.johnson@dal.ca'),
 
