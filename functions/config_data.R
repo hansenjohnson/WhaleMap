@@ -94,7 +94,7 @@ config_observations = function(obs){
   
   # configure column types
   if(is.null(obs$time)){obs$time = NA}
-  obs$time = as.POSIXct(obs$time, tz = 'UTC', usetz = T)
+  obs$time = as.POSIXct(obs$time, tz = 'UTC', usetz = T, origin = '1970-01-01')
   
   if(is.null(obs$species)){obs$species = NA}
   obs$species = as.factor(obs$species)

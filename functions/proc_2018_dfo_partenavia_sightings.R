@@ -37,13 +37,23 @@ for(i in seq_along(flist)){
   
   # read in data from excel
   tmp = as.data.frame(read_xlsx(flist[i]))
+  n = ncol(tmp)
+  
+  # fix time
+  if('Hour' %in% colnames(tmp)){
+    hrs = substr(as.character(tmp$Hour), start = 12, stop = 20)
+    tmp$time = as.POSIXct(paste0(tmp$Date, ' ', hrs), format = '%m-%d-%Y %H:%M:%S', tz = 'UTC', usetz = TRUE)
+  } else {
+    tmp$time = NA
+  }
   
   # add data
   tmp$date = as.Date(tmp$Date, format = '%m-%d-%Y')
-  tmp$time = NA
-  tmp$lat = tmp$Lat
-  tmp$lon = tmp$Long
-  tmp$number = tmp$Quant.
+  tmp$lat = as.numeric(tmp$Lat)
+  tmp$lon = abs(as.numeric(tmp$Long))*-1
+  tmp$number = as.numeric(tmp$Quant.)
+  
+  # add metadata
   tmp$yday = yday(tmp$date)
   tmp$year = year(tmp$date)
   tmp$score = 'sighted'
@@ -61,8 +71,8 @@ for(i in seq_along(flist)){
   tmp$species[tmp$Species == 'mn'] = 'humpback'
   tmp$species[tmp$Species == 'fs'] = 'fin/sei'
   
-  # remove unused columns
-  tmp = tmp[-c(1:9)]
+  # remove original columns
+  tmp = tmp[-c(1:n)]
   
   # remove NA sightings
   tmp = tmp[!is.na(tmp$species),]
@@ -81,7 +91,7 @@ for(i in seq_along(flist)){
 # if(length(SIG)!=length(flist)){stop('Not all sightings were processed!')}
 
 # combine all flights
-SIGS = do.call(rbind, SIG)
+SIGS = do.call(rbind.data.frame, SIG)
 
 # config flight data
 sig = config_observations(SIGS)
