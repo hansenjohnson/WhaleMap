@@ -25,6 +25,9 @@ end_date = as.Date('2018-12-30')
 years = c('2014', '2015', '2016', '2017')
 species = c('right', 'sei', 'fin', 'humpback')
 
+# get date from server
+timeNow = as.Date(system('date \'+%Y-%m-%d\'', intern = TRUE))
+
 # header ----------------------------------------------------------------------
 
 header <-  dashboardHeader(title = 'WhaleMap',
@@ -110,7 +113,7 @@ body <- dashboardBody(
                            
                            # add date range choice
                            sliderInput("range", "Choose date range:", begin_date, end_date,
-                                       value = c(Sys.Date()-30, Sys.Date()), timeFormat = '%b-%d',
+                                       value = c(timeNow-30, timeNow), timeFormat = '%b-%d',
                                        animate = F),
                            
                            hr(),
