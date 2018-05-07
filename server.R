@@ -42,6 +42,9 @@ load('data/processed/tss.rda')
 # define track point plotting threshold
 npts = 250000
 
+# define time lag for startup plotting
+tlag = 30 # days
+
 # make dcs icons
 dcsIcons = iconList(
   slocum = makeIcon("icons/slocum.png", iconWidth = 40, iconHeight = 40),
@@ -55,6 +58,20 @@ load('password.rda')
 # server ------------------------------------------------------------------
 
 function(input, output, session){
+  
+  # build date UI -------------------------------------------------------
+  
+  output$dateChoice <- renderUI({
+
+    # set begin and end dates for slider
+    begin_date = as.Date('2018-01-01')
+    end_date = as.Date('2018-12-30')
+
+    # add date range choice
+    sliderInput("range", "Choose date range:", begin_date, end_date,
+                value = c(Sys.Date()-tlag, Sys.Date()), timeFormat = '%b-%d',
+                animate = F)
+  })
   
   # read in data -------------------------------------------------------
   
@@ -96,14 +113,31 @@ function(input, output, session){
   
   # choose date -------------------------------------------------------
   
-  # reactive
-  yday0 = eventReactive(input$go, {
-    yday(as.Date(input$range[1]))
-  }, ignoreNULL = F)
-
-  yday1 = eventReactive(input$go, {
-    yday(as.Date(input$range[2]))
-  }, ignoreNULL = F)
+  # define start time
+  yday0 <- reactive({
+    if (input$go == 0){ 
+      # assign default yday on startup
+      yday(Sys.Date()-tlag)
+    } else {
+      # choose date on action button click
+      isolate({ 
+        yday(as.Date(input$range[1]))
+      })
+    }
+  })
+  
+  # define end time
+  yday1 <- reactive({
+    if (input$go == 0){ 
+      # assign default yday on startup
+      yday(Sys.Date())
+    } else {
+      # choose date on action button click
+      isolate({ 
+        yday(as.Date(input$range[2]))
+      })
+    }
+  })
   
   # choose year -------------------------------------------------------
   
@@ -111,7 +145,7 @@ function(input, output, session){
     
     # assign default year if action button hasn't been pushed yet  
     if (input$go == 0){
-      as.character('2018')
+      as.character(year(Sys.Date()))
     } else {
       
       # choose year on action button click
@@ -225,7 +259,6 @@ function(input, output, session){
       showNotification(paste0('Warning! Tracklines have been turned off because you have chosen to plot more data than this application can currently handle (i.e. more than ', as.character(npts), ' points). Please select less data to view tracks.'), duration = 7, closeButton = T, type = 'warning')
     }
   })
-  
   
   # colorpal -----------------------------------------------------------------
   

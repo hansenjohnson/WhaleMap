@@ -19,14 +19,8 @@ library(rhandsontable)
 
 # user input --------------------------------------------------------------
 
-begin_date = as.Date('2018-01-01')
-end_date = as.Date('2018-12-30')
-
 years = c('2014', '2015', '2016', '2017')
 species = c('right', 'sei', 'fin', 'humpback')
-
-# get date from server
-timeNow = as.Date(system('date \'+%Y-%m-%d\'', intern = TRUE))
 
 # header ----------------------------------------------------------------------
 
@@ -111,10 +105,7 @@ body <- dashboardBody(
                            
                            hr(),
                            
-                           # add date range choice
-                           sliderInput("range", "Choose date range:", begin_date, end_date,
-                                       value = c(timeNow-30, timeNow), timeFormat = '%b-%d',
-                                       animate = F),
+                           uiOutput("dateChoice"),
                            
                            hr(),
                            
