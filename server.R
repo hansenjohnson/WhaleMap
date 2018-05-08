@@ -415,7 +415,7 @@ function(input, output, session){
       proxy %>%
         addPolygons(data=tc_lanes, group = 'tc_lanes',
                     fill = T, 
-                    fillOpacity = 0.25, 
+                    fillOpacity = 0.4, 
                     stroke = T, 
                     # smoothFactor = 3,
                     dashArray = c(5,5), 
@@ -479,8 +479,8 @@ function(input, output, session){
                     dashArray = c(5,5), 
                     options = pathOptions(clickable = F),
                     weight = 1, 
-                    color = 'grey', 
-                    fillColor = 'grey')
+                    color = 'brown', 
+                    fillColor = 'brown')
       
       # switch to show/hide
       ifelse(input$static_zone, showGroup(proxy, 'static_zone'),hideGroup(proxy, 'static_zone'))

@@ -214,13 +214,13 @@ body <- dashboardBody(
                            helpText(tags$em('2018 Protections')),
                            
                            checkboxInput("tc_lanes", 
-                                         label = 'Dynamic Shipping lanes', value = T),
+                                         label = 'Dynamic Shipping lanes', value = F),
                            
                            checkboxInput("tc_zone", 
-                                         label = 'Reduced Speed Zone', value = T),
+                                         label = 'Reduced Speed Zone', value = F),
                            
                            checkboxInput("static_zone", 
-                                         label = 'Static fishery closure', value = T),
+                                         label = 'Static fishery closure', value = F),
                            
                            tags$a(href="https://www.canada.ca/en/fisheries-oceans/news/2018/03/government-of-canada-unveils-its-plan-for-protecting-north-atlantic-right-whales-in-20180.html", "Click here for details")
                            
