@@ -101,8 +101,6 @@ body <- dashboardBody(
                            
                            uiOutput("yearChoice"),
                            
-                           helpText('Data before 2017 are incomplete...'),
-                           
                            hr(),
                            
                            uiOutput("dateChoice"),
@@ -113,8 +111,6 @@ body <- dashboardBody(
                            selectInput("species", "Choose species:", 
                                        choices = species,
                                        selected = "right", multiple = T),
-                           helpText('WhaleMap focuses on right whales. Other species
-                                    information is incomplete.'),
                            
                            hr(),
                            

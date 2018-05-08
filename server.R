@@ -253,12 +253,32 @@ function(input, output, session){
     }
   })
   
-  # track warning --------------------------------------------------------
+  # warnings --------------------------------------------------------
   
   observe({
+    
+    # track warning
     if(nrow(TRACKS())>npts){
-      showNotification(paste0('Warning! Tracklines have been turned off because you have chosen to plot more data than this application can currently handle (i.e. more than ', as.character(npts), ' points). Please select less data to view tracks.'), duration = 7, closeButton = T, type = 'warning')
+      showNotification(paste0('Warning! Tracklines have been turned off because 
+                              you have chosen to plot more data than this application 
+                              can currently handle (i.e. more than ', as.character(npts), ' points). 
+                              Please select less data to view tracks.'), 
+                       duration = 7, closeButton = T, type = 'warning')
     }
+    
+    # species warning
+    if(paste(species(),collapse=',')!='right'){
+      showNotification('Note: WhaleMap focuses on right whales. Other species
+                              information is incomplete.', 
+                       duration = 7, closeButton = T, type = 'warning')
+    }
+    
+    # year warning
+    if(min(years())<2017){
+      showNotification('Note: Data before 2017 are incomplete.', 
+                       duration = 7, closeButton = T, type = 'warning')
+    }
+    
   })
   
   # colorpal -----------------------------------------------------------------
