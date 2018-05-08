@@ -110,8 +110,9 @@ body <- dashboardBody(
                            hr(),
                            
                            # add species choice
-                           selectInput("species", "Choose species:", choices = species, 
-                                       selected = "right", multiple = F),
+                           selectInput("species", "Choose species:", 
+                                       choices = species,
+                                       selected = "right", multiple = T),
                            helpText('WhaleMap focuses on right whales. Other species
                                     information is incomplete.'),
                            
@@ -166,6 +167,7 @@ body <- dashboardBody(
                                            'Platform' = 'platform',
                                            'Platform name' = 'name',
                                            'Number' = 'number',
+                                           'Species' = 'species',
                                            'Latitude' = 'lat',
                                            'Longitude' = 'lon',
                                            'Deployment' = 'id'), selected = 'score'),

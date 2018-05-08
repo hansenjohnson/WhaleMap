@@ -776,8 +776,11 @@ function(input, output, session){
       HTML('No data available...')
     } else {
       
+      # list species names in bounds 
+      spp_names = paste(levels(dInBounds()$species), collapse = ', ')
+      
       # sighting/detection info
-      str1 <- paste0('<strong>Species</strong>: ', species())
+      str1 <- paste0('<strong>Species</strong>: ', spp_names)
       
       str2 <- paste0('<strong>Number of definite sighting events</strong>: ', 
                      nrow(dInBounds()[dInBounds()$score=='sighted',]))
@@ -814,7 +817,6 @@ function(input, output, session){
       
       str10 <- paste0('<strong>Most recent position</strong>: ', 
                      dInBounds()$lat[rec_ind], ', ', dInBounds()$lon[rec_ind])
-      
       # str8 <- paste0('<strong>Number of survey(s)</strong>: ', length(unique(tInBounds()$id)))
       # str9 <- paste0('<strong>Number of track points</strong>: ', nrow(tInBounds()))
       # str10 <- paste('<strong>Survey ID(s)</strong>:<br/>', 
