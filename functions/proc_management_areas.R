@@ -21,10 +21,10 @@ static_zone_dir = paste0(gis_dir,'StaticZone/')
 
 # process -----------------------------------------------------------------
 
-# unzip files
-unzip(zipfile = paste0(gis_dir,'TCLanes.zip'), exdir = tc_lane_dir)
-unzip(zipfile = paste0(gis_dir,'SpeedReductionZone.zip'), exdir = tc_zone_dir)
-unzip(zipfile = paste0(gis_dir,'StaticZone.zip'), exdir = static_zone_dir)
+# # unzip files
+# unzip(zipfile = paste0(gis_dir,'TCLanes.zip'), exdir = tc_lane_dir)
+# unzip(zipfile = paste0(gis_dir,'SpeedReductionZone.zip'), exdir = tc_zone_dir)
+# unzip(zipfile = paste0(gis_dir,'StaticZone.zip'), exdir = static_zone_dir)
 
 # read in data
 tc_lanes = readOGR(tc_lane_dir)
