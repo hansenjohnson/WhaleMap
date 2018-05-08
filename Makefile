@@ -180,7 +180,7 @@ data/processed/mpa.rds : functions/proc_mpa.R data/raw/mpa/*
 	Rscript $<
 
 # Process management areas
-data/processed/management_areas.rda : functions/proc_management_areas.R data/raw/2018_whalemapdata/GIS_data/*
+data/processed/management_areas.rda : functions/proc_management_areas.R data/raw/2018_whalemapdata/GIS_Data/*
 	Rscript $<
 
 ## MAP ##
