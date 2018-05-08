@@ -1,7 +1,7 @@
 
 ## ALL ##
 .PHONY : all
-all : tracks obs sono latest tss mpa map
+all : tracks obs sono latest tss mpa management_areas map
 
 ## TRACKS ##
 .PHONY : tracks
@@ -173,12 +173,15 @@ data/processed/tss.rda : functions/proc_tss.R data/raw/tss/*
 
 ## MPA ##
 .PHONY : mpa
-mpa : data/processed/mpa.rds \
-			data/processed/management_areas.rda
+mpa : data/processed/mpa.rds
 
 # Process mpa
 data/processed/mpa.rds : functions/proc_mpa.R data/raw/mpa/*
 	Rscript $<
+
+## Management Areas ##
+.PHONY : management_areas
+management_areas : data/processed/management_areas.rda
 
 # Process management areas
 data/processed/management_areas.rda : functions/proc_management_areas.R data/raw/2018_whalemapdata/GIS_data/*
