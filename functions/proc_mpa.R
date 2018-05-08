@@ -11,7 +11,8 @@ output_dir = 'data/processed/'
 # read in data
 mpa = read.csv(paste0(data_dir, 'mpa.csv'))
 
-# # test with leaflet
+# test with leaflet
+# library(leaflet)
 # leaflet(mpa) %>%
 #   addTiles() %>%
 #   addPolygons(~lon, ~lat, weight = .5)

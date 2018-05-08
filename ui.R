@@ -184,12 +184,23 @@ body <- dashboardBody(
                            hr(),
                            
                            h5(strong('Choose layer(s):')),
+                           
+                           # Survey layers
+                           helpText(tags$em('Survey Layers')),
+                           
                            checkboxInput("tracks", label = 'Tracks', value = T),
                            
                            checkboxInput("possible", label = 'Possible detections/sightings', value = T),
                            
                            checkboxInput("detected", 
                                          label = 'Definite detections/sightings', value = T),
+                           
+                           checkboxInput("sono", label = 'Sonobuoys', value = F),
+                           
+                           checkboxInput("latest", label = 'Latest robot positions', value = T),
+                           
+                           # Map layers
+                           helpText(tags$em('Map Layers')),
                            
                            checkboxInput("mpa", 
                                          label = 'Protected areas', value = T),
@@ -199,9 +210,19 @@ body <- dashboardBody(
                            
                            checkboxInput("legend", label = 'Legends', value = T),
                            
-                           checkboxInput("latest", label = 'Latest robot positions', value = T),
+                           # 2018 protections
+                           helpText(tags$em('2018 Protections')),
                            
-                           checkboxInput("sono", label = 'Sonobuoys', value = F)
+                           checkboxInput("tc_lanes", 
+                                         label = 'Dynamic Shipping lanes', value = T),
+                           
+                           checkboxInput("tc_zone", 
+                                         label = 'Reduced Speed Zone', value = T),
+                           
+                           checkboxInput("static_zone", 
+                                         label = 'Static fishery closure', value = T),
+                           
+                           tags$a(href="https://www.canada.ca/en/fisheries-oceans/news/2018/03/government-of-canada-unveils-its-plan-for-protecting-north-atlantic-right-whales-in-20180.html", "Click here for details")
                            
                   ),
                   

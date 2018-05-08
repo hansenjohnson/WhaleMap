@@ -38,6 +38,7 @@ score_cols = c('detected' = 'red',
 # read in map polygons
 mpa = readRDS('data/processed/mpa.rds')
 load('data/processed/tss.rda')
+load('data/processed/management_areas.rda')
 
 # define track point plotting threshold
 npts = 250000
@@ -396,6 +397,93 @@ function(input, output, session){
       
       # switch to show/hide
       ifelse(input$mpa, showGroup(proxy, 'mpa'),hideGroup(proxy, 'mpa'))
+    }
+    
+  })
+  
+  # tc_lanes observer ------------------------------------------------------  
+  
+  observe(priority = 4, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('tc_lanes')
+    
+    if(input$tc_lanes){
+      
+      # add mpas
+      proxy %>%
+        addPolygons(data=tc_lanes, group = 'tc_lanes',
+                    fill = T, 
+                    fillOpacity = 0.25, 
+                    stroke = T, 
+                    # smoothFactor = 3,
+                    dashArray = c(5,5), 
+                    options = pathOptions(clickable = F),
+                    weight = 1, 
+                    color = 'grey', 
+                    fillColor = 'grey')
+      
+      # switch to show/hide
+      ifelse(input$tc_lanes, showGroup(proxy, 'tc_lanes'),hideGroup(proxy, 'tc_lanes'))
+    }
+    
+  })
+  
+  # tc_zone observer ------------------------------------------------------  
+  
+  observe(priority = 4, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('tc_zone')
+    
+    if(input$tc_zone){
+      
+      # add mpas
+      proxy %>%
+        addPolygons(data=tc_zone, group = 'tc_zone',
+                    fill = T, 
+                    fillOpacity = 0.25, 
+                    stroke = T, 
+                    # smoothFactor = 3,
+                    dashArray = c(5,5), 
+                    options = pathOptions(clickable = F),
+                    weight = 1, 
+                    color = 'grey', 
+                    fillColor = 'grey')
+      
+      # switch to show/hide
+      ifelse(input$tc_zone, showGroup(proxy, 'tc_zone'),hideGroup(proxy, 'tc_zone'))
+    }
+    
+  })
+  
+  # static_zone observer ------------------------------------------------------  
+  
+  observe(priority = 4, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('static_zone')
+    
+    if(input$static_zone){
+      
+      # add mpas
+      proxy %>%
+        addPolygons(data=static_zone, group = 'static_zone',
+                    fill = T, 
+                    fillOpacity = 0.25, 
+                    stroke = T, 
+                    # smoothFactor = 3,
+                    dashArray = c(5,5), 
+                    options = pathOptions(clickable = F),
+                    weight = 1, 
+                    color = 'grey', 
+                    fillColor = 'grey')
+      
+      # switch to show/hide
+      ifelse(input$static_zone, showGroup(proxy, 'static_zone'),hideGroup(proxy, 'static_zone'))
     }
     
   })

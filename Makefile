@@ -173,10 +173,14 @@ data/processed/tss.rda : functions/proc_tss.R data/raw/tss/*
 
 ## MPA ##
 .PHONY : mpa
-tss : data/processed/mpa.rds
+mpa : data/processed/mpa.rds
 
 # Process mpa
 data/processed/mpa.rds : functions/proc_mpa.R data/raw/mpa/*
+	Rscript $<
+
+# Process management areas
+data/processed/management_areas.rda : functions/proc_management_areas.R data/raw/2018_whalemapdata/GIS_data/*
 	Rscript $<
 
 ## MAP ##

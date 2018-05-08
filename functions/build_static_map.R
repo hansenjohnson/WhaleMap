@@ -54,6 +54,7 @@ getColor <- function(tracks) {
 # read in map polygons
 mpa = readRDS('data/processed/mpa.rds')
 load('data/processed/tss.rda')
+load('data/processed/management_areas.rda')
 
 # tracklines
 tracks = readRDS('data/processed/tracks.rds')
@@ -115,18 +116,25 @@ map <- leaflet() %>%
                '</div>')) %>%
 
   # layer control
-  addLayersControl(overlayGroups = c('Place names',
-                                     'Protected areas',
-                                     'Shipping lanes',
-                                     'Graticules',
-                                     'Survey tracks',
+  addLayersControl(overlayGroups = c('Survey tracks',
                                      'Latest robot positions',
                                      'Possible detections/sightings',
-                                     'Definite detections/sightings'),
+                                     'Definite detections/sightings',
+                                     'Protected areas',
+                                     'Shipping lanes',
+                                     'GoSL static speed reduction zone',
+                                     'GoSL dynamic speed reduction zones',
+                                     'GoSL static fisheries closure',
+                                     'Graticules',
+                                     'Place names'
+                                     ),
                    options = layersControlOptions(collapsed = TRUE), position = 'topright') %>%
 
   # hide groups
-  hideGroup('Place names') %>%
+  hideGroup(c('Place names',
+            'GoSL static speed reduction zone',
+            'GoSL dynamic speed reduction zones',
+            'GoSL static fisheries closure')) %>%
 
   # # add graticules
   # addWMSTiles(
@@ -204,6 +212,26 @@ map <- map %>%
               options = pathOptions(clickable = F),
               group = 'Shipping lanes')
 
+# plot static speed reduction zone
+map <- map %>%
+  addPolygons(data=tc_zone, group = 'GoSL static speed reduction zone',
+              fill = T, fillOpacity = 0.07, stroke = T, smoothFactor = 0,
+              dashArray = c(5,5), options = pathOptions(clickable = F),
+              weight = .25, color = 'brown', fillColor = 'brown')
+
+# plot dynamic speed reduction zone
+map <- map %>%
+  addPolygons(data=tc_lanes, group = 'GoSL dynamic speed reduction zones',
+              fill = T, fillOpacity = 0.1, stroke = T, smoothFactor = 0,
+              dashArray = c(5,5), options = pathOptions(clickable = F),
+              weight = .25, color = 'brown', fillColor = 'brown')
+
+# plot static fisheries closue
+map <- map %>%
+  addPolygons(data=static_zone, group = 'GoSL static fisheries closure',
+              fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
+              dashArray = c(2,2), options = pathOptions(clickable = F),
+              weight = 1, color = 'grey', fillColor = 'grey')
 
 # add tracks --------------------------------------------------------------
 
