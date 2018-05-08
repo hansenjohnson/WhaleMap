@@ -173,7 +173,8 @@ data/processed/tss.rda : functions/proc_tss.R data/raw/tss/*
 
 ## MPA ##
 .PHONY : mpa
-mpa : data/processed/mpa.rds
+mpa : data/processed/mpa.rds \
+			data/processed/management_areas.rda
 
 # Process mpa
 data/processed/mpa.rds : functions/proc_mpa.R data/raw/mpa/*
