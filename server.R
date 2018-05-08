@@ -412,8 +412,8 @@ function(input, output, session){
                     dashArray = c(5,5), 
                     options = pathOptions(clickable = F),
                     weight = 1, 
-                    color = 'grey', 
-                    fillColor = 'grey')
+                    color = 'darkgreen', 
+                    fillColor = 'darkgreen')
       
       # switch to show/hide
       ifelse(input$mpa, showGroup(proxy, 'mpa'),hideGroup(proxy, 'mpa'))
@@ -431,7 +431,7 @@ function(input, output, session){
     
     if(input$tc_lanes){
       
-      # add mpas
+      # add polygons
       proxy %>%
         addPolygons(data=tc_lanes, group = 'tc_lanes',
                     fill = T, 
@@ -441,8 +441,8 @@ function(input, output, session){
                     dashArray = c(5,5), 
                     options = pathOptions(clickable = F),
                     weight = 1, 
-                    color = 'grey', 
-                    fillColor = 'grey')
+                    color = 'purple', 
+                    fillColor = 'purple')
       
       # switch to show/hide
       ifelse(input$tc_lanes, showGroup(proxy, 'tc_lanes'),hideGroup(proxy, 'tc_lanes'))
@@ -460,7 +460,7 @@ function(input, output, session){
     
     if(input$tc_zone){
       
-      # add mpas
+      # add polygons
       proxy %>%
         addPolygons(data=tc_zone, group = 'tc_zone',
                     fill = T, 
@@ -489,7 +489,7 @@ function(input, output, session){
     
     if(input$static_zone){
       
-      # add mpas
+      # add polygons
       proxy %>%
         addPolygons(data=static_zone, group = 'static_zone',
                     fill = T, 
@@ -499,8 +499,8 @@ function(input, output, session){
                     dashArray = c(5,5), 
                     options = pathOptions(clickable = F),
                     weight = 1, 
-                    color = 'brown', 
-                    fillColor = 'brown')
+                    color = 'darkblue', 
+                    fillColor = 'darkblue')
       
       # switch to show/hide
       ifelse(input$static_zone, showGroup(proxy, 'static_zone'),hideGroup(proxy, 'static_zone'))
@@ -523,14 +523,14 @@ function(input, output, session){
       proxy %>%
         addPolylines(tss_lines$lon, tss_lines$lat,
                      weight = .5,
-                     color = 'red',
+                     color = 'grey',
                      # smoothFactor = 3,
                      options = pathOptions(clickable = F),
                      group = 'tss') %>%
         addPolygons(tss_polygons$lon, tss_polygons$lat,
                     weight = .5,
-                    color = 'red',
-                    fillColor = 'red',
+                    color = 'grey',
+                    fillColor = 'grey',
                     # smoothFactor = 3,
                     options = pathOptions(clickable = F),
                     group = 'tss')

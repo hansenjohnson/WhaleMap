@@ -193,21 +193,21 @@ map <- map %>%
   addPolygons(data=mpa, group = 'Protected areas',
               fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
               dashArray = c(5,5), options = pathOptions(clickable = F),
-              lng=~lon, lat=~lat, weight = 1, color = 'grey', fillColor = 'grey')
+              lng=~lon, lat=~lat, weight = 1, color = 'darkgreen', fillColor = 'darkgreen')
 
 # plot shipping lanes
 
 map <- map %>%
   addPolylines(tss_lines$lon, tss_lines$lat,
                weight = .5,
-               color = 'red',
+               color = 'grey',
                smoothFactor = 0,
                options = pathOptions(clickable = F),
                group = 'Shipping lanes') %>%
   addPolygons(tss_polygons$lon, tss_polygons$lat,
               weight = .5,
-              color = 'red',
-              fillColor = 'red',
+              color = 'grey',
+              fillColor = 'grey',
               smoothFactor = 0,
               options = pathOptions(clickable = F),
               group = 'Shipping lanes')
@@ -215,23 +215,23 @@ map <- map %>%
 # plot static speed reduction zone
 map <- map %>%
   addPolygons(data=tc_zone, group = 'GoSL static speed reduction zone',
-              fill = T, fillOpacity = 0.07, stroke = T, smoothFactor = 0,
+              fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
               dashArray = c(5,5), options = pathOptions(clickable = F),
-              weight = .25, color = 'brown', fillColor = 'brown')
+              weight = .25, color = 'grey', fillColor = 'grey')
 
 # plot dynamic speed reduction zone
 map <- map %>%
   addPolygons(data=tc_lanes, group = 'GoSL dynamic speed reduction zones',
-              fill = T, fillOpacity = 0.1, stroke = T, smoothFactor = 0,
+              fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
               dashArray = c(5,5), options = pathOptions(clickable = F),
-              weight = .25, color = 'brown', fillColor = 'brown')
+              weight = .25, color = 'purple', fillColor = 'purple')
 
 # plot static fisheries closue
 map <- map %>%
   addPolygons(data=static_zone, group = 'GoSL static fisheries closure',
               fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
               dashArray = c(2,2), options = pathOptions(clickable = F),
-              weight = 1, color = 'grey', fillColor = 'grey')
+              weight = 1, color = 'darkblue', fillColor = 'darkblue')
 
 # add tracks --------------------------------------------------------------
 
