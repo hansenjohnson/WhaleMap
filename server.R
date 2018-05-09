@@ -251,12 +251,12 @@ function(input, output, session){
   
   observeEvent(input$go,{
     if(input$password == password){
-      showNotification('Password was correct! Showing unverified data and C&P tracklines...',
+      showNotification('Password was correct! Showing unverified data...',
                        duration = 7, closeButton = T, type = 'message')
 
     } else {
-      showNotification('Password not provided or incorrect. Hiding unverified data...',
-                       duration = 7, closeButton = T, type = 'warning')
+      # showNotification('Password not provided or incorrect. Hiding unverified data...',
+      #                  duration = 7, closeButton = T, type = 'warning')
     }
   })
   
