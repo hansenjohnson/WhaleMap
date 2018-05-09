@@ -1,5 +1,6 @@
 ## proc_2018_dfo_twin_otter_sightings ##
 # Process sightings data from DFO Twin Otter survey plane
+# Also run proc_2018-04-03_dfo_transit_sightings
 
 # user input --------------------------------------------------------------
 
@@ -11,6 +12,9 @@ ofile = '2018_dfo_twin_otter_sightings.rds'
 
 # output directory
 output_dir = 'data/interim/'
+
+# process one-off transit mission
+source('functions/proc_2018-04-03_dfo_transit_sightings.R')
 
 # setup -------------------------------------------------------------------
 

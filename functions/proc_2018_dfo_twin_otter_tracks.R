@@ -1,5 +1,6 @@
 ## proc_2018_dfo_twin_otter_tracks ##
 # Process gps data from DFO Twin Otter survey plane
+# Also run proc_2018-04-03_dfo_transit_tracks
 
 # user input --------------------------------------------------------------
 
@@ -11,6 +12,9 @@ ofile = '2018_dfo_twin_otter_tracks.rds'
 
 # output directory
 output_dir = 'data/interim/'
+
+# process one-off transit mission
+source('functions/proc_2018-04-03_dfo_transit_tracks.R')
 
 # setup -------------------------------------------------------------------
 
