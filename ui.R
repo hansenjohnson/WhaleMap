@@ -29,7 +29,7 @@ header <-  dashboardHeader(title = 'WhaleMap',
                            # data
                            dropdownMenu(
                              type = "notifications",
-                             icon = icon('info-sign', lib = 'glyphicon'),
+                             icon = 'More Information',
                              badgeStatus = NULL,
                              headerText = "",
                              notificationItem("Help",
@@ -43,23 +43,26 @@ header <-  dashboardHeader(title = 'WhaleMap',
                                               href = "https://github.com/hansenjohnson/WhaleMap"),
                              notificationItem("View/Report Issues",
                                               icon = icon('remove-sign', lib = 'glyphicon'),
-                                              href = "https://github.com/hansenjohnson/WhaleMap/issues")
-                           ),
-                           
-                           # leviathan
-                           dropdownMenu(
-                             type = "notifications",
-                             icon = 'leviathan.ocean.dal.ca',
-                             badgeStatus = NULL,
-                             headerText = "",
+                                              href = "https://github.com/hansenjohnson/WhaleMap/issues"),
                              notificationItem("Home",
                                               icon = icon("home"),
                                               href = "http://leviathan.ocean.dal.ca")
-                             # notificationItem("Live Glider",
-                             #                  icon = icon("plane", lib = 'glyphicon'),
-                             #                  href = "http://leviathan.ocean.dal.ca/live_glider/")
-                             
                            )
+                           
+                           # # leviathan
+                           # dropdownMenu(
+                           #   type = "notifications",
+                           #   icon = 'leviathan.ocean.dal.ca',
+                           #   badgeStatus = NULL,
+                           #   headerText = "",
+                           #   notificationItem("Home",
+                           #                    icon = icon("home"),
+                           #                    href = "http://leviathan.ocean.dal.ca")
+                           #   # notificationItem("Live Glider",
+                           #   #                  icon = icon("plane", lib = 'glyphicon'),
+                           #   #                  href = "http://leviathan.ocean.dal.ca/live_glider/")
+                           #   
+                           # )
 )
 
 jscode <- '
