@@ -174,12 +174,25 @@ function(input, output, session){
   
   # reactive data -----------------------------------------------------------
   
-  # choose year(s) and platform(s)
+  # # choose year(s) and platform(s)
+  # Tracks <- eventReactive(input$go|input$go == 0, {
+  #   tmp = tracks[tracks$year %in% years(),]
+  #   tmp[tmp$platform %in% platform(),]
+  # })
+  
+  # choose tracks year(s) and platform(s) (no cp without password)
   Tracks <- eventReactive(input$go|input$go == 0, {
-    tmp = tracks[tracks$year %in% years(),]
-    tmp[tmp$platform %in% platform(),]
+    if(input$password == password){
+      tmp = tracks[tracks$year %in% years(),]
+      tmp[tmp$platform %in% platform(),]
+    } else {
+      tmp = tracks[tracks$year %in% years(),]
+      tmp = tmp[tmp$platform %in% platform(),]
+      tmp[tmp$name!='cp_king_air',]
+    }
   })
   
+  # choose observations
   Obs <- eventReactive(input$go|input$go == 0, {
     tmp = obs[obs$year %in% years(),]
     tmp[tmp$platform %in% platform(),]
@@ -240,11 +253,11 @@ function(input, output, session){
     list(lat, lon)
   })
   
-  # password protected data -----------------------------------------------
+  # password warning -----------------------------------------------
   
   observeEvent(input$go,{
     if(input$password == password){
-      showNotification('Password was correct! Showing unverified data...',
+      showNotification('Password was correct! Showing unverified data and C&P tracklines...',
                        duration = 7, closeButton = T, type = 'message')
 
     } else {
