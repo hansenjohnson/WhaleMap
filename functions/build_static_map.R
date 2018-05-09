@@ -72,6 +72,7 @@ obs = readRDS('data/processed/observations.rds')
 
 # tracklines
 Tracks = tracks[tracks$date >= start_date,]; rm(tracks)
+Tracks = Tracks[Tracks$name!='cp_king_air',] # do not plot C&P data
 
 # observations
 Obs = obs[obs$date >= start_date,]; rm(obs)
@@ -79,14 +80,8 @@ Obs = obs[obs$date >= start_date,]; rm(obs)
 # select species
 spp = Obs[Obs$species == 'right',]
 
-# # new category for possible sightings
-# spp$score = as.character(spp$score)
-# spp$score[spp$platform == 'opportunistic'] = 'possibly sighted'
-# spp$score = as.factor(spp$score)
-
 # only possible detections
-# pos = droplevels(spp[spp$score %in% c('possibly detected', 'possibly sighted'),])
-pos = droplevels(spp[spp$score == 'possibly detected',])
+pos = droplevels(spp[spp$score == 'possibly detected',]) # do not plot possible sightings
 
 # only definite
 det = droplevels(spp[!spp$score %in% c('possibly detected', 'possibly sighted'),])
