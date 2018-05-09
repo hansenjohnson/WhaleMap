@@ -214,6 +214,11 @@ body <- dashboardBody(
                            checkboxInput("tc_lanes", 
                                          label = 'Dynamic Shipping lanes', value = F),
                            
+                           tags$div(
+                             `style` = "padding-left: 20px",
+                             HTML(paste(tags$em("Status: "), tags$span(style="color:red", "ACTIVE"), sep = ""))
+                           ),
+                           
                            checkboxInput("tc_zone", 
                                          label = 'Reduced Speed Zone', value = F),
                            
