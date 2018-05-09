@@ -174,12 +174,6 @@ function(input, output, session){
   
   # reactive data -----------------------------------------------------------
   
-  # # choose year(s) and platform(s)
-  # Tracks <- eventReactive(input$go|input$go == 0, {
-  #   tmp = tracks[tracks$year %in% years(),]
-  #   tmp[tmp$platform %in% platform(),]
-  # })
-  
   # choose tracks year(s) and platform(s) (no cp without password)
   Tracks <- eventReactive(input$go|input$go == 0, {
     if(input$password == password){
