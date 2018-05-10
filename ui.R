@@ -131,7 +131,7 @@ body <- dashboardBody(
                            # add platform choice
                            selectInput("platform", "Choose platform(s):", multiple = T,
                                        choices = c("Slocum Glider" = "slocum",
-                                                   "Wave Glider" = "wave",
+                                                   # "Wave Glider" = "wave",
                                                    "Plane" = "plane",
                                                    "Vessel" = "vessel",
                                                    "Buoy" = "buoy",
