@@ -62,6 +62,9 @@ if(length(flist)!=0){
     # remove columns without species
     tmp = tmp[!is.na(tmp$species),]
     
+    # skip if nothing seen
+    if (nrow(tmp) == 0) next
+    
     # fix date
     tmp$date = as.Date(tmp$date)
     
@@ -75,7 +78,8 @@ if(length(flist)!=0){
     # fix time
     tmp$time = as.POSIXct(tmp$time)
     tmp$time = as.POSIXct(paste0(tmp$date, ' ', hour(tmp$time), ':', minute(tmp$time), ':', second(tmp$time)), 
-                          tz = 'UTC', usetz = T)
+                            tz = 'UTC', usetz = T)
+    
     
     # convert lat lon data type
     tmp$lat = as.character(tmp$lat)
@@ -127,7 +131,7 @@ if(length(flist)!=0){
   # combine and save --------------------------------------------------------
   
   # catch errors
-  if(length(SIG)!=length(flist)){stop('Not all sightings were processed!')}
+  # if(length(SIG)!=length(flist)){stop('Not all sightings were processed!')}
   
   # combine all flights
   SIGS = do.call(rbind, SIG)
