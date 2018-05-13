@@ -35,6 +35,10 @@ score_cols = c('detected' = 'red',
                'sighted' = 'darkslategray',
                'possibly sighted' = 'gray')
 
+# define visual and acoustic platforms
+visual_platforms = c('plane', 'vessel')
+acoustic_platforms = c('slocum', 'buoy', 'wave')
+
 # read in map polygons
 mpa = readRDS('data/processed/mpa.rds')
 load('data/processed/tss.rda')
@@ -859,7 +863,7 @@ function(input, output, session){
   
   output$graph <- renderPlotly({
     
-    # determine input data
+    # define input observations
     if(input$plotInBounds){
       # use only data within map bounds
       obs = dInBounds()
@@ -868,23 +872,38 @@ function(input, output, session){
       obs = spp()  
     }
     
+    # define input tracks
+    if(input$plotInBounds){
+      # use only data within map bounds
+      tracks = tInBounds()
+    } else {
+      # use all input data
+      tracks = TRACKS()  
+    }
+    
     # conditionally remove possibles for plotting
     if(!input$possible){
       obs = obs[obs$score!='possibly detected' & obs$score!='possibly sighted',]
     }
     
-    # # remove na's for plotting (especially important for lat lons)
-    # obs = obs[-c(which(is.na(obs$lat))),]
-    
     # avoid error if no data selected or in map view
-    if(nrow(obs)==0){
+    if(nrow(obs)==0|nrow(tracks)==0){
       return(NULL)
     }
     
     # make categories for facet plotting
     obs$cat = ''
-    obs$cat[obs$score == 'sighted' | obs$score == 'possibly sighted'] = 'Sightings per day'
-    obs$cat[obs$score == 'detected' | obs$score == 'possibly detected'] = 'Detections per day'
+    obs$cat[obs$score == 'sighted' | obs$score == 'possibly sighted'] = 'Sighting events per day'
+    obs$cat[obs$score == 'detected' | obs$score == 'possibly detected'] = 'Detection events per day'
+    
+    # determine days with trackline effort
+    vis_effort = data.frame('yday' = unique(tracks$yday[tracks$platform %in% visual_platforms]), 
+                            'y' = -1,
+                            'cat' = 'Sighting events per day')
+    aco_effort = data.frame('yday' = unique(tracks$yday[tracks$platform %in% acoustic_platforms]), 
+                            'y' = -1,
+                            'cat' = 'Detection events per day')
+    eff = rbind.data.frame(vis_effort,aco_effort)
     
     # determine number of factor levels to color
     ncol = length(unique(obs[,which(colnames(obs)==input$colorby)]))
@@ -939,6 +958,7 @@ function(input, output, session){
           fillcols+
           facet_wrap(~cat, scales="free_y", nrow = 2)+
           scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"))+
+          geom_point(data = eff, aes(x = yday, y=y), pch=45, cex = 3, col = 'blue')+
           aes(text = paste('date: ', format(as.Date(as.character(yday), "%j"), "%d-%b")))
       })
       
@@ -977,6 +997,7 @@ function(input, output, session){
           fillcols+
           facet_wrap(~cat, scales="free_y", nrow = 2)+
           scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"))+
+          geom_point(data = eff, aes(x = yday, y=y), pch=45, cex = 3, col = 'blue')+
           aes(text = paste('date: ', format(as.Date(as.character(yday), "%j"), "%d-%b")))
         
       })

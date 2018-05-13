@@ -308,6 +308,9 @@ body <- dashboardBody(
                
                plotlyOutput("graph"),
                
+               # define blue effort line
+               helpText('The blue dashed line indicates days with survey effort'),
+               
                # plot inBounds switch
                checkboxInput("plotInBounds", 
                              label = 'Only plot data within map bounds?', value = T)
