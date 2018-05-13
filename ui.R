@@ -46,7 +46,10 @@ header <-  dashboardHeader(title = 'WhaleMap',
                                               href = "https://github.com/hansenjohnson/WhaleMap/issues"),
                              notificationItem("Home",
                                               icon = icon("home"),
-                                              href = "http://leviathan.ocean.dal.ca")
+                                              href = "/"),
+                             notificationItem(Sys.getenv("R_SHNYSRVINST"),
+                                              icon = icon("tag"),
+                                              href = "#")
                            )
                            
                            # # leviathan
