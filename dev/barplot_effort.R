@@ -9,8 +9,10 @@ library(plotly)
 # definitions -------------------------------------------------------------
 
 # time period to show (days)
-start_date = as.Date('2017-06-01')
-end_date = as.Date('2017-12-30')
+# start_date = as.Date('2017-06-01')
+# end_date = as.Date('2017-12-30')
+end_date = as.Date('2018-05-13')
+start_date = as.Date('2018-04-15')
 
 # output path
 fout = '../server_index/whale_map.html'
@@ -64,8 +66,10 @@ tracks = tracks[tracks$name!='cp_king_air',] # do not plot C&P data
 Obs = OBS[OBS$date >= start_date & OBS$date <= end_date,]; rm(OBS)
 
 # select platform
-tracks = tracks[tracks$platform %in% c('slocum','plane','vessel'),] # do not plot C&P data
-Obs = Obs[Obs$platform %in% c('slocum','plane','vessel'),] # do not plot C&P data
+# tracks = tracks[tracks$platform %in% c('slocum','plane','vessel'),] 
+# Obs = Obs[Obs$platform %in% c('slocum','plane','vessel'),]
+tracks = tracks[tracks$platform %in% c('plane','vessel'),] 
+Obs = Obs[Obs$platform %in% c('plane','vessel'),]
 
 # select species
 spp = Obs[Obs$species == 'right',]
@@ -98,18 +102,13 @@ fillcols = scale_fill_manual(values = c('sighted' = 'black',
 # order factors so possibles plot first
 obs$score <- factor(obs$score, levels=levels(obs$score)[order(levels(obs$score), decreasing = TRUE)])
 
-data.frame('x' = unique(tracks$yday[tracks$platform %in% visual_platforms]), 
-           'y' = -1,
-           cat = 'Sightings per day')
-
 # determine days with trackline effort
-vis_effort = data.frame('yday' = unique(tracks$yday[tracks$platform %in% visual_platforms]), 
-                        'y' = -1,
-                        'cat' = 'Sighting events per day')
-aco_effort = data.frame('yday' = unique(tracks$yday[tracks$platform %in% acoustic_platforms]), 
-                        'y' = -1,
-                        'cat' = 'Detection events per day')
-eff = rbind.data.frame(vis_effort,aco_effort)
+vis_effort = unique(tracks$yday[tracks$platform %in% visual_platforms])
+aco_effort = unique(tracks$yday[tracks$platform %in% acoustic_platforms])
+eff = data.frame('yday' = c(vis_effort, aco_effort),
+                 'cat' = c(rep('Sighting events per day',length(vis_effort)), 
+                           rep('Detection events per day',length(aco_effort))),
+                 'y' = -1)
 
 # build plot --------------------------------------------------------------
 

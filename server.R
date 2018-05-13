@@ -897,13 +897,12 @@ function(input, output, session){
     obs$cat[obs$score == 'detected' | obs$score == 'possibly detected'] = 'Detection events per day'
     
     # determine days with trackline effort
-    vis_effort = data.frame('yday' = unique(tracks$yday[tracks$platform %in% visual_platforms]), 
-                            'y' = -1,
-                            'cat' = 'Sighting events per day')
-    aco_effort = data.frame('yday' = unique(tracks$yday[tracks$platform %in% acoustic_platforms]), 
-                            'y' = -1,
-                            'cat' = 'Detection events per day')
-    eff = rbind.data.frame(vis_effort,aco_effort)
+    vis_effort = unique(tracks$yday[tracks$platform %in% visual_platforms])
+    aco_effort = unique(tracks$yday[tracks$platform %in% acoustic_platforms])
+    eff = data.frame('yday' = c(vis_effort, aco_effort),
+                     'cat' = c(rep('Sighting events per day',length(vis_effort)), 
+                               rep('Detection events per day',length(aco_effort))),
+                     'y' = -1)
     
     # determine number of factor levels to color
     ncol = length(unique(obs[,which(colnames(obs)==input$colorby)]))
