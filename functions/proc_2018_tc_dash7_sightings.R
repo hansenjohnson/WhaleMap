@@ -95,11 +95,20 @@ if(length(flist)!=0){
       }
     }
     
-    # fix lat
-    tmp$lat = round(as.numeric(measurements::conv_unit(tmp$lat, from = 'deg_dec_min', to = 'dec_deg')), 5)
+    # remove any commas
+    tmp$lat = gsub(pattern = ',', replacement = ' ', x = tmp$lat)
+    tmp$lon = gsub(pattern = ',', replacement = ' ', x = tmp$lon)
     
-    # fix lon
-    tmp$lon = round(as.numeric(measurements::conv_unit(tmp$lon, from = 'deg_dec_min', to = 'dec_deg'))*-1, 5)
+    # determine lat lon format
+    if(str_count(tmp$lon[1], ' ') == 2){
+      ll_type = 'deg_min_sec'
+    } else {
+      ll_type = 'deg_dec_min'
+    }
+      
+    # convert to decimal degrees
+    tmp$lat = round(as.numeric(measurements::conv_unit(tmp$lat, from = ll_type, to = 'dec_deg')), 5)
+    tmp$lon = round(as.numeric(measurements::conv_unit(tmp$lon, from = ll_type, to = 'dec_deg'))*-1, 5)
     
     # add species identifiers
     tmp$species = toupper(tmp$species)
