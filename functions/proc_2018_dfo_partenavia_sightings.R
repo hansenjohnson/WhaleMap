@@ -25,7 +25,7 @@ library(readxl, quietly = T, warn.conflicts = F)
 source('functions/config_data.R')
 
 # list files to process
-flist = list.files(data_dir, pattern = '*_sightings.xlsx', full.names = T, recursive = T)
+flist = list.files(data_dir, pattern = 'PartenaviaObs(\\d{8}).xlsx$', full.names = T, recursive = T)
 
 # list to hold loop output
 SIG = list()
