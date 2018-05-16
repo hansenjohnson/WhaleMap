@@ -43,16 +43,17 @@ if(length(flist)!=0){
     if (file.size(flist[i]) == 0) next
     
     # read in data
-    tmp = as.data.frame(read_xlsx(flist[i], sheet = 1))
+    tmp = as.data.frame(read_excel(flist[i], sheet = 1, col_names = TRUE))
     
     # select columns of interest
-    # tmp = tmp[c(2,4,5,12,28,30)]
+    # tmp = tmp[c(1,3,4,11,27,29)]
     
-    tmp = data.frame(tmp$`WS_DATE (Ctr + ;)`, 
-               tmp$LATITUDE, 
-               tmp$LONGITUDE, 
-               tmp[,grep('TIME', colnames(tmp))], 
-               tmp$SPECIES_CD, 
+    # select columns of interest
+    tmp = data.frame(tmp$`WS_DATE (Ctr + ;)`,
+               tmp$LATITUDE,
+               tmp$LONGITUDE,
+               tmp[,grep('TIME', colnames(tmp))],
+               tmp$SPECIES_CD,
                tmp$NUMB
     )
                
@@ -80,7 +81,6 @@ if(length(flist)!=0){
     tmp$time = as.POSIXct(paste0(tmp$date, ' ', hour(tmp$time), ':', minute(tmp$time), ':', second(tmp$time)), 
                             tz = 'UTC', usetz = T)
     
-    
     # convert lat lon data type
     tmp$lat = as.character(tmp$lat)
     tmp$lon = as.character(tmp$lon)
@@ -95,9 +95,16 @@ if(length(flist)!=0){
       }
     }
     
+    # remove any letter
+    tmp$lat = gsub(pattern = 'N', replacement = '', x = tmp$lat)
+    tmp$lon = gsub(pattern = 'W', replacement = '', x = tmp$lon)
+    
     # remove any commas
     tmp$lat = gsub(pattern = ',', replacement = ' ', x = tmp$lat)
     tmp$lon = gsub(pattern = ',', replacement = ' ', x = tmp$lon)
+    
+    # remove minus sign
+    tmp$lon = gsub(pattern = '-', replacement = '', x = tmp$lon)
     
     # determine lat lon format
     if(str_count(tmp$lon[1], ' ') == 2){
