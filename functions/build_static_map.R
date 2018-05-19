@@ -22,7 +22,7 @@ start_date = Sys.Date()-lag
 fout = '../server_index/whale_map.html'
 
 # define score color palette
-obs_levs = c('acoustically detected', 'sighted')
+obs_levs = c('acoustic', 'visual')
 obs_pal = c('red', 'darkslategray')
 pal = colorFactor(levels = obs_levs,
                   palette = obs_pal)
@@ -84,10 +84,7 @@ spp = Obs[Obs$species == 'right',]
 # pos = droplevels(spp[spp$score == 'possibly detected',]) # do not plot possible sightings
 
 # only definite
-det = droplevels(spp[!spp$score %in% c('possibly detected', 'possibly sighted'),])
-
-# rename scores
-spp$score[spp$score == 'detected'] = 'acoustically detected'
+det = droplevels(spp[!spp$score %in% c('possible acoustic', 'possible visual'),])
 
 # basemap -----------------------------------------------------------------
 
