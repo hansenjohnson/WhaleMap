@@ -174,12 +174,12 @@ body <- dashboardBody(
                            #color by
                            selectInput("colorby", "Color observations by:", choices =
                                          c('Score' = 'score',
-                                           'Year' = 'year',
+                                           'Species' = 'species',
                                            'Day of year' = 'yday',
+                                           'Year' = 'year',
                                            'Platform' = 'platform',
                                            'Platform name' = 'name',
                                            'Number' = 'number',
-                                           'Species' = 'species',
                                            'Latitude' = 'lat',
                                            'Longitude' = 'lon',
                                            'Deployment' = 'id'), selected = 'score'),
