@@ -30,10 +30,10 @@ palette_list = list(heat.colors(200),
                     oceColorsViridis(200))
 
 # define score colors
-score_cols = c('detected' = 'red', 
-               'possibly detected' = 'yellow', 
-               'sighted' = 'darkslategray',
-               'possibly sighted' = 'gray')
+score_cols = c('definite acoustic' = 'red', 
+               'possible acoustic' = 'yellow', 
+               'definite visual' = 'darkslategray',
+               'possible visual' = 'gray')
 
 # define visual and acoustic platforms
 visual_platforms = c('plane', 'vessel')
@@ -139,6 +139,7 @@ function(input, output, session){
   
   # choose species -----------------------------------------------------------
   
+  # species
   species <- eventReactive(input$go|input$go == 0,{
     input$species
   })
@@ -152,7 +153,7 @@ function(input, output, session){
   # choose colorby -----------------------------------------------------------
   
   colorby <- eventReactive(input$go|input$go == 0,{
-    input$colorby
+    input$colorby  
   })
   
   # reactive data -----------------------------------------------------------
@@ -208,15 +209,15 @@ function(input, output, session){
   # only possible
   pos <- eventReactive(input$go|input$go == 0, {
     if(input$password == password){
-      droplevels(spp()[spp()$score=='possibly detected'|spp()$score=='possibly sighted',])
+      droplevels(spp()[spp()$score=='possible acoustic'|spp()$score=='possible visual',])
     } else {
-      droplevels(spp()[spp()$score=='possibly detected',])
+      droplevels(spp()[spp()$score=='possible acoustic',])
     }
   })
   
   # only definite
   det <- reactive({
-    droplevels(spp()[spp()$score=='detected'|spp()$score=='sighted',])
+    droplevels(spp()[spp()$score=='definite acoustic'|spp()$score=='definite visual',])
   })
   
   # combine track and observations
@@ -297,7 +298,7 @@ function(input, output, session){
     } else if (colorby() == 'score'){
       
       # hard wire colors for score factor levels
-      colorFactor(levels = c('detected', 'possibly detected', 'possibly sighted', 'sighted'), 
+      colorFactor(levels = c('definite acoustic', 'possible acoustic', 'possible visual', 'definite visual'), 
                   palette = c('red', 'yellow', 'grey', 'darkslategray'))  
       
     } else {
@@ -781,19 +782,19 @@ function(input, output, session){
       str1 <- paste0('<strong>Species</strong>: ', spp_names)
       
       str2 <- paste0('<strong>Number of definite sighting events</strong>: ', 
-                     nrow(dInBounds()[dInBounds()$score=='sighted',]))
+                     nrow(dInBounds()[dInBounds()$score=='definite visual',]))
       
       str3 <- paste0('<strong>Number of whales sighted (includes duplicates)</strong>: ', 
-                     sum(dInBounds()$number[dInBounds()$score=='sighted'], na.rm = T))
+                     sum(dInBounds()$number[dInBounds()$score=='definite visual'], na.rm = T))
       
       ifelse(input$possible, 
-             t<-nrow(dInBounds()[dInBounds()$score=='possibly sighted',]),
+             t<-nrow(dInBounds()[dInBounds()$score=='possible visual',]),
              t<-0)
       
       str4 <- paste0('<strong>Number of possible sighting events</strong>: ', t)
       
       ifelse(input$possible, 
-             u<-sum(dInBounds()$number[dInBounds()$score=='possibly sighted'], na.rm = T),
+             u<-sum(dInBounds()$number[dInBounds()$score=='possible visual'], na.rm = T),
              u<-0)
       
       str5 <- paste0('<strong>Number of whales possibly sighted</strong>: ', u)
@@ -802,7 +803,7 @@ function(input, output, session){
                      nrow(dInBounds()[dInBounds()$score=='detected',]))
       
       ifelse(input$possible, 
-             v<-nrow(dInBounds()[dInBounds()$score=='possibly detected',]),
+             v<-nrow(dInBounds()[dInBounds()$score=='possible acoustic',]),
              v<-0)
       
       str7 <- paste0('<strong>Number of possible detections</strong>: ', v)
@@ -850,7 +851,7 @@ function(input, output, session){
     
     # conditionally remove possibles for plotting
     if(!input$possible){
-      obs = obs[obs$score!='possibly detected' & obs$score!='possibly sighted',]
+      obs = obs[obs$score!='possible acoustic' & obs$score!='possible visual',]
     }
     
     # avoid error if no data selected or in map view
@@ -860,15 +861,15 @@ function(input, output, session){
     
     # make categories for facet plotting
     obs$cat = ''
-    obs$cat[obs$score == 'sighted' | obs$score == 'possibly sighted'] = 'Sighting events per day'
-    obs$cat[obs$score == 'detected' | obs$score == 'possibly detected'] = 'Detection events per day'
+    obs$cat[obs$score == 'definite visual' | obs$score == 'possible visual'] = 'Sighting events per day'
+    obs$cat[obs$score == 'definite acoustic' | obs$score == 'possible acoustic'] = 'Acoustic detection events per day'
     
     # determine days with trackline effort
     vis_effort = unique(tracks$yday[tracks$platform %in% visual_platforms])
     aco_effort = unique(tracks$yday[tracks$platform %in% acoustic_platforms])
     eff = data.frame('yday' = c(vis_effort, aco_effort),
                      'cat' = c(rep('Sighting events per day',length(vis_effort)), 
-                               rep('Detection events per day',length(aco_effort))),
+                               rep('Acoustic detection events per day',length(aco_effort))),
                      'y' = -1)
     
     # determine number of factor levels to color

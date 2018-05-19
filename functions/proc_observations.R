@@ -27,5 +27,9 @@ obs = obs[which(!duplicated(obs)),]
 # select only focal species
 obs = obs[obs$species %in% c('right', 'fin', 'sei', 'humpback'),]
 
+# rename score categories
+levels(obs$score) = c('definite visual', 'possible visual', 'definite acoustic', 'possible acoustic')
+obs$score = droplevels(obs$score)
+
 # save
 saveRDS(obs, 'data/processed/observations.rds')
