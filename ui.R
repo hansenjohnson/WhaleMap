@@ -19,7 +19,7 @@ library(rhandsontable)
 
 # user input --------------------------------------------------------------
 
-years = c('2014', '2015', '2016', '2017')
+years = c('2014', '2015', '2016', '2017', '2018')
 species = c('right', 'sei', 'fin', 'humpback')
 
 # header ----------------------------------------------------------------------
@@ -129,18 +129,16 @@ body <- dashboardBody(
                   # Select Data    
                   tabPanel(title = 'Data',
                            
-                           # choose year input
-                           radioButtons("yearType", label = 'Choose year(s):', 
-                                        choiceNames = c('Specific year(s):','Range of years:'),
-                                        choiceValues = c('select', 'range')),
-                           
-                           uiOutput("yearChoice"),
+                           # choose year
+                           selectInput("year", label = 'Choose year(s):',
+                                       choices = years,
+                                       selected = '2018', multiple = TRUE),
                            
                            hr(),
                            
                            # choose date input
                            radioButtons("dateType", label = 'Choose dates(s):', 
-                                        choiceNames = c('Specific date(s):','Range of dates:'),
+                                        choiceNames = c('Specific date:','Range of dates:'),
                                         choiceValues = c('select', 'range'), selected = 'range'),
                            
                            uiOutput("dateChoice"),
@@ -173,6 +171,21 @@ body <- dashboardBody(
                            
                            hr(),
                            
+                           #color by
+                           selectInput("colorby", "Color observations by:", choices =
+                                         c('Score' = 'score',
+                                           'Year' = 'year',
+                                           'Day of year' = 'yday',
+                                           'Platform' = 'platform',
+                                           'Platform name' = 'name',
+                                           'Number' = 'number',
+                                           'Species' = 'species',
+                                           'Latitude' = 'lat',
+                                           'Longitude' = 'lon',
+                                           'Deployment' = 'id'), selected = 'score'),
+                           
+                           hr(),
+                           
                            # unlock preliminary data
                            tagAppendAttributes(
                                passwordInput("password", 'Show unverified data:', value = "",
@@ -194,19 +207,6 @@ body <- dashboardBody(
                   
                   # Customize plotting
                   tabPanel(title = 'Layers',
-                           
-                           #color by
-                           selectInput("colorby", "Color by:", choices =
-                                         c('Detection Score' = 'score',
-                                           'Year' = 'year',
-                                           'Day of year' = 'yday',
-                                           'Platform' = 'platform',
-                                           'Platform name' = 'name',
-                                           'Number' = 'number',
-                                           'Species' = 'species',
-                                           'Latitude' = 'lat',
-                                           'Longitude' = 'lon',
-                                           'Deployment' = 'id'), selected = 'score'),
                            
                            # color palette
                            selectInput("pal", "Choose color palette:",

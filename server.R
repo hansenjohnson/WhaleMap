@@ -64,29 +64,6 @@ load('password.rda')
 
 function(input, output, session){
   
-  # build date UI -------------------------------------------------------
-  
-  output$dateChoice <- renderUI({
-
-    # set begin and end dates for slider
-    begin_date = as.Date('2018-01-01')
-    end_date = as.Date('2018-12-30')
-    
-    # make vector of all possible dates
-    date_vec = format.Date(seq.Date(from = begin_date,to = end_date, by = 1), '%b-%d')
-    
-    switch(input$dateType,
-           
-           'select' = selectInput("date", label = NULL,
-                                  choices = date_vec,
-                                  selected = NA, multiple = T),
-           
-           'range' = sliderInput("date", label = NULL, begin_date, end_date,
-                         value = c(Sys.Date()-tlag, Sys.Date()), timeFormat = '%b-%d',
-                         animate = F)
-    )
-  })
-  
   # read in data -------------------------------------------------------
   
   # tracklines
@@ -104,24 +81,26 @@ function(input, output, session){
   # sonobuoys
   sono = readRDS('data/processed/sonobuoys.rds')
   
-  # build year UI -------------------------------------------------------
+  # build date UI -------------------------------------------------------
   
-  output$yearChoice <- renderUI({
+  output$dateChoice <- renderUI({
     
-    # define year choices based on input data
-    min_yr = min(as.numeric(obs$year), na.rm = T)
-    max_yr = max(as.numeric(obs$year), na.rm = T)
+    # set begin and end dates for slider
+    begin_date = as.Date('2018-01-01')
+    end_date = as.Date('2018-12-30')
     
-    # change input depending on user choice
-    switch(input$yearType,
+    # make vector of all possible dates
+    date_vec = format.Date(seq.Date(from = begin_date,to = end_date, by = 1), '%b-%d')
+    
+    switch(input$dateType,
            
-           'select' = selectInput("year", label = NULL,
-                                  choices = as.character(seq(max_yr, min_yr, -1)),
-                                  selected = '2018', multiple = T),
+           'select' = selectInput("date", label = NULL,
+                                  choices = date_vec,
+                                  selected = format.Date(Sys.Date(), '%b-%d'), multiple = FALSE),
            
-           'range' = sliderInput("year", label = NULL,
-                                 min = min_yr, max = max_yr, step = 1, 
-                                 value = c(min_yr, max_yr), sep = "")
+           'range' = sliderInput("date", label = NULL, begin_date, end_date,
+                                 value = c(Sys.Date()-tlag, Sys.Date()), timeFormat = '%b-%d',
+                                 animate = F)
     )
   })
   
@@ -147,19 +126,13 @@ function(input, output, session){
   # choose year -------------------------------------------------------
   
   years <- reactive({
-    
     # assign default year if action button hasn't been pushed yet  
     if (input$go == 0){
       as.character(year(Sys.Date()))
     } else {
-      
       # choose year on action button click
       isolate({
-        if(input$yearType == 'select'){
-          as.character(input$year)
-        } else if(input$yearType == 'range'){
-          as.character(seq(input$year[1], input$year[2], 1))
-        }
+        as.character(input$year)
       })
     }
   })
@@ -174,6 +147,12 @@ function(input, output, session){
   
   platform <- eventReactive(input$go|input$go == 0,{
     input$platform
+  })
+  
+  # choose colorby -----------------------------------------------------------
+  
+  colorby <- eventReactive(input$go|input$go == 0,{
+    input$colorby
   })
   
   # reactive data -----------------------------------------------------------
@@ -300,12 +279,12 @@ function(input, output, session){
     # define index of color selection for use in palette list
     ind = as.numeric(input$pal)
     
-    if(input$colorby %in% c('yday', 'lat', 'lon')){
+    if(colorby() %in% c('yday', 'lat', 'lon')){
       
       # use continuous palette
-      colorNumeric(palette_list[[ind]], spp()[,which(colnames(spp())==input$colorby)])  
+      colorNumeric(palette_list[[ind]], spp()[,which(colnames(spp())==colorby())])  
       
-    } else if (input$colorby == 'number'){
+    } else if (colorby() == 'number'){
       
       if(is.infinite(min(spp()$number, na.rm = T))){
         # define colorbar limits if 'number' is selected without sightings data
@@ -315,17 +294,7 @@ function(input, output, session){
         colorNumeric(palette_list[[ind]], spp()$number, na.color = 'darkgrey')
       }
       
-    } else if (input$colorby == 'year'){
-      
-      if(input$yearType=='range'){
-        # use discrete palette if years are selected as a range
-        colorNumeric(palette_list[[ind]], as.numeric(spp()$year))  
-      } else {
-        # use discrete palette if years are selected individually
-        colorFactor(palette_list[[ind]], spp()$year)  
-      }
-      
-    } else if (input$colorby == 'score'){
+    } else if (colorby() == 'score'){
       
       # hard wire colors for score factor levels
       colorFactor(levels = c('detected', 'possibly detected', 'possibly sighted', 'sighted'), 
@@ -334,7 +303,7 @@ function(input, output, session){
     } else {
       
       # color by factor level
-      colorFactor(palette_list[[ind]], spp()[,which(colnames(spp())==input$colorby)])  
+      colorFactor(palette_list[[ind]], spp()[,which(colnames(spp())==colorby())])  
       
     }
   })
@@ -656,7 +625,7 @@ function(input, output, session){
       # possible detections
       addCircleMarkers(map = proxy, data = pos(), ~lon, ~lat, group = 'possible',
                        radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
-                       fillColor = pal(pos()[,which(colnames(pos())==input$colorby)]),
+                       fillColor = pal(pos()[,which(colnames(pos())==colorby())]),
                        popup = ~paste(sep = "<br/>" ,
                                       paste0("Species: ", species),
                                       paste0("Score: ", score),
@@ -687,7 +656,7 @@ function(input, output, session){
       # definite detections
       addCircleMarkers(map = proxy, data = det(), ~lon, ~lat, group = 'detected',
                        radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
-                       fillColor = pal(det()[,which(colnames(det())==input$colorby)]),
+                       fillColor = pal(det()[,which(colnames(det())==colorby())]),
                        popup = ~paste(sep = "<br/>" ,
                                       paste0("Species: ", species),
                                       paste0("Score: ", score),
@@ -730,14 +699,14 @@ function(input, output, session){
     
     # set up color palette plotting
     pal <- colorpal()
-    var <- dat[,which(colnames(dat)==input$colorby)]
+    var <- dat[,which(colnames(dat)==colorby())]
     
     # legend
     if(input$legend){
       proxy %>% clearControls() %>% 
         addLegend(position = "bottomright",labFormat = labelFormat(big.mark = ""),
                   pal = pal, values = var, 
-                  title = input$colorby)
+                  title = colorby())
     } else {
       proxy %>% clearControls()
     }
@@ -903,7 +872,7 @@ function(input, output, session){
                      'y' = -1)
     
     # determine number of factor levels to color
-    ncol = length(unique(obs[,which(colnames(obs)==input$colorby)]))
+    ncol = length(unique(obs[,which(colnames(obs)==colorby())]))
     
     # get input for color palette choice
     ind = as.numeric(input$pal)
@@ -918,39 +887,26 @@ function(input, output, session){
                          oce.colorsJet(ncol),
                          oceColorsViridis(ncol))
     
-    if(input$colorby %in% c('number','lat','lon', 'year')){
+    if(colorby() %in% c('number', 'lat','lon', 'year')){
       
       # replace all sightings/detections with '1' to facilitate stacked plotting
       obs$counter = 1
       
-      if(input$yearType == 'select' & input$colorby == 'year'){
+      if(colorby() == 'year'){
         # convert year to factor
         obs$year = as.factor(obs$year)
-        
-        # choose palette for discrete scale
-        cols = palette_list2[[ind]]
-        
-        # define palette for discrete scale
-        fillcols = scale_fill_manual(values = cols, name = input$colorby)
-        
-      } else {
-        
-        # convert year to numeric
-        if(input$colorby == 'year'){
-          obs$year = as.numeric(obs$year)  
-        }
-        
-        # choose palette for continuous scale
-        cols = palette_list[[ind]]
-        
-        # define colors for continuous scale
-        fillcols = scale_fill_gradientn(colours = cols, name = input$colorby)
       }
       
+      # choose palette for discrete scale
+      cols = palette_list2[[ind]]
+      
+      # define palette for discrete scale
+      fillcols = scale_fill_manual(values = cols, name = colorby())
+        
       # build plot
       suppressWarnings({
         g = ggplot(obs, aes(x = yday, y = counter))+
-          geom_histogram(stat = "identity", na.rm = T, aes_string(fill = paste0(input$colorby)))+
+          geom_histogram(stat = "identity", na.rm = T, aes_string(fill = paste0(colorby())))+
           labs(x = '', y = '')+
           fillcols+
           facet_wrap(~cat, scales="free_y", nrow = 2)+
@@ -960,22 +916,22 @@ function(input, output, session){
       })
       
     } else {
-      if(input$colorby=='score'){
+      if(colorby()=='score'){
         
         # manually define colors based on score
-        fillcols = scale_fill_manual(values = score_cols, name = input$colorby)
+        fillcols = scale_fill_manual(values = score_cols, name = colorby())
         
         # order factors so possibles plot first
         obs$score <- factor(obs$score, 
                             levels=levels(obs$score)[order(levels(obs$score), decreasing = TRUE)])
         
-      } else if(input$colorby=='yday'){
+      } else if(colorby()=='yday'){
         
         # choose palette for continuous scale
         cols = palette_list[[ind]]
         
         # define colors for continuous scale
-        fillcols = scale_fill_gradientn(colours = cols, name = input$colorby)
+        fillcols = scale_fill_gradientn(colours = cols, name = colorby())
         
       } else {
         
@@ -983,13 +939,13 @@ function(input, output, session){
         cols = palette_list2[[ind]]
         
         # define palette for discrete scale
-        fillcols = scale_fill_manual(values = cols, name = input$colorby)
+        fillcols = scale_fill_manual(values = cols, name = colorby())
       }
       
       # build plot
       suppressWarnings({
         g = ggplot(obs, aes(x = yday))+
-          geom_histogram(stat = "count", na.rm = T, aes_string(fill = paste0(input$colorby)))+
+          geom_histogram(stat = "count", na.rm = T, aes_string(fill = paste0(colorby())))+
           labs(x = '', y = '')+
           fillcols+
           facet_wrap(~cat, scales="free_y", nrow = 2)+
