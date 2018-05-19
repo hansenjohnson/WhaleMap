@@ -163,8 +163,7 @@ map <- leaflet() %>%
   # add legend
   addLegend(position = "bottomright",
             pal = pal,
-            values = obs_levs,
-            title = 'Observation Type:')
+            values = obs_levs)
 
 # center on observations (if present)
 # if(nrow(Tracks)!=0){
