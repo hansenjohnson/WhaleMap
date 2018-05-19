@@ -22,8 +22,8 @@ start_date = Sys.Date()-lag
 fout = '../server_index/whale_map.html'
 
 # define score color palette
-obs_levs = c('detected', 'possibly detected', 'sighted')
-obs_pal = c('red', 'yellow', 'darkslategray')
+obs_levs = c('acoustically detected', 'sighted')
+obs_pal = c('red', 'darkslategray')
 pal = colorFactor(levels = obs_levs,
                   palette = obs_pal)
 
@@ -81,10 +81,13 @@ Obs = obs[obs$date >= start_date,]; rm(obs)
 spp = Obs[Obs$species == 'right',]
 
 # only possible detections
-pos = droplevels(spp[spp$score == 'possibly detected',]) # do not plot possible sightings
+# pos = droplevels(spp[spp$score == 'possibly detected',]) # do not plot possible sightings
 
 # only definite
 det = droplevels(spp[!spp$score %in% c('possibly detected', 'possibly sighted'),])
+
+# rename scores
+spp$score[spp$score == 'detected'] = 'acoustically detected'
 
 # basemap -----------------------------------------------------------------
 
@@ -101,7 +104,7 @@ map <- leaflet() %>%
   addControl(position = "topright",
              paste0(
                '<div align="center">',
-               '<strong>Right Whale Surveys</strong>','<br>',
+               '<strong>Right Whale Observations</strong>','<br>',
                '<small>Last updated: ',
                format(Sys.time(), '%b-%d at %H:%M', tz = 'UTC', usetz = T),
                '</small>','<br>',
@@ -113,7 +116,6 @@ map <- leaflet() %>%
   # layer control
   addLayersControl(overlayGroups = c('Survey tracks',
                                      'Latest robot positions',
-                                     'Possible detections/sightings',
                                      'Definite detections/sightings',
                                      'Protected areas',
                                      'Shipping lanes',
@@ -127,9 +129,10 @@ map <- leaflet() %>%
 
   # hide groups
   hideGroup(c('Place names',
-            'GoSL static speed reduction zone',
-            'GoSL dynamic speed reduction zones',
-            'GoSL static fisheries closure')) %>%
+              'Survey tracks',
+              'GoSL static speed reduction zone',
+              'GoSL dynamic speed reduction zones',
+              'GoSL static fisheries closure')) %>%
 
   # # add graticules
   # addWMSTiles(
@@ -161,7 +164,7 @@ map <- leaflet() %>%
   addLegend(position = "bottomright",
             pal = pal,
             values = obs_levs,
-            title = 'Score')
+            title = 'Observation Type:')
 
 # center on observations (if present)
 # if(nrow(Tracks)!=0){
@@ -239,7 +242,7 @@ names(tracks.df) %>%
     map <<- map %>%
       addPolylines(data=tracks.df[[df]], group = 'Survey tracks',
                    lng=~lon, lat=~lat, weight = 2,
-                   popup = paste0('Track ID: ', unique(tracks.df[[df]]$id)),
+                   popup = paste0('Survey completed by: ', unique(tracks.df[[df]]$name)),
                    smoothFactor = 1, color = getColor(tracks.df[[df]]))
   })
 
@@ -264,28 +267,28 @@ if(file.exists(lfile)){
 # add possible detections/sightings ---------------------------------------
 
 # possible detections
-map <- map %>% addCircleMarkers(data = pos, ~lon, ~lat, group = 'Possible detections/sightings',
-                 radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
-                 fillColor = pal(pos$score),
-                 popup = ~paste(sep = "<br/>" ,
-                                strong("Sighting/Detection Details:"),
-                                paste0("Species: ", species),
-                                "Score: possible",
-                                paste0("Platform: ", platform),
-                                paste0("Name: ", name),
-                                paste0('Date: ', as.character(date)),
-                                paste0('Position: ',
-                                       as.character(lat), ', ', as.character(lon))),
-                 label = ~paste0(as.character(date), ': ', species,' whale ', score, ' by ', name),
-                 options = markerOptions(removeOutsideVisibleBounds=T)) %>%
+# map <- map %>% addCircleMarkers(data = pos, ~lon, ~lat, group = 'Possible detections/sightings',
+#                  radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
+#                  fillColor = pal(pos$score),
+#                  popup = ~paste(sep = "<br/>" ,
+#                                 strong("Sighting/Detection Details:"),
+#                                 paste0("Species: ", species),
+#                                 "Score: possible",
+#                                 paste0("Platform: ", platform),
+#                                 paste0("Name: ", name),
+#                                 paste0('Date: ', as.character(date)),
+#                                 paste0('Position: ',
+#                                        as.character(lat), ', ', as.character(lon))),
+#                  label = ~paste0(as.character(date), ': ', species,' whale ', score, ' by ', name),
+#                  options = markerOptions(removeOutsideVisibleBounds=T)) %>%
 
 # add definite detections/sightings ---------------------------------------
 
-addCircleMarkers(data = det, ~lon, ~lat, group = 'Definite detections/sightings',
+map <- map %>% addCircleMarkers(data = det, ~lon, ~lat, group = 'Acoustic detections/sightings',
                  radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
                  fillColor = pal(det$score),
                  popup = ~paste(sep = "<br/>" ,
-                                strong("Sighting/Detection Details:"),
+                                strong("Details:"),
                                 paste0("Species: ", species),
                                 paste0("Score: ", score),
                                 paste0("Number: ", number),
