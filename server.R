@@ -71,11 +71,20 @@ function(input, output, session){
     # set begin and end dates for slider
     begin_date = as.Date('2018-01-01')
     end_date = as.Date('2018-12-30')
-
-    # add date range choice
-    sliderInput("range", "Choose date range:", begin_date, end_date,
-                value = c(Sys.Date()-tlag, Sys.Date()), timeFormat = '%b-%d',
-                animate = F)
+    
+    # make vector of all possible dates
+    date_vec = format.Date(seq.Date(from = begin_date,to = end_date, by = 1), '%b-%d')
+    
+    switch(input$dateType,
+           
+           'select' = selectInput("date", label = NULL,
+                                  choices = date_vec,
+                                  selected = NA, multiple = T),
+           
+           'range' = sliderInput("date", label = NULL, begin_date, end_date,
+                         value = c(Sys.Date()-tlag, Sys.Date()), timeFormat = '%b-%d',
+                         animate = F)
+    )
   })
   
   # read in data -------------------------------------------------------
@@ -119,27 +128,18 @@ function(input, output, session){
   # choose date -------------------------------------------------------
   
   # define start time
-  yday0 <- reactive({
+  ydays <- reactive({
     if (input$go == 0){ 
-      # assign default yday on startup
-      yday(Sys.Date()-tlag)
+      # yday list on startup
+      seq(yday(Sys.Date()-tlag), yday(Sys.Date()), 1)
     } else {
       # choose date on action button click
-      isolate({ 
-        yday(as.Date(input$range[1]))
-      })
-    }
-  })
-  
-  # define end time
-  yday1 <- reactive({
-    if (input$go == 0){ 
-      # assign default yday on startup
-      yday(Sys.Date())
-    } else {
-      # choose date on action button click
-      isolate({ 
-        yday(as.Date(input$range[2]))
+      isolate({
+        if(input$dateType == 'select'){
+          yday(as.Date(input$date, format = '%b-%d'))
+        } else if(input$dateType == 'range'){
+          seq(yday(input$date[1]), yday(input$date[2]), 1)
+        }
       })
     }
   })
@@ -201,24 +201,24 @@ function(input, output, session){
     LATEST <- eventReactive(input$go|input$go == 0, {
       tmp = latest[latest$year %in% years(),]
       tmp = tmp[tmp$platform %in% platform(),]
-      tmp[tmp$yday >= yday0() & tmp$yday <= yday1(),]
+      tmp[tmp$yday %in% ydays(),]
     })
   }
   
   # position for live dcs platform
   SONO <- eventReactive(input$go|input$go == 0, {
     tmp = sono[sono$year %in% years(),]
-    tmp[tmp$yday >= yday0() & tmp$yday <= yday1(),]
+    tmp[tmp$yday %in% ydays(),]
   })
   
   # choose track date range
   TRACKS <- eventReactive(input$go|input$go == 0, {
-    Tracks()[Tracks()$yday >= yday0() & Tracks()$yday <= yday1(),]
+    Tracks()[Tracks()$yday %in% ydays(),]
   })
   
   # choose species date range
   OBS <- eventReactive(input$go|input$go == 0, {
-    Obs()[Obs()$yday >= yday0() & Obs()$yday <= yday1(),]
+    Obs()[Obs()$yday %in% ydays(),]
   })
   
   # choose species

@@ -138,6 +138,11 @@ body <- dashboardBody(
                            
                            hr(),
                            
+                           # choose date input
+                           radioButtons("dateType", label = 'Choose dates(s):', 
+                                        choiceNames = c('Specific date(s):','Range of dates:'),
+                                        choiceValues = c('select', 'range'), selected = 'range'),
+                           
                            uiOutput("dateChoice"),
                            
                            hr(),
