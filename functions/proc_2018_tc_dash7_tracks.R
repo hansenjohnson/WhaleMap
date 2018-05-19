@@ -75,7 +75,8 @@ for(i in seq_along(flist)){
     tmp$time = as.POSIXct(tmp$time, origin = '1970-01-01', tz = 'UTC', usetz=TRUE)
     
   } else {
-    stop('Format not known!')
+    message('Format not known! Skipping file: ', flist[i])
+    next
   }
   
   # remove columns without timestamp
