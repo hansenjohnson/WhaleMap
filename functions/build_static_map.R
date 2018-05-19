@@ -113,7 +113,7 @@ map <- leaflet() %>%
   # layer control
   addLayersControl(overlayGroups = c('Survey tracks',
                                      'Latest robot positions',
-                                     'Definite detections/sightings',
+                                     'Right whale observations',
                                      'Protected areas',
                                      'Shipping lanes',
                                      'GoSL static speed reduction zone',
@@ -127,6 +127,7 @@ map <- leaflet() %>%
   # hide groups
   hideGroup(c('Place names',
               'Survey tracks',
+              'Latest robot positions',
               'GoSL static speed reduction zone',
               'GoSL dynamic speed reduction zones',
               'GoSL static fisheries closure')) %>%
@@ -280,7 +281,7 @@ if(file.exists(lfile)){
 
 # add definite detections/sightings ---------------------------------------
 
-map <- map %>% addCircleMarkers(data = det, ~lon, ~lat, group = 'Acoustic detections/sightings',
+map <- map %>% addCircleMarkers(data = det, ~lon, ~lat, group = 'Right whale observations',
                  radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
                  fillColor = pal(det$score),
                  popup = ~paste(sep = "<br/>" ,
