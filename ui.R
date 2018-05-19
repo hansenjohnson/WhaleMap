@@ -109,7 +109,7 @@ body <- dashboardBody(
     column(width = 3,
            
            # translator
-           box(width = NULL, solidHeader = F, collapsible = T, title = 'Translate this page', status = 'primary',
+           box(width = NULL, solidHeader = F, collapsible = T, title = 'Translate / Traduire', status = 'primary',
              HTML('
                   <div id="google_translate_element"></div>
                   
@@ -144,21 +144,23 @@ body <- dashboardBody(
                            
                            # add species choice
                            selectInput("species", "Choose species:", 
-                                       choices = species,
-                                       selected = "right", multiple = T),
+                                       choices = c("Right whale" = "right",
+                                                   "Fin whale" = "fin",
+                                                   "Sei whale" = "sei",
+                                                   "Humpback whale" = "humpback"), 
+                                       selected = "right", 
+                                       multiple = T),
                            
                            hr(),
                            
                            # add platform choice
                            selectInput("platform", "Choose platform(s):", multiple = T,
                                        choices = c("Slocum Glider" = "slocum",
-                                                   # "Wave Glider" = "wave",
                                                    "Plane" = "plane",
                                                    "Vessel" = "vessel",
                                                    "Buoy" = "buoy",
                                                    "Opportunistic" = "opportunistic"), 
                                        selected = c('slocum', 
-                                                    'wave', 
                                                     'plane',
                                                     'vessel',
                                                     'buoy', 
@@ -172,8 +174,6 @@ body <- dashboardBody(
                                          placeholder = 'Enter password'),
                                `data-proxy-click` = "go"
                            ),
-                           helpText('To request the password please send a brief description 
-                                    of your affiliation and intentions to hansen.johnson@dal.ca'),
 
                            hr(),
                            
@@ -249,10 +249,10 @@ body <- dashboardBody(
                            checkboxInput("tc_lanes", 
                                          label = 'Dynamic Shipping lanes', value = F),
                            
-                           tags$div(
-                             `style` = "padding-left: 20px",
-                             HTML(paste(tags$em("Status: "), tags$span(style="color:red", "ACTIVE"), sep = ""))
-                           ),
+                           # tags$div(
+                           #   `style` = "padding-left: 20px",
+                           #   HTML(paste(tags$em("Status: "), tags$span(style="color:red", "ACTIVE"), sep = ""))
+                           # ),
                            
                            checkboxInput("tc_zone", 
                                          label = 'Reduced Speed Zone', value = F),
