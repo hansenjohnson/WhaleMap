@@ -93,16 +93,16 @@ body <- dashboardBody(
   fluidRow(
     tags$head(tags$script(HTML(jscode))),
     
-    # development warning message
-    column(width = 12, align = "center",
-           box(width = NULL, solidHeader = T,collapsible = F, collapsed = T,
-               status = 'danger', background = 'red',
-               
-               # warning text
-               h4('Warning: WhaleMap is under active development')
-               
-           )
-    ),
+    # # development warning message
+    # column(width = 12, align = "center",
+    #        box(width = NULL, solidHeader = T,collapsible = F, collapsed = T,
+    #            status = 'danger', background = 'red',
+    #            
+    #            # warning text
+    #            h4('Warning: WhaleMap is under active development')
+    #            
+    #        )
+    # ),
     
     # editor tab ----------------------------------------------------------
     
