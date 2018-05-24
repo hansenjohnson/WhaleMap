@@ -66,15 +66,15 @@ if(length(flist)!=0){
     # skip if nothing seen
     if (nrow(tmp) == 0) next
     
-    # fix date
-    tmp$date = as.Date(tmp$date)
-    
-    # remove columns without timestamp
-    tmp = tmp[which(!is.na(tmp$date)),]
-    
     # remove columns without lat lon
     tmp = tmp[!is.na(tmp$lat),]
     tmp = tmp[!is.na(tmp$lon),]
+    
+    # fix date
+    tmp$date = as.Date(tmp$date[1]) # onlys use first date
+    
+    # remove columns without timestamp
+    tmp = tmp[which(!is.na(tmp$date)),]
     
     # fix time
     tmp$time = as.POSIXct(tmp$time)
@@ -107,15 +107,17 @@ if(length(flist)!=0){
     tmp$lon = gsub(pattern = '-', replacement = '', x = tmp$lon)
     
     # determine lat lon format
-    if(str_count(tmp$lon[1], ' ') == 2){
+    if(str_count(tmp$lat[1], ' ') == 2){
       ll_type = 'deg_min_sec'
     } else {
       ll_type = 'deg_dec_min'
     }
       
-    # convert to decimal degrees
-    tmp$lat = round(as.numeric(measurements::conv_unit(tmp$lat, from = ll_type, to = 'dec_deg')), 5)
-    tmp$lon = round(as.numeric(measurements::conv_unit(tmp$lon, from = ll_type, to = 'dec_deg'))*-1, 5)
+    # convert to decimal degrees (loop because vector behaviour is strange)
+    for(ii in 1:nrow(tmp)){
+      tmp$lat[ii] = round(as.numeric(measurements::conv_unit(tmp$lat[ii], from = ll_type, to = 'dec_deg')), 5)
+      tmp$lon[ii] = round(as.numeric(measurements::conv_unit(tmp$lon[ii], from = ll_type, to = 'dec_deg'))*-1, 5)
+    }
     
     # add species identifiers
     tmp$species = toupper(tmp$species)
