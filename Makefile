@@ -16,6 +16,7 @@ data/processed/tracks.rds : functions/proc_tracks.R \
 														data/interim/2017_tc_dash8_tracks.rds \
 														data/interim/2018_dfo_twin_otter_tracks.rds \
 														data/interim/2018_dfo_partenavia_tracks.rds \
+														data/interim/2018_dfo_cessna_tracks.rds \
 														data/interim/2018_tc_dash7_tracks.rds \
 														data/interim/2018_tc_dash8_tracks.rds \
 														data/interim/2018_noaa_twin_otter_tracks.rds \
@@ -53,6 +54,10 @@ data/interim/2018_dfo_twin_otter_tracks.rds : functions/proc_2018_dfo_twin_otter
 
 # 2018 DFO partenavia tracks
 data/interim/2018_dfo_partenavia_tracks.rds : functions/proc_2018_dfo_partenavia_tracks.R data/raw/2018_whalemapdata/DFO_partenavia/*
+	Rscript $<
+
+# 2018 DFO cessna tracks
+data/interim/2018_dfo_cessna_tracks.rds : functions/proc_2018_dfo_cessna_tracks.R data/raw/2018_whalemapdata/DFO_cessna/*
 	Rscript $<
 
 # 2018 TC dash7 tracks
