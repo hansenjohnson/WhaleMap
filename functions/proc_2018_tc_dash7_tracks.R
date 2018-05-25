@@ -74,6 +74,22 @@ for(i in seq_along(flist)){
     # add timestamp
     tmp$time = as.POSIXct(tmp$time, origin = '1970-01-01', tz = 'UTC', usetz=TRUE)
     
+    # format: '20180402_Dash7_tracklog-from_kml.csv'  
+  } else if(grepl(pattern = '(\\d{8})_Dash7_tracklog-from_kml.csv', x = flist[i], ignore.case = T)){
+    
+    # read in file
+    tmp = read.csv(flist[i])
+    
+    # select and rename important columns
+    tmp = data.frame(tmp$date, tmp$time, tmp$LONG, tmp$LAT, tmp$grndspeed, tmp$altitude)
+    colnames(tmp) = c('date', 'time', 'lon', 'lat', 'speed', 'altitude')
+    
+    # add date
+    tmp$date = as.Date(tmp$date)
+    
+    # add time
+    tmp$time = as.POSIXct(paste0(tmp$date, ' ', as.character(tmp$time)), origin = '1970-01-01', tz = 'UTC', usetz=TRUE)
+    
   } else {
     message('Format not known! Skipping file: ', flist[i])
     next
