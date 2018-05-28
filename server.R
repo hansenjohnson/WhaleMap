@@ -1065,11 +1065,30 @@ function(input, output, session){
     }
   )
   
+  # status table ------------------------------------------------------------
+  
+  # read in helper function
+  source('functions/make_status_table.R')
+  
+  # make status table
+  sdf = make_status_table('status.txt')
+  
+  # render table
+  output$status = renderTable({sdf}, striped = TRUE, 
+                              hover = TRUE, 
+                              bordered = TRUE, colnames = TRUE,
+                              align = 'l',
+                              width = '100%')
+  
+  # session -----------------------------------------------------------------
+  
   # Set this to "force" instead of TRUE for testing locally
   # (without Shiny Server)
   session$allowReconnect(TRUE)
   
 } # server
+
+
 
 
 

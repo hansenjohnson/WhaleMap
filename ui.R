@@ -348,6 +348,13 @@ body <- dashboardBody(
                status = 'primary',
                
                htmlOutput("summary")
+           ),
+           
+           # Status table
+           box(width = NULL, solidHeader = T,collapsible = T, title = 'Status:', 
+               status = 'primary',
+               
+               tableOutput("status")
            )
     )
   )
