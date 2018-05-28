@@ -60,6 +60,9 @@ if(length(flist)!=0){
     # rename
     colnames(tmp) = c('date','lat', 'lon', 'time', 'species', 'number')
     
+    # fix date
+    tmp$date = as.Date(tmp$date[1]) # onlys use first date
+    
     # remove columns without species
     tmp = tmp[!is.na(tmp$species),]
     
@@ -70,11 +73,8 @@ if(length(flist)!=0){
     tmp = tmp[!is.na(tmp$lat),]
     tmp = tmp[!is.na(tmp$lon),]
     
-    # fix date
-    tmp$date = as.Date(tmp$date[1]) # onlys use first date
-    
     # remove columns without timestamp
-    tmp = tmp[which(!is.na(tmp$date)),]
+    tmp = tmp[which(!is.na(tmp$time)),]
     
     # fix time
     tmp$time = as.POSIXct(tmp$time)

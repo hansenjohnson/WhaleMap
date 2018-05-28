@@ -43,34 +43,38 @@ if(length(flist)!=0){
     if (file.size(flist[i]) == 0) next
     
     # read in data
-    tmp = as.data.frame(read_xlsx(flist[i], sheet = 1))
+    tmp = as.data.frame(read_excel(flist[i], sheet = 1, col_names = TRUE))
     
     # select columns of interest
-    # tmp = tmp[c(2,4,5,12,28,30)]
+    # tmp = tmp[c(1,3,4,11,27,29)]
     
-    tmp = data.frame(tmp$`WS_DATE (Ctr + ;)`, 
-                     tmp$LATITUDE, 
-                     tmp$LONGITUDE, 
-                     tmp[,grep('TIME', colnames(tmp))], 
-                     tmp$SPECIES_CD, 
+    # select columns of interest
+    tmp = data.frame(tmp$`WS_DATE (Ctr + ;)`,
+                     tmp$LATITUDE,
+                     tmp$LONGITUDE,
+                     tmp[,grep('TIME', colnames(tmp))],
+                     tmp$SPECIES_CD,
                      tmp$NUMB
     )
     
     # rename
     colnames(tmp) = c('date','lat', 'lon', 'time', 'species', 'number')
     
+    # fix date
+    tmp$date = as.Date(tmp$date[1]) # onlys use first date
+    
     # remove columns without species
     tmp = tmp[!is.na(tmp$species),]
     
-    # fix date
-    tmp$date = as.Date(tmp$date)
-    
-    # remove columns without timestamp
-    tmp = tmp[which(!is.na(tmp$date)),]
+    # skip if nothing seen
+    if (nrow(tmp) == 0) next
     
     # remove columns without lat lon
     tmp = tmp[!is.na(tmp$lat),]
     tmp = tmp[!is.na(tmp$lon),]
+    
+    # remove columns without timestamp
+    tmp = tmp[which(!is.na(tmp$time)),]
     
     # fix time
     tmp$time = as.POSIXct(tmp$time)
@@ -91,11 +95,29 @@ if(length(flist)!=0){
       }
     }
     
-    # fix lat
-    tmp$lat = round(as.numeric(measurements::conv_unit(tmp$lat, from = 'deg_dec_min', to = 'dec_deg')), 5)
+    # remove any letter
+    tmp$lat = gsub(pattern = 'N', replacement = '', x = tmp$lat)
+    tmp$lon = gsub(pattern = 'W', replacement = '', x = tmp$lon)
     
-    # fix lon
-    tmp$lon = round(as.numeric(measurements::conv_unit(tmp$lon, from = 'deg_dec_min', to = 'dec_deg'))*-1, 5)
+    # remove any commas
+    tmp$lat = gsub(pattern = ',', replacement = ' ', x = tmp$lat)
+    tmp$lon = gsub(pattern = ',', replacement = ' ', x = tmp$lon)
+    
+    # remove minus sign
+    tmp$lon = gsub(pattern = '-', replacement = '', x = tmp$lon)
+    
+    # determine lat lon format
+    if(str_count(tmp$lat[1], ' ') == 2){
+      ll_type = 'deg_min_sec'
+    } else {
+      ll_type = 'deg_dec_min'
+    }
+    
+    # convert to decimal degrees (loop because vector behaviour is strange)
+    for(ii in 1:nrow(tmp)){
+      tmp$lat[ii] = round(as.numeric(measurements::conv_unit(tmp$lat[ii], from = ll_type, to = 'dec_deg')), 5)
+      tmp$lon[ii] = round(as.numeric(measurements::conv_unit(tmp$lon[ii], from = ll_type, to = 'dec_deg'))*-1, 5)
+    }
     
     # add species identifiers
     tmp$species = toupper(tmp$species)
@@ -127,7 +149,7 @@ if(length(flist)!=0){
   # combine and save --------------------------------------------------------
   
   # catch errors
-  if(length(SIG)!=length(flist)){stop('Not all sightings were processed!')}
+  # if(length(SIG)!=length(flist)){stop('Not all sightings were processed!')}
   
   # combine all flights
   SIGS = do.call(rbind, SIG)
