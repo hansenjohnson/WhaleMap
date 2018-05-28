@@ -354,7 +354,9 @@ body <- dashboardBody(
            box(width = NULL, solidHeader = T,collapsible = T, title = 'Status:', 
                status = 'primary',
                
-               tableOutput("status")
+               tableOutput("status"),
+               helpText('This shows when data from a particular platform were last processed by the WhaleMap
+                        system. Errors in processing are indicated by an error message in place of a timestamp.')
            )
     )
   )
