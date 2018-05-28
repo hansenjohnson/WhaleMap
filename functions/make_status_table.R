@@ -58,7 +58,7 @@ make_status_table = function(sfile='status.txt'){
   sdf = sdf[order(sdf$status, decreasing = TRUE),]
   
   # adjust column names
-  colnames(sdf) = c('Platform', 'Last processed [UTC]')
+  colnames(sdf) = c('Platform', 'Last processed [ADT]')
   
   return(sdf)
 }
