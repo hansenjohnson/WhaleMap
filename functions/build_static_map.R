@@ -44,7 +44,7 @@ build_static_map = function(english=TRUE){
     static_fish_grp = 'Static fisheries closure'
     
     # output path
-    fout = '../server_index/whale_map-en.html'
+    fout = '../server_index/whale_map_en.html'
     
   } else {
     
@@ -87,7 +87,7 @@ build_static_map = function(english=TRUE){
     static_fish_grp = 'Fermeture statique de la pêche'
     
     # output path
-    fout = '../server_index/whale_map-fr.html'
+    fout = '../server_index/whale_map_fr.html'
   }
   
   # setup -------------------------------------------------------------------
