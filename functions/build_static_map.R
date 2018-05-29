@@ -157,7 +157,7 @@ map <- leaflet() %>%
             values = obs_levs)
 
 # center on entire region
-map <- setView(map = map, lng = -63, lat = 48, zoom = 5)
+map <- setView(map = map, lng = -65, lat = 45, zoom = 5)
 
 # plot polygons -----------------------------------------------------------
 
