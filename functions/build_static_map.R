@@ -1,4 +1,4 @@
-# static map
+# static map - biligual version
 
 # setup -------------------------------------------------------------------
 
@@ -22,7 +22,7 @@ start_date = Sys.Date()-lag
 fout = '../server_index/whale_map.html'
 
 # define score color palette
-obs_levs = c('acoustic', 'visual')
+obs_levs = c('Acoustic / acoustique', 'Visual / visuelle')
 obs_pal = c('red', 'darkslategray')
 pal = colorFactor(levels = obs_levs,
                   palette = obs_pal)
@@ -80,57 +80,58 @@ Obs = obs[obs$date >= start_date,]; rm(obs)
 # select species
 spp = Obs[Obs$species == 'right',]
 
-# only possible detections
-# pos = droplevels(spp[spp$score == 'possibly detected',]) # do not plot possible sightings
-
 # only definite
 det = droplevels(spp[!spp$score %in% c('possible acoustic', 'possible visual'),])
 
 # basemap -----------------------------------------------------------------
 
+# define layer labels
+survey_grp = 'Survey tracks / <br> Trajet Suivi'
+robot_grp = 'Latest robot positions / <br> position la plus récente des robots'
+graticules_grp = 'Graticules / <br> graticules'
+rw_grp = 'Right whale observations / <br> Observation des baleines noires'
+mpa_grp = 'Protected areas / <br> Zone protégée'
+tss_grp = 'Shipping lanes / <br> Couloirs de navigation'
+static_speed_grp = 'Static speed reduction zone / <br> Zones de réduction de vitesse statique'
+dynamic_speed_grp = 'Dynamic speed reduction zone / <br> Zones de réduction de vitesse dynamique'
+static_fish_grp = 'Static fisheries closure / <br> Fermeture statique de la pêche'
+
 # start basemap
 map <- leaflet() %>%
 
   # add ocean basemap
-  addProviderTiles(providers$Esri.OceanBasemap) %>%
-
-  # add place names layer
-  addProviderTiles(providers$Hydda.RoadsAndLabels, group = 'Place names') %>%
+  addProviderTiles(providers$OpenStreetMap.Mapnik) %>%
 
   # title and last updated message
   addControl(position = "topright",
              paste0(
                '<div align="center">',
-               '<strong>Right Whale Observations</strong>','<br>',
-               '<small>Last updated: ',
-               format(Sys.time(), '%b-%d at %H:%M', tz = 'UTC', usetz = T),
-               '</small>','<br>',
-               '<small>Data from: ',
-               format(start_date, '%b-%d'), ' to ',
-               format(Sys.Date(), '%b-%d'), '</small>',
+               '<strong>Right whale observations / <br> 
+               Observation des baleines noires</strong>','<br>',
+               '<small>Data from / Données de: ','<br>',
+               format(start_date, '%Y-%m-%d'), ' - ',
+               format(Sys.Date(), '%Y-%m-%d'), '</small>',
                '</div>')) %>%
 
   # layer control
-  addLayersControl(overlayGroups = c('Survey tracks',
-                                     'Latest robot positions',
-                                     'Right whale observations',
-                                     'Protected areas',
-                                     'Shipping lanes',
-                                     'GoSL static speed reduction zone',
-                                     'GoSL dynamic speed reduction zones',
-                                     'GoSL static fisheries closure',
-                                     'Graticules',
-                                     'Place names'
+  addLayersControl(overlayGroups = c(survey_grp,
+                                     robot_grp,
+                                     rw_grp,
+                                     mpa_grp,
+                                     tss_grp,
+                                     static_speed_grp,
+                                     dynamic_speed_grp,
+                                     static_fish_grp,
+                                     graticules_grp
                                      ),
                    options = layersControlOptions(collapsed = TRUE), position = 'topright') %>%
 
   # hide groups
-  hideGroup(c('Place names',
-              'Survey tracks',
-              'Latest robot positions',
-              'GoSL static speed reduction zone',
-              'GoSL dynamic speed reduction zones',
-              'GoSL static fisheries closure')) %>%
+  hideGroup(c(survey_grp,
+              graticules_grp,
+              static_speed_grp,
+              dynamic_speed_grp,
+              static_fish_grp)) %>%
 
   # # add graticules
   # addWMSTiles(
@@ -144,48 +145,25 @@ map <- leaflet() %>%
     "https://gis.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer/",
     layers = c("1-degree grid", "5-degree grid"),
     options = WMSTileOptions(format = "image/png8", transparent = TRUE),
-    attribution = NULL,group = 'Graticules') %>%
+    attribution = NULL,group = graticules_grp) %>%
 
   # add extra map features
   addScaleBar(position = 'bottomleft')%>%
   addFullscreenControl(pseudoFullscreen = F) %>%
-  addMeasure(
-    primaryLengthUnit = "kilometers",
-    secondaryLengthUnit = 'miles',
-    primaryAreaUnit = "hectares",
-    secondaryAreaUnit="acres",
-    activeColor = "darkslategray",
-    completedColor = "darkslategray",
-    position = 'bottomleft') %>%
 
   # add legend
   addLegend(position = "bottomright",
             pal = pal,
             values = obs_levs)
 
-# center on observations (if present)
-# if(nrow(Tracks)!=0){
-#
-#   # define an offset (in deg) to buffer bounds around latest observations
-#   offset = 0.05
-#
-#   map <- fitBounds(map = map,
-#             max(Tracks$lon, na.rm = T)+offset,
-#             min(Tracks$lat, na.rm = T)-offset,
-#             min(Tracks$lon, na.rm = T)-offset,
-#             max(Tracks$lat, na.rm = T)+offset)
-# } else {
-#   map <- setView(map = map, lng = -65, lat = 45, zoom = 5)
-# }
-
 # center on entire region
-map <- setView(map = map, lng = -65, lat = 45, zoom = 5)
+map <- setView(map = map, lng = -63, lat = 48, zoom = 5)
 
 # plot polygons -----------------------------------------------------------
 
 # add mpas
 map <- map %>%
-  addPolygons(data=mpa, group = 'Protected areas',
+  addPolygons(data=mpa, group = mpa_grp,
               fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
               dashArray = c(5,5), options = pathOptions(clickable = F),
               lng=~lon, lat=~lat, weight = 1, color = 'darkgreen', fillColor = 'darkgreen')
@@ -198,32 +176,32 @@ map <- map %>%
                color = 'grey',
                smoothFactor = 0,
                options = pathOptions(clickable = F),
-               group = 'Shipping lanes') %>%
+               group = tss_grp) %>%
   addPolygons(tss_polygons$lon, tss_polygons$lat,
               weight = .5,
               color = 'grey',
               fillColor = 'grey',
               smoothFactor = 0,
               options = pathOptions(clickable = F),
-              group = 'Shipping lanes')
+              group = tss_grp)
 
 # plot static speed reduction zone
 map <- map %>%
-  addPolygons(data=tc_zone, group = 'GoSL static speed reduction zone',
+  addPolygons(data=tc_zone, group = static_speed_grp,
               fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
               dashArray = c(5,5), options = pathOptions(clickable = F),
               weight = .25, color = 'grey', fillColor = 'grey')
 
 # plot dynamic speed reduction zone
 map <- map %>%
-  addPolygons(data=tc_lanes, group = 'GoSL dynamic speed reduction zones',
+  addPolygons(data=tc_lanes, group = dynamic_speed_grp,
               fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
               dashArray = c(5,5), options = pathOptions(clickable = F),
               weight = .25, color = 'purple', fillColor = 'purple')
 
 # plot static fisheries closue
 map <- map %>%
-  addPolygons(data=static_zone, group = 'GoSL static fisheries closure',
+  addPolygons(data=static_zone, group = static_fish_grp,
               fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
               dashArray = c(2,2), options = pathOptions(clickable = F),
               weight = 1, color = 'darkblue', fillColor = 'darkblue')
@@ -237,9 +215,8 @@ tracks.df <- split(Tracks, Tracks$id)
 names(tracks.df) %>%
   purrr::walk( function(df) {
     map <<- map %>%
-      addPolylines(data=tracks.df[[df]], group = 'Survey tracks',
+      addPolylines(data=tracks.df[[df]], group = survey_grp,
                    lng=~lon, lat=~lat, weight = 2,
-                   popup = paste0('Survey completed by: ', unique(tracks.df[[df]]$name)),
                    smoothFactor = 1, color = getColor(tracks.df[[df]]))
   })
 
@@ -250,51 +227,30 @@ if(file.exists(lfile)){
   # add icons for latest position of live dcs platforms
   map <- map %>% addMarkers(data = latest, ~lon, ~lat, icon = ~dcsIcons[platform],
                             popup = ~paste(sep = "<br/>",
-                                           strong('Latest position'),
-                                           paste0('Platform: ', as.character(platform)),
-                                           paste0('Name: ', as.character(name)),
-                                           paste0('Time: ', as.character(time), ' UTC'),
-                                           paste0('Position: ',
-                                                  as.character(lat), ', ', as.character(lon))),
-                            label = ~paste0('Latest position of ', as.character(name), ': ',
-                                            as.character(time), ' UTC'),
-                            group = 'Latest robot positions')
+                                           strong('Latest position / 
+                                                  position la plus récente'),
+                                           paste0('Time / heure: ', 
+                                                  as.character(time), ' UTC'),
+                                           paste0('Position / position: ',
+                                                  as.character(round(lat,2)), ', ', 
+                                                  as.character(round(lon,2)))
+                            ),
+                            group = robot_grp)
 }
-
-# add possible detections/sightings ---------------------------------------
-
-# possible detections
-# map <- map %>% addCircleMarkers(data = pos, ~lon, ~lat, group = 'Possible detections/sightings',
-#                  radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
-#                  fillColor = pal(pos$score),
-#                  popup = ~paste(sep = "<br/>" ,
-#                                 strong("Sighting/Detection Details:"),
-#                                 paste0("Species: ", species),
-#                                 "Score: possible",
-#                                 paste0("Platform: ", platform),
-#                                 paste0("Name: ", name),
-#                                 paste0('Date: ', as.character(date)),
-#                                 paste0('Position: ',
-#                                        as.character(lat), ', ', as.character(lon))),
-#                  label = ~paste0(as.character(date), ': ', species,' whale ', score, ' by ', name),
-#                  options = markerOptions(removeOutsideVisibleBounds=T)) %>%
 
 # add definite detections/sightings ---------------------------------------
 
-map <- map %>% addCircleMarkers(data = det, ~lon, ~lat, group = 'Right whale observations',
+map <- map %>% addCircleMarkers(data = det, ~lon, ~lat, group = rw_grp,
                  radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
                  fillColor = pal(det$score),
                  popup = ~paste(sep = "<br/>" ,
-                                strong("Details:"),
-                                paste0("Species: ", species),
-                                paste0("Score: ", score),
-                                paste0("Number: ", number),
-                                paste0("Platform: ", platform),
-                                paste0("Name: ", name),
-                                paste0('Date: ', as.character(date)),
-                                paste0('Position: ',
-                                       as.character(lat), ', ', as.character(lon))),
-                 label = ~paste0(as.character(date), ': ', species,' whale ', score, ' by ', name),
+                                strong('Right whale / baleine noire'),
+                                paste0("Number / nombre: ", number),
+                                paste0('Date / date: ', as.character(date)),
+                                paste0('Position / position: ',
+                                       as.character(round(lat,2)), ', ', 
+                                       as.character(round(lon,2)))
+                                ),
                  options = markerOptions(removeOutsideVisibleBounds=T))
 
 # save widget -------------------------------------------------------------
