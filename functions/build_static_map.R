@@ -92,9 +92,9 @@ osm_grp_fr = 'OpenStreetMap-français'
 oceanmap_grp = 'Ocean basemap / fond de l\'océan'
 
 # define layer labels
-survey_grp = 'Survey tracks / <br> Trajet Suivi'
-robot_grp = 'Latest robot positions / <br> position la plus récente des robots'
-graticules_grp = 'Graticules / <br> graticules'
+survey_grp = 'Survey tracks / <br> Trajet suivi'
+robot_grp = 'Latest robot positions / <br> Position la plus récente des robots'
+graticules_grp = 'Graticules / <br> Graticules'
 rw_grp = 'Right whale observations / <br> Observation des baleines noires'
 mpa_grp = 'Protected areas / <br> Zone protégée'
 tss_grp = 'Shipping lanes / <br> Couloirs de navigation'
@@ -149,13 +149,6 @@ map <- leaflet() %>%
               dynamic_speed_grp,
               static_fish_grp)) %>%
 
-  # # add graticules
-  # addWMSTiles(
-  #   'https://gis.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer',
-  #   layers = c('1', '2', '3'),
-  #   options = WMSTileOptions(format = "image/png8", transparent = TRUE),
-  #   attribution = NULL, group = 'Graticules') %>%
-
   # use NOAA graticules
   addWMSTiles(
     "https://gis.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer/",
@@ -163,14 +156,14 @@ map <- leaflet() %>%
     options = WMSTileOptions(format = "image/png8", transparent = TRUE),
     attribution = NULL,group = graticules_grp) %>%
 
+  # add legend
+  addLegend(position = "bottomleft",
+            pal = pal,
+            values = obs_levs) %>%
+  
   # add extra map features
   addScaleBar(position = 'bottomleft')%>%
-  addFullscreenControl(pseudoFullscreen = F) %>%
-
-  # add legend
-  addLegend(position = "bottomright",
-            pal = pal,
-            values = obs_levs)
+  addFullscreenControl(pseudoFullscreen = F)
 
 # center on entire region
 map <- setView(map = map, lng = -65, lat = 45, zoom = 5)
