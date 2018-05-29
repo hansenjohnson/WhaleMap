@@ -85,6 +85,12 @@ det = droplevels(spp[!spp$score %in% c('possible acoustic', 'possible visual'),]
 
 # basemap -----------------------------------------------------------------
 
+# define basemap labels
+basemap_grp = 'Basemap / fond de carte'
+osm_grp = 'OpenStreetMap'
+osm_grp_fr = 'OpenStreetMap-français'
+oceanmap_grp = 'Ocean basemap / fond de l\'océan'
+
 # define layer labels
 survey_grp = 'Survey tracks / <br> Trajet Suivi'
 robot_grp = 'Latest robot positions / <br> position la plus récente des robots'
@@ -100,7 +106,10 @@ static_fish_grp = 'Static fisheries closure / <br> Fermeture statique de la pêc
 map <- leaflet() %>%
 
   # add ocean basemap
-  addProviderTiles(providers$OpenStreetMap.Mapnik) %>%
+  addProviderTiles(providers$CartoDB.PositronNoLabels, group=basemap_grp) %>%
+  addProviderTiles(providers$OpenStreetMap.Mapnik, group=osm_grp) %>%
+  addProviderTiles(providers$OpenStreetMap.France, group=osm_grp_fr) %>%
+  addProviderTiles(providers$Esri.OceanBasemap, group=oceanmap_grp) %>%
 
   # title and last updated message
   addControl(position = "topright",
@@ -114,18 +123,25 @@ map <- leaflet() %>%
                '</div>')) %>%
 
   # layer control
-  addLayersControl(overlayGroups = c(survey_grp,
-                                     robot_grp,
-                                     rw_grp,
-                                     mpa_grp,
-                                     tss_grp,
-                                     static_speed_grp,
-                                     dynamic_speed_grp,
-                                     static_fish_grp,
-                                     graticules_grp
-                                     ),
-                   options = layersControlOptions(collapsed = TRUE), position = 'topright') %>%
-
+  addLayersControl(
+    baseGroups = c(
+      basemap_grp,
+      osm_grp,
+      osm_grp_fr,
+      oceanmap_grp
+    ),
+    overlayGroups = c(survey_grp,
+                      robot_grp,
+                      rw_grp,
+                      mpa_grp,
+                      tss_grp,
+                      static_speed_grp,
+                      dynamic_speed_grp,
+                      static_fish_grp,
+                      graticules_grp
+    ),
+    options = layersControlOptions(collapsed = TRUE), position = 'topright') %>%
+  
   # hide groups
   hideGroup(c(survey_grp,
               graticules_grp,
