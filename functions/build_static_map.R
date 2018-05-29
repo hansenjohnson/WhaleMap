@@ -92,12 +92,12 @@ osm_grp_fr = 'OpenStreetMap-français'
 oceanmap_grp = 'Ocean basemap / fond de l\'océan'
 
 # define layer labels
-survey_grp = 'Survey tracks / <br> Trajet suivi'
+survey_grp = 'Survey tracks / Trajet suivi'
 robot_grp = 'Latest robot positions / <br> Position la plus récente des robots'
-graticules_grp = 'Graticules / <br> Graticules'
+graticules_grp = 'Graticules / Graticules'
 rw_grp = 'Right whale observations / <br> Observation des baleines noires'
-mpa_grp = 'Protected areas / <br> Zone protégée'
-tss_grp = 'Shipping lanes / <br> Couloirs de navigation'
+mpa_grp = 'Protected areas / Zone protégée'
+tss_grp = 'Shipping lanes / Couloirs de navigation'
 static_speed_grp = 'Static speed reduction zone / <br> Zones de réduction de vitesse statique'
 dynamic_speed_grp = 'Dynamic speed reduction zone / <br> Zones de réduction de vitesse dynamique'
 static_fish_grp = 'Static fisheries closure / <br> Fermeture statique de la pêche'
@@ -157,7 +157,7 @@ map <- leaflet() %>%
     attribution = NULL,group = graticules_grp) %>%
 
   # add legend
-  addLegend(position = "bottomleft",
+  addLegend(position = "bottomright",
             pal = pal,
             values = obs_levs) %>%
   
