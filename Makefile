@@ -268,10 +268,10 @@ data/processed/management_areas.rda : functions/proc_management_areas.R data/raw
 
 ## MAP ##
 .PHONY : map
-map : ../server_index/whale_map_en.html ../server_index/whale_map_fr.html
+map : ../server_index/whale_map_en.html
 
 # Build map
-../server_index/whale_map.html : functions/build_static_map.R data/processed/*
+../server_index/whale_map_en.html : functions/build_static_map.R data/processed/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
