@@ -73,17 +73,17 @@ build_static_map = function(english=TRUE){
     # basemap labels
     basemap_grp = 'OpenStreetMap-Français'
     blank_grp = 'Fond de carte'
-    oceanmap_grp = 'Fond de l\'océan [étiquettes anglaises]'
+    oceanmap_grp = 'Fond de l\'océan'
     
     # define layer labels
-    survey_grp = 'Trajet suivi'
-    robot_grp = 'Position la plus récente des robots'
+    survey_grp = 'Trajets suivis'
+    robot_grp = 'Positions les plus récentes des robots'
     graticules_grp = 'Graticules'
-    rw_grp = 'Observation des baleines noires'
-    mpa_grp = 'Zone protégée'
+    rw_grp = 'Observations de baleines noires'
+    mpa_grp = 'Zones protégées'
     tss_grp = 'Couloirs de navigation'
-    static_speed_grp = 'Zones de réduction de vitesse statique'
-    dynamic_speed_grp = 'Zones de réduction de vitesse dynamique'
+    static_speed_grp = 'Zone statique de réduction de vitesse'
+    dynamic_speed_grp = 'Zone dynamique de réduction de vitesse'
     static_fish_grp = 'Fermeture statique de la pêche'
     
     # output path
@@ -202,8 +202,8 @@ build_static_map = function(english=TRUE){
                         tss_grp,
                         static_speed_grp,
                         dynamic_speed_grp,
-                        static_fish_grp,
-                        graticules_grp
+                        static_fish_grp
+                        # graticules_grp
       ),
       options = layersControlOptions(collapsed = TRUE), position = 'topright') %>%
     
@@ -214,12 +214,12 @@ build_static_map = function(english=TRUE){
                 dynamic_speed_grp,
                 static_fish_grp)) %>%
     
-    # use NOAA graticules
-    addWMSTiles(
-      "https://gis.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer/",
-      layers = c("1-degree grid", "5-degree grid"),
-      options = WMSTileOptions(format = "image/png8", transparent = TRUE),
-      attribution = NULL,group = graticules_grp) %>%
+    # # use NOAA graticules
+    # addWMSTiles(
+    #   "https://gis.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer/",
+    #   layers = c("1-degree grid", "5-degree grid"),
+    #   options = WMSTileOptions(format = "image/png8", transparent = TRUE),
+    #   attribution = NULL,group = graticules_grp) %>%
     
     # add legend
     addLegend(position = "bottomright",
