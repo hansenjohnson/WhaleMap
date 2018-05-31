@@ -20,7 +20,7 @@ build_static_map = function(english=TRUE){
     
     # robot popup labels
     rw_main = 'Right whale'
-    rw_number = 'Number: '
+    rw_number = 'Number of whales: '
     rw_date = 'Date: '
     rw_position = 'Position: '
     
@@ -63,7 +63,7 @@ build_static_map = function(english=TRUE){
     
     # robot popup labels
     rw_main = 'Baleine noire'
-    rw_number = 'Nombre: '
+    rw_number = 'Nombre de baleines: '
     rw_date = 'Date: '
     rw_position = 'Position: '
     
