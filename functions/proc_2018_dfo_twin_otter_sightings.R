@@ -27,7 +27,7 @@ library(tools, quietly = T, warn.conflicts = F)
 source('functions/config_data.R')
 
 # list files to process
-flist = list.files(data_dir, pattern = '.sig$', full.names = T, recursive = T)
+flist = list.files(data_dir, pattern = '.sig$', full.names = T, recursive = T, ignore.case = T)
 
 # list to hold loop output
 SIG = list()
@@ -59,6 +59,12 @@ for(i in seq_along(flist)){
   tmp$species = as.character(tmp$species)
   tmp$species[tmp$species==""] = NA
   
+  # remove columns without species
+  tmp = tmp[which(!is.na(tmp$species)),]
+  
+  # skip to next if no sightings
+  if (nrow(tmp) == 0) next
+  
   # add species identifiers
   tmp$species = toupper(tmp$species)
   tmp$species[tmp$species == 'EG'] = 'right'
@@ -68,7 +74,7 @@ for(i in seq_along(flist)){
   tmp$species[tmp$species == 'FS'] = 'fin/sei'
   tmp$species[tmp$species == 'BA'] = 'minke'
   tmp$species[tmp$species == 'BM'] = 'blue'
-  tmp$species[tmp$species == 'UW'] = 'unknown whale'
+  tmp$species[tmp$species == 'UW'|tmp$species == 'LGWH'] = 'unknown whale'
   
   # add metadata
   tmp$date = as.Date(tmp$time)
