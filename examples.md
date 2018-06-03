@@ -151,4 +151,8 @@ cat /dev/null >/var/mail/hansen # server
 ```
 # reset branch to master (delete local commits)
 git reset --hard
+
+# apply patch commit
+
+git am filename
 ```
