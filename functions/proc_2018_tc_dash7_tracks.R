@@ -90,6 +90,9 @@ for(i in seq_along(flist)){
     # add time
     tmp$time = as.POSIXct(paste0(tmp$date, ' ', as.character(tmp$time)), origin = '1970-01-01', tz = 'UTC', usetz=TRUE)
     
+    # order by time
+    tmp = tmp[order(tmp$time),]
+    
   } else {
     message('Format not known! Skipping file: ', flist[i])
     next
