@@ -1,10 +1,16 @@
-subsample_gps = function(gps, n=60, tol = 0.001, plot_comparison=F, full_res=F, simplify = TRUE){
+sub_dataframe = function(dataframe, n){
+  dataframe[(seq(n,to=nrow(dataframe),by=n)),]
+}
+
+subsample_gps = function(gps, n=60, tol = 0.001, plot_comparison=T, full_res=F, simplify = TRUE){
   # 'gps' is a data frame that has columns named 'lat' and 'lon' in decimal degrees
   # 'n' is the desired gps sampling interval in seconds (only when simplify=FALSE)
   # 'tol' is a tolerance for simplifying where larger values provide fewer points (only when simplify=TRUE)
   # 'plot_comparison' is a switch to produce a plot of the original and new track
   # 'full_res' is a switch to skip subsampling and maintain full gps resolution
   # 'simplify' is a switch to choose the method for simplifying the tracks. TRUE simplifies with the Douglas-Peuker algorithm (rgeos::gSimplify), and FALSE subsamples the gps to a given time interval
+  
+  rn = 10 # row subset (take row every n rows)
   
   if(simplify){
     # simplify ----------------------------------------------------------------
@@ -13,44 +19,53 @@ subsample_gps = function(gps, n=60, tol = 0.001, plot_comparison=F, full_res=F, 
     suppressPackageStartupMessages(library(sp))
     suppressPackageStartupMessages(library(rgeos))
     
-    # return full resolution tracks if desired
+    # return full resolution tracks if desired or if timestamps are not unique
     if(full_res){
-      return(gps)
+      
+      # no subsampling
+      new = gps
+      
+    } else if(length(unique(gps$time))<nrow(gps)/2){
+      
+      # subset rows
+      new = sub_dataframe(gps, rn)
+      
+    } else {
+      
+      # remove columns without lat or lon
+      gps = gps[which(!is.na(gps$lat)),]
+      gps = gps[which(!is.na(gps$lon)),]
+      
+      # create lines object
+      ln = Line(cbind(gps$lat, gps$lon))
+      
+      # convert to Lines
+      lns = Lines(ln, ID = 'track')
+      
+      # convert to Spatial Lines
+      slns = SpatialLines(list(lns))
+      
+      # simplify
+      sim = gSimplify(slns, tol = tol)
+      
+      # # warning if not simple
+      # if(!gIsSimple(sim)){
+      #   warning('Line is not simple! Duplicates will be removed, but watch for consequences. Consider lowering subset tolerance...')
+      # }
+      
+      # extract coordinates in data frame
+      df = as.data.frame(coordinates(sim)[[1]][[1]])
+      colnames(df) = c('lat', 'lon')
+      
+      # match appropriate rows in original data
+      new = gps[match(round(df$lon,5),round(gps$lon,5)),]
+      
+      # remove duplicates
+      new = new[which(!duplicated(new)),]
+      
+      # order by time
+      new = new[order(new$time),]
     }
-    
-    # remove columns without lat or lon
-    gps = gps[which(!is.na(gps$lat)),]
-    gps = gps[which(!is.na(gps$lon)),]
-    
-    # create lines object
-    ln = Line(cbind(gps$lat, gps$lon))
-    
-    # convert to Lines
-    lns = Lines(ln, ID = 'track')
-    
-    # convert to Spatial Lines
-    slns = SpatialLines(list(lns))
-    
-    # simplify
-    sim = gSimplify(slns, tol = tol)
-    
-    # # warning if not simple
-    # if(!gIsSimple(sim)){
-    #   warning('Line is not simple! Duplicates will be removed, but watch for consequences. Consider lowering subset tolerance...')
-    # }
-    
-    # extract coordinates in data frame
-    df = as.data.frame(coordinates(sim)[[1]][[1]])
-    colnames(df) = c('lat', 'lon')
-    
-    # match appropriate rows in original data
-    new = gps[match(round(df$lon,5),round(gps$lon,5)),]
-    
-    # remove duplicates
-    new = new[which(!duplicated(new)),]
-    
-    # order by time
-    new = new[order(new$time),]
     
   } else {
     # downsample ----------------------------------------------------------------
@@ -58,18 +73,26 @@ subsample_gps = function(gps, n=60, tol = 0.001, plot_comparison=F, full_res=F, 
     
     # return full resolution tracks if desired
     if(full_res){
-      return(gps)
-    }
-    
-    # determine sample rate
-    ts = as.numeric(round(median(diff(gps$time), na.rm = T), 1))
-    
-    # subsample
-    if(ts>0 & n>ts){
-      new = gps[seq(1, nrow(gps), n/ts),]
-    } else {
-      message('No subsampling occured - unable to determine gps sampling rate')
-      return(gps)
+      
+      # no subsampling
+      new=gps
+      
+    } else if(length(unique(gps$time))<nrow(gps)/2){
+      
+      # subset rows
+      new = sub_dataframe(gps, rn)
+      
+    }else{      
+      # determine sample rate
+      ts = as.numeric(round(median(diff(gps$time), na.rm = T), 1))
+      
+      # subsample
+      if(ts>0 & n>ts){
+        new = gps[seq(1, nrow(gps), n/ts),]
+      } else {
+        message('No subsampling occured - unable to determine gps sampling rate')
+        new = gps
+      }
     }
   }
   
