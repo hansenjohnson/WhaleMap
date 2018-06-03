@@ -29,7 +29,7 @@ source('functions/on_server.R')
 plot_tracks = !on_server()
 
 # list files to process
-flist = list.files(data_dir, pattern = '.gpx', full.names = T, recursive = T)
+flist = list.files(data_dir, pattern = '.gpx', full.names = T, recursive = T, ignore.case = T)
 
 # list to hold loop output
 TRK = list()
