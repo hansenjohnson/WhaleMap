@@ -14,6 +14,7 @@ job/
 issues/
 test/
 reports/
+release/
 tmp/
 
 # sensitive
@@ -35,3 +36,7 @@ password.rda
 *.rds
 *.rda
 *.pptx
+status.txt
+
+# hansen specific
+get_remote_data_hj.sh
