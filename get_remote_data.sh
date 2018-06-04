@@ -11,7 +11,7 @@ cd /srv/shiny-server/WhaleMap/data/raw/ # server
 mkdir -p backups
 
 # Sync Canadian aerial data Google drive
-rclone sync whalemapdata:"WhaleMapData_Master/" "2018_whalemapdata/" --drive-formats csv --backup-dir backups -v --exclude *.JPG
+rclone sync whalemapdata:"WhaleMapData_Master/" "2018_whalemapdata/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.mp4
 
 ## Update map ##
 
