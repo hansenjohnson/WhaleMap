@@ -1071,7 +1071,7 @@ function(input, output, session){
   source('functions/make_status_table.R')
   
   # make status table
-  sdf = make_status_table('status.txt')
+  sdf = make_status_table('data/processed/status.txt')
   
   # render table
   output$status = renderTable({sdf}, striped = TRUE,

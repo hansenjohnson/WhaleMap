@@ -2,7 +2,7 @@
 # Remove errors in data processing
 
 ## Variables
-sfile=status.txt # status file
+sfile=data/processed/status.txt # status file
 
 # get path to file
 path=$1
