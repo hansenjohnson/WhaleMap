@@ -37,7 +37,7 @@ for(i in seq_along(flist)){
   if (file.size(flist[i]) == 0) next
   
   # # read in data
-  if(basename(flist[i]) == '180604.sig'){
+  if(grepl(pattern = '*_tab.sig$', x = basename(flist[i]))){
     
     # read in data
     tmp = read.table(flist[i], sep = '\t', stringsAsFactors = FALSE)
