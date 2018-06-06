@@ -38,13 +38,27 @@ for(i in seq_along(flist)){
   
   # # read in data
   if(basename(flist[i]) == '180604.sig'){
-    tmp = read.table(flist[i], sep = '\t')
+    
+    # read in data
+    tmp = read.table(flist[i], sep = '\t', stringsAsFactors = FALSE)
+    
+    # assign column names
+    colnames(tmp) = c('V1', 'V2', 'V3', 'time', 'V5', 'V6', 'species', 'number', 'V9', 'V10', 'V11', 'V12', 'comments', 'V14', 'lat', 'lon','V17','V18','V19', 'V20', 'V21')
+    
+    # time format
+    tformat = '%d/%m/%Y %H:%M'
+    
   } else {
+    
+    # read in data
     tmp = read.table(flist[i], sep = ',')
+    
+    # assign column names
+    colnames(tmp) = c('transect', 'unk1', 'unk2', 'time', 'observer', 'declination', 'species', 'number', 'confidence', 'bearing', 'unk5', 'unk6', 'comments', 'side', 'lat', 'lon', 'calf', 'unk7', 'unk8', 'unk9', 'unk10')
+    
+    # time format
+    tformat = '%d/%m/%Y %H:%M'
   }
-  
-  # assign column names
-  colnames(tmp) = c('transect', 'unk1', 'unk2', 'time', 'observer', 'declination', 'species', 'number', 'confidence', 'bearing', 'unk5', 'unk6', 'comments', 'side', 'lat', 'lon', 'calf', 'unk7', 'unk8', 'unk9', 'unk10')
   
   # remove final estimates
   tmp = tmp[!grepl(pattern = 'fin est', x = tmp$comments, ignore.case = TRUE),]
@@ -56,7 +70,7 @@ for(i in seq_along(flist)){
   tmp = tmp[which(!is.na(tmp$time)),]
   
   # add timestamp
-  tmp$time = as.POSIXct(tmp$time, format = '%d/%m/%Y %H:%M:%S', tz="UTC", usetz=TRUE)
+  tmp$time = as.POSIXct(tmp$time, format = tformat, tz="UTC", usetz=TRUE)
   
   # fix blank species rows
   tmp$species = as.character(tmp$species)
