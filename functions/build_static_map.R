@@ -42,7 +42,7 @@ build_static_map = function(english=TRUE){
     static_speed_grp = 'Static speed reduction zone'
     dynamic_speed_grp = 'Dynamic speed reduction zone'
     static_fish_grp = 'Static fisheries closure'
-    forage_areas_grp = 'Right whale foraging areas'
+    forage_areas_grp = 'Area subject to temporary fishery closure protocol'
     
     # output path
     fout = '../server_index/whale_map_en.html'
@@ -86,7 +86,7 @@ build_static_map = function(english=TRUE){
     static_speed_grp = 'Zone statique de réduction de vitesse'
     dynamic_speed_grp = 'Zone dynamique de réduction de vitesse'
     static_fish_grp = 'Fermeture statique de la pêche'
-    forage_areas_grp = 'Zones d\'alimentation des baleines noires'
+    forage_areas_grp = 'Zones soumises au protocole de fermeture temporaire'
     
     # output path
     fout = '../server_index/whale_map_fr.html'
