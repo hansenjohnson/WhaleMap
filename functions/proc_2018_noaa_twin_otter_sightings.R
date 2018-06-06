@@ -36,12 +36,18 @@ for(i in seq_along(flist)){
   # skip empty files
   if (file.size(flist[i]) == 0) next
   
-  # read in data
-  tmp = read.table(flist[i], sep = ',')
+  # # read in data
+  if(basename(flist[i]) == '180604.sig'){
+    tmp = read.table(flist[i], sep = '\t')
+  } else {
+    tmp = read.table(flist[i], sep = ',')
+  }
   
   # assign column names
   colnames(tmp) = c('transect', 'unk1', 'unk2', 'time', 'observer', 'declination', 'species', 'number', 'confidence', 'bearing', 'unk5', 'unk6', 'comments', 'side', 'lat', 'lon', 'calf', 'unk7', 'unk8', 'unk9', 'unk10')
-  tmp
+  
+  # remove final estimates
+  tmp = tmp[!grepl(pattern = 'fin est', x = tmp$comments, ignore.case = TRUE),]
   
   # select important columns
   tmp = tmp[,c('time', 'lat', 'lon', 'species', 'number')]
