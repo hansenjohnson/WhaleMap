@@ -42,6 +42,7 @@ build_static_map = function(english=TRUE){
     static_speed_grp = 'Static speed reduction zone'
     dynamic_speed_grp = 'Dynamic speed reduction zone'
     static_fish_grp = 'Static fisheries closure'
+    forage_areas_grp = 'Right whale foraging areas'
     
     # output path
     fout = '../server_index/whale_map_en.html'
@@ -85,6 +86,7 @@ build_static_map = function(english=TRUE){
     static_speed_grp = 'Zone statique de réduction de vitesse'
     dynamic_speed_grp = 'Zone dynamique de réduction de vitesse'
     static_fish_grp = 'Fermeture statique de la pêche'
+    forage_areas_grp = 'Zones d\'alimentation des baleines noires'
     
     # output path
     fout = '../server_index/whale_map_fr.html'
@@ -202,8 +204,8 @@ build_static_map = function(english=TRUE){
                         tss_grp,
                         static_speed_grp,
                         dynamic_speed_grp,
-                        static_fish_grp
-                        # graticules_grp
+                        static_fish_grp,
+                        forage_areas_grp
       ),
       options = layersControlOptions(collapsed = TRUE), position = 'topright') %>%
     
@@ -212,7 +214,8 @@ build_static_map = function(english=TRUE){
                 graticules_grp,
                 static_speed_grp,
                 dynamic_speed_grp,
-                static_fish_grp)) %>%
+                static_fish_grp,
+                forage_areas_grp)) %>%
     
     # # use NOAA graticules
     # addWMSTiles(
@@ -279,6 +282,16 @@ build_static_map = function(english=TRUE){
                 fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
                 dashArray = c(2,2), options = pathOptions(clickable = F),
                 weight = 1, color = 'darkblue', fillColor = 'darkblue')
+  
+  # plot known foraging areas
+  map <- map %>%
+    addPolygons(data=forage_areas, group = forage_areas_grp,
+                fill = T, 
+                fillOpacity = 0.25, 
+                stroke = T, 
+                weight = 1, 
+                color = 'darkslategrey', 
+                fillColor = 'orange')
   
   # add tracks --------------------------------------------------------------
   

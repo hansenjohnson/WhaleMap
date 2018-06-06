@@ -44,6 +44,10 @@ mpa = readRDS('data/processed/mpa.rds')
 load('data/processed/tss.rda')
 load('data/processed/management_areas.rda')
 
+# fish = as.data.frame(t(sapply(forage_areas@polygons, function(x) x@labpt)))
+# colnames(fish) = c('lon','lat')
+# fish$labs = as.data.frame(as.character(forage_areas@data$GRIDSUBARE))
+
 # define track point plotting threshold
 npts = 250000
 
@@ -485,6 +489,32 @@ function(input, output, session){
       
       # switch to show/hide
       ifelse(input$static_zone, showGroup(proxy, 'static_zone'),hideGroup(proxy, 'static_zone'))
+    }
+    
+  })
+  
+  # forage_areas observer ------------------------------------------------------  
+  
+  observe(priority = 4, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('forage_areas')
+    
+    if(input$forage_areas){
+      
+      # add polygons
+      proxy %>%
+        addPolygons(data=forage_areas, group = 'forage_areas',
+                    fill = T, 
+                    fillOpacity = 0.25, 
+                    stroke = T, 
+                    weight = 1, 
+                    color = 'darkslategrey', 
+                    fillColor = 'orange')
+      
+      # switch to show/hide
+      ifelse(input$forage_areas, showGroup(proxy, 'forage_areas'),hideGroup(proxy, 'forage_areas'))
     }
     
   })

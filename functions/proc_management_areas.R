@@ -18,6 +18,7 @@ library(rgdal)
 tc_lane_dir = paste0(gis_dir,'TCLanes/')
 tc_zone_dir = paste0(gis_dir,'SpeedReductionZone/')
 static_zone_dir = paste0(gis_dir,'StaticZone/')
+forage_areas_dir = paste0(gis_dir,'ForagingAreas/')
 
 # process -----------------------------------------------------------------
 
@@ -30,14 +31,19 @@ static_zone_dir = paste0(gis_dir,'StaticZone/')
 tc_lanes = readOGR(tc_lane_dir)
 tc_zone = readOGR(tc_zone_dir)
 static_zone = readOGR(static_zone_dir)
+forage_areas = readOGR(forage_areas_dir)
+
+# subset foraging areas
+forage_areas = forage_areas[forage_areas@data$LINKID %in% c(3,4,13),]
 
 # # test with leaflet
 # library(leaflet)
 # leaflet() %>%
 #   addTiles() %>%
-#   addPolygons(data = tc_lanes,weight = .5, popup = ~paste0(Type)) %>%
-#   addPolygons(data = static_zone,weight = .5, popup = 'Speed reduction zone') %>%
-#   addPolygons(data = tc_zones,weight = .5, popup = ~paste0(Type))
+#   # addPolygons(data = tc_lanes,weight = .5, popup = ~paste0(Type)) %>%
+#   # addPolygons(data = static_zone,weight = .5, popup = 'Speed reduction zone') %>%
+#   # addPolygons(data = tc_zone,weight = .5, popup = ~paste0(Type)) %>%
+#   addPolygons(data = forage_areas,weight = .5,popup = ~paste0(LINKID))
 
 # save
-save(tc_lanes, tc_zone, static_zone, file = paste0(output_dir, 'management_areas.rda'))
+save(tc_lanes, tc_zone, static_zone,forage_areas, file = paste0(output_dir, 'management_areas.rda'))

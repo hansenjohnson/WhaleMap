@@ -263,6 +263,9 @@ body <- dashboardBody(
                            checkboxInput("static_zone", 
                                          label = 'Static fishery closure', value = F),
                            
+                           checkboxInput("forage_areas", 
+                                         label = 'Potential habitat areas', value = F),
+                           
                            tags$a(href="https://www.canada.ca/en/fisheries-oceans/news/2018/03/government-of-canada-unveils-its-plan-for-protecting-north-atlantic-right-whales-in-20180.html", "Click here for details")
                            
                   ),
