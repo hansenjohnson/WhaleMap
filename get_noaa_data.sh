@@ -14,7 +14,7 @@ mkdir -p backups
 # rclone sync drive:"RW Flights - Canada/2017/Flights/" "2017_noaa_twin_otter/" --drive-formats csv --backup-dir backups -v
 
 # Sync NOAA 2018 aerial data Google drive
-rclone sync drive:"RW Flights - Canada/2018/Flights/" "2018_noaa_twin_otter/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.mp4
+rclone sync drive:"2018 Canadian Right Whales/NEFSC/Flights/" "2018_noaa_twin_otter/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.mp4
 
 ## Update map ##
 
