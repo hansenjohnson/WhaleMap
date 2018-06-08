@@ -36,32 +36,22 @@ for(i in seq_along(flist)){
   # skip empty files
   if (file.size(flist[i]) == 0) next
   
-  # # read in data
-  if(grepl(pattern = '*_tab.sig$', x = basename(flist[i]))){
-    
-    # read in data
-    tmp = read.table(flist[i], sep = '\t', stringsAsFactors = FALSE)
-    
-    # assign column names
-    colnames(tmp) = c('V1', 'V2', 'V3', 'time', 'V5', 'V6', 'species', 'number', 'V9', 'V10', 'V11', 'V12', 'comments', 'V14', 'lat', 'lon','V17','V18','V19', 'V20', 'V21')
-    
-    # time format
-    tformat = '%d/%m/%Y %H:%M'
-    
-  } else {
-    
-    # read in data
-    tmp = read.table(flist[i], sep = ',')
-    
-    # assign column names
-    colnames(tmp) = c('transect', 'unk1', 'unk2', 'time', 'observer', 'declination', 'species', 'number', 'confidence', 'bearing', 'unk5', 'unk6', 'comments', 'side', 'lat', 'lon', 'calf', 'unk7', 'unk8', 'unk9', 'unk10')
-    
-    # time format
-    tformat = '%d/%m/%Y %H:%M'
-  }
+  # read in data
+  tmp = read.table(flist[i], sep = ',')
+  
+  # assign column names
+  colnames(tmp) = c('transect', 'unk1', 'unk2', 'time', 'observer', 'declination', 'species', 'number', 'confidence', 'bearing', 'unk5', 'unk6', 'comments', 'side', 'lat', 'lon', 'calf', 'unk7', 'unk8', 'unk9', 'unk10')
+  
+  # time format
+  tformat = '%d/%m/%Y %H:%M'
   
   # remove final estimates
   tmp = tmp[!grepl(pattern = 'fin est', x = tmp$comments, ignore.case = TRUE),]
+  
+  # if they exist, only include actual positions
+  if(nrow(tmp[grepl(pattern = 'ap', x = tmp$comments, ignore.case = TRUE),])>0){
+    tmp = tmp[grepl(pattern = 'ap', x = tmp$comments, ignore.case = TRUE),]
+  }
   
   # select important columns
   tmp = tmp[,c('time', 'lat', 'lon', 'species', 'number')]
