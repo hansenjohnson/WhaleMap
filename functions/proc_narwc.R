@@ -8,9 +8,8 @@ data_dir = 'data/raw/narwc/'
 # directory for output
 output_dir = 'data/interim/'
 
-# subset only recent years
-subset_years = T
-yr = 2014
+# subset year
+yr = 2015
 
 # setup -------------------------------------------------------------------
 
@@ -147,9 +146,9 @@ tracks = tracks[-which(is.na(tracks$time)),]
 tracks$species = NULL
 
 # subset
-if(subset_years){
-  tracks = tracks[tracks$year >= yr,]
-}
+tracks = tracks[tracks$year == yr,]
+tracks = tracks[tracks$platform == 'plane',]
+tracks = tracks[tracks$lon >= -65,]
 
 # simplify tracks
 stracks = split(tracks, f = tracks$id)
@@ -185,9 +184,9 @@ sig = sig[,-c(1:17)]
 sig = sig[-which(is.na(sig$score)),]
 
 # subset
-if(subset_years){
-  sig = sig[sig$year >= yr,]
-}
+sig = sig[sig$year == yr,]
+sig = sig[sig$platform == 'plane',]
+sig = sig[sig$lon >= -65,]
 
 # config data types
 sig = config_observations(sig)

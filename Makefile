@@ -12,6 +12,7 @@ tracks : data/processed/tracks.rds
 
 # Combine all tracks
 data/processed/tracks.rds : functions/proc_tracks.R \
+														data/interim/narwc_tracks.rds \
 														data/interim/2016_shelagh_tracks.rds \
 														data/interim/2017_shelagh_tracks.rds \
 														data/interim/2017_dfo_twin_otter_tracks.rds \
@@ -30,8 +31,10 @@ data/processed/tracks.rds : functions/proc_tracks.R \
 	$(remove_error)
 
 # historical Canadian NARWC data [add rds to dependency list above!]
-# data/interim/narwc_tracks.rds : functions/proc_narwc.R data/raw/narwc/*
-# 	Rscript $<
+data/interim/narwc_tracks.rds : functions/proc_narwc.R data/raw/narwc/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
 
 # 2016 shelagh tracks
 data/interim/2016_shelagh_tracks.rds : functions/proc_2016_shelagh.R data/raw/2016_shelagh/*
@@ -123,6 +126,7 @@ obs : data/processed/observations.rds
 
 # Combine all sightings
 data/processed/observations.rds : functions/proc_observations.R \
+																	data/interim/narwc_sightings.rds \
 																	data/interim/2016_shelagh_sightings.rds \
 																	data/interim/2017_*_sightings.rds \
 																	data/interim/2018_opportunistic_sightings.rds \
@@ -138,9 +142,11 @@ data/processed/observations.rds : functions/proc_observations.R \
 	Rscript $<
 	$(remove_error)
 
-# # historical Canadian NARWC sightings [add rds to dependency list above!]
-# data/interim/narwc_sightings.rds : functions/proc_narwc.R data/raw/narwc/*
-# 	Rscript $<
+# historical Canadian NARWC sightings [add rds to dependency list above!]
+data/interim/narwc_sightings.rds : functions/proc_narwc.R data/raw/narwc/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
 
 # 2016 shelagh sightings
 data/interim/2016_shelagh_sightings.rds : functions/proc_2016_shelagh.R data/raw/2016_shelagh/*
