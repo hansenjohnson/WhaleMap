@@ -11,6 +11,9 @@ proc_dcs = function(data_dir, output_dir, det_fname, track_fname, ext = ""){
   source('functions/config_data.R')
   # source('functions/subsample_gps.R')
   
+  # list names of potential input species
+  species_list = c('right', 'fin', 'sei', 'humpback', 'blue')
+  
   # define functions --------------------------------------------------------
   
   insert_NAs = function(d, thresh = 4*60*60){
@@ -54,96 +57,75 @@ proc_dcs = function(data_dir, output_dir, det_fname, track_fname, ext = ""){
   # process data ------------------------------------------------------------
   
   # list detection files
-  detection_dir_list = list.files(path = data_dir, full.names = T)
+  flist = list.files(path = data_dir, full.names = T)
   
   # return if there are no files
-  if(length(detection_dir_list)==0){
+  if(length(flist)==0){
     return()
   }
   
+  # empty lists for detections and tracks
+  DET = list()
+  TRK = list()
+  
   # process each file
-  detection_list = list()
-  for(i in seq_along(detection_dir_list)){
+  for(i in seq_along(flist)){
     
     # determine deployment directory
-    dir = detection_dir_list[[i]]
+    dir = flist[[i]]
     
     # read in detection data
-    d = read.csv(paste0(dir,'/manual_analysis.csv'))
+    tmp = read.csv(paste0(dir,'/manual_analysis.csv'))
     
     # remove unneeded columns
-    d$analyst = NULL
-    d$notes = NULL
+    tmp$analyst = NULL
+    tmp$notes = NULL
     
     # fix time
-    d$datetime_utc = as.character(d$datetime_utc)
-    d$time = as.POSIXct(d$datetime_utc,format = '%Y%m%d%H%M%S',tz = 'UTC')
-    d$datetime_utc = NULL
+    tmp$datetime_utc = as.character(tmp$datetime_utc)
+    tmp$time = as.POSIXct(tmp$datetime_utc,format = '%Y%m%d%H%M%S',tz = 'UTC')
+    tmp$datetime_utc = NULL
     
     # configure time
-    d$time = format(d$time, tz="UTC",usetz=TRUE)
-    d$date = as.Date(d$time)
-    d$yday = yday(d$time)
-    d$year = year(d$time)
+    tmp$time = format(tmp$time, tz="UTC",usetz=TRUE)
+    tmp$date = as.Date(tmp$time)
+    tmp$yday = yday(tmp$time)
+    tmp$year = year(tmp$time)
     
     # add deployment metadata
-    d$id = paste0(basename(dir), ext)
-    d$platform = strsplit(dir, '_')[[1]][2]
-    d$name = strsplit(dir, '_')[[1]][3]
+    tmp$id = paste0(basename(dir), ext)
+    tmp$platform = strsplit(dir, '_')[[1]][2]
+    tmp$name = strsplit(dir, '_')[[1]][3]
     
     # insert NAs when time threshold is exceeded
-    d = insert_NAs(d)
+    tmp = insert_NAs(tmp)
+    
+    # make trackline file
+    TRK[[i]] = tmp[!colnames(tmp) %in% species_list]
+    
+    # create single species column
+    tmpl = melt(tmp, 
+               measure.vars = species_list[species_list %in% colnames(tmp)], 
+               variable.name = 'species', 
+               value.name = 'score')
+    
+    # rename factor levels for score
+    tmpl$score = gsub(tmpl$score, pattern = 'absent', replacement = 'not detected')
+    tmpl$score = gsub(tmpl$score, pattern = 'maybe', replacement = 'possibly detected')
+    tmpl$score = gsub(tmpl$score, pattern = 'present', replacement = 'detected')
+    tmpl$score = as.factor(tmpl$score)
     
     # add to the list
-    detection_list[[i]] = d
+    DET[[i]] = tmpl
   }
-  
-  # flatten list
-  all = do.call(rbind, detection_list)
-  
-  # convert column types
-  all$platform = as.factor(all$platform)
-  all$name = as.factor(all$name)
-  all$time = as.POSIXct(all$time, tz="UTC")
-  
-  # convert score names
-  # sei
-  all$sei = gsub(all$sei, pattern = 'present', replacement = 'detected')
-  all$sei = gsub(all$sei, pattern = 'maybe', replacement = 'possibly detected')
-  all$sei = gsub(all$sei, pattern = 'absent', replacement = 'not detected')
-  all$sei = as.factor(all$sei)
-  
-  # fin
-  all$fin = gsub(all$fin, pattern = 'present', replacement = 'detected')
-  all$fin = gsub(all$fin, pattern = 'maybe', replacement = 'possibly detected')
-  all$fin = gsub(all$fin, pattern = 'absent', replacement = 'not detected')
-  all$fin = as.factor(all$fin)
-  
-  # right
-  all$right = gsub(all$right, pattern = 'present', replacement = 'detected')
-  all$right = gsub(all$right, pattern = 'maybe', replacement = 'possibly detected')
-  all$right = gsub(all$right, pattern = 'absent', replacement = 'not detected')
-  all$right = as.factor(all$right)
-  
-  # humpback
-  all$humpback = gsub(all$humpback, pattern = 'present', replacement = 'detected')
-  all$humpback = gsub(all$humpback, pattern = 'maybe', replacement = 'possibly detected')
-  all$humpback = gsub(all$humpback, pattern = 'absent', replacement = 'not detected')
-  all$humpback = as.factor(all$humpback)
-  
-  # drop all unused levels
-  all = droplevels(all)
   
   # create trackline file ---------------------------------------------------
   
-  # remove species info and keep tracklines
-  tracks = all[,-c(1:4)]
+  # flatten list
+  tracks = do.call(rbind, TRK)
   
   # sort by time (important for plotting)
   tracks = tracks[order(tracks$id, tracks$time),]
-  
-  # # subsample (use default subsample rate)
-  # tracks = subsample_gps(gps = tracks)
   
   # config data types
   tracks = config_tracks(tracks)
@@ -153,8 +135,8 @@ proc_dcs = function(data_dir, output_dir, det_fname, track_fname, ext = ""){
   
   # create detections file --------------------------------------------------
   
-  # convert detections to long form
-  detections = melt(all, measure.vars = c('right', 'sei', 'fin', 'humpback'), variable.name = 'species', value.name = 'score')
+  # flatten list
+  detections = do.call(rbind, DET)
   
   # remove absences to reduce data frame size
   detections = detections[detections$score!='not detected',]
@@ -164,6 +146,9 @@ proc_dcs = function(data_dir, output_dir, det_fname, track_fname, ext = ""){
   
   # config data types
   detections = config_observations(detections)
+  
+  # drop all unused levels
+  detections = droplevels(detections)
   
   # save output
   saveRDS(detections, paste0(output_dir, det_fname))
