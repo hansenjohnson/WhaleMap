@@ -12,8 +12,8 @@ if(file.exists(infile)){
   # read in data
   tracks = readRDS(infile)
   
-  # # remove NAs
-  # dep = tracks[complete.cases(tracks),]
+  # remove NAs
+  tracks = tracks[!is.na(tracks$lat),]
   
   # split tracks by deployment
   dep = split(tracks, tracks$id)
