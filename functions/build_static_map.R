@@ -170,6 +170,11 @@ build_static_map = function(english=TRUE){
   # only definite
   det = droplevels(spp[!spp$score %in% c('possible acoustic', 'possible visual'),])
   
+  # rename factor levels
+  det$score = gsub(pattern = 'definite visual', replacement = visual_lab, x = det$score)
+  det$score = gsub(pattern = 'definite acoustic', replacement = acoustic_lab, x = det$score)
+  det$score = as.factor(det$score) 
+  
   # basemap -----------------------------------------------------------------
   
   # start basemap
