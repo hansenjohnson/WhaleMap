@@ -25,7 +25,7 @@ for(i in seq_along(obs_list)){
 obs = obs[which(!duplicated(obs)),]
 
 # select only focal species
-obs = obs[obs$species %in% c('right', 'fin', 'sei', 'humpback'),]
+obs = obs[obs$species %in% c('right', 'fin', 'sei', 'humpback', 'blue'),]
 
 # rename score categories
 levels(obs$score) = c('definite visual', 'possible visual', 'definite acoustic', 'possible acoustic')

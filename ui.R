@@ -18,7 +18,6 @@ library(rhandsontable)
 # user input --------------------------------------------------------------
 
 years = c('2014', '2015', '2016', '2017', '2018')
-species = c('right', 'sei', 'fin', 'humpback')
 
 # header ----------------------------------------------------------------------
 
@@ -147,6 +146,7 @@ body <- dashboardBody(
                            selectInput("species", "Choose species:", 
                                        choices = c("Right whale" = "right",
                                                    "Fin whale" = "fin",
+                                                   "Blue whale" = "blue",
                                                    "Sei whale" = "sei",
                                                    "Humpback whale" = "humpback"), 
                                        selected = "right", 
