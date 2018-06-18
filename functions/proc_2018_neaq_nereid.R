@@ -21,59 +21,101 @@ source('functions/subsample_gps.R')
 spp_key = read.csv(paste0(data_dir, '/species_key.csv'))
 
 # list data files
-dfiles = list.files(data_dir, pattern = '*NEA-V.csv$', full.names = T)
+flist = list.files(data_dir, pattern = '*NEA-V.csv$', full.names = T)
 
-ALL = list()
-for(i in seq_along(dfiles)){
-  
-  # determine filename
-  ifile = dfiles[i]
+TRK = list()
+SIG = list()
+for(i in seq_along(flist)){
   
   # read in data
-  ALL[[i]] = read.csv(ifile)
+  tmp = read.csv(flist[i])
+  
+  # wrangle time
+  tmp$time = as.POSIXct(tmp$Time, tz = 'UTC', usetz = T)
+  tmp$date = as.Date(tmp$time)
+  tmp$yday = yday(tmp$time)
+  tmp$year = year(tmp$time)
+  
+  # add deployment metadata
+  tmp$platform = 'vessel'
+  tmp$name = 'nereid'
+  tmp$id = paste(tmp$date, tmp$platform, tmp$name, sep = '_')
+  
+  # tracklines --------------------------------------------------------------
+  
+  # determine start/stop of effort segments
+  i0 = which(tmp$LEGSTAGE...ENVIRONMENTALS==1)
+  i1 = which(tmp$LEGSTAGE...ENVIRONMENTALS==5)
+  
+  # fill in leg stage info for each effort segment
+  EFF = list()
+  for(j in 1:length(i0)){
+    
+    # effort segment
+    itrk = tmp[i0[j]:i1[j],]
+    
+    # fix lat lons
+    itrk$lat = itrk$TrkLatitude
+    itrk$lon = itrk$TrkLongitude
+    
+    # get speed and altitude
+    itrk$altitude = as.numeric(gsub(pattern = ' m', replacement = '', x = itrk$TrkAltitude))
+    itrk$speed = as.numeric(gsub(pattern = ' kts', replacement = '', x = itrk$PlatformSpeed))
+    
+    # remove unused columns
+    itrk = itrk[,c('time','lat','lon', 'altitude','speed','date','yday', 'year',  'platform', 'name', 'id')]
+    
+    # simplify
+    itrk = subsample_gps(gps = itrk)
+    
+    # duplicate last row, and replace pos with NA's for plotting
+    itrk = rbind(itrk, itrk[nrow(itrk),])
+    itrk$lat[nrow(itrk)] = NA
+    itrk$lon[nrow(itrk)] = NA
+    
+    # add to list
+    EFF[[j]] = itrk
+  }
+  
+  # combine all effort segments
+  TRK[[i]] = do.call(rbind.data.frame, EFF)
+  
+  # sightings ---------------------------------------------------------------
+  
+  # take only sightings
+  sig = droplevels(tmp[which(as.character(tmp$SPECCODE)!=""),])
+  
+  # get lat lons
+  sig$lat = sig$LAT...SIGHTINGS
+  sig$lon = sig$LONG...SIGHTINGS
+  
+  # get number of individuals
+  sig$number = sig$NUMBER...SIGHTINGS
+  
+  # get score
+  sig$score[which(sig$number>0)] = 'sighted'
+  
+  # find indecies of matching
+  mind = match(table = spp_key$code, x = sig$SPECCODE)
+  
+  # replace codes with species names
+  sig$species = spp_key$species[mind]
+  
+  # drop unknown codes
+  sig = sig[which(!is.na(sig$species)),]
+  
+  # keep important columns
+  sig = sig[,c('time','lat','lon','date', 'yday','species','score','number','year','platform','name','id')]
+  
+  # add to the list
+  SIG[[i]] = sig
+  
 }
 
-# combine into single table
-all = do.call(rbind.data.frame, ALL)
+# prep track output -------------------------------------------------------
 
-# fix time
-all$time = as.POSIXct(all$Time, tz = 'UTC', usetz = T)
-
-# find start and end of surveys
-ind = which(all$LEGSTAGE==1|all$LEGSTAGE==5) 
-
-# replace these lat lons with NAs to stop plotting
-all$TrkLatitude[ind] = NA 
-all$TrkLongitude[ind] = NA
-
-# wrangle time
-all$date = as.Date(all$time)
-all$yday = yday(all$time)
-all$year = year(all$time)
-
-# add deployment metadata
-all$platform = 'vessel'
-all$name = 'nereid'
-all$id = paste(all$date, all$platform, all$name, sep = '_')
-
-# tracks ------------------------------------------------------------------
-
-# take only on-effort tracklines
-tracks = all[which(all$LEGSTAGE==1 | all$LEGSTAGE==5 | all$LEGSTAGE==2),]
-
-# fix lat lons
-tracks$lat = tracks$TrkLatitude
-tracks$lon = tracks$TrkLongitude
-
-# remove unused columns
-tracks = tracks[,c('time','lat','lon', 'date','yday', 'year',  'platform', 'name', 'id')]
-
-# subsample
-if(subsample){
-  tracks = subsample_gps(gps = tracks)
-} else {
-  message('Not subsampling tracklines!')
-}
+# combine all tracks
+tracks = do.call(rbind.data.frame, TRK)
 
 # config data types
 tracks = config_tracks(tracks)
@@ -81,35 +123,13 @@ tracks = config_tracks(tracks)
 # save
 saveRDS(tracks, paste0(output_dir, '2018_neaq_nereid_tracks.rds'))
 
-# sightings ---------------------------------------------------------------
+# prep sightings output ---------------------------------------------------
 
-# take only sightings
-sig = droplevels(all[which(as.character(all$SPECCODE)!=""),])
-
-# get lat lons
-sig$lat = sig$LAT...SIGHTINGS
-sig$lon = sig$LONG...SIGHTINGS
-
-# get number of individuals
-sig$number = sig$NUMBER...SIGHTINGS
-
-# get score
-sig$score[which(sig$number>0)] = 'sighted'
-
-# find indecies of matching
-mind = match(table = spp_key$code, x = sig$SPECCODE)
-
-# replace codes with species names
-sig$species = spp_key$species[mind]
-
-# drop unknown codes
-sig = sig[which(!is.na(sig$species)),]
-
-# keep important columns
-sig = sig[,c('time','lat','lon','date', 'yday','species','score','number','year','platform','name','id')]
+# combine all sightings
+sightings = do.call(rbind.data.frame, SIG)
 
 # config data types
-sig = config_observations(sig)
+sightings = config_observations(sightings)
 
 # save
-saveRDS(sig, paste0(output_dir, '2018_neaq_nereid_sightings.rds'))
+saveRDS(sightings, paste0(output_dir, '2018_neaq_nereid_sightings.rds'))
