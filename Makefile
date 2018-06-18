@@ -24,6 +24,7 @@ data/processed/tracks.rds : functions/proc_tracks.R \
 														data/interim/2018_tc_dash7_tracks.rds \
 														data/interim/2018_tc_dash8_tracks.rds \
 														data/interim/2018_noaa_twin_otter_tracks.rds \
+														data/interim/2018_neaq_nereid_tracks.rds \
 														data/interim/dcs_archived_tracks.rds \
 														data/interim/dcs_live_tracks.rds
 	$(report_error)
@@ -108,6 +109,12 @@ data/interim/2018_noaa_twin_otter_tracks.rds : functions/proc_2018_noaa_twin_ott
 	Rscript $<
 	$(remove_error)
 
+# 2018 NEAq nereid tracks
+data/interim/2018_neaq_nereid_tracks.rds : functions/proc_2018_neaq_nereid.R data/raw/2018_neaq_nereid/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
 # DCS archived tracks
 data/interim/dcs_archived_tracks.rds : functions/proc_archived_dcs.R data/raw/dcs/archived/*/*
 	$(report_error)
@@ -136,6 +143,7 @@ data/processed/observations.rds : functions/proc_observations.R \
 																	data/interim/2018_dfo_partenavia_sightings.rds \
 																	data/interim/2018_dfo_cessna_sightings.rds \
 																	data/interim/2018_noaa_twin_otter_sightings.rds \
+																	data/interim/2018_neaq_nereid_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
 	$(report_error)
@@ -200,6 +208,12 @@ data/interim/2018_dfo_cessna_sightings.rds : functions/proc_2018_dfo_cessna_sigh
 
 # 2018 noaa twin otter sightings
 data/interim/2018_noaa_twin_otter_sightings.rds : functions/proc_2018_noaa_twin_otter_sightings.R data/raw/2018_noaa_twin_otter/edit_data/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2018 NEAq nereid sightings
+data/interim/2018_neaq_nereid_sightings.rds : functions/proc_2018_neaq_nereid.R data/raw/2018_neaq_nereid/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
