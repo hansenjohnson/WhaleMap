@@ -8,5 +8,5 @@ cd /srv/shiny-server/WhaleMap/ # server
 # Build output data
 Rscript functions/build_output_data.R
 
-# sync output data with Google Drive
-rclone sync "output/" whalemapdata:"WhaleMapData_Processed/"
+# copy output data with Google Drive
+rclone copy "output/" whalemapdata:"WhaleMapData_Processed/"
