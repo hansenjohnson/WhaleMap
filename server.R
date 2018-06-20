@@ -349,14 +349,15 @@ function(input, output, session){
         completedColor = "darkslategray",
         position = 'bottomleft') %>%
       addDrawToolbar(position = "topleft",
-                     polylineOptions = F,
-                     polygonOptions = F,
-                     circleOptions = F,
-                     rectangleOptions = F,
-                     markerOptions = drawMarkerOptions(repeatMode = T), 
+                     polylineOptions = FALSE,
+                     polygonOptions = FALSE,
+                     circleOptions = FALSE,
+                     rectangleOptions = FALSE,
+                     circleMarkerOptions = FALSE,
+                     markerOptions = drawMarkerOptions(repeatMode = TRUE), 
                      editOptions = editToolbarOptions(),
                      targetGroup = 'grp',
-                     singleFeature = F
+                     singleFeature = FALSE
       )
     
   })
@@ -1059,14 +1060,15 @@ function(input, output, session){
     proxy %>%
       removeDrawToolbar(clearFeatures=TRUE) %>%
       addDrawToolbar(position = "topleft",
-                     polylineOptions = F,
-                     polygonOptions = F,
-                     circleOptions = F,
-                     rectangleOptions = F,
-                     markerOptions = drawMarkerOptions(repeatMode = T), 
+                     polylineOptions = FALSE,
+                     polygonOptions = FALSE,
+                     circleOptions = FALSE,
+                     rectangleOptions = FALSE,
+                     circleMarkerOptions = FALSE,
+                     markerOptions = drawMarkerOptions(repeatMode = TRUE), 
                      editOptions = editToolbarOptions(),
                      targetGroup = 'grp',
-                     singleFeature = F
+                     singleFeature = FALSE
       ) %>%
       addMarkers(data = DF, lng = ~lng, lat = ~lat, group = 'grp', 
                  label = ~paste0(lat, ', ', lng))
