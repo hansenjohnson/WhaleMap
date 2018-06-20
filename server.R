@@ -44,10 +44,6 @@ mpa = readRDS('data/processed/mpa.rds')
 load('data/processed/tss.rda')
 load('data/processed/management_areas.rda')
 
-# fish = as.data.frame(t(sapply(forage_areas@polygons, function(x) x@labpt)))
-# colnames(fish) = c('lon','lat')
-# fish$labs = as.data.frame(as.character(forage_areas@data$GRIDSUBARE))
-
 # define track point plotting threshold
 npts = 250000
 
