@@ -3,16 +3,16 @@
 
 # setup -------------------------------------------------------------------
 
-library(shiny)
-library(leaflet)
-library(rgdal)
-library(htmltools)
-library(htmlwidgets)
-library(maptools)
-library(lubridate)
-library(oce)
-library(plotly)
-library(shinydashboard)
+suppressPackageStartupMessages(library(shiny))
+suppressPackageStartupMessages(library(leaflet))
+# suppressPackageStartupMessages(library(rgdal))
+suppressPackageStartupMessages(library(htmltools))
+suppressPackageStartupMessages(library(htmlwidgets))
+suppressPackageStartupMessages(library(maptools))
+suppressPackageStartupMessages(library(lubridate))
+suppressPackageStartupMessages(library(oce))
+suppressPackageStartupMessages(library(plotly))
+suppressPackageStartupMessages(library(shinydashboard))
 # library(rhandsontable)
 
 # user input --------------------------------------------------------------
