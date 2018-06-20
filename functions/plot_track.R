@@ -1,6 +1,6 @@
 plot_track = function(gps, span = 'default', verbose = F){
-  library(oce)
-  library(ocedata)
+  suppressPackageStartupMessages(library(oce))
+  suppressPackageStartupMessages(library(ocedata))
   data("coastlineWorldFine")
   
   # determine limits

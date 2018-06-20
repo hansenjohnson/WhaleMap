@@ -15,9 +15,9 @@ output_dir = 'data/interim/'
 # setup -------------------------------------------------------------------
 
 # libraries
-library(lubridate, quietly = T, warn.conflicts = F)
-suppressMessages(library(rgdal, quietly = T, warn.conflicts = F))
-library(tools, quietly = T, warn.conflicts = F)
+suppressPackageStartupMessages(library(lubridate))
+suppressPackageStartupMessages(library(rgdal))
+suppressPackageStartupMessages(library(tools))
 
 # functions
 source('functions/config_data.R')
