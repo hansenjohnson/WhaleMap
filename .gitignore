@@ -16,6 +16,7 @@ test/
 reports/
 release/
 tmp/
+static_map/
 
 # sensitive
 password.rda
