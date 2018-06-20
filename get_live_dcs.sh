@@ -26,7 +26,7 @@ for i in "${!URL[@]}"; do
 	mkdir -p ${DATADIR}
 
 	# download glider detections
-	wget -q -N ${URL[$i]} -P ${DATADIR}
+	wget -N ${URL[$i]} -P ${DATADIR}
 
 done
 
