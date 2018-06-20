@@ -296,6 +296,7 @@ map : ../server_index/whale_map_en.html
 ../server_index/whale_map_en.html : functions/build_static_map.R data/processed/*.rda data/processed/*.rds
 	$(report_error)
 	Rscript $<
+	cp -r static_map/* ../server_index/
 	$(remove_error)
 
 ## CLEAN ##

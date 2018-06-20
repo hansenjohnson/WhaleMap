@@ -5,6 +5,7 @@ build_static_map = function(english=TRUE){
   # translation -------------------------------------------------------------
   
   if(english){
+    
     # define category names
     acoustic_lab = 'Acoustic'
     visual_lab = 'Visual'
@@ -45,7 +46,8 @@ build_static_map = function(english=TRUE){
     forage_areas_grp = 'Area subject to temporary fishery closure protocol'
     
     # output path
-    fout = '../server_index/whale_map_en.html'
+    # fout = '../server_index/whale_map_en-tmp.html'
+    fout = './static_map/whale_map_en.html'
     
   } else {
     
@@ -89,20 +91,21 @@ build_static_map = function(english=TRUE){
     forage_areas_grp = 'Zones soumises au protocole de fermeture temporaire'
     
     # output path
-    fout = '../server_index/whale_map_fr.html'
+    # fout = '../server_index/whale_map_fr-tmp.html'
+    fout = './static_map/whale_map_fr.html'
   }
   
   # setup -------------------------------------------------------------------
   
   # required libraries
-  library(leaflet, quietly = T, warn.conflicts = F)
-  suppressMessages(library(rgdal, quietly = T, warn.conflicts = F))
-  library(htmltools, quietly = T, warn.conflicts = F)
-  library(htmlwidgets, quietly = T, warn.conflicts = F)
-  library(maptools, quietly = T, warn.conflicts = F)
-  library(lubridate, quietly = T, warn.conflicts = F)
-  library(oce, quietly = T, warn.conflicts = F)
-  library(leaflet.extras, quietly = T, warn.conflicts = F)
+  suppressPackageStartupMessages(library(leaflet))
+  suppressPackageStartupMessages(library(rgdal))
+  suppressPackageStartupMessages(library(htmltools))
+  suppressPackageStartupMessages(library(htmlwidgets))
+  suppressPackageStartupMessages(library(maptools))
+  suppressPackageStartupMessages(library(lubridate))
+  suppressPackageStartupMessages(library(oce))
+  suppressPackageStartupMessages(library(leaflet.extras))
   
   # time period to show (days)
   lag = 14
@@ -135,6 +138,10 @@ build_static_map = function(english=TRUE){
       "darkgrey"
     }
   }
+  
+  # create destination directory
+  outdir = dirname(fout)
+  if(!dir.exists(outdir)){dir.create(outdir)}
   
   # read in data -------------------------------------------------------
   
@@ -346,10 +353,14 @@ build_static_map = function(english=TRUE){
   
   # save widget -------------------------------------------------------------
   
-  saveWidget(widget = map, file = fout, selfcontained = T)
+  # normalize output path
+  FOUT = file.path(normalizePath(dirname(fout)),basename(fout))
+  
+  # save widget
+  saveWidget(widget = map, file = FOUT, selfcontained = T)
 }
 
 # build english map
-build_static_map(english = TRUE)
-build_static_map(english = FALSE)
+suppressWarnings(build_static_map(english = TRUE))
+suppressWarnings(build_static_map(english = FALSE))
 
