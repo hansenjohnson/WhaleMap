@@ -17,7 +17,7 @@ library(ggplot2)
 library(plotly)
 library(leaflet.extras)
 # devtools::install_github("jrowen/rhandsontable")
-library(rhandsontable)
+# library(rhandsontable)
 
 # define color palette list to choose from
 palette_list = list(heat.colors(200), 
@@ -347,18 +347,18 @@ function(input, output, session){
         secondaryAreaUnit="acres", 
         activeColor = "darkslategray",
         completedColor = "darkslategray",
-        position = 'bottomleft') %>%
-      addDrawToolbar(position = "topleft",
-                     polylineOptions = FALSE,
-                     polygonOptions = FALSE,
-                     circleOptions = FALSE,
-                     rectangleOptions = FALSE,
-                     circleMarkerOptions = FALSE,
-                     markerOptions = drawMarkerOptions(repeatMode = TRUE), 
-                     editOptions = editToolbarOptions(),
-                     targetGroup = 'grp',
-                     singleFeature = FALSE
-      )
+        position = 'bottomleft')
+      # addDrawToolbar(position = "topleft",
+      #                polylineOptions = FALSE,
+      #                polygonOptions = FALSE,
+      #                circleOptions = FALSE,
+      #                rectangleOptions = FALSE,
+      #                circleMarkerOptions = FALSE,
+      #                markerOptions = drawMarkerOptions(repeatMode = TRUE), 
+      #                editOptions = editToolbarOptions(),
+      #                targetGroup = 'grp',
+      #                singleFeature = FALSE
+      # )
     
   })
   
@@ -999,103 +999,103 @@ function(input, output, session){
   
   # coordinate editor ----------------------------------------------------------  
   
-  observeEvent(input$map_draw_all_features,{
-    
-    # extract lat lons of drawn objects
-    f = input$map_draw_all_features
-    lng = sapply(f$features, FUN = function(x) x$geometry$coordinates[[1]])
-    lat = sapply(f$features, FUN = function(x) x$geometry$coordinates[[2]])
-    
-    # calculate along-path distance
-    if(input$dist){
-      
-      # catch error if plot is cleared
-      if(is.numeric(lng)){
-        dist = geodDist(longitude1 = lng, latitude1 = lat, alongPath = T)
-      } else {
-        dist = NULL
-      }
-      
-      DF = data.frame(lat, lng, dist)
-    } else {
-      DF = data.frame(lat, lng)
-    }
-    
-    # construct table
-    output$hot = renderRHandsontable({
-      rhandsontable(DF, rowHeaders = NULL) %>%
-        hot_table(highlightCol = TRUE, highlightRow = TRUE)
-      
-    })
-  })
-  
-  # round coordinates
-  observeEvent(input$round,{
-    DF = hot_to_r(input$hot)
-    DF = round(DF, digits = input$dig)
-    
-    output$hot = renderRHandsontable({
-      rhandsontable(DF, rowHeaders = NULL) %>%
-        hot_table(highlightCol = TRUE, highlightRow = TRUE)
-    })
-  })
-  
-  # update map after editing coordinates
-  observe({
-    if (is.null(input$hot))
-      return()
-    
-    # read in values from table
-    DF = hot_to_r(input$hot)
-    
-    # catch error for blank DF (e.g. after deleting all points)
-    if(is.null(DF$lng)){
-      leafletProxy("map") %>% clearGroup('add')
-      return()
-    }
-    
-    # replace old positions on map
-    proxy = leafletProxy("map")
-    
-    proxy %>%
-      removeDrawToolbar(clearFeatures=TRUE) %>%
-      addDrawToolbar(position = "topleft",
-                     polylineOptions = FALSE,
-                     polygonOptions = FALSE,
-                     circleOptions = FALSE,
-                     rectangleOptions = FALSE,
-                     circleMarkerOptions = FALSE,
-                     markerOptions = drawMarkerOptions(repeatMode = TRUE), 
-                     editOptions = editToolbarOptions(),
-                     targetGroup = 'grp',
-                     singleFeature = FALSE
-      ) %>%
-      addMarkers(data = DF, lng = ~lng, lat = ~lat, group = 'grp', 
-                 label = ~paste0(lat, ', ', lng))
-    
-    if(input$shp == 'None'){
-      proxy %>% 
-        clearGroup('add')
-    } else if (input$shp == 'Line'){
-      proxy %>% 
-        clearGroup('add')%>%
-        addPolylines(data = DF, lng = ~lng, lat = ~lat, group = 'add')
-    }else if (input$shp == 'Polygon'){
-      proxy %>% 
-        clearGroup('add')%>%
-        addPolygons(data = DF, lng = ~lng, lat = ~lat, group = 'add')
-    }
-  })
-  
-  # download csv
-  output$downloadData <- downloadHandler(
-    filename = function() {
-      "WhaleMap.csv"
-    },
-    content = function(file) {
-      write.csv(hot_to_r(input$hot), file, row.names = FALSE)
-    }
-  )
+  # observeEvent(input$map_draw_all_features,{
+  #   
+  #   # extract lat lons of drawn objects
+  #   f = input$map_draw_all_features
+  #   lng = sapply(f$features, FUN = function(x) x$geometry$coordinates[[1]])
+  #   lat = sapply(f$features, FUN = function(x) x$geometry$coordinates[[2]])
+  #   
+  #   # calculate along-path distance
+  #   if(input$dist){
+  #     
+  #     # catch error if plot is cleared
+  #     if(is.numeric(lng)){
+  #       dist = geodDist(longitude1 = lng, latitude1 = lat, alongPath = T)
+  #     } else {
+  #       dist = NULL
+  #     }
+  #     
+  #     DF = data.frame(lat, lng, dist)
+  #   } else {
+  #     DF = data.frame(lat, lng)
+  #   }
+  #   
+  #   # construct table
+  #   output$hot = renderRHandsontable({
+  #     rhandsontable(DF, rowHeaders = NULL) %>%
+  #       hot_table(highlightCol = TRUE, highlightRow = TRUE)
+  #     
+  #   })
+  # })
+  # 
+  # # round coordinates
+  # observeEvent(input$round,{
+  #   DF = hot_to_r(input$hot)
+  #   DF = round(DF, digits = input$dig)
+  #   
+  #   output$hot = renderRHandsontable({
+  #     rhandsontable(DF, rowHeaders = NULL) %>%
+  #       hot_table(highlightCol = TRUE, highlightRow = TRUE)
+  #   })
+  # })
+  # 
+  # # update map after editing coordinates
+  # observe({
+  #   if (is.null(input$hot))
+  #     return()
+  #   
+  #   # read in values from table
+  #   DF = hot_to_r(input$hot)
+  #   
+  #   # catch error for blank DF (e.g. after deleting all points)
+  #   if(is.null(DF$lng)){
+  #     leafletProxy("map") %>% clearGroup('add')
+  #     return()
+  #   }
+  #   
+  #   # replace old positions on map
+  #   proxy = leafletProxy("map")
+  #   
+  #   proxy %>%
+  #     removeDrawToolbar(clearFeatures=TRUE) %>%
+  #     addDrawToolbar(position = "topleft",
+  #                    polylineOptions = FALSE,
+  #                    polygonOptions = FALSE,
+  #                    circleOptions = FALSE,
+  #                    rectangleOptions = FALSE,
+  #                    circleMarkerOptions = FALSE,
+  #                    markerOptions = drawMarkerOptions(repeatMode = TRUE), 
+  #                    editOptions = editToolbarOptions(),
+  #                    targetGroup = 'grp',
+  #                    singleFeature = FALSE
+  #     ) %>%
+  #     addMarkers(data = DF, lng = ~lng, lat = ~lat, group = 'grp', 
+  #                label = ~paste0(lat, ', ', lng))
+  #   
+  #   if(input$shp == 'None'){
+  #     proxy %>% 
+  #       clearGroup('add')
+  #   } else if (input$shp == 'Line'){
+  #     proxy %>% 
+  #       clearGroup('add')%>%
+  #       addPolylines(data = DF, lng = ~lng, lat = ~lat, group = 'add')
+  #   }else if (input$shp == 'Polygon'){
+  #     proxy %>% 
+  #       clearGroup('add')%>%
+  #       addPolygons(data = DF, lng = ~lng, lat = ~lat, group = 'add')
+  #   }
+  # })
+  # 
+  # # download csv
+  # output$downloadData <- downloadHandler(
+  #   filename = function() {
+  #     "WhaleMap.csv"
+  #   },
+  #   content = function(file) {
+  #     write.csv(hot_to_r(input$hot), file, row.names = FALSE)
+  #   }
+  # )
   
   # status table ------------------------------------------------------------
   
