@@ -31,5 +31,4 @@ for i in "${!URL[@]}"; do
 done
 
 # process data
-# ( cd ${DESTDIR}; Rscript -e "source('update_live_dcs.R')" )
-( cd ${DESTDIR}; make )
+# ( cd ${DESTDIR}; make )
