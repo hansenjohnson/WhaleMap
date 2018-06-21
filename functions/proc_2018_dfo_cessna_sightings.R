@@ -25,7 +25,7 @@ library(readxl, quietly = T, warn.conflicts = F)
 source('functions/config_data.R')
 
 # list files to process
-flist = list.files(data_dir, pattern = 'CessnaObs(\\d{8}).xlsx$', full.names = T, recursive = T)
+flist = list.files(data_dir, pattern = '^(\\d{8}).xlsx$', full.names = T, recursive = T)
 
 # list to hold loop output
 SIG = list()
@@ -37,21 +37,17 @@ for(i in seq_along(flist)){
   
   # read in data from excel
   tmp = as.data.frame(read_xlsx(flist[i]))
-  n = ncol(tmp)
   
-  # fix time
-  if('Hour' %in% colnames(tmp)){
-    hrs = substr(as.character(tmp$Hour), start = 12, stop = 20)
-    tmp$time = as.POSIXct(paste0(tmp$Date, ' ', hrs), format = '%m-%d-%Y %H:%M:%S', tz = 'UTC', usetz = TRUE)
-  } else {
-    tmp$time = NA
-  }
+  tmp$time_UTC
+  
+  # fix date/time
+  tmp$date = as.Date(tmp$Date_UTC, format = '%Y-%m-%d UTC')
+  tmp$time = as.POSIXct(paste0(tmp$date, ' ', substr(tmp$time_UTC, start = 12, stop = 20)), tz = 'UTC')
   
   # add data
-  tmp$date = as.Date(tmp$Date, format = '%m-%d-%Y')
-  tmp$lat = as.numeric(tmp$Lat)
-  tmp$lon = abs(as.numeric(tmp$Long))*-1
-  tmp$number = as.numeric(tmp$Quant.)
+  tmp$lat = as.numeric(tmp$lat)
+  tmp$lon = abs(as.numeric(tmp$long))*-1
+  tmp$number = as.numeric(tmp$nb_tot)
   
   # add metadata
   tmp$yday = yday(tmp$date)
@@ -63,16 +59,16 @@ for(i in seq_along(flist)){
   
   # fix species
   tmp$species = NA
-  tmp$Species = tolower(tmp$Species)
-  tmp$species[tmp$Species == 'bb'] = 'sei'
-  tmp$species[tmp$Species == 'bm'] = 'blue'
-  tmp$species[tmp$Species == 'bp'] = 'fin'
-  tmp$species[tmp$Species == 'eg'] = 'right'
-  tmp$species[tmp$Species == 'mn'] = 'humpback'
-  tmp$species[tmp$Species == 'fs'] = 'fin/sei'
+  tmp$sp_code = toupper(tmp$sp_code)
+  tmp$species[tmp$sp_code == 'BB'] = 'sei'
+  tmp$species[tmp$sp_code == 'BM'] = 'blue'
+  tmp$species[tmp$sp_code == 'BP'] = 'fin'
+  tmp$species[tmp$sp_code == 'EG'] = 'right'
+  tmp$species[tmp$sp_code == 'MN'] = 'humpback'
+  tmp$species[tmp$sp_code == 'FS'] = 'fin/sei'
   
-  # remove original columns
-  tmp = tmp[-c(1:n)]
+  # select columns of interest
+  tmp = tmp[,c('time','lat','lon','date', 'yday','species','score','number','year','platform','name','id')]
   
   # remove NA sightings
   tmp = tmp[!is.na(tmp$species),]
@@ -80,21 +76,15 @@ for(i in seq_along(flist)){
   # add to list
   SIG[[i]] = tmp
   
-  # catch null error
-  if(is.null(SIG[[i]])){stop('Sightings in ', flist[i], ' not processed correctly!')}
-  
 }
 
 # combine and save --------------------------------------------------------
 
-# catch errors
-# if(length(SIG)!=length(flist)){stop('Not all sightings were processed!')}
-
 # combine all flights
-SIGS = do.call(rbind.data.frame, SIG)
+sig = do.call(rbind.data.frame, SIG)
 
 # config flight data
-sig = config_observations(SIGS)
+sig = config_observations(sig)
 
 # save
 saveRDS(sig, paste0(output_dir, ofile))

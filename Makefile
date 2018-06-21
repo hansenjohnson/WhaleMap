@@ -141,12 +141,11 @@ data/processed/observations.rds : functions/proc_observations.R \
 																	data/interim/2018_tc_dash7_sightings.rds \
 																	data/interim/2018_tc_dash8_sightings.rds \
 																	data/interim/2018_dfo_partenavia_sightings.rds \
+																	data/interim/2018_dfo_cessna_sightings.rds \
 																	data/interim/2018_noaa_twin_otter_sightings.rds \
 																	data/interim/2018_neaq_nereid_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
-
-# data/interim/2018_dfo_cessna_sightings.rds \
 
 	$(report_error)
 	Rscript $<
@@ -203,10 +202,10 @@ data/interim/2018_dfo_partenavia_sightings.rds : functions/proc_2018_dfo_partena
 	$(remove_error)
 
 # 2018 dfo cessna sightings
-# data/interim/2018_dfo_cessna_sightings.rds : functions/proc_2018_dfo_cessna_sightings.R data/raw/2018_whalemapdata/DFO_cessna/*
-# 	$(report_error)
-# 	Rscript $<
-# 	$(remove_error)
+data/interim/2018_dfo_cessna_sightings.rds : functions/proc_2018_dfo_cessna_sightings.R data/raw/2018_whalemapdata/DFO_cessna/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
 
 # 2018 noaa twin otter sightings
 data/interim/2018_noaa_twin_otter_sightings.rds : functions/proc_2018_noaa_twin_otter_sightings.R data/raw/2018_noaa_twin_otter/edit_data/*
