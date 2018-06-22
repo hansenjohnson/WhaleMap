@@ -38,10 +38,11 @@ for(i in seq_along(flist)){
   # read in data from excel
   tmp = as.data.frame(read_xlsx(flist[i]))
   
-  tmp$time_UTC
+  # find date column
+  date_ind = grep(pattern = 'date_UTC', x = colnames(tmp), ignore.case = TRUE)
   
   # fix date/time
-  tmp$date = as.Date(tmp$Date_UTC, format = '%Y-%m-%d UTC')
+  tmp$date = as.Date(tmp[,date_ind], format = '%Y-%m-%d UTC')
   tmp$time = as.POSIXct(paste0(tmp$date, ' ', substr(tmp$time_UTC, start = 12, stop = 20)), tz = 'UTC')
   
   # add data
