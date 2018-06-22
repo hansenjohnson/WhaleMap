@@ -224,6 +224,7 @@ build_static_map = function(english=TRUE){
     # hide groups
     hideGroup(c(survey_grp,
                 graticules_grp,
+                robot_grp,
                 static_speed_grp,
                 dynamic_speed_grp,
                 static_fish_grp,
