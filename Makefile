@@ -104,7 +104,7 @@ data/interim/2018_tc_dash8_tracks.rds : functions/proc_2018_tc_dash8_tracks.R da
 	# $(remove_error)
 
 # 2018 NOAA twin otter tracks
-data/interim/2018_noaa_twin_otter_tracks.rds : functions/proc_2018_noaa_twin_otter_tracks.R data/raw/2018_noaa_twin_otter/edit_data/*
+data/interim/2018_noaa_twin_otter_tracks.rds : functions/proc_2018_noaa_twin_otter.R data/raw/2018_noaa_twin_otter/edit_data/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
@@ -208,7 +208,7 @@ data/interim/2018_dfo_cessna_sightings.rds : functions/proc_2018_dfo_cessna_sigh
 	$(remove_error)
 
 # 2018 noaa twin otter sightings
-data/interim/2018_noaa_twin_otter_sightings.rds : functions/proc_2018_noaa_twin_otter_sightings.R data/raw/2018_noaa_twin_otter/edit_data/*
+data/interim/2018_noaa_twin_otter_sightings.rds : functions/proc_2018_noaa_twin_otter.R data/raw/2018_noaa_twin_otter/edit_data/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
