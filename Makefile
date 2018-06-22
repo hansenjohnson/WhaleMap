@@ -137,6 +137,7 @@ data/processed/observations.rds : functions/proc_observations.R \
 																	data/interim/2016_shelagh_sightings.rds \
 																	data/interim/2017_*_sightings.rds \
 																	data/interim/2018_opportunistic_sightings.rds \
+																	data/interim/2018_mics_sightings.rds \
 																	data/interim/2018_dfo_twin_otter_sightings.rds \
 																	data/interim/2018_tc_dash7_sightings.rds \
 																	data/interim/2018_tc_dash8_sightings.rds \
@@ -173,6 +174,12 @@ data/interim/2017_*_sightings.rds : functions/proc_2017_sightings.R data/raw/201
 
 # 2018 opportunistic sightings
 data/interim/2018_opportunistic_sightings.rds : functions/proc_2018_opportunistic.R data/raw/2018_whalemapdata/2018_opportunistic_sightings/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2018 MICS sightings
+data/interim/2018_mics_sightings.rds : functions/proc_2018_mics_sightings.R data/raw/2018_mics_sightings/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)

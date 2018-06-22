@@ -28,6 +28,7 @@ make_status_table = function(sfile='status.txt'){
                   'DFO Partenavia Sightings', 
                   'NOAA Twin Otter Sightings/Tracks',
                   'NEAq Nereid Sightings/Tracks',
+                  'MICS Right Whale Sightings',
                   'Dal/WHOI Acoustic Detections',
                   'Opportunistic Sightings')
   
@@ -44,6 +45,7 @@ make_status_table = function(sfile='status.txt'){
              gs('2018_dfo_partenavia_sightings'), 
              gs('2018_noaa_twin_otter'), 
              gs('2018_neaq_nereid'), 
+             gs('2018_mics_sightings'), 
              gs('live_dcs'), 
              gs('2018_opportunistic'))
   
