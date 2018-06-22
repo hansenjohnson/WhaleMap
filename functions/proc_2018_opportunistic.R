@@ -1,3 +1,5 @@
+# process 2018 opportunistic right whales sightings
+
 # directory to look for files
 data_dir = 'data/raw/2018_whalemapdata/2018_opportunistic_sightings/'
 
