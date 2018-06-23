@@ -827,7 +827,7 @@ function(input, output, session){
       str5 <- paste0('<strong>Number of whales possibly sighted</strong>: ', u)
       
       str6 <- paste0('<strong>Number of definite detections</strong>: ', 
-                     nrow(dInBounds()[dInBounds()$score=='detected',]))
+                     nrow(dInBounds()[dInBounds()$score=='definite acoustic',]))
       
       ifelse(input$possible, 
              v<-nrow(dInBounds()[dInBounds()$score=='possible acoustic',]),
