@@ -26,7 +26,7 @@ library(stringr)
 source('functions/config_data.R')
 
 # list files to process
-flist = list.files(data_dir, pattern = '(\\d{8})_Dash8_sightings.xlsx$', full.names = T, recursive = T)
+flist = list.files(data_dir, pattern = '(\\d{8})_Dash8_sightings.xls', full.names = T, recursive = T)
 
 # only proceed if sightings files exist
 if(length(flist)!=0){
