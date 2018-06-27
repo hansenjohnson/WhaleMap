@@ -115,20 +115,20 @@ for(i in seq_along(flist)){
     # read in data (method below is slower but more robust to errors in gps file)
     textLines = readLines(gps_file)
     counts = count.fields(textConnection(textLines), sep=",")
-    tmp = read.table(text=textLines[counts == 7], header=FALSE, sep=",")
+    trk = read.table(text=textLines[counts == 7], header=FALSE, sep=",")
     
     # select and rename important columns
-    tmp = data.frame(tmp$V1, tmp$V3, tmp$V2, tmp$V4, tmp$V6)
-    colnames(tmp) = c('time', 'lon', 'lat', 'speed', 'altitude')
+    trk = data.frame(trk$V1, trk$V3, trk$V2, trk$V4, trk$V6)
+    colnames(trk) = c('time', 'lon', 'lat', 'speed', 'altitude')
     
     # remove columns without timestamp
-    tmp = tmp[which(!is.na(tmp$time)),]
+    trk = trk[which(!is.na(trk$time)),]
     
     # add timestamp
-    tmp$time = as.POSIXct(tmp$time, format = '%d/%m/%Y %H:%M:%S', tz="UTC", usetz=TRUE)
+    trk$time = as.POSIXct(trk$time, format = '%d/%m/%Y %H:%M:%S', tz="UTC", usetz=TRUE)
     
     # subsample (use default subsample rate)
-    tracks = subsample_gps(gps = tmp)
+    tracks = subsample_gps(gps = trk)
     
     # add metadata
     tracks$date = as.Date(tracks$time)
@@ -153,55 +153,55 @@ for(i in seq_along(flist)){
       if(file.size(sig_files[j]) == 0) next
       
       # read in data
-      tmp = read.table(sig_files[j], sep = ',')
+      sig = read.table(sig_files[j], sep = ',')
       
       # assign column names
-      colnames(tmp) = c('transect', 'unk1', 'unk2', 'time', 'observer', 'declination', 'species', 'number', 'confidence', 'bearing', 'unk5', 'unk6', 'comments', 'side', 'lat', 'lon', 'calf', 'unk7', 'unk8', 'unk9', 'unk10')
+      colnames(sig) = c('transect', 'unk1', 'unk2', 'time', 'observer', 'declination', 'species', 'number', 'confidence', 'bearing', 'unk5', 'unk6', 'comments', 'side', 'lat', 'lon', 'calf', 'unk7', 'unk8', 'unk9', 'unk10')
       
       # remove final estimates
-      tmp = tmp[!grepl(pattern = 'fin est', x = tmp$comments, ignore.case = TRUE),]
+      sig = sig[!grepl(pattern = 'fin est', x = sig$comments, ignore.case = TRUE),]
       
       # if they exist, only include actual positions
-      if(nrow(tmp[grepl(pattern = 'ap', x = tmp$comments, ignore.case = TRUE),])>0){
-        tmp = tmp[grepl(pattern = 'ap', x = tmp$comments, ignore.case = TRUE),]
+      if(nrow(sig[grepl(pattern = 'ap', x = sig$comments, ignore.case = TRUE),])>0){
+        sig = sig[grepl(pattern = 'ap', x = sig$comments, ignore.case = TRUE),]
       }
       
       # remove columns without timestamp
-      tmp = tmp[which(!is.na(tmp$time)),]
+      sig = sig[which(!is.na(sig$time)),]
       
       # add timestamp
-      tmp$time = as.POSIXct(tmp$time, format = '%d/%m/%Y %H:%M', tz="UTC", usetz=TRUE)
+      sig$time = as.POSIXct(sig$time, format = '%d/%m/%Y %H:%M', tz="UTC", usetz=TRUE)
       
       # add metadata
-      tmp$date = as.Date(tmp$time)
-      tmp$yday = yday(tmp$date)
-      tmp$year = year(tmp$date)
-      tmp$score = 'sighted'
-      tmp$platform = 'plane'
-      tmp$name = 'noaa_twin_otter'
-      tmp$id = paste(tmp$date, tmp$platform, tmp$name, sep = '_')
+      sig$date = as.Date(sig$time)
+      sig$yday = yday(sig$date)
+      sig$year = year(sig$date)
+      sig$score = 'sighted'
+      sig$platform = 'plane'
+      sig$name = 'noaa_twin_otter'
+      sig$id = paste(sig$date, sig$platform, sig$name, sep = '_')
       
       # initialize species column
-      tmp$sp_code = as.character(tmp$species)
-      tmp$species = NA
+      sig$sp_code = as.character(sig$species)
+      sig$species = NA
       
       # add species identifiers
-      tmp$sp_code = toupper(tmp$sp_code)
-      tmp$species[tmp$sp_code == 'EG'] = 'right'
-      tmp$species[tmp$sp_code == 'MN'] = 'humpback'
-      tmp$species[tmp$sp_code == 'BB'] = 'sei'
-      tmp$species[tmp$sp_code == 'BP'] = 'fin'
-      tmp$species[tmp$sp_code == 'BA'] = 'minke'
-      tmp$species[tmp$sp_code == 'BM'] = 'blue'
+      sig$sp_code = toupper(sig$sp_code)
+      sig$species[sig$sp_code == 'EG'] = 'right'
+      sig$species[sig$sp_code == 'MN'] = 'humpback'
+      sig$species[sig$sp_code == 'BB'] = 'sei'
+      sig$species[sig$sp_code == 'BP'] = 'fin'
+      sig$species[sig$sp_code == 'BA'] = 'minke'
+      sig$species[sig$sp_code == 'BM'] = 'blue'
       
       # drop unknown codes
-      tmp = sig[which(!is.na(tmp$species)),]
+      sig = sig[which(!is.na(sig$species)),]
       
       # keep important columns
-      tmp = tmp[,c('time','lat','lon','date', 'yday','species','score','number','year','platform','name','id')]
+      sig = sig[,c('time','lat','lon','date', 'yday','species','score','number','year','platform','name','id')]
       
       # add to list
-      iSIG[[j]] = tmp
+      iSIG[[j]] = sig
     }
     
     # combine multiple sightings file
