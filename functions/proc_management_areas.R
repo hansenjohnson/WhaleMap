@@ -12,10 +12,10 @@ output_dir = 'data/processed/'
 # setup -------------------------------------------------------------------
 
 # libraries
-library(rgdal)
+suppressPackageStartupMessages(library(rgdal))
 
 # define data paths
-tc_lane_dir = paste0(gis_dir,'TCLanes/')
+tc_lane_dir = paste0(gis_dir,'Shipping Lanes NEW/')
 tc_zone_dir = paste0(gis_dir,'SpeedReductionZone/')
 static_zone_dir = paste0(gis_dir,'StaticZone/')
 forage_areas_dir = paste0(gis_dir,'ForagingAreas/')
