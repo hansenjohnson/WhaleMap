@@ -108,8 +108,8 @@ build_static_map = function(english=TRUE){
   suppressPackageStartupMessages(library(leaflet.extras))
   
   # time period to show (days)
-  lag = 14
-  start_date = Sys.Date()-lag
+  t1 = as.Date(format(Sys.time(), "%Y-%m-%d", tz = 'UTC'))
+  t0 = t1-14
   
   # define score color palette
   obs_levs = c(acoustic_lab, visual_lab)
@@ -169,7 +169,7 @@ build_static_map = function(english=TRUE){
   Tracks = Tracks[Tracks$name!='cp_king_air',] # do not plot C&P data
   
   # observations
-  Obs = obs[obs$date >= start_date,]; rm(obs)
+  Obs = obs[obs$date >= t0,]; rm(obs)
   
   # select species
   spp = Obs[Obs$species == 'right',]
@@ -198,8 +198,8 @@ build_static_map = function(english=TRUE){
                  '<div align="center">',
                  '<strong>', main_title, '</strong>','<br>',
                  '<small>', date_title,'<br>',
-                 format(start_date, '%Y-%m-%d'), ' - ',
-                 format(Sys.Date(), '%Y-%m-%d'), '</small>',
+                 format(t0, '%Y-%m-%d'), ' - ',
+                 format(t1, '%Y-%m-%d'), '</small>',
                  '</div>')) %>%
     
     # layer control
