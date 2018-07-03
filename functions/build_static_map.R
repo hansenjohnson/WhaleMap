@@ -165,7 +165,7 @@ build_static_map = function(english=TRUE){
   # subset data -------------------------------------------------------------
   
   # tracklines
-  Tracks = tracks[tracks$date >= start_date,]; rm(tracks)
+  Tracks = tracks[tracks$date >= t0,]; rm(tracks)
   Tracks = Tracks[Tracks$name!='cp_king_air',] # do not plot C&P data
   
   # observations
