@@ -41,3 +41,4 @@ status.txt
 
 # hansen specific
 get_remote_data_hj.sh
+get_live_dcs_hj.sh
