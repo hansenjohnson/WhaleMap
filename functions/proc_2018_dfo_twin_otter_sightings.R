@@ -40,8 +40,13 @@ for(i in seq_along(flist)){
   # skip empty files
   if (file.size(flist[i]) == 0) next
   
-  # read in data
-  tmp = read.table(flist[i], sep = ',')
+  # read in data (method below is slower but more robust to errors in gps file)
+  textLines = readLines(flist[i])
+  counts = count.fields(textConnection(textLines), sep=",")
+  tmp = read.table(text=textLines[counts == 21 & !is.na(counts)], header=FALSE, sep=",")
+  
+  # # read in data
+  # tmp = read.table(flist[i], sep = ',')
   
   # assign column names
   colnames(tmp) = c('transect', 'unk1', 'unk2', 'time', 'observer', 'declination', 'species', 'number', 'unk4', 'bearing', 'unk5', 'unk6', 'comments', 'side', 'lat', 'lon', 'audio', 'unk7', 'photo', 'unk8', 'unk9')
@@ -100,6 +105,11 @@ for(i in seq_along(flist)){
 
 # combine all flights
 SIGS = do.call(rbind, SIG)
+
+# remove strange characters in 'number' column
+SIGS$number = gsub(pattern = '\\+', replacement = '', x = SIGS$number)
+SIGS$number = gsub(pattern = '\`', replacement = '', x = SIGS$number)
+SIGS$number = as.numeric(SIGS$number)
 
 # config flight data
 sig = config_observations(SIGS)
