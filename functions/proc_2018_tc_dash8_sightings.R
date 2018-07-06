@@ -15,18 +15,18 @@ output_dir = 'data/interim/'
 # setup -------------------------------------------------------------------
 
 # libraries
-library(lubridate, quietly = T, warn.conflicts = F)
-suppressMessages(library(rgdal, quietly = T, warn.conflicts = F))
-library(tools, quietly = T, warn.conflicts = F)
-library(measurements, quietly = T, warn.conflicts = F)
-library(readxl, quietly = T, warn.conflicts = F)
-library(stringr)
+suppressPackageStartupMessages(library(lubridate))
+suppressPackageStartupMessages(library(rgdal))
+suppressPackageStartupMessages(library(tools))
+suppressPackageStartupMessages(library(measurements))
+suppressPackageStartupMessages(library(readxl))
+suppressPackageStartupMessages(library(stringr))
 
 # functions
 source('functions/config_data.R')
 
 # list files to process
-flist = list.files(data_dir, pattern = '(\\d{8})_Dash8_sightings.xls', full.names = T, recursive = T)
+flist = list.files(data_dir, pattern = '(\\d{8})_Dash8_sightings.xls.$', full.names = T, recursive = T)
 
 # only proceed if sightings files exist
 if(length(flist)!=0){
