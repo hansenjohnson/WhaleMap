@@ -1,6 +1,6 @@
 ---
-output: pdf_document
-always_allow_html: yes
+output: 
+    pdf_document
 params:
   start: !r Sys.Date()-1
   stop: !r Sys.Date()-1
@@ -83,7 +83,7 @@ if(t0 == t1){
 
 #### Figure 1: Locations of large whale observations
 
-```{r map, echo=FALSE, fig.height=8, fig.width=8, warning=FALSE, fig.show='hold', fig.path='../tmp/'}
+```{r map, echo=FALSE, warning=FALSE, fig.height=8, fig.width=8}
 
 # setup -------------------------------------------------------------------
   
