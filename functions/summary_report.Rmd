@@ -1,0 +1,295 @@
+---
+output: pdf_document
+params:
+  start: !r Sys.Date()-1
+  stop: !r Sys.Date()-1
+---
+
+```{r setup, echo=FALSE}
+
+# libraries
+suppressPackageStartupMessages(library(knitr))
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(leaflet))
+suppressPackageStartupMessages(library(rgdal))
+suppressPackageStartupMessages(library(htmltools))
+suppressPackageStartupMessages(library(htmlwidgets))
+suppressPackageStartupMessages(library(maptools))
+suppressPackageStartupMessages(library(lubridate))
+suppressPackageStartupMessages(library(oce))
+suppressPackageStartupMessages(library(leaflet.extras))
+
+# read in data
+obs = readRDS('../data/processed/observations.rds')
+trk = readRDS('../data/processed/tracks.rds')
+mpa = readRDS('../data/processed/mpa.rds')
+load('../data/processed/tss.rda')
+load('../data/processed/management_areas.rda')
+
+# # for testing
+# obs = readRDS('data/processed/observations.rds')
+# trk = readRDS('data/processed/tracks.rds')
+# mpa = readRDS('data/processed/mpa.rds')
+# load('data/processed/tss.rda')
+# load('data/processed/management_areas.rda')
+# params=data.frame(start = as.Date('2018-03-30'),
+#                   stop = as.Date('2018-03-30'))
+
+# rename time limits
+t0 = params$start
+t1 = params$stop
+
+# remove buoys from GOM
+obs = obs[obs$platform!='buoy',]
+trk = trk[trk$platform!='buoy',]
+
+# subset data
+obs = obs[obs$date >= t0 & obs$date <= t1,]
+trk = trk[trk$date >= t0 & trk$date <= t1,]
+
+# define species list
+spp_list = c('right', 'fin', 'sei', 'humpback', 'blue')
+
+# select species
+obs = obs[obs$species %in% spp_list,]
+
+# only keep definites
+obs = obs[obs$score %in% c('definite visual','definite acoustic'),]
+
+# remove NAs
+obs = obs[!is.na(obs$lat),]
+trk = trk[!is.na(trk$lat),]
+
+# create data to/from message
+if(t0 == t1){
+  data_range = params$stop
+} else {
+  data_range = paste0(params$start, ' to ', params$stop)
+}
+
+```
+
+\begin{center}
+	\huge \textbf{WhaleMap Summary Report} \\
+	\huge \textbf{`r data_range`} \\
+	\bigskip
+	\large 
+	\textbf{Report generated on:} `r Sys.time()`\\
+	\textbf{Produced by DFO Science - Maritimes Region} \\
+\end{center}
+
+\hrulefill
+
+#### Figure 1: Locations of large whale observations
+
+```{r map, echo=FALSE, fig.height=8, fig.width=8, warning=FALSE}
+
+# setup -------------------------------------------------------------------
+  
+# define score color palette
+pal = colorFactor(levels = spp_list, palette = c('red', 'blue', 'lightgray', 'green', 'darkslategrey'))
+
+# define function to determine trackline color
+getColor <- function(trk) {
+  if(trk$platform[1] == 'slocum') {
+    "blue"
+  } else if(trk$platform[1] == 'plane') {
+    "#8B6914"
+  } else if(trk$platform[1] == 'vessel'){
+    "black"
+  } else {
+    "darkgrey"
+  }
+}
+
+# combine all lat/lon to help determine plot limits
+inLat = c(obs$lat, trk$lat)
+inLon = c(obs$lon, trk$lon)
+
+# basemap -----------------------------------------------------------------
+
+# start basemap
+map <- leaflet(options = leafletOptions(zoomControl = FALSE, attributionControl = FALSE)) %>%
+  
+  # add ocean basemap
+  addProviderTiles(providers$Esri.OceanBasemap) %>%
+  
+  # add legend
+  addLegend(position = "topleft", 
+            title = 'Species',
+            opacity = 0.5,
+            pal = pal,
+            values = spp_list) %>%
+  
+  # add extra map features
+  addScaleBar(position = 'topright')
+
+# center on focal region
+if(length(inLon)!=0){
+ map <- fitBounds(map = map, 
+                 lng1 = min(inLon, na.rm = T), 
+                 lng2 = max(inLon, na.rm = T), 
+                 lat1 = min(inLat, na.rm = T), 
+                 lat2 = max(inLat, na.rm = T), 
+                 options = list(maxZoom=7)) 
+}
+
+# plot polygons -----------------------------------------------------------
+
+# add mpas
+map <- map %>%
+  addPolygons(data=mpa, fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
+              dashArray = c(5,5), options = pathOptions(clickable = F),
+              lng=~lon, lat=~lat, weight = 1, color = 'darkgreen', fillColor = 'darkgreen')
+
+# plot shipping lanes
+map <- map %>%
+  addPolylines(tss_lines$lon, tss_lines$lat,
+               weight = .5,
+               color = 'grey',
+               smoothFactor = 0,
+               options = pathOptions(clickable = F)) %>%
+  addPolygons(tss_polygons$lon, tss_polygons$lat,
+              weight = .5,
+              color = 'grey',
+              fillColor = 'grey',
+              smoothFactor = 0,
+              options = pathOptions(clickable = F))
+
+# add tracks --------------------------------------------------------------
+
+# set up track plotting
+trk.df <- split(trk, trk$id)
+
+# add lines
+names(trk.df) %>%
+  purrr::walk( function(df) {
+    map <<- map %>%
+      addPolylines(data=trk.df[[df]],opacity = 0.3,
+                   lng=~lon, lat=~lat, weight = 2,
+                   smoothFactor = 0, color = getColor(trk.df[[df]]))
+  })
+
+# add definite detections/sightings ---------------------------------------
+
+map <- map %>% addCircleMarkers(data = obs, ~lon, ~lat,
+                                radius = 3, fillOpacity = 0.5, stroke = T, col = 'black', weight = 0.5,
+                                fillColor = pal(obs$species))
+
+# show map
+if(length(inLon)!=0){
+  map
+} 
+```
+
+```{r map_text, echo=FALSE, results='asis'}
+
+# show map text
+if(length(inLon)!=0){
+  cat('For interactive map, go to: https://whalemap.ocean.dal.ca/WhaleMap/ \n')
+  cat('\\clearpage \n')
+} else {
+  cat('*No effort or observations were recorded during this period*')
+}
+
+```
+
+#### Table 1: Number of large whale observations
+
+```{r spp_table, echo=FALSE, results='asis'}
+
+# count numbers of all species sighted
+vis = obs[obs$score=='definite visual',]
+vis = obs[!is.na(obs$number),]
+
+if(nrow(vis)!=0){
+  vis = aggregate(number ~ species, data = vis, FUN = sum)
+} else {
+  vis = data.frame(species = levels(obs$species), number = rep(0, length(levels(obs$species))))
+}
+
+# count acoustic detections
+aco = as.data.frame(table(obs$species[obs$score=='definite acoustic']))
+
+# merge sightings and acoustics
+spp_table = merge(vis, aco, by.x = 'species', by.y = 'Var1', all.y = TRUE)
+
+# rename columns
+colnames(spp_table) = c('species', 'visual_counts', 'acoustic_detections')
+
+# replace zeros
+spp_table$visual_counts[is.na(spp_table$visual_counts)] = 0
+
+# sort table alphabetically
+spp_table=spp_table[order(as.character(spp_table$species), decreasing = FALSE),]
+
+# display table
+kable(spp_table, row.names = FALSE, align = 'c')  
+
+```
+
+*Visual counts only include sightings where numbers of whales were recorded, and may include duplicates*
+
+#### Table 2. Platforms with recorded survey effort
+
+```{r effort, echo=FALSE, results='asis'}
+
+# display table or message
+if(nrow(trk)==0){
+  cat('*No platforms recorded effort during this period*')
+} else {
+  platform_table = aggregate(platform ~ name, data = trk, FUN = unique)
+  kable(platform_table, row.names = FALSE, align = 'c')
+}
+
+```
+
+#### Table 3: North Atlantic right whale sightings
+
+```{r narw_sig, echo=FALSE, results='asis'}
+
+# select species
+sig = obs[obs$species == 'right' & obs$score == 'definite visual',]
+
+# format table
+sig = sig[,c('date','time', 'lat', 'lon', 'number', 'platform', 'name')]
+
+# sort by time
+sig = sig[order(sig$time),]
+
+# format timestamps
+sig$time = format(sig$time, '%H:%M:%S')
+
+# display table or message
+if(nrow(sig)==0){
+  cat('*No right whales were sighted*')
+} else {
+  kable(sig, row.names = FALSE, align = 'c')  
+}
+
+```
+
+#### Table 4: North Atlantic right whale acoustic detections
+
+```{r narw_det, echo=FALSE, results='asis'}
+
+# select species
+det = obs[obs$species == 'right' & obs$score == 'definite acoustic',]
+
+# format table
+det = det[,c('date','time', 'lat', 'lon', 'platform', 'name')]
+
+# sort by time
+det = det[order(det$time),]
+
+# format timestamps
+det$time = format(det$time, '%H:%M:%S')
+
+# display table or message
+if(nrow(det)==0){
+  cat('*No right whales were acoustically detected*')
+} else {
+  kable(det, row.names = FALSE, align = 'c')  
+}
+
+```

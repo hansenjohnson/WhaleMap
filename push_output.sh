@@ -5,8 +5,11 @@
 # cd ~/Projects/WhaleMap # local
 cd /srv/shiny-server/WhaleMap/ # server
 
-# Build output data
-Rscript functions/build_output_data.R
+# Write output data
+Rscript functions/write_output_data.R
 
-# copy output data with Google Drive
+# Write summary reports
+Rscript functions/write_summary_reports.R
+
+# copy output data back to Google Drive
 rclone copy "output/" whalemapdata:"WhaleMapData_Processed/"

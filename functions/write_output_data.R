@@ -1,8 +1,8 @@
-# build output data files
+## write_output_data ##
 
 # user input --------------------------------------------------------------
 
-outdir = 'output/'
+outdir = 'output/data/'
 
 # setup -------------------------------------------------------------------
 
