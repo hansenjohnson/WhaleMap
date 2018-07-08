@@ -11,6 +11,9 @@ weekly_report_day = 'Friday'
 ## rewrite all reports (will take a long time, maybe an hour or so)
 rewrite_reports = FALSE
 
+## remove .tex files
+remove_tex = FALSE
+
 # setup -------------------------------------------------------------------
 
 # define dates in various formats
@@ -105,8 +108,11 @@ if(rewrite_reports){
 
 # clean report directory --------------------------------------------------
 
-# list temporary tex files created during pdf rendering
-rm_files = list.files(path = report_dir, pattern = '*.tex$', recursive = TRUE, full.names = TRUE)
+if(remove_tex){
+  # list temporary tex files created during pdf rendering
+  rm_files = list.files(path = report_dir, pattern = '*.tex$', recursive = TRUE, full.names = TRUE)
+  
+  # delete temporary files
+  file.remove(rm_files)
+}
 
-# delete temporary files
-file.remove(rm_files)
