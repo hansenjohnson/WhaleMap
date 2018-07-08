@@ -15,6 +15,7 @@ issues/
 test/
 reports/
 release/
+output/
 tmp/
 static_map/
 
