@@ -12,7 +12,7 @@ weekly_report_day = 'Friday'
 rewrite_reports = FALSE
 
 ## remove .tex files
-remove_tex = FALSE
+remove_tex = TRUE
 
 # setup -------------------------------------------------------------------
 
