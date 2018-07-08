@@ -1,6 +1,7 @@
 ---
 output: 
     pdf_document
+always_allow_html: yes
 params:
   start: !r Sys.Date()-1
   stop: !r Sys.Date()-1
