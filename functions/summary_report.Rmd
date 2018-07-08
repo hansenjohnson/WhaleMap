@@ -83,7 +83,7 @@ if(t0 == t1){
 
 #### Figure 1: Locations of large whale observations
 
-```{r map, echo=FALSE, fig.height=8, fig.width=8, warning=FALSE}
+```{r map, echo=FALSE, fig.height=8, fig.width=8, warning=FALSE, fig.show='hold'}
 
 # setup -------------------------------------------------------------------
   
