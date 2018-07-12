@@ -42,6 +42,13 @@ for(i in seq_along(flist)){
     
     # wrangle time
     tmp$time = as.POSIXct(tmp$DateTime, format = '%Y-%m-%d %H:%M:%S', tz = 'UTC', usetz = T)
+    
+    # try a different format if previous did not work
+    if(is.na(tmp$time[1])){
+      tmp$time = as.POSIXct(tmp$DateTime, format = '%m/%d/%Y %H:%M', tz = 'UTC', usetz = T)
+    }
+    
+    # other time vars
     tmp$date = as.Date(tmp$time)
     tmp$yday = yday(tmp$time)
     tmp$year = year(tmp$time)
@@ -63,6 +70,9 @@ for(i in seq_along(flist)){
     
     # take important columns
     trk = tmp[,c('time','lat','lon', 'altitude','speed','date','yday', 'year',  'platform', 'name', 'id')]
+    
+    # re-order
+    trk = trk[order(trk$time, decreasing = TRUE),]
     
     # simplify
     trk = subsample_gps(gps = trk)
@@ -230,3 +240,4 @@ sightings = config_observations(sightings)
 
 # save
 saveRDS(sightings, paste0(output_dir, sighting_file))
+
