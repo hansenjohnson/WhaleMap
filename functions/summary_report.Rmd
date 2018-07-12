@@ -124,7 +124,14 @@ map <- leaflet(options = leafletOptions(zoomControl = FALSE, attributionControl 
             values = spp_list) %>%
   
   # add extra map features
-  addScaleBar(position = 'topright')
+  addScaleBar(position = 'topright') %>%
+  
+  # use NOAA graticules
+      addWMSTiles(
+        "https://gis.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer/",
+        layers = c("1-degree grid", "5-degree grid"),
+        options = WMSTileOptions(format = "image/png8", transparent = TRUE),
+        attribution = NULL)
 
 # center on focal region
 if(length(inLon)!=0){
