@@ -21,8 +21,8 @@ printf "\n*** Checking NOAA Google Drive ***\n\n"
 rclone sync drive:"2018/2018 NEFSC Survey Data/Flights/" "2018_noaa_twin_otter/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.mp4
 
 # Sync NEAq 2018 vessel data Dropbox
-printf "\n*** Checking NEAq Dropbox ***\n\n"
-rclone sync dropbox:"NEAq_CWI Effort_2018" "2018_neaq_nereid/" --backup-dir backups -v --exclude *.JPG --exclude *.mp4
+printf "\n*** Checking NEAq CWI Dropbox ***\n\n"
+rclone sync dropbox:"NEAq_CWI Effort_2018" "2018_neaq_cwi/" --backup-dir backups -v --exclude *.JPG --exclude *.mp4
 
 # Sync MICS 2018 vessel data Dropbox
 printf "\n*** Checking MICS Dropbox ***\n\n"

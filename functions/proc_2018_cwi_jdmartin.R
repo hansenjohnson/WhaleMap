@@ -1,4 +1,4 @@
-# process and save all 2018 neaq sightings and tracklines
+# process and save all 2018 cwi sightings and tracklines
 
 # user input --------------------------------------------------------------
 
@@ -18,7 +18,7 @@ source('functions/subsample_gps.R')
 spp_key = read.csv(paste0(data_dir, '/species_key.csv'))
 
 # list data files
-flist = list.files(data_dir, pattern = '*NEA-V.csv$', full.names = T)
+flist = list.files(data_dir, pattern = '*CWI-V.csv$', full.names = T)
 
 TRK = list()
 SIG = list()
@@ -35,7 +35,7 @@ for(i in seq_along(flist)){
   
   # add deployment metadata
   tmp$platform = 'vessel'
-  tmp$name = 'nereid'
+  tmp$name = 'jdmartin'
   tmp$id = paste(tmp$date, tmp$platform, tmp$name, sep = '_')
   
   # tracklines --------------------------------------------------------------
@@ -43,6 +43,11 @@ for(i in seq_along(flist)){
   # determine start/stop of effort segments
   i0 = which(tmp$LEGSTAGE...ENVIRONMENTALS==1)
   i1 = which(tmp$LEGSTAGE...ENVIRONMENTALS==5)
+  
+  # enter off-effort automatically
+  if(length(i1)==0){
+    i1 = nrow(tmp)
+  }
   
   # fill in leg stage info for each effort segment
   EFF = list()
@@ -118,7 +123,7 @@ tracks = do.call(rbind.data.frame, TRK)
 tracks = config_tracks(tracks)
 
 # save
-saveRDS(tracks, paste0(output_dir, '2018_neaq_nereid_tracks.rds'))
+saveRDS(tracks, paste0(output_dir, '2018_cwi_jdmartin_tracks.rds'))
 
 # prep sightings output ---------------------------------------------------
 
@@ -129,4 +134,4 @@ sightings = do.call(rbind.data.frame, SIG)
 sightings = config_observations(sightings)
 
 # save
-saveRDS(sightings, paste0(output_dir, '2018_neaq_nereid_sightings.rds'))
+saveRDS(sightings, paste0(output_dir, '2018_cwi_jdmartin_sightings.rds'))

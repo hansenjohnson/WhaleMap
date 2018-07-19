@@ -25,6 +25,7 @@ data/processed/tracks.rds : functions/proc_tracks.R \
 														data/interim/2018_tc_dash8_tracks.rds \
 														data/interim/2018_noaa_twin_otter_tracks.rds \
 														data/interim/2018_neaq_nereid_tracks.rds \
+														data/interim/2018_cwi_jdmartin_tracks.rds \
 														data/interim/dcs_archived_tracks.rds \
 														data/interim/dcs_live_tracks.rds
 	$(report_error)
@@ -110,7 +111,13 @@ data/interim/2018_noaa_twin_otter_tracks.rds : functions/proc_2018_noaa_twin_ott
 	$(remove_error)
 
 # 2018 NEAq nereid tracks
-data/interim/2018_neaq_nereid_tracks.rds : functions/proc_2018_neaq_nereid.R data/raw/2018_neaq_nereid/*
+data/interim/2018_neaq_nereid_tracks.rds : functions/proc_2018_neaq_nereid.R data/raw/2018_neaq_cwi/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2018 CWI jdmartin tracks
+data/interim/2018_cwi_jdmartin_tracks.rds : functions/proc_2018_cwi_jdmartin.R data/raw/2018_neaq_cwi/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
@@ -145,6 +152,7 @@ data/processed/observations.rds : functions/proc_observations.R \
 																	data/interim/2018_dfo_cessna_sightings.rds \
 																	data/interim/2018_noaa_twin_otter_sightings.rds \
 																	data/interim/2018_neaq_nereid_sightings.rds \
+																	data/interim/2018_cwi_jdmartin_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
 
@@ -221,7 +229,13 @@ data/interim/2018_noaa_twin_otter_sightings.rds : functions/proc_2018_noaa_twin_
 	$(remove_error)
 
 # 2018 NEAq nereid sightings
-data/interim/2018_neaq_nereid_sightings.rds : functions/proc_2018_neaq_nereid.R data/raw/2018_neaq_nereid/*
+data/interim/2018_neaq_nereid_sightings.rds : functions/proc_2018_neaq_nereid.R data/raw/2018_neaq_cwi/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2018 CWI jdmartin sightings
+data/interim/2018_cwi_jdmartin_sightings.rds : functions/proc_2018_cwi_jdmartin.R data/raw/2018_neaq_cwi/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
