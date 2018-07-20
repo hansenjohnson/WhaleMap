@@ -50,11 +50,11 @@ if(nrow(sig) == 0){
   
   # convert lat lons
   sig$lat = round(as.numeric(measurements::conv_unit(sig$lat, from = 'deg_min_sec', to = 'dec_deg')), 5)
-  sig$lon = round(as.numeric(measurements::conv_unit(sig$lon, from = 'deg_min_sec', to = 'dec_deg')), 5)
+  sig$lon = abs(round(as.numeric(measurements::conv_unit(sig$lon, from = 'deg_min_sec', to = 'dec_deg')), 5))*-1
   
   # add metadata
   sig$name = sig$platform
-  sig$platform = 'mics'
+  sig$platform = 'vessel'
   sig$id = paste0(sig$date, '_', sig$platform, '_', sig$name)
   
   # select columns of interest
