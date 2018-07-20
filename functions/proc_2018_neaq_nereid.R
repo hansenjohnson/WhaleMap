@@ -18,7 +18,7 @@ source('functions/subsample_gps.R')
 spp_key = read.csv(paste0(data_dir, '/species_key.csv'))
 
 # list data files
-flist = list.files(data_dir, pattern = '*NEA-V.csv$', full.names = T)
+flist = list.files(data_dir, pattern = '*NEA-..csv$', full.names = T)
 
 TRK = list()
 SIG = list()
