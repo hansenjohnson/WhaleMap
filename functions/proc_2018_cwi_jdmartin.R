@@ -49,6 +49,11 @@ for(i in seq_along(flist)){
     i1 = nrow(tmp)
   }
   
+  # enter off-effort automatically
+  if(length(i0)!=length(i1)){
+    i1 = c(i1,nrow(tmp))
+  }
+  
   # fill in leg stage info for each effort segment
   EFF = list()
   for(j in 1:length(i0)){
