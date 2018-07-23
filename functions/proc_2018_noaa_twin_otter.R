@@ -85,9 +85,6 @@ for(i in seq_along(flist)){
     # take only sightings
     sig = droplevels(tmp[which(as.character(tmp$SPCODE)!=""),])
     
-    # remove final estimates
-    sig = sig[!grepl(pattern = 'fin est', x = sig$SIGHTING_COMMENTS, ignore.case = TRUE),]
-    
     # get sighting number
     sig$number = sig$GROUP_SIZE
     
@@ -106,6 +103,19 @@ for(i in seq_along(flist)){
     
     # drop unknown codes
     sig = sig[which(!is.na(sig$species)),]
+    
+    # right whale numbers
+    eg = sig[sig$species=='right',]
+    eg = eg[(!grepl('dup', eg$SIGHTING_COMMENTS) & 
+                (grepl('ap',eg$SIGHTING_COMMENTS) | 
+                   grepl('fin est no break', eg$SIGHTING_COMMENTS) | 
+                   grepl('No right whales', eg$DateTime))),]
+    
+    # other whales
+    noeg = sig[sig$species!='right',]
+    
+    # recombine all species
+    sig = rbind.data.frame(eg,noeg)
     
     # keep important columns
     sig = sig[,c('time','lat','lon','date', 'yday','species','score','number','year','platform','name','id')]
