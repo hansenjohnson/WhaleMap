@@ -256,21 +256,12 @@ data/interim/dcs_live_detections.rds : functions/proc_live_dcs.R data/raw/dcs/li
 .PHONY : sono
 sono : data/processed/sonobuoys.rds
 
-# Combine all sonobuoys
+# Process sonobuoys
 data/processed/sonobuoys.rds : 	functions/proc_sonobuoys.R \
-																data/interim/2017_sonobuoys.rds
+																data/raw/2018_noaa_twin_otter/sonobuoy_data/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
-
-# 2017 sonobuoys
-data/interim/2017_sonobuoys.rds : functions/proc_2017_sonobuoys.R data/raw/2017_sonobuoys/*
-	$(report_error)
-	Rscript $<
-	$(remove_error)
-
-# 2018 sonobuoys
-# FILL IN HERE #
 
 ## DCS latest positions ##
 .PHONY : latest

@@ -1,25 +1,49 @@
-## proc_sonobuoys ##
-# combine all sonobuoys
+# process sonobuoy drop times and locations
 
-# list sonobuoy files
-sono_list = list.files('data/interim', pattern = 'sonobuoys', full.names = T)
+# user input --------------------------------------------------------------
 
-# read in files
-for(i in seq_along(sono_list)){
-  
-  # get data
-  isono = readRDS(sono_list[[i]])
-  
-  # combine
-  if(i==1){
-    sono = isono
-  } else {
-    sono = rbind(sono, isono) # add to list
-  }
-}
+ifile = 'data/raw/2018_noaa_twin_otter/sonobuoy_data/NERW_Sonobuoy_Log_MASTER.xlsx.csv'
 
-# remove duplicates
-sono = sono[which(!duplicated(sono)),]
+output_dir = 'data/processed/'
+
+# process -----------------------------------------------------------------
+
+# libraries
+suppressPackageStartupMessages(library(lubridate))
+
+# read in data
+tmp = read.csv(ifile)
+
+# remove first line (example input)
+tmp = tmp[-1,]
+
+# fix date and time
+tmp$date = as.Date(tmp$Date, format = '%d-%b-%y')
+tmp$time = as.POSIXct(paste0(tmp$date, ' ', tmp$Time..ET.), format = '%Y-%m-%d %H:%M:%S', tz = 'US/Eastern')
+tmp$year = year(tmp$date)
+tmp$yday = yday(tmp$date)
+
+# extract positions
+tmp$lat = suppressWarnings(as.numeric(as.character(tmp$Lat..Deg.Min.)))
+tmp$lon = suppressWarnings(as.numeric(as.character(tmp$Long..Deg.Min.)))
+
+# sonobuoy serial number
+tmp$sn = as.factor(tmp$Sonobuoy.Lot)
+
+# station id
+tmp$stn_id = as.factor(tmp$Station)
+
+# comments
+tmp$comments = as.character(tmp$Comments)
+
+# select only actual positions of successful deployments
+tmp = tmp[grepl(x = tmp$comments, pattern = 'ap', ignore.case = TRUE) & tmp$Deploy.Success. == 'yes',]
+
+# take unique position from each station
+tmp = tmp[which(!duplicated(tmp$stn_id)),]
+
+# select only helpful columns
+tmp = tmp[,c('time','lat','lon','date','year','yday','sn','stn_id')]
 
 # save
-saveRDS(sono, 'data/processed/sonobuoys.rds')
+saveRDS(tmp, file = paste0(output_dir, '/sonobuoys.rds'))
