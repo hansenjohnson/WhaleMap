@@ -18,6 +18,7 @@ release/
 output/
 tmp/
 static_map/
+protocols/
 
 # sensitive
 password.rda
