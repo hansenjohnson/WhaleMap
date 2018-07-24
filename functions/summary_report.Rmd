@@ -77,7 +77,7 @@ if(t0 == t1){
 	\bigskip
 	\large 
 	\textbf{Report generated on:} `r Sys.time()`\\
-	\textbf{Produced by DFO Science - Maritimes Region} \\
+	\textbf{Produced by Dalhousie MEOPAR-WHaLE project and DFO Science - Maritimes Region} \\
 \end{center}
 
 \hrulefill
