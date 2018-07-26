@@ -57,6 +57,9 @@ dcsIcons = iconList(
   buoy = makeIcon("icons/buoy.png", iconWidth = 50, iconHeight = 40)
 )
 
+# make sono icon
+sonoIcon = makeIcon("icons/sono.png", iconWidth = 10, iconHeight = 40)
+
 # read in password file
 load('password.rda')
 
@@ -620,7 +623,7 @@ function(input, output, session){
     if(input$sono){
       
       # add icons for latest position of live dcs platforms
-      proxy %>% addMarkers(data = SONO(), ~lon, ~lat,group='sono',
+      proxy %>% addMarkers(data = SONO(), ~lon, ~lat, group='sono', icon = sonoIcon,
                            popup = ~paste(sep = "<br/>",
                                           strong('Sonobuoy position'),
                                           paste0('Date: ', as.character(date)),
