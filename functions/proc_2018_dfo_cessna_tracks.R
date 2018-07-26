@@ -39,7 +39,7 @@ TRK = list()
 # read files
 for(i in seq_along(flist)){
   
-  if(file.size(flist[i])<50){
+  if(file.size(flist[i])<51200){
     next
   }
   
