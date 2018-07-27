@@ -5,13 +5,16 @@
 sfile=data/processed/status.txt # status file
 
 # get path to file
-path=$1
+fpath=$1
 
 # isolate file basename
-fname=${path##*/}
+fname=${fpath##*/}
+
+# determine date
+DATE=`date '+%Y-%m-%d %H:%M:%S'`
 
 # add filename to file (if doesn't exist already)
 grep -q -F "$fname" $sfile || echo $fname >> $sfile
 
 # add error message
-sed -i "s/.*$fname.*/$fname, error/" $sfile
+sed -i "s/.*$fname.*/$fname, ERROR ($DATE)/" $sfile

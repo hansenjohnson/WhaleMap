@@ -5,10 +5,10 @@
 sfile=data/processed/status.txt # status file
 
 # get path to file
-path=$1
+fpath=$1
 
 # isolate file basename
-fname=${path##*/}
+fname=${fpath##*/}
 
 # determine date
 DATE=`date '+%Y-%m-%d %H:%M:%S'`
