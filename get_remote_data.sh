@@ -18,7 +18,10 @@ rclone sync whalemapdata:"WhaleMapData_Master/" "2018_whalemapdata/" --drive-for
 
 # Sync NOAA 2018 aerial data Google drive
 printf "\n*** Checking NOAA Google Drive ***\n\n"
-rclone sync drive:"2018/2018 NEFSC Survey Data/Flights/" "2018_noaa_twin_otter/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.mp4
+printf "Flight data \n\n"
+rclone sync drive:"2018/2018 NEFSC Survey Data/Flights/" "2018_noaa_twin_otter/" --drive-skip-gdocs --backup-dir backups -v --exclude *.JPG --exclude *.mp4
+printf "Sonobuoy data \n\n"
+rclone sync drive:"2018/2018 Sonobuoy recordings/sonobuoy_metadata/" "noaa_sonobuoys/" --drive-formats csv --backup-dir backups -v --exclude *.wav --exclude *.txt
 
 # Sync NEAq 2018 vessel data Dropbox
 printf "\n*** Checking NEAq CWI Dropbox ***\n\n"

@@ -258,7 +258,7 @@ sono : data/processed/sonobuoys.rds
 
 # Process sonobuoys
 data/processed/sonobuoys.rds : 	functions/proc_sonobuoys.R \
-																data/raw/2018_noaa_twin_otter/sonobuoy_data/*
+																data/raw/noaa_sonobuoys/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)

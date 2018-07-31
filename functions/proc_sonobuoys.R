@@ -2,7 +2,7 @@
 
 # user input --------------------------------------------------------------
 
-ifile = 'data/raw/2018_noaa_twin_otter/sonobuoy_data/NERW_Sonobuoy_Log_MASTER.xlsx.csv'
+ifile = 'data/raw/noaa_sonobuoys/NERW_Sonobuoy_Log_MASTER.xlsx.csv'
 
 output_dir = 'data/processed/'
 
