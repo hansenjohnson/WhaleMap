@@ -30,7 +30,7 @@ source('functions/on_server.R')
 plot_tracks = !on_server()
 
 # list files to process
-flist = list.files(data_dir, pattern = '(\\d{8})_Dash8_tracklog.*.csv$', full.names = T, recursive = T)
+flist = list.files(data_dir, pattern = '^(\\d{8})_Dash8_tracklog.*.csv$', full.names = T, recursive = T)
 
 # list to hold loop output
 TRK = list()
@@ -84,6 +84,38 @@ for(i in seq_along(flist)){
   if(is.null(TRK[[i]])){stop('Track in ', flist[i], ' not processed correctly!')}
   
 }
+
+
+# add extra kml file(s) ---------------------------------------------------
+
+# # list files to process
+# flist2 = list.files(data_dir, pattern = 'FlightTrackPositions.*.kml$', full.names = T, recursive = T)
+# 
+# for(j in seq_along(flist2)){
+#   
+#   # library
+#   library(xml2)
+#   
+#   # read in xml
+#   x = read_xml(flist2[j])
+#   
+#   # explore contents
+#   xml_name(x)
+#   xml_children(x)
+#   xml_attrs(x)
+#   
+#   # find start time, which is in the first 'EVENT' node
+#   t0 = xml_find_first(x, "time")
+#   
+#   # extract the timestamp, saved in the attribute 'TIME'
+#   t0 = xml_attr(t0, "TIME")
+#   
+#   # read in data
+#   tmp = getKMLcoordinates(flist2[j], ignoreAltitude = TRUE)
+#   tmp = do.call(rbind.data.frame, tmp)
+#   
+#   
+# }
 
 # combine and save --------------------------------------------------------
 
