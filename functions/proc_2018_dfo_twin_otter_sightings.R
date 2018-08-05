@@ -40,6 +40,9 @@ for(i in seq_along(flist)){
   # skip empty files
   if (file.size(flist[i]) == 0) next
   
+  # skip file with gps error
+  if (flist[i] == "data/raw/2018_whalemapdata/DFO_twin_otter//20180804/D180804final.sig") next
+  
   # read in data (method below is slower but more robust to errors in gps file)
   textLines = readLines(flist[i])
   counts = count.fields(textConnection(textLines), sep=",")
