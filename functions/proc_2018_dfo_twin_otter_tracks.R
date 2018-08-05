@@ -1,6 +1,6 @@
 ## proc_2018_dfo_twin_otter_tracks ##
 # Process gps data from DFO Twin Otter survey plane
-# Also run proc_2018-04-03_dfo_transit_tracks
+# Also run proc_2018-04-03_dfo_transit_tracks, and proc_2018-08-04_dfo_twin_otter_error.R
 
 # user input --------------------------------------------------------------
 
@@ -15,6 +15,9 @@ output_dir = 'data/interim/'
 
 # process one-off transit mission
 source('functions/proc_2018-04-03_dfo_transit_tracks.R')
+
+# process mission with gps error
+source('functions/proc_2018-08-04_dfo_twin_otter_error.R')
 
 # setup -------------------------------------------------------------------
 

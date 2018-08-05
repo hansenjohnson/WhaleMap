@@ -51,9 +51,6 @@ for(i in seq_along(flist)){
   # assign column names
   colnames(tmp) = c('transect', 'unk1', 'unk2', 'time', 'observer', 'declination', 'species', 'number', 'unk4', 'bearing', 'unk5', 'unk6', 'comments', 'side', 'lat', 'lon', 'audio', 'unk7', 'photo', 'unk8', 'unk9')
   
-  # select important columns
-  tmp = tmp[,c('time', 'lat', 'lon', 'species', 'number')]
-  
   # remove columns without timestamp
   tmp = tmp[which(!is.na(tmp$time)),]
   
@@ -80,6 +77,12 @@ for(i in seq_along(flist)){
   tmp$species[tmp$species == 'BA'] = 'minke'
   tmp$species[tmp$species == 'BM'] = 'blue'
   tmp$species[tmp$species == 'UW'|tmp$species == 'LGWH'] = 'unknown whale'
+  
+  # remove duplicate sightings
+  tmp = tmp[!grepl('resight', tolower(as.character(tmp$comments))),]
+  
+  # select important columns
+  tmp = tmp[,c('time', 'lat', 'lon', 'species', 'number')]
   
   # add metadata
   tmp$date = as.Date(tmp$time)

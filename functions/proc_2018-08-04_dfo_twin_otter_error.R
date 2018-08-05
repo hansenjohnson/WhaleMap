@@ -88,9 +88,6 @@ sig = read.table(text=textLines[counts == 21 & !is.na(counts)], header=FALSE, se
 # assign column names
 colnames(sig) = c('transect', 'unk1', 'unk2', 'time', 'observer', 'declination', 'species', 'number', 'unk4', 'bearing', 'unk5', 'unk6', 'comments', 'side', 'lat', 'lon', 'audio', 'unk7', 'photo', 'unk8', 'unk9')
 
-# select important columns
-sig = sig[,c('time', 'lat', 'lon', 'species', 'number')]
-
 # remove columns without timestamp
 sig = sig[which(!is.na(sig$time)),]
 
@@ -131,6 +128,12 @@ for(i in 1:nrow(sig)){
   sig$lat[i] = trk$lat[ind]
   sig$lon[i] = trk$lon[ind]
 }
+
+# remove duplicate sightings
+sig = sig[!grepl('resight', tolower(as.character(sig$comments))),]
+
+# select important columns
+sig = sig[,c('time', 'lat', 'lon', 'species', 'number')]
 
 # add sightings metadata
 sig$date = as.Date(sig$time)
