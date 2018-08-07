@@ -46,6 +46,12 @@ TRK = list()
 # read files
 for(i in seq_along(flist)){
   
+  # skip empty files
+  if (file.size(flist[i]) == 0){
+    message('Skipping empty file ', flist[i])
+    next
+  }
+  
   # read in data (method below is slower but more robust to errors in gps file)
   textLines = readLines(flist[i])
   counts = count.fields(textConnection(textLines), sep=",")
@@ -95,7 +101,7 @@ for(i in seq_along(flist)){
 # combine and save --------------------------------------------------------
 
 # catch errors
-if(length(TRK)!=length(flist)){stop('Not all tracks were processed!')}
+# if(length(TRK)!=length(flist)){stop('Not all tracks were processed!')}
 
 # combine all flights
 TRACKS = do.call(rbind, TRK)
