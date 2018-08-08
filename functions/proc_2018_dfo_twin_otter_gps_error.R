@@ -154,8 +154,8 @@ for(i in seq_along(fdirs)){
     }
     
     # pull position from trk file
-    sig$lat[i] = trk$lat[ind]
-    sig$lon[i] = trk$lon[ind]
+    sig$lat[i] = as.numeric(trk$lat[ind])
+    sig$lon[i] = as.numeric(trk$lon[ind])
   }
   
   # remove duplicate sightings
@@ -182,8 +182,10 @@ for(i in seq_along(fdirs)){
   SIG[[i]] = config_observations(sig)
   
   # # verify
-  # plot(tracks$lon, tracks$lat, type = 'l', xlab = '', ylab = '')
-  # points(sig$lon[sig$species=='right'], sig$lat[sig$species=='right'], pch = 16, col = 'red')
+  # plot(tracks$lon, tracks$lat, xlab = '', ylab = '', type = 'l')
+  # points(sig$lon, sig$lat, pch = 16, col = 'blue')
+  # points(sig$lon[sig$species=='right'], sig$lat[sig$species=='right'], 
+  #       pch = 16, col = 'red')
 }
 
 # flatten data

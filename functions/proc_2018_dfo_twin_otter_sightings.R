@@ -39,12 +39,9 @@ for(i in seq_along(flist)){
   
   # skip empty files
   if (file.size(flist[i]) == 0){
-    message('Skipping empty file ', flist[i])
+    message('Skipping empty file: ', flist[i])
     next
   }
-  
-  # skip file with gps error
-  if (flist[i] == "data/raw/2018_whalemapdata/DFO_twin_otter//20180804/D180804final.sig") next
   
   # read in data (method below is slower but more robust to errors in gps file)
   textLines = readLines(flist[i])
@@ -56,6 +53,12 @@ for(i in seq_along(flist)){
   
   # assign column names
   colnames(tmp) = c('transect', 'unk1', 'unk2', 'time', 'observer', 'declination', 'species', 'number', 'unk4', 'bearing', 'unk5', 'unk6', 'comments', 'side', 'lat', 'lon', 'audio', 'unk7', 'photo', 'unk8', 'unk9')
+  
+  # skip empty files
+  if (tmp$lat[1] == 0){
+    message('Skipping file for GPS error: ', flist[i])
+    next
+  }
   
   # remove columns without timestamp
   tmp = tmp[which(!is.na(tmp$time)),]
