@@ -107,9 +107,10 @@ for(i in seq_along(fdirs)){
   # read in files
   siglist = list()
   for(k in seq_along(sigs)){
-    textLines = readLines(sigs[k])
-    counts = count.fields(textConnection(textLines), sep=",")
-    siglist[[k]] = read.table(text=textLines[counts == 21 & !is.na(counts)], header=FALSE, sep=",")
+    # textLines = readLines(sigs[k])
+    # counts = count.fields(textConnection(textLines), sep=",")
+    # siglist[[k]] = read.table(text=textLines[counts == 21 & !is.na(counts)], header=FALSE, sep=",")
+    siglist[[k]] = read.csv(sigs[k])
   }
   # flatten and combine
   sig = do.call(rbind, siglist)
