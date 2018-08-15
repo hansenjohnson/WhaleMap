@@ -35,7 +35,7 @@ plot_tracks = !on_server()
 # process -----------------------------------------------------------------
 
 # find all gps files
-flist = list.files(data_dir, pattern = '.gps', full.names = T, recursive = T)
+flist = list.files(data_dir, pattern = '.gps$', full.names = T, recursive = T)
 
 # find flights with gps errors
 flts = flist[which(file.size(flist) == 0)]
@@ -102,7 +102,7 @@ for(i in seq_along(fdirs)){
   # process sightings -------------------------------------------------------
   
   # list sightings files
-  sigs = list.files(fdirs[i], pattern = '.sig', full.names = T, recursive = T)
+  sigs = list.files(fdirs[i], pattern = '.sig$', full.names = T, recursive = T)
   
   # read in files
   siglist = list()
