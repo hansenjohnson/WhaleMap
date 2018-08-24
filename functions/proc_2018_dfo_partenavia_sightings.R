@@ -47,6 +47,11 @@ for(i in seq_along(flist)){
     tmp$time = NA
   }
   
+  # skip improperly formatted file
+  if(is.null(tmp$Date)){
+    next
+  }
+  
   # add data
   tmp$date = as.Date(tmp$Date, format = '%m-%d-%Y')
   tmp$lat = as.numeric(tmp$Lat)
