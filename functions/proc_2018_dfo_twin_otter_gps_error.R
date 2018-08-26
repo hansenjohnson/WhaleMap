@@ -38,7 +38,7 @@ plot_tracks = !on_server()
 flist = list.files(data_dir, pattern = '.gps$', full.names = T, recursive = T)
 
 # find flights with gps errors
-flts = flist[which(file.size(flist) == 0)]
+flts = flist[which(file.size(flist) == 0 | grepl(pattern = 'incomplete', x = flist))]
 
 # isolate flight directories
 fdirs = dirname(flts)

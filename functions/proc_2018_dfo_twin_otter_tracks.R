@@ -36,7 +36,7 @@ source('functions/on_server.R')
 plot_tracks = !on_server()
 
 # list files to process
-flist = list.files(data_dir, pattern = '.gps', full.names = T, recursive = T)
+flist = list.files(data_dir, pattern = '.gps$', full.names = T, recursive = T)
 
 # list to hold loop output
 TRK = list()
@@ -47,8 +47,8 @@ TRK = list()
 for(i in seq_along(flist)){
   
   # skip empty files
-  if (file.size(flist[i]) == 0){
-    message('Skipping empty file ', flist[i])
+  if (file.size(flist[i]) == 0 | grepl(pattern = 'incomplete', x = flist)){
+    message('Skipping empty or incomplete file ', flist[i])
     next
   }
   
