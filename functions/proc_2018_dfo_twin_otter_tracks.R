@@ -47,7 +47,7 @@ TRK = list()
 for(i in seq_along(flist)){
   
   # skip empty files
-  if (file.size(flist[i]) == 0 | grepl(pattern = 'incomplete', x = flist)){
+  if (file.size(flist[i]) == 0 | grepl(pattern = 'incomplete', x = flist[i])){
     message('Skipping empty or incomplete file ', flist[i])
     next
   }
