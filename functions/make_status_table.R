@@ -30,6 +30,7 @@ make_status_table = function(sfile='status.txt'){
                   'NEAq Nereid Sightings/Tracks',
                   'CWI Jean-Denis Martin Sightings/Tracks',
                   'MICS Right Whale Sightings',
+                  'MICS Vessel Tracks',
                   'Dal/WHOI Acoustic Detections',
                   'Opportunistic Sightings')
 
@@ -48,6 +49,7 @@ make_status_table = function(sfile='status.txt'){
              gs('2018_neaq_nereid'),
              gs('2018_cwi_jdmartin'),
              gs('2018_mics_sightings'),
+             gs('2018_mics_tracks'),
              gs('live_dcs'),
              gs('2018_opportunistic'))
 
