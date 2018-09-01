@@ -52,6 +52,12 @@ for(i in seq_along(flist)){
     next
   }
   
+  # skip error flights
+  if (dirname(flist[i]) == 'data/raw/2018_whalemapdata/DFO_twin_otter//20180901'){
+    message('Skipping empty or incomplete file ', flist[i])
+    next
+  }
+  
   # read in data (method below is slower but more robust to errors in gps file)
   textLines = readLines(flist[i])
   counts = count.fields(textConnection(textLines), sep=",")
