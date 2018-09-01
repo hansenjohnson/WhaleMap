@@ -26,7 +26,7 @@ data/processed/tracks.rds : functions/proc_tracks.R \
 														data/interim/2018_noaa_twin_otter_tracks.rds \
 														data/interim/2018_neaq_nereid_tracks.rds \
 														data/interim/2018_cwi_jdmartin_tracks.rds \
-														data/interim/2018_mics_tracks.rds \
+														data/interim/2018_mics_vessel_tracks.rds \
 														data/interim/dcs_archived_tracks.rds \
 														data/interim/dcs_live_tracks.rds
 	$(report_error)
@@ -124,7 +124,7 @@ data/interim/2018_cwi_jdmartin_tracks.rds : functions/proc_2018_cwi_jdmartin.R d
 	$(remove_error)
 
 # 2018 MICS tracks
-data/interim/2018_mics_tracks.rds : functions/proc_2018_mics_tracks.R data/raw/2018_mics_sightings/Effort/*
+data/interim/2018_mics_vessel_tracks.rds : functions/proc_2018_mics_tracks.R data/raw/2018_mics_sightings/Effort/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
