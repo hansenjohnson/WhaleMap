@@ -58,10 +58,10 @@ dcsIcons = iconList(
 )
 
 # make sono icon
-sonoIcon = makeIcon("icons/sono.png", iconWidth = 10, iconHeight = 40)
+sonoIcon = makeIcon("icons/sono.png", iconWidth = 10, iconHeight = 45)
 
 # read in password file
-load('password.rda')
+load('data/processed/password.rda')
 
 # server ------------------------------------------------------------------
 
@@ -166,10 +166,15 @@ function(input, output, session){
     if(input$password == password){
       tmp = tracks[tracks$year %in% years(),]
       tmp[tmp$platform %in% platform(),]
-    } else {
+    } else if(input$password == jasco_password){
       tmp = tracks[tracks$year %in% years(),]
       tmp = tmp[tmp$platform %in% platform(),]
       tmp[tmp$name!='cp_king_air',]
+    } else {
+      tmp = tracks[tracks$year %in% years(),]
+      tmp = tmp[tmp$platform %in% platform(),]
+      tmp = tmp[tmp$name!='cp_king_air',]
+      tmp[tmp$name!='jasco_test',]
     }
   })
   
@@ -206,7 +211,12 @@ function(input, output, session){
   
   # choose species
   spp <- eventReactive(input$go|input$go == 0, {
-    droplevels(OBS()[OBS()$species %in% species(),])
+    if(input$password == password|input$password == jasco_password){
+      droplevels(OBS()[OBS()$species %in% species(),])
+    } else {
+      tmp = droplevels(OBS()[OBS()$species %in% species(),])
+      tmp[tmp$name!='jasco_test',]
+    }
   })
   
   # only possible
@@ -238,12 +248,14 @@ function(input, output, session){
   
   observeEvent(input$go,{
     if(input$password == password){
-      showNotification('Password was correct! Showing unverified data...',
+      showNotification('Password was correct! Showing unverified and/or test data...',
                        duration = 7, closeButton = T, type = 'message')
 
+    } else if(input$password == jasco_password){
+      showNotification('Password was correct! Showing JASCO test data...',
+                       duration = 7, closeButton = T, type = 'message')
     } else {
-      # showNotification('Password not provided or incorrect. Hiding unverified data...',
-      #                  duration = 7, closeButton = T, type = 'warning')
+      
     }
   })
   

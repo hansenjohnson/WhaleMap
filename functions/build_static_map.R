@@ -167,9 +167,11 @@ build_static_map = function(english=TRUE){
   # tracklines
   Tracks = tracks[tracks$date >= t0,]; rm(tracks)
   Tracks = Tracks[Tracks$name!='cp_king_air',] # do not plot C&P data
+  Tracks = Tracks[Tracks$name!='jasco_test',] # do not plot jasco test data
   
   # observations
   Obs = obs[obs$date >= t0,]; rm(obs)
+  Obs = Obs[Obs$name!='jasco_test',] # do not plot jasco test data
   
   # select species
   spp = Obs[Obs$species == 'right',]
