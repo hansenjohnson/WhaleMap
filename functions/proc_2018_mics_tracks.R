@@ -1,4 +1,4 @@
-## proc_2018_mics_sightings ##
+## proc_2018_mics_tracks ##
 # Process track data from MICS survey vessels
 
 # user input --------------------------------------------------------------
