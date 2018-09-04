@@ -59,8 +59,8 @@ obs = obs[obs$species %in% spp_list,]
 obs = obs[obs$score %in% c('definite visual','definite acoustic'),]
 
 # remove JASCO test data
-obs = obs[obs$name!='jasco_test']
-trk = trk[trk$name!='jasco_test']
+obs = obs[obs$name!='jasco_test',]
+trk = trk[trk$name!='jasco_test',]
 
 # remove NAs
 obs = obs[!is.na(obs$lat),]
