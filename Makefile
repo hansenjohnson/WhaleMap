@@ -27,6 +27,7 @@ data/processed/tracks.rds : functions/proc_tracks.R \
 														data/interim/2018_neaq_nereid_tracks.rds \
 														data/interim/2018_cwi_jdmartin_tracks.rds \
 														data/interim/2018_mics_vessel_tracks.rds \
+														data/interim/2018_dfo_cetus_tracks.rds \
 														data/interim/2018_jasco_tracks.rds \
 														data/interim/dcs_archived_tracks.rds \
 														data/interim/dcs_live_tracks.rds
@@ -130,6 +131,12 @@ data/interim/2018_mics_vessel_tracks.rds : functions/proc_2018_mics_tracks.R dat
 	Rscript $<
 	$(remove_error)
 
+# 2018 dfo tag vessel tracks
+data/interim/2018_dfo_cetus_tracks.rds : functions/proc_2018_dfo_cetus_tracks.R data/raw/2018_whalemapdata/DFO_vessel_cetus/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
 # JASCO glider tracks
 data/interim/2018_jasco_tracks.rds : functions/proc_2018_jasco_tracks.R data/raw/jasco/*
 	$(report_error)
@@ -167,6 +174,7 @@ data/processed/observations.rds : functions/proc_observations.R \
 																	data/interim/2018_noaa_twin_otter_sightings.rds \
 																	data/interim/2018_neaq_nereid_sightings.rds \
 																	data/interim/2018_cwi_jdmartin_sightings.rds \
+																	data/interim/2018_dfo_cetus_sightings.rds \
 																	data/interim/2018_jasco_detections.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
@@ -251,6 +259,12 @@ data/interim/2018_neaq_nereid_sightings.rds : functions/proc_2018_neaq_nereid.R 
 
 # 2018 CWI jdmartin sightings
 data/interim/2018_cwi_jdmartin_sightings.rds : functions/proc_2018_cwi_jdmartin.R data/raw/2018_neaq_cwi/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2018 dfo tag vessel sightings
+data/interim/2018_dfo_cetus_sightings.rds : functions/proc_2018_dfo_cetus_sightings.R data/raw/2018_whalemapdata/DFO_vessel_cetus/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
