@@ -58,11 +58,11 @@ for(i in seq_along(fdirs)){
     next
   }
   
-  # skip error flights
-  if (fdirs[i] == 'data/raw/2018_whalemapdata/DFO_twin_otter//20180901'){
-    message('Skipping empty or incomplete file ', fdirs[i])
-    next
-  }
+  # # skip error flights
+  # if (fdirs[i] == 'data/raw/2018_whalemapdata/DFO_twin_otter//20180901'){
+  #   message('Skipping empty or incomplete file ', fdirs[i])
+  #   next
+  # }
   
   # read and combine gps files
   trklist = list()
