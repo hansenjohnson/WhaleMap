@@ -37,6 +37,8 @@ SIG = list()
 # read files
 for(i in seq_along(flist)){
   
+  print(i)
+  
   # skip empty files
   if (file.size(flist[i]) == 0){
     message('Skipping empty file: ', flist[i])
@@ -49,16 +51,28 @@ for(i in seq_along(flist)){
   #   next
   # }
   
-  # read in data (method below is slower but more robust to errors in gps file)
-  textLines = readLines(flist[i])
-  counts = count.fields(textConnection(textLines), sep=",")
-  tmp = read.table(text=textLines[counts == 21 & !is.na(counts)], header=FALSE, sep=",")
+  # accomodate switch in VOR software (different columns used after 2018-09-05)
+  if (as.Date(basename(dirname(flist[i])), format = '%Y%m%d') <= as.Date('2018-09-05')){
   
-  # # read in data
-  # tmp = read.table(flist[i], sep = ',')
+    # read in data (method below is slower but more robust to errors in gps file)
+    textLines = readLines(flist[i])
+    counts = count.fields(textConnection(textLines), sep=",")
+    tmp = read.table(text=textLines[counts == 21 & !is.na(counts)], header=FALSE, sep=",")
+    
+    # assign column names
+    colnames(tmp) = c('transect', 'unk1', 'unk2', 'time', 'observer', 'declination', 'species', 'number', 'unk4', 'bearing', 'unk5', 'unk6', 'comments', 'side', 'lat', 'lon', 'audio', 'unk7', 'photo', 'unk8', 'unk9')
   
-  # assign column names
-  colnames(tmp) = c('transect', 'unk1', 'unk2', 'time', 'observer', 'declination', 'species', 'number', 'unk4', 'bearing', 'unk5', 'unk6', 'comments', 'side', 'lat', 'lon', 'audio', 'unk7', 'photo', 'unk8', 'unk9')
+  } else {
+    
+    # read in data (method below is slower but more robust to errors in gps file)
+    textLines = readLines(flist[i])
+    counts = count.fields(textConnection(textLines), sep=",")
+    tmp = read.table(text=textLines[counts == 22 & !is.na(counts)], header=FALSE, sep=",")
+    
+    # assign column names
+    colnames(tmp) = c('transect', 'unk1', 'unk2', 'time', 'observer', 'declination', 'species', 'unk10', 'number', 'cue', 'bearing', 'unk5', 'unk6', 'comments', 'side', 'lat', 'lon', 'audio', 'unk7', 'photo', 'unk8', 'unk9')
+    
+  }
   
   # skip empty files
   if (tmp$lat[1] == 0){
