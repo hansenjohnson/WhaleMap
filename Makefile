@@ -138,7 +138,7 @@ data/interim/2018_dfo_cetus_tracks.rds : functions/proc_2018_dfo_cetus_tracks.R 
 	$(remove_error)
 
 # JASCO glider tracks
-data/interim/2018_jasco_tracks.rds : functions/proc_2018_jasco_tracks.R data/raw/jasco/*
+data/interim/2018_jasco_tracks.rds : functions/proc_2018_jasco_tracks.R data/raw/jasco/track.csv
 	$(report_error)
 	Rscript $<
 	$(remove_error)
@@ -270,7 +270,7 @@ data/interim/2018_dfo_cetus_sightings.rds : functions/proc_2018_dfo_cetus_sighti
 	$(remove_error)
 
 # 2018 JASCO detections
-data/interim/2018_jasco_detections.rds : functions/proc_2018_jasco_detections.R data/raw/jasco/*
+data/interim/2018_jasco_detections.rds : functions/proc_2018_jasco_detections.R data/raw/jasco/detections.csv
 	$(report_error)
 	Rscript $<
 	$(remove_error)
