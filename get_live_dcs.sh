@@ -1,11 +1,16 @@
 #!/bin/bash
 # download live LFDCS detections, then process using R script
 
-# Determine location
-if [[ "$OSTYPE"=='darwin14.5.0' ]]; then
-	DESTDIR=/Users/hansenjohnson/Projects/WhaleMap # local
-else
+# Extract OS name
+unamestr=`uname`
+
+# Define OS-specific paths
+if [[ "$unamestr" == 'Linux' ]]; then
 	DESTDIR=/srv/shiny-server/WhaleMap # server
+	SSHDIR=/home/hansen
+elif [[ "$unamestr" == 'Darwin' ]]; then
+	DESTDIR=/Users/hansenjohnson/Projects/WhaleMap # local
+	SSHDIR=/Users/hansenjohnson
 fi
 
 # initiate array
