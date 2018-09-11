@@ -1,10 +1,16 @@
 #!/bin/bash
 # download survey data from remote repository
 
-## Define variables ##
-PROJDIR=/srv/shiny-server/WhaleMap/ # main project directory (server)
-# PROJDIR=~/Projects/WhaleMap/ # main project directory (local)
-DATADIR=${PROJDIR}/data/raw/ # raw data directory
+# Determine location
+if [[ "$OSTYPE"=='darwin14.5.0' ]]; then
+	DESTDIR=/Users/hansenjohnson/Projects/WhaleMap # local
+	SSHDIR=/Users/hansenjohnson
+else
+	DESTDIR=/srv/shiny-server/WhaleMap # server
+	SSHDIR=/home/hansen
+fi
+
+DATADIR=${DESTDIR}/data/raw/ # raw data directory
 
 # Move to data directory
 cd ${DATADIR}
@@ -33,10 +39,10 @@ rclone sync dropbox:"Right Whale 2018" "2018_mics_sightings/" --backup-dir backu
 
 # Sync JASCO server
 printf "\n*** Checking JASCO Server ***\n\n"
-rsync -e "ssh -i /home/hansen/.ssh/mykey" whalemap@142.176.15.238:/home/whalemap/*.csv jasco/
+rsync -ve "ssh -i $SSHDIR/.ssh/mykey" whalemap@142.176.15.238:/home/whalemap/*.csv jasco/
 
 # move to project directory
-cd ${PROJDIR}
+cd ${DESTDIR}
 
 # get live WHOI/Dal acoustic detections (dcs)
 printf "\n*** Checking DAL/WHOI acoustic detections ***\n\n"

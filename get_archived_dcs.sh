@@ -1,15 +1,19 @@
 #!/bin/bash
 # download archived LFDCS data detections, then process using R script
 
-# Select app directory
-DESTDIR=/srv/shiny-server/WhaleMap # server
-# DESTDIR=/Users/hansenjohnson/Projects/WhaleMap # local
+# Determine location
+if [[ "$OSTYPE"=='darwin14.5.0' ]]; then
+	DESTDIR=/Users/hansenjohnson/Projects/WhaleMap # local
+else
+	DESTDIR=/srv/shiny-server/WhaleMap # server
+fi
 
 # initiate array
 declare -A URL
 
 # assign paths to detection data for each deployment
 URL=(
+	[2018-08-15_slocum_otn200]=http://dcs.whoi.edu/dal0818/dal0818_otn200_html/ptracks/manual_analysis.csv
 	[2018-06-09_slocum_fundy]=http://dcs.whoi.edu/dal0618/dal0618_fundy_html/ptracks/manual_analysis.csv
 	[2018-02-22_slocum_we03]=http://dcs.whoi.edu/hatteras0218/hatteras0218_we03_html/ptracks/manual_analysis.csv
 	[2016-06-23_buoy_nybight]=http://dcs.whoi.edu/nyb0616/dmon009_html/ptracks/manual_analysis.csv
