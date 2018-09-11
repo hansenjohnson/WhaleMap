@@ -31,6 +31,10 @@ rclone sync dropbox:"NEAq_CWI Effort_2018" "2018_neaq_cwi/" --backup-dir backups
 printf "\n*** Checking MICS Dropbox ***\n\n"
 rclone sync dropbox:"Right Whale 2018" "2018_mics_sightings/" --backup-dir backups -v --exclude *.JPG --exclude *.mp4
 
+# Sync JASCO server
+printf "\n*** Checking JASCO Server ***\n\n"
+rsync -e "ssh -i /home/hansen/.ssh/mykey" whalemap@142.176.15.238:/home/whalemap/*.csv jasco/
+
 # move to project directory
 cd ${PROJDIR}
 
