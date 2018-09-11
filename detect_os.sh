@@ -1,9 +1,10 @@
 #!/bin/bash
 # Determine location
-if [[ "$OSTYPE"=='darwin14.5.0' ]]; then
+unamestr=`uname`
+if [[ "$unamestr"=='Darwin' ]]; then
 	echo /Users/hansenjohnson/Projects/WhaleMap # local
 	echo /Users/hansenjohnson
-else
+elif [[ "$unamestr"=='Linux' ]]; then
 	echo /srv/shiny-server/WhaleMap # server
 	echo /home/hansen
 fi
