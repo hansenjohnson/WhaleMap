@@ -37,8 +37,6 @@ SIG = list()
 # read files
 for(i in seq_along(flist)){
   
-  print(i)
-  
   # skip empty files
   if (file.size(flist[i]) == 0){
     message('Skipping empty file: ', flist[i])
