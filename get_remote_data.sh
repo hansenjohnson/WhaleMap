@@ -56,5 +56,8 @@ bash get_live_dcs.sh
 printf "\n*** Updating WhaleMap ***\n\n"
 make
 
-# completion message
-printf "\n*** WhaleMap updated :) ***\n\n"
+# check for errors and send emails
+printf "\n*** Checking for errors and sending email alerts ***\n\n"
+bash send_email_alert.sh
+
+printf "\n*** Update complete :) ***\n\n"

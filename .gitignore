@@ -40,6 +40,7 @@ password.rda
 *.rda
 *.pptx
 status.txt
+error_email.txt
 
 # hansen specific
 get_remote_data_hj.sh
