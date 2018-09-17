@@ -35,7 +35,8 @@ if(nrow(sig) == 0){
   
   # fix time
   sig$date = as.Date(sig$date, format = '%Y-%m-%d')
-  sig$time = as.POSIXct(paste0(sig$date, ' ', sig$time, tz = 'US/Eastern'))
+  sig$time = paste0(hour(sig$time), ':', minute(sig$time), ':', second(sig$time))
+  sig$time = as.POSIXct(paste0(sig$date, ' ', sig$time), tz = 'US/Eastern')
   
   # convert to UTC
   sig$time = as.POSIXct(format(sig$time, tz = 'UTC', usetz = TRUE), tz = 'UTC')
