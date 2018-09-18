@@ -7,7 +7,7 @@ DATE=`date '+%Y-%m-%d %H:%M:%S'`
 # Email message text
 subject="WhaleMap Error: $DATE"
 recipients="hansen.johnson@dal.ca"
-from="WhaleMap@whalemap.ocean.dal.ca"
+from="hansen.johnson@dal.ca"
 
 # Define temporary file name
 email_file="error_email.txt"
@@ -42,8 +42,8 @@ else # if error exists
           touch $email_file
 
           # add lines to file
-          echo "Subject:$subject" >> $email_file
-          echo "From:$from" >> $email_file
+          echo "Subject: $subject" >> $email_file
+          echo "From: $from" >> $email_file
           echo "" >> $email_file
           echo "Check WhaleMap! There's a problem here:" >> $email_file
           echo "$error" >> $email_file
