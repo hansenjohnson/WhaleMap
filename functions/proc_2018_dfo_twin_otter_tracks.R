@@ -13,6 +13,10 @@ ofile = '2018_dfo_twin_otter_tracks.rds'
 # output directory
 output_dir = 'data/interim/'
 
+# list files to skip
+fskip = c("data/raw/2018_whalemapdata/DFO_twin_otter//20180921/001231.gps",
+          "data/raw/2018_whalemapdata/DFO_twin_otter//20180921/180921.gps")
+
 # process one-off transit mission
 source('functions/proc_2018-04-03_dfo_transit_tracks.R')
 
@@ -57,6 +61,12 @@ for(i in seq_along(flist)){
   #   message('Skipping empty or incomplete file ', flist[i])
   #   next
   # }
+  
+  # skip specific gps files
+  if (flist[i] %in% fskip){
+    message('Skipping file ', flist[i])
+    next
+  }
   
   # read in data (method below is slower but more robust to errors in gps file)
   textLines = readLines(flist[i])
