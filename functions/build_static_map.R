@@ -157,6 +157,7 @@ build_static_map = function(english=TRUE){
   lfile = 'data/processed/dcs_live_latest_position.rds'
   if(file.exists(lfile)){
     latest = readRDS(lfile)
+    latest = latest[latest$name!='jasco_test',] # do not plot jasco test data
   }
   
   # sightings / detections

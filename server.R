@@ -187,9 +187,19 @@ function(input, output, session){
   # position for live dcs platform
   if(file.exists(lfile)){
     LATEST <- eventReactive(input$go|input$go == 0, {
-      tmp = latest[latest$year %in% years(),]
-      tmp = tmp[tmp$platform %in% platform(),]
-      tmp[tmp$yday %in% ydays(),]
+      
+      if(input$password == password | input$password == jasco_password){
+        tmp = latest[latest$year %in% years(),]
+        tmp = tmp[tmp$platform %in% platform(),]
+        tmp = tmp[tmp$yday %in% ydays(),]
+        tmp
+      } else {
+        tmp = latest[latest$year %in% years(),]
+        tmp = tmp[tmp$platform %in% platform(),]
+        tmp = tmp[tmp$yday %in% ydays(),]
+        tmp[tmp$name!='jasco_test',]
+      }
+      
     })
   }
   

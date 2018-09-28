@@ -303,7 +303,7 @@ data/processed/sonobuoys.rds : 	functions/proc_sonobuoys.R \
 latest : data/processed/dcs_live_latest_position.rds
 
 # Process dcs positions
-data/processed/dcs_live_latest_position.rds : functions/proc_dcs_latest_position.R data/interim/dcs_live_tracks.rds
+data/processed/dcs_live_latest_position.rds : functions/proc_dcs_latest_position.R data/interim/dcs_live_tracks.rds data/interim/2018_jasco_tracks.rds
 	$(report_error)
 	Rscript $<
 	$(remove_error)
