@@ -6,8 +6,11 @@ The goal of this application is to rapidly and effectively disseminate whale sur
 
 ## Demonstration
 
-See the live application here:
-http://leviathan.ocean.dal.ca/WhaleMap/
+See the homepage with summary map here:
+https://whalemap.ocean.dal.ca/  
+
+And see the Shiny App interactive map page here:
+https://whalemap.ocean.dal.ca/WhaleMap/
 
 ## Data details
 
