@@ -57,7 +57,7 @@ printf "\n*** Updating WhaleMap ***\n\n"
 make
 
 # check for errors and send emails
-printf "\n*** Checking for errors and sending email alerts ***\n\n"
-bash send_email_alert.sh
+# printf "\n*** Checking for errors and sending email alerts ***\n\n"
+# bash send_email_alert.sh
 
 printf "\n*** Update complete :) ***\n\n"
