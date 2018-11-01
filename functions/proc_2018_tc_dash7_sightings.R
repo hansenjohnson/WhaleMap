@@ -26,7 +26,7 @@ library(stringr)
 source('functions/config_data.R')
 
 # list files to process
-flist = list.files(data_dir, pattern = '(\\d{8})_Dash7_sightings.xlsx$', full.names = T, recursive = T)
+flist = list.files(data_dir, pattern = '(\\d{8})_Dash7_sightings.xls', full.names = T, recursive = T)
 
 # only proceed if sightings files exist
 if(length(flist)!=0){
@@ -46,17 +46,14 @@ if(length(flist)!=0){
     tmp = as.data.frame(read_excel(flist[i], sheet = 1, col_names = TRUE))
     
     # select columns of interest
-    # tmp = tmp[c(1,3,4,11,27,29)]
-    
-    # select columns of interest
-    tmp = data.frame(tmp$`WS_DATE (Ctr + ;)`,
-               tmp$LATITUDE,
-               tmp$LONGITUDE,
-               tmp[,grep('TIME', colnames(tmp))],
-               tmp$SPECIES_CD,
-               tmp$NUMB
+    tmp = data.frame(tmp[,grep('WS_DATE', colnames(tmp))],
+                     tmp$LATITUDE,
+                     tmp$LONGITUDE,
+                     tmp[,grep('TIME', colnames(tmp))],
+                     tmp$SPECIES_CD,
+                     tmp$NUMB
     )
-               
+    
     # rename
     colnames(tmp) = c('date','lat', 'lon', 'time', 'species', 'number')
     
