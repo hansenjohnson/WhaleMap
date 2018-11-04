@@ -24,22 +24,23 @@ mkdir -p backups
 
 # Sync Canadian aerial data Google drive
 printf "\n*** Checking DFO Google Drive ***\n\n"
-rclone sync whalemapdata:"WhaleMapData_Master/" "2018_whalemapdata/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.mp4 --exclude *.mp3 --exclude *.MP3
+# rclone sync whalemapdata:"WhaleMapData_Master/" "2018_whalemapdata/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf
+rclone sync whalemapdata:"WhaleMapData_Master/" "2018_whalemapdata/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --fast-list
 
 # Sync NOAA 2018 aerial data Google drive
-printf "\n*** Checking NOAA Google Drive ***\n\n"
-printf "Flight data \n\n"
-rclone sync drive:"2018/2018 NEFSC Survey Data/Flights/" "2018_noaa_twin_otter/" --drive-skip-gdocs --backup-dir backups -v --exclude *.JPG --exclude *.mp4
+# printf "\n*** Checking NOAA Google Drive ***\n\n"
+# printf "Flight data \n\n"
+# rclone sync drive:"2018/2018 NEFSC Survey Data/Flights/" "2018_noaa_twin_otter/" --drive-skip-gdocs --backup-dir backups -v --exclude *.JPG --exclude *.mp4
 # printf "Sonobuoy data \n\n"
 # rclone sync drive:"2018/2018 Sonobuoy recordings/sonobuoy_metadata/" "noaa_sonobuoys/" --drive-formats csv --backup-dir backups -v --exclude *.wav --exclude *.txt
 
 # Sync NEAq 2018 vessel data Dropbox
-printf "\n*** Checking NEAq CWI Dropbox ***\n\n"
-rclone sync dropbox:"NEAq_CWI Effort_2018" "2018_neaq_cwi/" --backup-dir backups -v --exclude *.JPG --exclude *.mp4
+# printf "\n*** Checking NEAq CWI Dropbox ***\n\n"
+# rclone sync dropbox:"NEAq_CWI Effort_2018" "2018_neaq_cwi/" --backup-dir backups -v --exclude *.JPG --exclude *.mp4
 
 # Sync MICS 2018 vessel data Dropbox
-printf "\n*** Checking MICS Dropbox ***\n\n"
-rclone sync dropbox:"Right Whale 2018" "2018_mics_sightings/" --backup-dir backups -v --exclude *.JPG --exclude *.mp4
+# printf "\n*** Checking MICS Dropbox ***\n\n"
+# rclone sync dropbox:"Right Whale 2018" "2018_mics_sightings/" --backup-dir backups -v --exclude *.JPG --exclude *.mp4
 
 # Sync JASCO server
 printf "\n*** Checking JASCO Server ***\n\n"
