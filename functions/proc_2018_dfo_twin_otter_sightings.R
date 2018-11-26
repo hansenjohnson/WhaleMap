@@ -49,8 +49,12 @@ for(i in seq_along(flist)){
   #   next
   # }
   
+  fdate = as.Date(basename(dirname(flist[i])), format = '%Y%m%d')
+  t0_date = as.Date('2018-09-05')
+  t1_date = as.Date('2018-11-24')
+  
   # accomodate switch in VOR software (different columns used after 2018-09-05)
-  if (as.Date(basename(dirname(flist[i])), format = '%Y%m%d') <= as.Date('2018-09-05')){
+  if (fdate <= t0_date | fdate > t1_date){
   
     # read in data (method below is slower but more robust to errors in gps file)
     textLines = readLines(flist[i])
