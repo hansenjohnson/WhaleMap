@@ -321,6 +321,15 @@ body <- dashboardBody(
     # main display --------------------------------------------------------------------
     column(width = 9,
            
+           # Notice
+           box(width = NULL, solidHeader = T, collapsible = F, 
+               status = 'danger', 
+               
+               p("WhaleMap currently focuses on Canadian waters. For the latest observations in the US go to:", 
+                 a("https://www.nefsc.noaa.gov/psb/surveys/"), align = "center")
+               
+           ),
+           
            # Map
            box(width = NULL, solidHeader = T,collapsible = T, 
                status = 'primary', title = 'Map', 
