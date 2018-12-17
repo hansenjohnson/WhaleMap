@@ -43,8 +43,8 @@ rclone sync whalemapdata:"WhaleMapData_Master/" "2018_whalemapdata/" --drive-for
 # rclone sync dropbox:"Right Whale 2018" "2018_mics_sightings/" --backup-dir backups -v --exclude *.JPG --exclude *.mp4
 
 # Sync JASCO server
-printf "\n*** Checking JASCO Server ***\n\n"
-rsync -rtve "ssh -i $SSHDIR/.ssh/mykey" whalemap@142.176.15.238:/home/whalemap/ jasco/ --exclude=".*"
+# printf "\n*** Checking JASCO Server ***\n\n"
+# rsync -rtve "ssh -i $SSHDIR/.ssh/mykey" whalemap@142.176.15.238:/home/whalemap/ jasco/ --exclude=".*"
 
 # move to project directory
 cd ${DESTDIR}
