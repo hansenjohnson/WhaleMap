@@ -17,7 +17,7 @@ suppressPackageStartupMessages(library(shinydashboard))
 
 # user input --------------------------------------------------------------
 
-years = c('2014', '2015', '2016', '2017', '2018')
+years = c('2014', '2015', '2016', '2017', '2018', '2019')
 
 # header ----------------------------------------------------------------------
 
@@ -129,7 +129,7 @@ body <- dashboardBody(
                            # choose year
                            selectInput("year", label = 'Choose year(s):',
                                        choices = years,
-                                       selected = '2018', multiple = TRUE),
+                                       selected = '2019', multiple = TRUE),
                            
                            hr(),
                            

@@ -48,7 +48,7 @@ load('data/processed/management_areas.rda')
 npts = 250000
 
 # define time lag for startup plotting
-tlag = 14 # days
+tlag = 1 # days
 
 # make dcs icons
 dcsIcons = iconList(
