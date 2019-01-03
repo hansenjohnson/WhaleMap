@@ -48,7 +48,7 @@ load('data/processed/management_areas.rda')
 npts = 250000
 
 # define time lag for startup plotting
-tlag = 1 # days
+tlag = 2 # days
 
 # make dcs icons
 dcsIcons = iconList(
@@ -89,8 +89,8 @@ function(input, output, session){
   output$dateChoice <- renderUI({
     
     # set begin and end dates for slider
-    begin_date = as.Date('2018-01-01')
-    end_date = as.Date('2018-12-30')
+    begin_date = as.Date('2019-01-01')
+    end_date = as.Date('2019-12-31')
     
     # make vector of all possible dates
     date_vec = format.Date(seq.Date(from = begin_date,to = end_date, by = 1), '%b-%d')
