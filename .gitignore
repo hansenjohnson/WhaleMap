@@ -26,6 +26,7 @@ password.rda
 *.docx
 
 # data files
+summary_report.pdf
 *.csv
 *.gps
 *.gpx
