@@ -9,16 +9,10 @@
 # directories
 data/
 figures/
-shiny_bookmarks/
-job/
-issues/
-test/
-reports/
-release/
+docs/
 output/
-tmp/
 static_map/
-protocols/
+dev/
 
 # sensitive
 password.rda
@@ -41,7 +35,3 @@ password.rda
 *.pptx
 status.txt
 error_email.txt
-
-# hansen specific
-get_remote_data_hj.sh
-get_live_dcs_hj.sh
