@@ -72,7 +72,7 @@ tc = sig[sig$platform=='TC-Dash 8',]
 cnp = sig[sig$platform=='C&P plane (DFO)'|sig$platform=='C&P plane',]
 dfo = sig[sig$platform=='DFO Twin Otter',]
 neaq = sig[sig$platform=='Nereid -NEAq',]
-mics = sig[sig$platform=='MICS',]
+# mics = sig[sig$platform=='MICS',]
 
 # clean and save survey data
 clean_sig(noaa, 'plane', 'noaa_twin_otter')
@@ -81,7 +81,7 @@ clean_sig(tc, 'plane', 'tc_dash8')
 clean_sig(cnp, 'plane', 'cnp')
 clean_sig(dfo, 'plane', 'dfo_twin_otter')
 clean_sig(neaq, 'vessel', 'nereid')
-clean_sig(mics, 'vessel', 'mics')
+# clean_sig(mics, 'vessel', 'mics')
 
 # opportunistic data ------------------------------------------------------
 
