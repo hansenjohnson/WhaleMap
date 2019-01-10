@@ -13,6 +13,7 @@ docs/
 output/
 static_map/
 dev/
+manager_maps/
 
 # sensitive
 password.rda
