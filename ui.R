@@ -103,6 +103,15 @@ body <- dashboardBody(
     
     # editor tab ----------------------------------------------------------
     
+    # Notice
+    column(width = 12,
+    box(width = NULL, solidHeader = T, collapsible = F, 
+        status = 'danger', 
+        
+        p("WhaleMap currently focuses on Canadian waters. For a comprehensive overview of the latest observations in the US go to:", 
+          a(href="https://www.nefsc.noaa.gov/psb/surveys/", "https://www.nefsc.noaa.gov/psb/surveys/"), align = "center")
+    )),
+    
     column(width = 3,
            
            # translator
@@ -321,21 +330,29 @@ body <- dashboardBody(
     # main display --------------------------------------------------------------------
     column(width = 9,
            
-           # Notice
-           box(width = NULL, solidHeader = T, collapsible = F, 
-               status = 'danger', 
-               
-               p("WhaleMap currently focuses on Canadian waters. For the latest observations in the US go to:", 
-                 a("https://www.nefsc.noaa.gov/psb/surveys/"), align = "center")
-               
-           ),
+           # # Notice
+           # box(width = NULL, solidHeader = T, collapsible = F, 
+           #     status = 'danger', 
+           #     
+           #     p("WhaleMap currently focuses on Canadian waters. For the latest observations in the US go to:", 
+           #       a("https://www.nefsc.noaa.gov/psb/surveys/"), align = "center"),
+           #     p("Because whales swim continuously, exact locations are obsolete within minutes of a sighting.
+           #       A specific date or date range may contain few or no sightings. This does not mean right whales 
+           #       were not present. The majority of the North Atlantic right whale population lives along the 
+           #       eastern seaboard for much of the year, but effort to find them is typically limited to seasonal 
+           #       whale watches or researchers dedicated to locating seasonal habitats. The whereabouts of most of 
+           #       the individuals in the population is unknown for much of the year.")
+           #     
+           # ),
            
            # Map
            box(width = NULL, solidHeader = T,collapsible = T, 
                status = 'primary', title = 'Map', 
                
-               leafletOutput("map", height = 550)
+               leafletOutput("map", height = 550),
                
+               helpText("Please note that much of these data are preliminary and subject to change, and
+                        that few or no observations may reflect a lack of effort rather than a lack of whales")
            ),
            
            # Plot
