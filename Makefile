@@ -30,6 +30,7 @@ data/processed/tracks.rds : functions/proc_tracks.R \
 														data/interim/2018_mics_tracks.rds \
 														data/interim/2018_dfo_cetus_tracks.rds \
 														data/interim/2018_jasco_tracks.rds \
+														data/interim/2019_noaa_twin_otter_tracks.rds \
 														data/interim/dcs_archived_tracks.rds \
 														data/interim/dcs_live_tracks.rds
 	$(report_error)
@@ -144,8 +145,14 @@ data/interim/2018_dfo_cetus_tracks.rds : functions/proc_2018_dfo_cetus_tracks.R 
 	Rscript $<
 	$(remove_error)
 
-# JASCO glider tracks
+# 2018 JASCO glider tracks
 data/interim/2018_jasco_tracks.rds : functions/proc_2018_jasco_tracks.R data/raw/jasco/track.csv
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2019 NOAA twin otter tracks
+data/interim/2019_noaa_twin_otter_tracks.rds : functions/proc_2019_noaa_twin_otter.R data/raw/2019_noaa_twin_otter/edit_data/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
@@ -184,6 +191,7 @@ data/processed/observations.rds : functions/proc_observations.R \
 																	data/interim/2018_cwi_jdmartin_sightings.rds \
 																	data/interim/2018_dfo_cetus_sightings.rds \
 																	data/interim/2018_jasco_detections.rds \
+																	data/interim/2018_noaa_twin_otter_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
 
@@ -285,6 +293,12 @@ data/interim/2018_dfo_cetus_sightings.rds : functions/proc_2018_dfo_cetus_sighti
 
 # 2018 JASCO detections
 data/interim/2018_jasco_detections.rds : functions/proc_2018_jasco_detections.R data/raw/jasco/detections.csv
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2019 noaa twin otter sightings
+data/interim/2019_noaa_twin_otter_sightings.rds : functions/proc_2019_noaa_twin_otter.R data/raw/2019_noaa_twin_otter/edit_data/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
