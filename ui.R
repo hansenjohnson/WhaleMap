@@ -256,7 +256,7 @@ body <- dashboardBody(
                            checkboxInput("legend", label = 'Legends', value = T),
                            
                            # 2018 protections
-                           helpText(tags$em('2018 Protections')),
+                           helpText(tags$em('2019 Protections')),
                            
                            checkboxInput("tc_lanes", 
                                          label = 'Dynamic Shipping lanes', value = F),

@@ -357,7 +357,7 @@ data/processed/mpa.rds : functions/proc_mpa.R data/raw/mpa/*
 	$(remove_error)
 
 # Process management areas
-data/processed/management_areas.rda : functions/proc_management_areas.R data/raw/2018_whalemapdata/GIS_Data/*
+data/processed/management_areas.rda : functions/proc_management_areas.R data/raw/gis/*/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)

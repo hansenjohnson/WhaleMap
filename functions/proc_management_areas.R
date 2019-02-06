@@ -4,7 +4,7 @@
 # input -------------------------------------------------------------------
 
 # input directory
-gis_dir = 'data/raw/2018_whalemapdata/GIS_Data/'
+gis_dir = 'data/raw/gis/'
 
 # output directory
 output_dir = 'data/processed/'
@@ -15,35 +15,32 @@ output_dir = 'data/processed/'
 suppressPackageStartupMessages(library(rgdal))
 
 # define data paths
-tc_lane_dir = paste0(gis_dir,'Shipping Lanes NEW/')
-tc_zone_dir = paste0(gis_dir,'SpeedReductionZone/')
-static_zone_dir = paste0(gis_dir,'StaticZone/')
-forage_areas_dir = paste0(gis_dir,'ForagingAreas/')
+tc_lane_dir = paste0(gis_dir,'dynamic_shipping/')
+tc_zone_dir = paste0(gis_dir,'static_vessel/')
+forage_areas_dir = paste0(gis_dir,'dynamic_fishing/')
+static_zone_file = paste0(gis_dir,'static_fishing/2019_static_fishing_closure.csv')
 
 # process -----------------------------------------------------------------
-
-# # unzip files
-# unzip(zipfile = paste0(gis_dir,'TCLanes.zip'), exdir = tc_lane_dir)
-# unzip(zipfile = paste0(gis_dir,'SpeedReductionZone.zip'), exdir = tc_zone_dir)
-# unzip(zipfile = paste0(gis_dir,'StaticZone.zip'), exdir = static_zone_dir)
 
 # read in data
 tc_lanes = readOGR(tc_lane_dir)
 tc_zone = readOGR(tc_zone_dir)
-static_zone = readOGR(static_zone_dir)
 forage_areas = readOGR(forage_areas_dir)
 
 # subset foraging areas
 forage_areas = forage_areas[forage_areas@data$LINKID %in% c(3,4,13),]
 
-# # test with leaflet
+# process static zone
+static_zone = read.csv(static_zone_file)
+
+# test with leaflet
 # library(leaflet)
 # leaflet() %>%
-#   addTiles() %>%
-#   # addPolygons(data = tc_lanes,weight = .5, popup = ~paste0(Type)) %>%
-#   # addPolygons(data = static_zone,weight = .5, popup = 'Speed reduction zone') %>%
-#   # addPolygons(data = tc_zone,weight = .5, popup = ~paste0(Type)) %>%
-#   addPolygons(data = forage_areas,weight = .5,popup = ~paste0(LINKID))
+# addTiles() %>%
+# addPolygons(data = tc_lanes,weight = .5) 
+# addPolygons(data = static_zone,lng = ~lon, lat=~lat, weight = .5, popup = 'Speed reduction zone')
+# addPolygons(data = tc_zone,weight = .5, popup = ~paste0(Type)) %>%
+# addPolygons(data = forage_areas,weight = .5,popup = ~paste0(LINKID))
 
 # save
 save(tc_lanes, tc_zone, static_zone,forage_areas, file = paste0(output_dir, 'management_areas.rda'))

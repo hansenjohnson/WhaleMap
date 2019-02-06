@@ -499,6 +499,7 @@ function(input, output, session){
       # add polygons
       proxy %>%
         addPolygons(data=static_zone, group = 'static_zone',
+                    lat = ~lat, lng = ~lon,
                     fill = T, 
                     fillOpacity = 0.25, 
                     stroke = T, 

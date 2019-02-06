@@ -294,7 +294,7 @@ build_static_map = function(english=TRUE){
   
   # plot static fisheries closue
   map <- map %>%
-    addPolygons(data=static_zone, group = static_fish_grp,
+    addPolygons(data=static_zone, group = static_fish_grp,lng=~lon, lat=~lat,
                 fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
                 dashArray = c(2,2), options = pathOptions(clickable = F),
                 weight = 1, color = 'darkblue', fillColor = 'darkblue')
