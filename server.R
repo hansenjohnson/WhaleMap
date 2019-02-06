@@ -931,18 +931,16 @@ function(input, output, session){
       fillcols = scale_fill_manual(values = cols, name = colorby())
         
       # build plot
-      suppressWarnings({
-        g = ggplot(obs, aes(x = yday, y = counter))+
-          geom_histogram(stat = "identity", na.rm = T, aes_string(fill = paste0(colorby())))+
-          labs(x = '', y = '')+
-          fillcols+
-          facet_wrap(~cat, scales="free_y", nrow = 2)+
-          scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"), 
-                             breaks = seq(from = min(ydays()), to = max(ydays()), length.out = 6))+
-          geom_point(data = eff, aes(x = yday, y=y), pch=45, cex = 3, col = 'blue')+
-          aes(text = paste('date: ', format(as.Date(as.character(yday), "%j"), "%d-%b")))+
-          expand_limits(x = c(min(ydays()), max(ydays())))
-      })
+      g = ggplot(obs, aes(x = yday, y = counter))+
+        geom_histogram(stat = "identity", na.rm = T, aes_string(fill = paste0(colorby())))+
+        labs(x = '', y = '')+
+        fillcols+
+        facet_wrap(~cat, scales="free_y", nrow = 2)+
+        scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"), 
+                           breaks = seq(from = min(ydays()), to = max(ydays()), length.out = 6))+
+        geom_point(data = eff, aes(x = yday, y=y), pch=45, cex = 3, col = 'blue')+
+        aes(text = paste('date: ', format(as.Date(as.character(yday), "%j"), "%d-%b")))+
+        expand_limits(x = c(min(ydays()), max(ydays())))
       
     } else {
       if(colorby()=='score'){
@@ -972,24 +970,23 @@ function(input, output, session){
       }
       
       # build plot
-      suppressWarnings({
-        g = ggplot(obs, aes(x = yday))+
-          geom_histogram(stat = "count", na.rm = T, aes_string(fill = paste0(colorby())))+
-          labs(x = '', y = '')+
-          fillcols+
-          facet_wrap(~cat, scales="free_y", nrow = 2)+
-          xlim(min(ydays()),max(ydays()))+
-          scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"),
-                             breaks = seq(from = min(ydays()), to = max(ydays()), length.out = 6))+
-          geom_point(data = eff, aes(x = yday, y=y), pch=45, cex = 3, col = 'blue')+
-          aes(text = paste('date: ', format(as.Date(as.character(yday), "%j"), "%d-%b")))+
-          expand_limits(x = c(min(ydays()), max(ydays())))
-        
-      })
+      g = ggplot(obs, aes(x = yday))+
+        geom_histogram(stat = "count", na.rm = T, aes_string(fill = paste0(colorby())))+
+        labs(x = '', y = '')+
+        fillcols+
+        facet_wrap(~cat, scales="free_y", nrow = 2)+
+        scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"),
+                           breaks = seq(from = min(ydays()), to = max(ydays()), length.out = 6))+
+        geom_point(data = eff, aes(x = yday, y=y), pch=45, cex = 3, col = 'blue')+
+        aes(text = paste('date: ', format(as.Date(as.character(yday), "%j"), "%d-%b")))+
+        expand_limits(x = c(min(ydays()), max(ydays())))
     }
-    # plot
+    
+    # build interactive plot
     gg = ggplotly(g, dynamicTicks = F, tooltip = c("text", "count", "fill")) %>%
       layout(margin=list(r=120, l=70, t=40, b=70), showlegend = input$legend)
+    gg$elementId <- NULL # remove widget id warning
+    gg
   })
   
   # status table ------------------------------------------------------------
