@@ -229,7 +229,7 @@ body <- dashboardBody(
                            checkboxInput("legend", label = 'Legends', value = T),
                            
                            # 2018 protections
-                           helpText(tags$em('2019 Protections')),
+                           helpText(tags$em('Management areas')),
                            
                            checkboxInput("tc_lanes", 
                                          label = 'Dynamic Shipping lanes', value = F),
@@ -241,9 +241,9 @@ body <- dashboardBody(
                                          label = 'Static fishery closure', value = F),
                            
                            checkboxInput("forage_areas", 
-                                         label = 'Area subject to temporary fishery closure protocol', value = F),
+                                         label = 'Area subject to temporary fishery closure protocol', value = F)
                            
-                           tags$a(href="https://www.canada.ca/en/fisheries-oceans/news/2018/03/government-of-canada-unveils-its-plan-for-protecting-north-atlantic-right-whales-in-20180.html", "Click here for details")
+                           # tags$a(href="https://www.canada.ca/en/fisheries-oceans/news/2018/03/government-of-canada-unveils-its-plan-for-protecting-north-atlantic-right-whales-in-20180.html", "Click here for details")
                            
                   )
            )
