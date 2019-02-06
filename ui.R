@@ -5,7 +5,6 @@
 
 suppressPackageStartupMessages(library(shiny))
 suppressPackageStartupMessages(library(leaflet))
-# suppressPackageStartupMessages(library(rgdal))
 suppressPackageStartupMessages(library(htmltools))
 suppressPackageStartupMessages(library(htmlwidgets))
 suppressPackageStartupMessages(library(maptools))
@@ -13,7 +12,6 @@ suppressPackageStartupMessages(library(lubridate))
 suppressPackageStartupMessages(library(oce))
 suppressPackageStartupMessages(library(plotly))
 suppressPackageStartupMessages(library(shinydashboard))
-# library(rhandsontable)
 
 # user input --------------------------------------------------------------
 
@@ -48,21 +46,6 @@ header <-  dashboardHeader(title = 'WhaleMap',
                                               icon = icon("tag"),
                                               href = "#")
                            )
-                           
-                           # # leviathan
-                           # dropdownMenu(
-                           #   type = "notifications",
-                           #   icon = 'leviathan.ocean.dal.ca',
-                           #   badgeStatus = NULL,
-                           #   headerText = "",
-                           #   notificationItem("Home",
-                           #                    icon = icon("home"),
-                           #                    href = "http://leviathan.ocean.dal.ca")
-                           #   # notificationItem("Live Glider",
-                           #   #                  icon = icon("plane", lib = 'glyphicon'),
-                           #   #                  href = "http://leviathan.ocean.dal.ca/live_glider/")
-                           #   
-                           # )
 )
 
 jscode <- '
@@ -90,33 +73,23 @@ body <- dashboardBody(
   fluidRow(
     tags$head(tags$script(HTML(jscode))),
     
-    # # development warning message
-    # column(width = 12, align = "center",
-    #        box(width = NULL, solidHeader = T,collapsible = F, collapsed = T,
-    #            status = 'danger', background = 'red',
-    #            
-    #            # warning text
-    #            h4('Warning: WhaleMap is under active development')
-    #            
-    #        )
-    # ),
-    
     # editor tab ----------------------------------------------------------
     
-    # Notice
+    # notice
     column(width = 12,
-    box(width = NULL, solidHeader = T, collapsible = F, 
-        status = 'danger', 
-        
-        p("WhaleMap currently focuses on Canadian waters. For a comprehensive overview of the latest observations in the US go to:", 
-          a(href="https://www.nefsc.noaa.gov/psb/surveys/", "https://www.nefsc.noaa.gov/psb/surveys/"), align = "center")
-    )),
+           box(width = NULL, solidHeader = T, collapsible = F, 
+               status = 'danger', 
+               
+               p("WhaleMap currently focuses on Canadian waters. For a comprehensive overview of the latest observations in the US go to:", 
+                 a(href="https://www.nefsc.noaa.gov/psb/surveys/", "https://www.nefsc.noaa.gov/psb/surveys/"), align = "center")
+           )),
     
+    # left column
     column(width = 3,
            
            # translator
            box(width = NULL, solidHeader = F, collapsible = T, title = 'Translate / Traduire', status = 'primary',
-             HTML('
+               HTML('
                   <div id="google_translate_element"></div>
                   
                   <script type="text/javascript">
@@ -129,7 +102,7 @@ body <- dashboardBody(
                   ')
            ),
            
-           
+           # map editor
            tabBox(title = 'Editor', width = NULL,
                   
                   # Select Data    
@@ -195,11 +168,11 @@ body <- dashboardBody(
                            
                            # unlock preliminary data
                            tagAppendAttributes(
-                               passwordInput("password", 'Show unverified data:', value = "",
-                                         placeholder = 'Enter password'),
-                               `data-proxy-click` = "go"
+                             passwordInput("password", 'Show unverified data:', value = "",
+                                           placeholder = 'Enter password'),
+                             `data-proxy-click` = "go"
                            ),
-
+                           
                            hr(),
                            
                            # add button to update date
@@ -261,11 +234,6 @@ body <- dashboardBody(
                            checkboxInput("tc_lanes", 
                                          label = 'Dynamic Shipping lanes', value = F),
                            
-                           # tags$div(
-                           #   `style` = "padding-left: 20px",
-                           #   HTML(paste(tags$em("Status: "), tags$span(style="color:red", "ACTIVE"), sep = ""))
-                           # ),
-                           
                            checkboxInput("tc_zone", 
                                          label = 'Reduced Speed Zone', value = F),
                            
@@ -278,72 +246,11 @@ body <- dashboardBody(
                            tags$a(href="https://www.canada.ca/en/fisheries-oceans/news/2018/03/government-of-canada-unveils-its-plan-for-protecting-north-atlantic-right-whales-in-20180.html", "Click here for details")
                            
                   )
-                  
-                  # draw tab ----------------------------------------------------------
-                  
-                  # Coordinate editor
-                  # tabPanel(title = 'Draw', 
-                  #          
-                  #          # help text
-                  #          helpText('Drop new points with ',icon("map-marker", lib = 'glyphicon'), 
-                  #                   '. Edit points with ', icon("edit", lib = 'glyphicon'),
-                  #                   ' or via the table below. Remove one or all points with', 
-                  #                   icon("trash", lib = 'glyphicon'), '. Distances are along-path [km]'),
-                  #          
-                  #          # coordinate table
-                  #          strong('Coordinate list'),
-                  #          rHandsontableOutput("hot", height = 250),
-                  #          helpText('Hint: switch tabs to add points more quickly'),
-                  #          
-                  #          # calculate distance
-                  #          checkboxInput("dist", label = 'Calculate distance?', value = T),
-                  #          
-                  #          # round coordinates
-                  #          strong('Round coordinates'),
-                  #          helpText('Choose number of decimal places'),
-                  #          numericInput('dig', label = NULL, value = 1,
-                  #                       min = 0, max = 6, step=1, width = 50),
-                  #          actionButton('round', 'Round'),
-                  #          
-                  #          # connect points
-                  #          radioButtons('shp', label = 'Connection between points', 
-                  #                       choices = c('None', 'Line', 'Polygon'), 
-                  #                       selected = 'None', inline = F),
-                  #          strong('Save coordinates'), br(),
-                  #          
-                  #          # download
-                  #          downloadButton("downloadData", "Save")
-                  # )    
            )
-           
-           # box(title = 'Share', width = NULL,
-           #   
-           #   # bookmarking
-           #   bookmarkButton(),
-           #   
-           #   helpText('Use the above button to bookmark the app in its current state 
-           #                          so you can easily share it with others')
-           #   
-           # )
     ),
     
     # main display --------------------------------------------------------------------
     column(width = 9,
-           
-           # # Notice
-           # box(width = NULL, solidHeader = T, collapsible = F, 
-           #     status = 'danger', 
-           #     
-           #     p("WhaleMap currently focuses on Canadian waters. For the latest observations in the US go to:", 
-           #       a("https://www.nefsc.noaa.gov/psb/surveys/"), align = "center"),
-           #     p("Because whales swim continuously, exact locations are obsolete within minutes of a sighting.
-           #       A specific date or date range may contain few or no sightings. This does not mean right whales 
-           #       were not present. The majority of the North Atlantic right whale population lives along the 
-           #       eastern seaboard for much of the year, but effort to find them is typically limited to seasonal 
-           #       whale watches or researchers dedicated to locating seasonal habitats. The whereabouts of most of 
-           #       the individuals in the population is unknown for much of the year.")
-           #     
-           # ),
            
            # Map
            box(width = NULL, solidHeader = T,collapsible = T, 
@@ -388,7 +295,6 @@ body <- dashboardBody(
     )
   )
 )
-
 
 # construct ui ----------------------------------------------------------
 
