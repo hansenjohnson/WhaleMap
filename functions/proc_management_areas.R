@@ -18,7 +18,7 @@ suppressPackageStartupMessages(library(rgdal))
 tc_lane_dir = paste0(gis_dir,'dynamic_shipping/')
 tc_zone_dir = paste0(gis_dir,'static_vessel/')
 forage_areas_dir = paste0(gis_dir,'dynamic_fishing/')
-static_zone_file = paste0(gis_dir,'static_fishing/2018_static_fishing_closure.csv')
+static_zone_file = paste0(gis_dir,'static_fishing/2019_static_fishing_closure.csv')
 
 # process -----------------------------------------------------------------
 
