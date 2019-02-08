@@ -280,7 +280,7 @@ build_static_map = function(english=TRUE){
   
   # plot static speed reduction zone
   map <- map %>%
-    addPolygons(data=tc_zone, group = static_speed_grp,
+    addPolygons(data=tc_zone, group = static_speed_grp,lng=~lon, lat=~lat,
                 fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
                 dashArray = c(5,5), options = pathOptions(clickable = F),
                 weight = .25, color = 'grey', fillColor = 'grey')

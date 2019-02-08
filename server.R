@@ -456,7 +456,7 @@ function(input, output, session){
       # add polygons
       proxy %>%
         addPolygons(data=tc_zone, group = 'tc_zone',
-                    fill = T, 
+                    fill = T, lng=~lon, lat=~lat,
                     fillOpacity = 0.25, 
                     stroke = T, 
                     # smoothFactor = 3,
