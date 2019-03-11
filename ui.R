@@ -1,22 +1,6 @@
 # ui.R
 # WhaleMap - a Shiny app for visualizing whale survey data
 
-# setup -------------------------------------------------------------------
-
-suppressPackageStartupMessages(library(shiny))
-suppressPackageStartupMessages(library(leaflet))
-suppressPackageStartupMessages(library(htmltools))
-suppressPackageStartupMessages(library(htmlwidgets))
-suppressPackageStartupMessages(library(maptools))
-suppressPackageStartupMessages(library(lubridate))
-suppressPackageStartupMessages(library(oce))
-suppressPackageStartupMessages(library(plotly))
-suppressPackageStartupMessages(library(shinydashboard))
-
-# user input --------------------------------------------------------------
-
-years = c('2014', '2015', '2016', '2017', '2018', '2019')
-
 # header ----------------------------------------------------------------------
 
 header <-  dashboardHeader(title = 'WhaleMap',
