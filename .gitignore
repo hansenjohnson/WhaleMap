@@ -1,10 +1,10 @@
 # R / system
-.Rproj.user
-.Rproj
-.Rhistory
-.RData
-.Ruserdata
-.DS_Store
+*.Rproj.user
+*.Rproj
+*.Rhistory
+*.RData
+*.Ruserdata
+*.DS_Store
 
 # directories
 data/
