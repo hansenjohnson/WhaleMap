@@ -53,7 +53,7 @@ cd ${DESTDIR}
 
 # get live WHOI/Dal acoustic detections (dcs)
 printf "\n*** Checking DAL/WHOI acoustic detections ***\n\n"
-bash get_live_dcs.sh
+bash src/get_live_dcs.sh
 
 # update WhaleMap
 printf "\n*** Updating WhaleMap ***\n\n"
