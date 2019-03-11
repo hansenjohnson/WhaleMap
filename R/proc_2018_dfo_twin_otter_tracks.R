@@ -18,10 +18,10 @@ fskip = c("data/raw/2018_whalemapdata/DFO_twin_otter//20180921/001231.gps",
           "data/raw/2018_whalemapdata/DFO_twin_otter//20180921/180921.gps")
 
 # process one-off transit mission
-source('functions/proc_2018-04-03_dfo_transit_tracks.R')
+source('R/proc_2018-04-03_dfo_transit_tracks.R')
 
 # process missions with gps error
-source('functions/proc_2018_dfo_twin_otter_gps_error.R')
+source('R/proc_2018_dfo_twin_otter_gps_error.R')
 
 # setup -------------------------------------------------------------------
 

@@ -14,6 +14,11 @@ track_fname = 'dcs_live_tracks.rds'
 # detection file
 det_fname = 'dcs_live_detections.rds'
 
+# setup -------------------------------------------------------------------
+
+# read in function
+source('R/proc_dcs.R')
+
 # process -----------------------------------------------------------------
 
 # determine if there are any live missions
@@ -41,9 +46,6 @@ if(length(flist)==0){
 } else {
   
   # if there are live raw data files, process live dcs
-  
-  # read in function
-  source('functions/proc_dcs.R')
   
   # process data
   proc_dcs(data_dir = data_dir, 
