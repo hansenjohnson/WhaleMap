@@ -12,7 +12,8 @@ figures/
 docs/
 output/
 static_map/
-dev/
+wrk/
+tests/
 manager_maps/
 
 # sensitive
