@@ -870,7 +870,7 @@ function(input, output, session){
         
       # build plot
       g = ggplot(obs, aes(x = yday, y = counter))+
-        geom_histogram(stat = "identity", na.rm = T, aes_string(fill = paste0(colorby())))+
+        geom_bar(stat = "identity", na.rm = T, aes_string(fill = paste0(colorby())))+
         labs(x = '', y = '')+
         fillcols+
         facet_wrap(~cat, scales="free_y", nrow = 2)+
@@ -909,7 +909,7 @@ function(input, output, session){
       
       # build plot
       g = ggplot(obs, aes(x = yday))+
-        geom_histogram(stat = "count", na.rm = T, aes_string(fill = paste0(colorby())))+
+        geom_bar(stat = "count", na.rm = T, aes_string(fill = paste0(colorby())))+
         labs(x = '', y = '')+
         fillcols+
         facet_wrap(~cat, scales="free_y", nrow = 2)+
