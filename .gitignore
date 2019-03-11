@@ -15,6 +15,7 @@ static_map/
 wrk/
 tests/
 manager_maps/
+tmp/
 
 # sensitive
 password.rda
