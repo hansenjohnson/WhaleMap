@@ -1,0 +1,113 @@
+---
+title: "Canadian NARW Sightings Update"
+author: 
+output:
+  html_document:
+    df_print: paged
+  pdf: default
+  word_document: default
+  pdf_document: default
+---
+
+
+```{r, include=FALSE}
+
+ #install req'd packages
+library(lubridate)
+library(dplyr)
+library(data.table)
+library(googledrive)
+library(latexpdf)
+
+
+```
+
+
+```{r, echo=FALSE, include=FALSE}
+ #pull in data
+
+
+downloaded_file <- drive_download("observations.csv", type = "csv", overwrite = TRUE)
+
+WS_Data <- read.csv("~/R/WhaleMapData_Processed/observations.csv")
+
+
+
+ WS_Data$date <- as.Date(WS_Data$date, format= "%Y-%m-%d")
+
+                                 
+ Yesterday_Vis <- as.data.table (WS_Data %>% filter(date == (today()-days(1)), score == "definite visual"))
+ 
+ Yesterday_Aco <- as.data.table (WS_Data %>% filter(date == (today()-days(1)),score == "definite acoustic"))
+
+```
+
+
+```{r, echo=FALSE, comment="Daily Sightings information for Atlantic Canada for:"}
+
+
+
+DAte <- DAte <- (WS_Data %>% filter(date == (today()-days(1))))
+DAte$date[1]
+
+
+```
+
+
+####Table 1: Species Sighted
+```{r, results='asis',echo=FALSE, comment="Species"}
+#number of species observed:
+##Species_Count
+
+#this works: USe tHIs
+Species_Count <-Yesterday_Vis %>% 
+  group_by(species) %>% 
+  summarise(Frequency = sum(number))
+knitr::kable(Species_Count)
+
+
+
+
+```
+
+
+
+
+#### Table 2: NARW Sightings
+
+```{r,results='asis', echo=FALSE}
+# plot definite sightings
+NARW <- subset(Yesterday_Vis, Yesterday_Vis$species=="right")
+
+NARW[, c('time', 'id', 'yday', 'year', 'platform', 'species') :=NULL]
+ knitr::kable(NARW)
+```
+
+
+#### Table 3: NARW Acoustic Detections
+
+```{r,results='asis', echo=FALSE}
+#plot Definite acoustic detections
+
+NARW2<- subset(Yesterday_Aco, Yesterday_Aco$score=="definite acoustic")
+
+
+NARW2[, c('time', 'id', 'yday', 'year', 'platform', 'species') :=NULL]
+ knitr::kable(NARW2)
+
+```
+
+
+
+
+
+#####North Atlantic Right Whale Sightings Summary| Produced by DFO Science - Maritimes Region
+
+
+
+```{r, echo=FALSE, include=FALSE}
+#####    To output/knit the file location, add file path after rmarkdown::render()
+
+#rmarkdown::render
+```
+
