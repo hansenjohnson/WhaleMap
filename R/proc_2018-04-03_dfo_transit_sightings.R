@@ -21,7 +21,7 @@ library(tools, quietly = T, warn.conflicts = F)
 library(readxl, quietly = T, warn.conflicts = F)
 
 # functions
-source('functions/config_data.R')
+source('R/functions.R')
 
 # process sightings -------------------------------------------------------
 

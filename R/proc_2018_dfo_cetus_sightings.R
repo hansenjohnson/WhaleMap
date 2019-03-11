@@ -15,8 +15,7 @@ ofile = '2018_dfo_cetus_sightings.rds'
 library(lubridate, quietly = T, warn.conflicts = F)
 library(data.table, quietly = T, warn.conflicts = F)
 library(measurements)
-source('functions/config_data.R')
-source('functions/clean_latlon.R')
+source('R/functions.R')
 
 # process data ------------------------------------------------------------
 

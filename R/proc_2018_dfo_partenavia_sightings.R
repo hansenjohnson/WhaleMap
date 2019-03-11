@@ -22,7 +22,7 @@ library(measurements, quietly = T, warn.conflicts = F)
 library(readxl, quietly = T, warn.conflicts = F)
 
 # functions
-source('functions/config_data.R')
+source('R/functions.R')
 
 # list files to process
 flist = list.files(data_dir, pattern = 'PartenaviaObs(\\d{8}).xlsx$', full.names = T, recursive = T)

@@ -24,7 +24,7 @@ suppressMessages(library(rgdal, quietly = T, warn.conflicts = F))
 library(tools, quietly = T, warn.conflicts = F)
 
 # functions
-source('functions/config_data.R')
+source('R/functions.R')
 
 # list files to process
 flist = list.files(data_dir, pattern = '.sig$', full.names = T, recursive = T, ignore.case = T)

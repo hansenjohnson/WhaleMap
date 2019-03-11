@@ -14,8 +14,7 @@ yr = 2015
 # setup -------------------------------------------------------------------
 
 library(lubridate, quietly = T, warn.conflicts = F)
-source('functions/config_data.R')
-source('functions/subsample_gps.R')
+source('R/functions.R')
 
 # read in data ------------------------------------------------------------
 

@@ -19,10 +19,7 @@ library(lubridate, quietly = T, warn.conflicts = F)
 library(tools, quietly = T, warn.conflicts = F)
 
 # functions
-source('functions/config_data.R')
-source('functions/subsample_gps.R')
-source('functions/plot_save_track.R')
-source('functions/on_server.R')
+source('R/functions.R')
 
 # plot tracks?
 plot_tracks = !on_server()

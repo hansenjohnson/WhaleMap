@@ -2,7 +2,7 @@
 # combine all observations
 
 # functions
-source('functions/config_data.R')
+source('R/functions.R')
 
 # list sightings files
 obs_list = list.files('data/interim', pattern = 'sightings|detections', full.names = T)

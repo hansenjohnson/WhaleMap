@@ -11,8 +11,7 @@ output_dir = 'data/interim/'
 # setup -------------------------------------------------------------------
 
 library(lubridate, quietly = T, warn.conflicts = F)
-source('functions/config_data.R')
-source('functions/subsample_gps.R')
+source('R/functions.R')
 
 # read in spp and obs keys
 spp_key = read.csv(paste0(data_dir, '/species_key.csv'))

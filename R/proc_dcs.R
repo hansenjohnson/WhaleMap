@@ -8,8 +8,7 @@ proc_dcs = function(data_dir, output_dir, det_fname, track_fname, ext = ""){
   library(lubridate, quietly = T, warn.conflicts = F)
   library(sp, quietly = T, warn.conflicts = F)
   library(reshape2, quietly = T, warn.conflicts = F)
-  source('functions/config_data.R')
-  # source('functions/subsample_gps.R')
+  source('R/functions.R')
   
   # list names of potential input species
   species_list = c('right', 'fin', 'sei', 'humpback', 'blue')

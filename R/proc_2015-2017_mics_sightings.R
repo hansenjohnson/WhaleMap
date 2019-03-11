@@ -14,8 +14,7 @@ out_file = 'data/interim/2015-2017_mics_sightings.rds'
 suppressPackageStartupMessages(library(lubridate))
 suppressPackageStartupMessages(library(readxl))
 suppressPackageStartupMessages(library(measurements))
-source('functions/config_data.R')
-source('functions/clean_latlon.R')
+source('R/functions.R')
 
 # process data ------------------------------------------------------------
 

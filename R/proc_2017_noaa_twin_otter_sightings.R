@@ -20,7 +20,7 @@ suppressMessages(library(rgdal, quietly = T, warn.conflicts = F))
 library(tools, quietly = T, warn.conflicts = F)
 
 # functions
-source('functions/config_data.R')
+source('R/functions.R')
 
 # read and format data ----------------------------------------------------
 

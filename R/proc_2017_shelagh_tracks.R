@@ -11,8 +11,7 @@ output_dir = 'data/interim/'
 # setup -------------------------------------------------------------------
 
 library(lubridate, quietly = T, warn.conflicts = F)
-source('functions/config_data.R')
-source('functions/subsample_gps.R')
+source('R/functions.R')
 
 # list data files
 dfiles = list.files(data_dir, pattern = '*CWI-V*', full.names = T)

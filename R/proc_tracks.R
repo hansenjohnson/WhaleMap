@@ -2,7 +2,7 @@
 # combine all trackline data
 
 # functions
-source('functions/config_data.R')
+source('R/functions.R')
 
 # list track files
 tracks_list = list.files('data/interim', pattern = 'tracks', full.names = T)

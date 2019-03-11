@@ -23,7 +23,7 @@ library(readxl, quietly = T, warn.conflicts = F)
 library(stringr)
 
 # functions
-source('functions/config_data.R')
+source('R/functions.R')
 
 # list files to process
 flist = list.files(data_dir, pattern = '(\\d{8})_Dash7_sightings.xls', full.names = T, recursive = T)

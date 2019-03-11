@@ -23,7 +23,7 @@ suppressPackageStartupMessages(library(readxl))
 suppressPackageStartupMessages(library(stringr))
 
 # functions
-source('functions/config_data.R')
+source('R/functions.R')
 
 # list files to process
 flist = list.files(data_dir, pattern = '(\\d{8})_Dash8_sightings.xls.$', full.names = T, recursive = T)

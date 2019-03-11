@@ -11,8 +11,7 @@ output_dir = 'data/interim/'
 # setup -------------------------------------------------------------------
 
 library(lubridate, quietly = T, warn.conflicts = F)
-source('functions/config_data.R')
-source('functions/clean_latlon.R')
+source('R/functions.R')
 
 # define functions --------------------------------------------------------
 
