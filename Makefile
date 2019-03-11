@@ -1,6 +1,6 @@
 ## DEFINE VARIABLES
-report_error = @bash report_error.sh $<
-remove_error = @bash remove_error.sh $<
+report_error = @bash src/report_error.sh $<
+remove_error = @bash src/remove_error.sh $<
 
 ## ALL ##
 .PHONY : all
@@ -11,7 +11,7 @@ all : tracks obs sono latest tss mpa map
 tracks : data/processed/tracks.rds
 
 # Combine all tracks
-data/processed/tracks.rds : functions/proc_tracks.R \
+data/processed/tracks.rds : R/proc_tracks.R \
 														data/interim/narwc_tracks.rds \
 														data/interim/2015-2017_mics_tracks.rds \
 														data/interim/2016_shelagh_tracks.rds \
@@ -38,133 +38,133 @@ data/processed/tracks.rds : functions/proc_tracks.R \
 	$(remove_error)
 
 # historical Canadian NARWC data [add rds to dependency list above!]
-data/interim/narwc_tracks.rds : functions/proc_narwc.R data/raw/narwc/*
+data/interim/narwc_tracks.rds : R/proc_narwc.R data/raw/narwc/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2015-2017 MICS tracks
-data/interim/2015-2017_mics_tracks.rds : functions/proc_2015-2017_mics_tracks.R data/raw/2015-2017_mics/effort/*
+data/interim/2015-2017_mics_tracks.rds : R/proc_2015-2017_mics_tracks.R data/raw/2015-2017_mics/effort/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2016 shelagh tracks
-data/interim/2016_shelagh_tracks.rds : functions/proc_2016_shelagh.R data/raw/2016_shelagh/*
+data/interim/2016_shelagh_tracks.rds : R/proc_2016_shelagh.R data/raw/2016_shelagh/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2017 shelagh tracks
-data/interim/2017_shelagh_tracks.rds : functions/proc_2017_shelagh_tracks.R data/raw/2017_shelagh_tracks/*
+data/interim/2017_shelagh_tracks.rds : R/proc_2017_shelagh_tracks.R data/raw/2017_shelagh_tracks/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2017 DFO twin otter tracks
-data/interim/2017_dfo_twin_otter_tracks.rds : functions/proc_2017_dfo_twin_otter_tracks.R data/raw/2017_dfo_twin_otter_tracks/*
+data/interim/2017_dfo_twin_otter_tracks.rds : R/proc_2017_dfo_twin_otter_tracks.R data/raw/2017_dfo_twin_otter_tracks/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2017 NOAA twin otter tracks
-data/interim/2017_noaa_twin_otter_tracks.rds : functions/proc_2017_noaa_twin_otter_tracks.R data/raw/2017_noaa_twin_otter/edit_data/*
+data/interim/2017_noaa_twin_otter_tracks.rds : R/proc_2017_noaa_twin_otter_tracks.R data/raw/2017_noaa_twin_otter/edit_data/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2017 TC dash 8 tracks
-data/interim/2017_tc_dash8_tracks.rds : functions/proc_2017_tc_dash8_tracks.R data/raw/2017_tc_dash8_tracks/*
+data/interim/2017_tc_dash8_tracks.rds : R/proc_2017_tc_dash8_tracks.R data/raw/2017_tc_dash8_tracks/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2018 DFO twin otter tracks
-data/interim/2018_dfo_twin_otter_tracks.rds : functions/proc_2018_dfo_twin_otter_tracks.R data/raw/2018_whalemapdata/DFO_twin_otter/*
+data/interim/2018_dfo_twin_otter_tracks.rds : R/proc_2018_dfo_twin_otter_tracks.R data/raw/2018_whalemapdata/DFO_twin_otter/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2018 DFO partenavia tracks
-data/interim/2018_dfo_partenavia_tracks.rds : functions/proc_2018_dfo_partenavia_tracks.R data/raw/2018_whalemapdata/DFO_partenavia/*
+data/interim/2018_dfo_partenavia_tracks.rds : R/proc_2018_dfo_partenavia_tracks.R data/raw/2018_whalemapdata/DFO_partenavia/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2018 DFO cessna tracks
-data/interim/2018_dfo_cessna_tracks.rds : functions/proc_2018_dfo_cessna_tracks.R data/raw/2018_whalemapdata/DFO_cessna/*
+data/interim/2018_dfo_cessna_tracks.rds : R/proc_2018_dfo_cessna_tracks.R data/raw/2018_whalemapdata/DFO_cessna/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2018 TC dash7 tracks
-data/interim/2018_tc_dash7_tracks.rds : functions/proc_2018_tc_dash7_tracks.R data/raw/2018_whalemapdata/TC_dash7/*
+data/interim/2018_tc_dash7_tracks.rds : R/proc_2018_tc_dash7_tracks.R data/raw/2018_whalemapdata/TC_dash7/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2018 TC dash8 tracks
-data/interim/2018_tc_dash8_tracks.rds : functions/proc_2018_tc_dash8_tracks.R data/raw/2018_whalemapdata/TC_dash8/*
+data/interim/2018_tc_dash8_tracks.rds : R/proc_2018_tc_dash8_tracks.R data/raw/2018_whalemapdata/TC_dash8/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # # 2018 CP king air tracks
-# data/interim/2018_cp_king_air_tracks.rds : functions/proc_2018_cp_king_air_tracks.R data/raw/2018_whalemapdata/CP_king_air/*
+# data/interim/2018_cp_king_air_tracks.rds : R/proc_2018_cp_king_air_tracks.R data/raw/2018_whalemapdata/CP_king_air/*
 	# $(report_error)
 	# Rscript $<
 	# $(remove_error)
 
 # 2018 NOAA twin otter tracks
-data/interim/2018_noaa_twin_otter_tracks.rds : functions/proc_2018_noaa_twin_otter.R data/raw/2018_noaa_twin_otter/edit_data/*
+data/interim/2018_noaa_twin_otter_tracks.rds : R/proc_2018_noaa_twin_otter.R data/raw/2018_noaa_twin_otter/edit_data/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2018 NEAq nereid tracks
-data/interim/2018_neaq_nereid_tracks.rds : functions/proc_2018_neaq_nereid.R data/raw/2018_neaq_cwi/*
+data/interim/2018_neaq_nereid_tracks.rds : R/proc_2018_neaq_nereid.R data/raw/2018_neaq_cwi/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2018 CWI jdmartin tracks
-data/interim/2018_cwi_jdmartin_tracks.rds : functions/proc_2018_cwi_jdmartin.R data/raw/2018_neaq_cwi/*
+data/interim/2018_cwi_jdmartin_tracks.rds : R/proc_2018_cwi_jdmartin.R data/raw/2018_neaq_cwi/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2018 MICS tracks
-data/interim/2018_mics_tracks.rds : functions/proc_2018_mics_tracks.R data/raw/2018_mics_sightings/Effort/*
+data/interim/2018_mics_tracks.rds : R/proc_2018_mics_tracks.R data/raw/2018_mics_sightings/Effort/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2018 dfo tag vessel tracks
-data/interim/2018_dfo_cetus_tracks.rds : functions/proc_2018_dfo_cetus_tracks.R data/raw/2018_whalemapdata/DFO_vessel_cetus/*
+data/interim/2018_dfo_cetus_tracks.rds : R/proc_2018_dfo_cetus_tracks.R data/raw/2018_whalemapdata/DFO_vessel_cetus/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2018 JASCO glider tracks
-data/interim/2018_jasco_tracks.rds : functions/proc_2018_jasco_tracks.R data/raw/jasco/track.csv
+data/interim/2018_jasco_tracks.rds : R/proc_2018_jasco_tracks.R data/raw/jasco/track.csv
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2019 NOAA twin otter tracks
-data/interim/2019_noaa_twin_otter_tracks.rds : functions/proc_2019_noaa_twin_otter.R data/raw/2019_noaa_twin_otter/edit_data/*
+data/interim/2019_noaa_twin_otter_tracks.rds : R/proc_2019_noaa_twin_otter.R data/raw/2019_noaa_twin_otter/edit_data/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # DCS archived tracks
-data/interim/dcs_archived_tracks.rds : functions/proc_archived_dcs.R data/raw/dcs/archived/*/*
+data/interim/dcs_archived_tracks.rds : R/proc_archived_dcs.R data/raw/dcs/archived/*/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # DCS live tracks
-data/interim/dcs_live_tracks.rds : functions/proc_live_dcs.R data/raw/dcs/live/*/*
+data/interim/dcs_live_tracks.rds : R/proc_live_dcs.R data/raw/dcs/live/*/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
@@ -174,7 +174,7 @@ data/interim/dcs_live_tracks.rds : functions/proc_live_dcs.R data/raw/dcs/live/*
 obs : data/processed/observations.rds
 
 # Combine all sightings
-data/processed/observations.rds : functions/proc_observations.R \
+data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/narwc_sightings.rds \
 																	data/interim/2015-2017_mics_sightings.rds \
 																	data/interim/2016_shelagh_sightings.rds \
@@ -200,117 +200,117 @@ data/processed/observations.rds : functions/proc_observations.R \
 	$(remove_error)
 
 # historical Canadian NARWC sightings [add rds to dependency list above!]
-data/interim/narwc_sightings.rds : functions/proc_narwc.R data/raw/narwc/*
+data/interim/narwc_sightings.rds : R/proc_narwc.R data/raw/narwc/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2015-2017 MICS sightings
-data/interim/2015-2017_mics_sightings.rds : functions/proc_2015-2017_mics_sightings.R data/raw/2015-2017_mics/sightings/*
+data/interim/2015-2017_mics_sightings.rds : R/proc_2015-2017_mics_sightings.R data/raw/2015-2017_mics/sightings/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2016 shelagh sightings
-data/interim/2016_shelagh_sightings.rds : functions/proc_2016_shelagh.R data/raw/2016_shelagh/*
+data/interim/2016_shelagh_sightings.rds : R/proc_2016_shelagh.R data/raw/2016_shelagh/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2017 sightings
-data/interim/2017_*_sightings.rds : functions/proc_2017_sightings.R data/raw/2017_sightings/* \
-																		functions/proc_2017_noaa_twin_otter_sightings.R data/raw/2017_noaa_twin_otter/canada2017_ap.csv
+data/interim/2017_*_sightings.rds : R/proc_2017_sightings.R data/raw/2017_sightings/* \
+																		R/proc_2017_noaa_twin_otter_sightings.R data/raw/2017_noaa_twin_otter/canada2017_ap.csv
 	$(report_error)
-	Rscript functions/proc_2017_sightings.R
-	Rscript functions/proc_2017_noaa_twin_otter_sightings.R
+	Rscript R/proc_2017_sightings.R
+	Rscript R/proc_2017_noaa_twin_otter_sightings.R
 	$(remove_error)
 
 # 2018 opportunistic sightings
-data/interim/2018_opportunistic_sightings.rds : functions/proc_2018_opportunistic.R data/raw/2018_whalemapdata/2018_opportunistic_sightings/*
+data/interim/2018_opportunistic_sightings.rds : R/proc_2018_opportunistic.R data/raw/2018_whalemapdata/2018_opportunistic_sightings/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2018 MICS sightings
-data/interim/2018_mics_sightings.rds : functions/proc_2018_mics_sightings.R data/raw/2018_mics_sightings/*
+data/interim/2018_mics_sightings.rds : R/proc_2018_mics_sightings.R data/raw/2018_mics_sightings/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2018 dfo twin otter sightings
-data/interim/2018_dfo_twin_otter_sightings.rds : functions/proc_2018_dfo_twin_otter_sightings.R data/raw/2018_whalemapdata/DFO_twin_otter/*
+data/interim/2018_dfo_twin_otter_sightings.rds : R/proc_2018_dfo_twin_otter_sightings.R data/raw/2018_whalemapdata/DFO_twin_otter/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2018 tc dash7 sightings
-data/interim/2018_tc_dash7_sightings.rds : functions/proc_2018_tc_dash7_sightings.R data/raw/2018_whalemapdata/TC_dash7/*
+data/interim/2018_tc_dash7_sightings.rds : R/proc_2018_tc_dash7_sightings.R data/raw/2018_whalemapdata/TC_dash7/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2018 tc dash8 sightings
-data/interim/2018_tc_dash8_sightings.rds : functions/proc_2018_tc_dash8_sightings.R data/raw/2018_whalemapdata/TC_dash8/*
+data/interim/2018_tc_dash8_sightings.rds : R/proc_2018_tc_dash8_sightings.R data/raw/2018_whalemapdata/TC_dash8/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2018 dfo partenavia sightings
-data/interim/2018_dfo_partenavia_sightings.rds : functions/proc_2018_dfo_partenavia_sightings.R data/raw/2018_whalemapdata/DFO_partenavia/*
+data/interim/2018_dfo_partenavia_sightings.rds : R/proc_2018_dfo_partenavia_sightings.R data/raw/2018_whalemapdata/DFO_partenavia/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2018 dfo cessna sightings
-data/interim/2018_dfo_cessna_sightings.rds : functions/proc_2018_dfo_cessna_sightings.R data/raw/2018_whalemapdata/DFO_cessna/*
+data/interim/2018_dfo_cessna_sightings.rds : R/proc_2018_dfo_cessna_sightings.R data/raw/2018_whalemapdata/DFO_cessna/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2018 noaa twin otter sightings
-data/interim/2018_noaa_twin_otter_sightings.rds : functions/proc_2018_noaa_twin_otter.R data/raw/2018_noaa_twin_otter/edit_data/*
+data/interim/2018_noaa_twin_otter_sightings.rds : R/proc_2018_noaa_twin_otter.R data/raw/2018_noaa_twin_otter/edit_data/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2018 NEAq nereid sightings
-data/interim/2018_neaq_nereid_sightings.rds : functions/proc_2018_neaq_nereid.R data/raw/2018_neaq_cwi/*
+data/interim/2018_neaq_nereid_sightings.rds : R/proc_2018_neaq_nereid.R data/raw/2018_neaq_cwi/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2018 CWI jdmartin sightings
-data/interim/2018_cwi_jdmartin_sightings.rds : functions/proc_2018_cwi_jdmartin.R data/raw/2018_neaq_cwi/*
+data/interim/2018_cwi_jdmartin_sightings.rds : R/proc_2018_cwi_jdmartin.R data/raw/2018_neaq_cwi/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2018 dfo tag vessel sightings
-data/interim/2018_dfo_cetus_sightings.rds : functions/proc_2018_dfo_cetus_sightings.R data/raw/2018_whalemapdata/DFO_vessel_cetus/*
+data/interim/2018_dfo_cetus_sightings.rds : R/proc_2018_dfo_cetus_sightings.R data/raw/2018_whalemapdata/DFO_vessel_cetus/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2018 JASCO detections
-data/interim/2018_jasco_detections.rds : functions/proc_2018_jasco_detections.R data/raw/jasco/detections.csv
+data/interim/2018_jasco_detections.rds : R/proc_2018_jasco_detections.R data/raw/jasco/detections.csv
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # 2019 noaa twin otter sightings
-data/interim/2019_noaa_twin_otter_sightings.rds : functions/proc_2019_noaa_twin_otter.R data/raw/2019_noaa_twin_otter/edit_data/*
+data/interim/2019_noaa_twin_otter_sightings.rds : R/proc_2019_noaa_twin_otter.R data/raw/2019_noaa_twin_otter/edit_data/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # DCS archived detections
-data/interim/dcs_archived_detections.rds : functions/proc_archived_dcs.R data/raw/dcs/archived/*
+data/interim/dcs_archived_detections.rds : R/proc_archived_dcs.R data/raw/dcs/archived/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # DCS live detections
-data/interim/dcs_live_detections.rds : functions/proc_live_dcs.R data/raw/dcs/live/*
+data/interim/dcs_live_detections.rds : R/proc_live_dcs.R data/raw/dcs/live/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
@@ -320,7 +320,7 @@ data/interim/dcs_live_detections.rds : functions/proc_live_dcs.R data/raw/dcs/li
 sono : data/processed/sonobuoys.rds
 
 # Process sonobuoys
-data/processed/sonobuoys.rds : 	functions/proc_sonobuoys.R \
+data/processed/sonobuoys.rds : 	R/proc_sonobuoys.R \
 																data/raw/noaa_sonobuoys/*
 	$(report_error)
 	Rscript $<
@@ -331,7 +331,7 @@ data/processed/sonobuoys.rds : 	functions/proc_sonobuoys.R \
 latest : data/processed/dcs_live_latest_position.rds
 
 # Process dcs positions
-data/processed/dcs_live_latest_position.rds : functions/proc_dcs_latest_position.R data/interim/dcs_live_tracks.rds data/interim/2018_jasco_tracks.rds
+data/processed/dcs_live_latest_position.rds : R/proc_dcs_latest_position.R data/interim/dcs_live_tracks.rds data/interim/2018_jasco_tracks.rds
 	$(report_error)
 	Rscript $<
 	$(remove_error)
@@ -341,7 +341,7 @@ data/processed/dcs_live_latest_position.rds : functions/proc_dcs_latest_position
 tss : data/processed/tss.rda
 
 # Process tss
-data/processed/tss.rda : functions/proc_tss.R data/raw/tss/*
+data/processed/tss.rda : R/proc_tss.R data/raw/tss/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
@@ -351,13 +351,13 @@ data/processed/tss.rda : functions/proc_tss.R data/raw/tss/*
 mpa : data/processed/mpa.rds data/processed/management_areas.rda
 
 # Process mpa
-data/processed/mpa.rds : functions/proc_mpa.R data/raw/mpa/*
+data/processed/mpa.rds : R/proc_mpa.R data/raw/mpa/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
 # Process management areas
-data/processed/management_areas.rda : functions/proc_management_areas.R data/raw/gis/*/*
+data/processed/management_areas.rda : R/proc_management_areas.R data/raw/gis/*/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
@@ -367,7 +367,7 @@ data/processed/management_areas.rda : functions/proc_management_areas.R data/raw
 map : ./static_map/whale_map_en.html
 
 # Build map
-./static_map/whale_map_en.html : functions/build_static_map.R data/processed/*.rda data/processed/*.rds
+./static_map/whale_map_en.html : R/build_static_map.R data/processed/*.rda data/processed/*.rds
 	$(report_error)
 	Rscript $<
 	cp -r static_map/* ../server_index/
