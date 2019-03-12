@@ -519,10 +519,16 @@ function(input, output, session){
       names(tracks.df) %>%
         purrr::walk( function(df) {
           proxy <<- proxy %>%
-            addPolylines(data=tracks.df[[df]], group = 'tracks',
-                         lng=~lon, lat=~lat, weight = 2,
-                         popup = paste0('Track ID: ', unique(tracks.df[[df]]$id)),
-                         smoothFactor = 1, color = getColor(tracks.df[[df]]))
+            addPolylines(data=tracks.df[[df]], 
+                         group = 'tracks',
+                         lng=~lon, 
+                         lat=~lat, 
+                         weight = 2,
+                         smoothFactor = 1, 
+                         # highlightOptions = highlightOptions(opacity = 1, weight = 4),
+                         options = markerOptions(removeOutsideVisibleBounds=TRUE, opacity = 0.5),
+                         color = getColor(tracks.df[[df]]),
+                         popup = paste0('Track ID: ', unique(tracks.df[[df]]$id)))
         })
     }
     
