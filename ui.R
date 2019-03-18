@@ -155,16 +155,16 @@ body <- dashboardBody(
                              passwordInput("password", 'Show unverified data:', value = "",
                                            placeholder = 'Enter password'),
                              `data-proxy-click` = "go"
-                           ),
+                           )
                            
-                           hr(),
-                           
-                           # add button to update date
-                           actionButton("go", "Go!",
-                                        style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
-                           
-                           # add button to re-center
-                           actionButton("zoom", "Center map")
+                           # hr(),
+                           # 
+                           # # add button to update date
+                           # actionButton("go", "Go!",
+                           #              style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
+                           # 
+                           # # add button to re-center
+                           # actionButton("zoom", "Center map")
                   ),
                   
                   # layers tab ----------------------------------------------------------
@@ -277,6 +277,15 @@ body <- dashboardBody(
                         system. Errors in processing are indicated by an error message in place of a timestamp.')
            )
     )
+  ),
+  
+  # floating go button
+  fixedPanel(
+    actionButton("go", "Go!",
+                 style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
+    left = 10,
+    bottom = 10,
+    style="z-index:500;"
   )
 )
 
