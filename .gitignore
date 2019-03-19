@@ -10,7 +10,7 @@
 data/
 figures/
 docs/
-output/
+shared/
 static_map/
 wrk/
 tests/

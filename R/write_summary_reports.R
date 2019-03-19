@@ -3,7 +3,7 @@
 # user input --------------------------------------------------------------
 
 ## report directory
-report_dir = 'output/summary_reports/'
+report_dir = 'shared/dfo/summary_reports/'
 
 ## day to write weekly report
 weekly_report_day = 'Friday'
