@@ -22,7 +22,7 @@ t1 = Sys.Date()
 t0 = t1 - 365
 
 # make output dir
-if(!dir.exists(to_sas_dir)){dir.create(to_sas_dir)}
+if(!dir.exists(to_sas_dir)){dir.create(to_sas_dir, recursive = TRUE)}
 
 # process raw sas ---------------------------------------------------------
 
