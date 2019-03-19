@@ -19,6 +19,7 @@ tmp/
 
 # sensitive
 password.rda
+src/get_sas_url.sh
 
 # latex
 *.out
