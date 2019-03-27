@@ -25,7 +25,7 @@ mkdir -p backups
 # Sync Canadian aerial data Google drive
 printf "\n*** Checking DFO Google Drive ***\n\n"
 # rclone sync whalemapdata:"WhaleMapData_Master/" "2018_whalemapdata/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf
-rclone sync whalemapdata:"WhaleMapData_Master/" "2018_whalemapdata/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --fast-list
+rclone sync whalemapdata:"WhaleMapData_Master/" "2018_whalemapdata/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --fast-list
 
 # Sync NOAA 2018 aerial data Google drive
 printf "\n*** Checking NOAA Google Drive ***\n\n"
