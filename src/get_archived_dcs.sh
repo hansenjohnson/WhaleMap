@@ -18,6 +18,9 @@ declare -A URL
 
 # assign paths to detection data for each deployment
 URL=(
+	[2019-03-13_slocum_scotia]=http://dcs.whoi.edu/dal0319/dal0319_scotia_html/ptracks/manual_analysis.csv
+	[2019-01-23_slocum_we15]=http://dcs.whoi.edu/hatteras0119/hatteras0119_we15_html/ptracks/manual_analysis.csv
+	[2019-01-22_slocum_we14]=http://dcs.whoi.edu/hatteras0119/hatteras0119_we14_html/ptracks/manual_analysis.csv
 	[2018-12-01_slocum_we03]=http://dcs.whoi.edu/gom1218/gom1218_we03_html/ptracks/manual_analysis.csv
 	[2018-02-13_buoy_nybight]=http://dcs.whoi.edu/nyb0218/nyb0218_buoy_html/ptracks/manual_analysis.csv
 	[2018-10-04_buoy_mdr]=http://dcs.whoi.edu/mdr1018/mdr1018_buoy_html/ptracks/manual_analysis.csv
