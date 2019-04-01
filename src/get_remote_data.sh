@@ -23,14 +23,14 @@ cd ${DATADIR}
 mkdir -p backups
 
 # Sync Canadian aerial data Google drive
-printf "\n*** Checking DFO Google Drive ***\n\n"
+# printf "\n*** Checking DFO Google Drive ***\n\n"
 # rclone sync whalemapdata:"WhaleMapData_Master/" "2018_whalemapdata/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf
-rclone sync whalemapdata:"WhaleMapData_Master/" "2018_whalemapdata/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --fast-list
+# rclone sync whalemapdata:"WhaleMapData_Master/" "2018_whalemapdata/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --fast-list
 
 # Sync NOAA 2018 aerial data Google drive
-printf "\n*** Checking NOAA Google Drive ***\n\n"
-printf "2018 Flight data \n\n"
-rclone sync drive:"2018/2018 NEFSC Survey Data/Flights/" "2018_noaa_twin_otter/" --drive-skip-gdocs --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
+# printf "\n*** Checking NOAA Google Drive ***\n\n"
+# printf "2018 Flight data \n\n"
+# rclone sync drive:"2018/2018 NEFSC Survey Data/Flights/" "2018_noaa_twin_otter/" --drive-skip-gdocs --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 # printf "2018 Sonobuoy data \n\n"
 # rclone sync drive:"2018/2018 Sonobuoy recordings/sonobuoy_metadata/" "noaa_sonobuoys/" --drive-formats csv --backup-dir backups -v --exclude *.wav --exclude *.txt
 printf "2019 Flight data \n\n"
