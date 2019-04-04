@@ -59,15 +59,6 @@ body <- dashboardBody(
     
     # editor tab ----------------------------------------------------------
     
-    # notice
-    column(width = 12,
-           box(width = NULL, solidHeader = T, collapsible = F, 
-               status = 'danger', 
-               
-               p("WhaleMap currently focuses on Canadian waters. For a comprehensive overview of the latest observations in the US go to:", 
-                 a(href="https://www.nefsc.noaa.gov/psb/surveys/", "https://www.nefsc.noaa.gov/psb/surveys/"), align = "center")
-           )),
-    
     # left column
     column(width = 3,
            
@@ -155,16 +146,16 @@ body <- dashboardBody(
                              passwordInput("password", 'Show unverified data:', value = "",
                                            placeholder = 'Enter password'),
                              `data-proxy-click` = "go"
-                           ),
+                           )
                            
-                           hr(),
-                           
-                           # add button to update date
-                           actionButton("go", "Go!",
-                                        style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
-                           
-                           # add button to re-center
-                           actionButton("zoom", "Center map")
+                           # hr(),
+                           # 
+                           # # add button to update date
+                           # actionButton("go", "Go!",
+                           #              style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
+                           # 
+                           # # add button to re-center
+                           # actionButton("zoom", "Center map")
                   ),
                   
                   # layers tab ----------------------------------------------------------
@@ -277,6 +268,15 @@ body <- dashboardBody(
                         system. Errors in processing are indicated by an error message in place of a timestamp.')
            )
     )
+  ),
+  
+  # floating go button
+  fixedPanel(
+    actionButton("go", "Go!",
+                 style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
+    left = 10,
+    bottom = 10,
+    style="z-index:1000;"
   )
 )
 

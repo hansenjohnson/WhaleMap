@@ -10,7 +10,7 @@
 data/
 figures/
 docs/
-output/
+shared/
 static_map/
 wrk/
 tests/
@@ -19,6 +19,7 @@ tmp/
 
 # sensitive
 password.rda
+src/get_sas_url.sh
 
 # latex
 *.out
