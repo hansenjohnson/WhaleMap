@@ -21,21 +21,22 @@ suppressPackageStartupMessages(library(lubridate))
 suppressPackageStartupMessages(library(oce))
 suppressPackageStartupMessages(library(leaflet.extras))
 
-# read in data
-obs = readRDS('../data/processed/observations.rds')
-trk = readRDS('../data/processed/tracks.rds')
-mpa = readRDS('../data/processed/mpa.rds')
-load('../data/processed/tss.rda')
-load('../data/processed/management_areas.rda')
+# designate prefix for paths
+pre = '../'
 
-# # for testing
-# obs = readRDS('data/processed/observations.rds')
-# trk = readRDS('data/processed/tracks.rds')
-# mpa = readRDS('data/processed/mpa.rds')
-# load('data/processed/tss.rda')
-# load('data/processed/management_areas.rda')
-# params=data.frame(start = as.Date('2018-03-30'),
-#                   stop = as.Date('2018-03-30'))
+# for testing
+# params=data.frame(start = as.Date('2019-04-04'),
+                  # stop = as.Date('2019-04-03'))
+
+source(paste0(pre,'R/functions.R'))
+
+# read in data
+obs = readRDS(paste0(pre, 'data/processed/observations.rds'))
+trk = readRDS(paste0(pre, 'data/processed/tracks.rds'))
+mpa = readRDS(paste0(pre, 'data/processed/mpa.rds'))
+load(paste0(pre, 'data/processed/tss.rda'))
+load(paste0(pre, 'data/processed/management_areas.rda'))
+bb_file = paste0(pre, 'data/raw/gis/canadian_boundary/canadian_boundary.csv')
 
 # define species list
 spp_list = c('right', 'fin', 'sei', 'humpback', 'blue')
@@ -51,16 +52,14 @@ obs = obs %>%
            score %in% c('definite visual','definite acoustic') &
            name != 'jasco_test' &
            !is.na(lat) & !is.na(lon))
-
-obs = subset_canadian(obs, bb_file = '../data/raw/gis/canadian_boundary/canadian_boundary.csv')
+obs = subset_canadian(obs, bb_file = bb_file)
   
 # subset tracks
 trk = trk %>%
   filter(date >= t0 & date <= t1 & 
            name != 'jasco_test' &
            !is.na(lat) & !is.na(lon))
-
-trk = subset_canadian(trk, bb_file = '../data/raw/gis/canadian_boundary/canadian_boundary.csv')
+trk = subset_canadian(trk, bb_file = bb_file)
 
 # create data to/from message
 if(t0 == t1){
@@ -68,7 +67,6 @@ if(t0 == t1){
 } else {
   data_range = paste0(params$start, ' to ', params$stop)
 }
-
 ```
 
 \begin{center}
@@ -87,7 +85,7 @@ if(t0 == t1){
 ```{r map, echo=FALSE, warning=FALSE, fig.height=8, fig.width=8}
 
 # setup -------------------------------------------------------------------
-  
+
 # define score color palette
 pal = colorFactor(levels = spp_list, palette = c('red', 'blue', 'lightgray', 'green', 'darkslategrey'))
 
@@ -127,20 +125,20 @@ map <- leaflet(options = leafletOptions(zoomControl = FALSE, attributionControl 
   addScaleBar(position = 'topright') %>%
   
   # use NOAA graticules
-      addWMSTiles(
-        "https://gis.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer/",
-        layers = c("1-degree grid", "5-degree grid"),
-        options = WMSTileOptions(format = "image/png8", transparent = TRUE),
-        attribution = NULL)
+  addWMSTiles(
+    "https://gis.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer/",
+    layers = c("1-degree grid", "5-degree grid"),
+    options = WMSTileOptions(format = "image/png8", transparent = TRUE),
+    attribution = NULL)
 
 # center on focal region
 if(length(inLon)!=0){
- map <- fitBounds(map = map, 
-                 lng1 = min(inLon, na.rm = T), 
-                 lng2 = max(inLon, na.rm = T), 
-                 lat1 = min(inLat, na.rm = T), 
-                 lat2 = max(inLat, na.rm = T), 
-                 options = list(maxZoom=7)) 
+  map <- fitBounds(map = map, 
+                   lng1 = min(inLon, na.rm = T), 
+                   lng2 = max(inLon, na.rm = T), 
+                   lat1 = min(inLat, na.rm = T), 
+                   lat2 = max(inLat, na.rm = T), 
+                   options = list(maxZoom=7)) 
 }
 
 # plot polygons -----------------------------------------------------------
