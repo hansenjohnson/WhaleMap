@@ -39,3 +39,4 @@ summary_report.pdf
 *.pptx
 status.txt
 error_email.txt
+.Rproj.user
