@@ -18,7 +18,7 @@ if(!dir.exists(outdir)){dir.create(outdir)}
 obs = readRDS('data/processed/observations.rds')
 
 # subset
-obs = obs[obs$year == yr,]
+obs = filter(obs, year == yr & !is.na(lat) & !is.na(lon))
 obs = subset_canadian(obs)
 
 # write to csv
@@ -30,7 +30,7 @@ write.csv(x = obs, file = paste0(outdir, 'observations.csv'), row.names = F)
 trk = readRDS('data/processed/tracks.rds')
 
 # subset
-trk = trk[trk$year == yr,]
+trk = filter(trk, year == yr & !is.na(lat) & !is.na(lon))
 trk = subset_canadian(trk)
 
 # write to csv
