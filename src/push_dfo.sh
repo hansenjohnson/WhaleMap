@@ -8,10 +8,10 @@
 cd ${DESTDIR}
 
 # Write output data
-Rscript R/write_output_data.R
+Rscript R/write_dfo_data.R
 
 # Write summary reports
-Rscript R/write_summary_reports.R
+Rscript R/write_dfo_summary.R
 
 # copy output data back to Google Drive
 rclone copy "shared/dfo/" whalemapdata:"WhaleMapData_Processed/"
