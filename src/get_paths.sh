@@ -1,5 +1,5 @@
 #!/bin/bash
-# get name of operating system
+# get project paths based on operating system
 
 # Extract OS name
 unamestr=`uname`

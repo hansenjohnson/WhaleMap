@@ -1,8 +1,8 @@
 #!/bin/bash
 # download SAS map data
 
-# Extract OS name
-. ./src/get_os_name.sh
+# Extract project paths
+. ./src/get_paths.sh
 
 # define data directory
 DATADIR=${DESTDIR}/data/raw/sas/

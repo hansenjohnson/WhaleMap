@@ -1,8 +1,8 @@
 #!/bin/bash
 # download archived LFDCS data detections, then process using R script
 
-# Extract OS name
-. ./src/get_os_name.sh
+# Extract project paths
+. ./src/get_paths.sh
 
 # initiate array
 declare -A URL

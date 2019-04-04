@@ -1,8 +1,8 @@
 #!/bin/bash
 # download survey data from remote repository
 
-# Extract OS name
-. ./src/get_os_name.sh
+# Extract project paths
+. ./src/get_paths.sh
 
 # Determine raw data directory
 DATADIR=${DESTDIR}/data/raw/

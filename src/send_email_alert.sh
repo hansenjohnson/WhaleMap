@@ -12,15 +12,11 @@ from="hansen.johnson@dal.ca"
 # Define temporary file name
 email_file="error_email.txt"
 
-# Define OS-specific paths to project directory
-if [[ "$unamestr" == 'Linux' ]]; then
-	proj_dir=/srv/shiny-server/WhaleMap # server
-elif [[ "$unamestr" == 'Darwin' ]]; then
-	proj_dir=/Users/hansenjohnson/Projects/WhaleMap # local
-fi
+# Extract project paths
+. ./src/get_paths.sh
 
 # Move to project directory
-cd "$proj_dir"
+cd ${DESTDIR}
 
 # Find error lines
 error=$(grep 'ERROR' data/processed/status.txt)
