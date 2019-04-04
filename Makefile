@@ -192,7 +192,6 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2018_dfo_cetus_sightings.rds \
 																	data/interim/2018_jasco_detections.rds \
 																	data/interim/2018_noaa_twin_otter_sightings.rds \
-																	data/interim/sas_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
 
@@ -304,11 +303,11 @@ data/interim/2019_noaa_twin_otter_sightings.rds : R/proc_2019_noaa_twin_otter.R 
 	Rscript $<
 	$(remove_error)
 
-# NOAA SAS map sightings
-data/interim/sas_sightings.rds : R/proc_sas.R data/raw/sas/*
-	$(report_error)
-	Rscript $<
-	$(remove_error)
+# # NOAA SAS map sightings
+# data/interim/sas_sightings.rds : R/proc_sas.R data/raw/sas/*
+# 	$(report_error)
+# 	Rscript $<
+# 	$(remove_error)
 
 # DCS archived detections
 data/interim/dcs_archived_detections.rds : R/proc_archived_dcs.R data/raw/dcs/archived/*
