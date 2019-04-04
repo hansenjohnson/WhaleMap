@@ -1,9 +1,11 @@
 #!/bin/bash
 # push summary data back to google drive
 
-# Move to project parent directory
-# cd ~/Projects/WhaleMap # local
-cd /srv/shiny-server/WhaleMap/ # server
+# Extract project paths
+. ./src/get_paths.sh
+
+# Move to project directory
+cd ${DESTDIR}
 
 # Write output data
 Rscript R/write_output_data.R
