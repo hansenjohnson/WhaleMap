@@ -23,7 +23,7 @@ yesterday = today-1
 
 # define report function --------------------------------------------------
 
-render_report = function(template = "R/summary_report.Rmd", 
+render_report = function(template = "R/write_dfo_summary-template.Rmd", 
                          outdir = report_dir, 
                          report_date = yesterday, 
                          daily = TRUE){

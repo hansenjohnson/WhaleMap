@@ -1,5 +1,8 @@
 ## functions ##
 
+suppressPackageStartupMessages(library(sf))
+suppressPackageStartupMessages(library(tidyverse))
+
 clean_latlon = function(d){
   d$lat = as.character(d$lat)
   d$lat = gsub(",","",d$lat)
@@ -404,4 +407,30 @@ subsample_gps = function(gps, n=60, tol = 0.001, plot_comparison=FALSE, full_res
   # return data
   return(new)
   
+}
+
+subset_canadian = function(df, 
+                           crs_string = "+init=epsg:3857", 
+                           bb_file = 'data/raw/gis/canadian_boundary/canadian_boundary.csv'){
+  # read
+  bb = read.csv(bb_file)
+  
+  # coordinate reference
+  crs_ref = st_crs(crs_string)
+  
+  # convert to polygon and create sfc
+  can = st_sfc(st_polygon(list(as.matrix(bb))), crs = crs_ref)
+  
+  # convert to spatial features
+  df_sf = st_as_sf(df, coords = c("lon", "lat"), crs = crs_ref, agr = "constant", remove = FALSE)
+  
+  # spatial subsets
+  df_in = st_within(x = df_sf, y = can, sparse = FALSE)[,1]
+  df_can = df_sf[df_in,]
+  
+  # convert back to data.frame
+  out = as.data.frame(df_can)
+  out$geometry = NULL
+  
+  return(out)
 }

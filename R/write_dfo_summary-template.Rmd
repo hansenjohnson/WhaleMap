@@ -11,7 +11,7 @@ params:
 
 # libraries
 suppressPackageStartupMessages(library(knitr))
-suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(leaflet))
 suppressPackageStartupMessages(library(rgdal))
 suppressPackageStartupMessages(library(htmltools))
@@ -37,34 +37,30 @@ load('../data/processed/management_areas.rda')
 # params=data.frame(start = as.Date('2018-03-30'),
 #                   stop = as.Date('2018-03-30'))
 
+# define species list
+spp_list = c('right', 'fin', 'sei', 'humpback', 'blue')
+
 # rename time limits
 t0 = params$start
 t1 = params$stop
 
-# remove buoys from GOM
-obs = obs[obs$platform!='buoy',]
-trk = trk[trk$platform!='buoy',]
+# subset observations
+obs = obs %>%
+  filter(date >= t0 & date <= t1 & 
+           species %in% spp_list &
+           score %in% c('definite visual','definite acoustic') &
+           name != 'jasco_test' &
+           !is.na(lat) & !is.na(lon))
 
-# subset data
-obs = obs[obs$date >= t0 & obs$date <= t1,]
-trk = trk[trk$date >= t0 & trk$date <= t1,]
+obs = subset_canadian(obs, bb_file = '../data/raw/gis/canadian_boundary/canadian_boundary.csv')
+  
+# subset tracks
+trk = trk %>%
+  filter(date >= t0 & date <= t1 & 
+           name != 'jasco_test' &
+           !is.na(lat) & !is.na(lon))
 
-# define species list
-spp_list = c('right', 'fin', 'sei', 'humpback', 'blue')
-
-# select species
-obs = obs[obs$species %in% spp_list,]
-
-# only keep definites
-obs = obs[obs$score %in% c('definite visual','definite acoustic'),]
-
-# remove JASCO test data
-obs = obs[obs$name!='jasco_test',]
-trk = trk[trk$name!='jasco_test',]
-
-# remove NAs
-obs = obs[!is.na(obs$lat),]
-trk = trk[!is.na(trk$lat),]
+trk = subset_canadian(trk, bb_file = '../data/raw/gis/canadian_boundary/canadian_boundary.csv')
 
 # create data to/from message
 if(t0 == t1){
