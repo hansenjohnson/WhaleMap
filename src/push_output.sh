@@ -12,4 +12,4 @@ Rscript R/write_output_data.R
 Rscript R/write_summary_reports.R
 
 # copy output data back to Google Drive
-rclone copy "output/" whalemapdata:"WhaleMapData_Processed/"
+rclone copy "shared/dfo/" whalemapdata:"WhaleMapData_Processed/"
