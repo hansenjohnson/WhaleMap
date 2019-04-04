@@ -412,6 +412,12 @@ subsample_gps = function(gps, n=60, tol = 0.001, plot_comparison=FALSE, full_res
 subset_canadian = function(df, 
                            crs_string = "+init=epsg:3857", 
                            bb_file = 'data/raw/gis/canadian_boundary/canadian_boundary.csv'){
+  
+  # catch and return empty input data
+  if(nrow(df)==0){
+    return(df)
+  }
+  
   # read
   bb = read.csv(bb_file)
   
