@@ -6,7 +6,7 @@ unamestr=`uname`
 
 # Define OS-specific paths
 if [[ "$unamestr" == 'Linux' ]]; then
-	DESTDIR=/srv/shiny-server/WhaleMap-dev # server
+	DESTDIR=/srv/shiny-server/WhaleMap # server
 	SSHDIR=/home/hansen
 elif [[ "$unamestr" == 'Darwin' ]]; then
 	DESTDIR=/Users/hansenjohnson/Projects/WhaleMap # local
