@@ -376,7 +376,7 @@ map : ./static_map/whale_map_en.html
 ./static_map/whale_map_en.html : R/build_static_map.R data/processed/*.rda data/processed/*.rds
 	$(report_error)
 	Rscript $<
-	# cp -r static_map/* ../server_index/
+	cp -r static_map/* ../server_index/
 	$(remove_error)
 
 ## CLEAN ##
