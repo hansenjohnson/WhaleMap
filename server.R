@@ -439,6 +439,54 @@ function(input, output, session){
     
   })
   
+  # dynamic fishing 10f contour ------------------------------------------------  
+  
+  observe(priority = 4, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('dynamic_fishing_10_fathom_contour')
+    
+    if(input$dynamic_fishing_10_fathom_contour){
+      
+      # add polygons
+      proxy %>%
+        addPolylines(data=dynamic_fishing_10_fathom_contour, 
+                    group = 'dynamic_fishing_10_fathom_contour',
+                    weight = 1, color = 'black')
+      
+      # switch to show/hide
+      ifelse(input$dynamic_fishing_10_fathom_contour, 
+             showGroup(proxy, 'dynamic_fishing_10_fathom_contour'),
+             hideGroup(proxy, 'dynamic_fishing_10_fathom_contour'))
+    }
+    
+  })
+  
+  # dynamic fishing 20f contour ------------------------------------------------  
+  
+  observe(priority = 4, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('dynamic_fishing_20_fathom_contour')
+    
+    if(input$dynamic_fishing_20_fathom_contour){
+      
+      # add polygons
+      proxy %>%
+        addPolylines(data=dynamic_fishing_20_fathom_contour, 
+                     group = 'dynamic_fishing_20_fathom_contour',
+                     weight = 1, color = 'grey')
+      
+      # switch to show/hide
+      ifelse(input$dynamic_fishing_20_fathom_contour, 
+             showGroup(proxy, 'dynamic_fishing_20_fathom_contour'),
+             hideGroup(proxy, 'dynamic_fishing_20_fathom_contour'))
+    }
+    
+  })
+  
   # static shipping zone ------------------------------------------------------  
   
   observe(priority = 4, {

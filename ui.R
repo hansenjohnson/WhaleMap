@@ -195,16 +195,16 @@ body <- dashboardBody(
                            # Map layers
                            helpText(tags$em('Map Layers')),
                            
-                           checkboxInput("critical_habitat_zone", 
-                                         label = 'Critical habitat areas', value = T),
-                           
                            checkboxInput("tss", 
                                          label = 'Shipping lanes', value = T),
                            
                            checkboxInput("legend", label = 'Legends', value = T),
                            
                            # Management layers
-                           helpText(tags$em('Management areas')),
+                           helpText(tags$em('Management Layers')),
+                           
+                           checkboxInput("critical_habitat_zone", 
+                                         label = 'Critical habitat areas', value = T),
                            
                            checkboxInput("static_fishing_zone", 
                                          label = 'Static fishery closure', value = F),
@@ -214,6 +214,12 @@ body <- dashboardBody(
                            
                            checkboxInput("dynamic_fishing_grid", 
                                          label = 'Dynamic fishing grid', value = F),
+                           
+                           checkboxInput("dynamic_fishing_10_fathom_contour", 
+                                         label = 'Dynamic fishing: 10-fathom contour', value = F),
+                           
+                           checkboxInput("dynamic_fishing_20_fathom_contour", 
+                                         label = 'Dynamic fishing: 20-fathom contour', value = F),
                            
                            checkboxInput("static_shipping_zone", 
                                          label = 'Static vessel slow zone', value = F),
