@@ -62,9 +62,7 @@ sonoIcon = makeIcon("icons/sono.png", iconWidth = 10, iconHeight = 45)
 # load data ---------------------------------------------------------------
 
 # read in map polygons
-mpa = readRDS('data/processed/mpa.rds')
 load('data/processed/tss.rda')
-# load('data/processed/management_areas.rda')
 load('data/processed/gis.rda')
 
 # read in password file
