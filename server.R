@@ -323,7 +323,7 @@ function(input, output, session){
     }
   }
   
-  # mpa observer ------------------------------------------------------  
+  # critical habitat zone ------------------------------------------------------  
   
   observe(priority = 4, {
     
@@ -427,9 +427,8 @@ function(input, output, session){
                     fill = T, 
                     fillOpacity = 0.4, 
                     stroke = T, 
-                    dashArray = c(5,5), 
                     weight = 1, 
-                    color = 'orange', 
+                    color = 'grey', 
                     fillColor = 'orange',
                     popup = ~paste0('Grid cell ID: ', ID))
       
