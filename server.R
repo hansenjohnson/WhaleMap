@@ -453,9 +453,8 @@ function(input, output, session){
       proxy %>%
         addPolylines(data=static_shipping_zone, group = 'static_shipping_zone',
                     options = pathOptions(clickable = F),
-                    weight = 1, 
-                    color = 'blue', 
-                    fillColor = 'blue')
+                    weight = 2, 
+                    color = 'brown')
       
       # switch to show/hide
       ifelse(input$static_shipping_zone, showGroup(proxy, 'static_shipping_zone'),
