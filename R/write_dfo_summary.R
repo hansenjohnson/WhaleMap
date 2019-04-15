@@ -90,7 +90,7 @@ if(today_name == weekly_report_day){
 if(rewrite_reports){
   
   # define date sequence
-  date_seq = seq.Date(from = as.Date('2018-01-01'), to = Sys.Date(), by = 1)
+  date_seq = seq.Date(from = as.Date('2019-01-01'), to = Sys.Date(), by = 1)
   
   # build reports
   for(i in seq_along(date_seq)){

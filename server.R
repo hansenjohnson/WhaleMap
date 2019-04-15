@@ -329,17 +329,17 @@ function(input, output, session){
     
     # define proxy
     proxy <- leafletProxy("map")
-    proxy %>% clearGroup('mpa')
+    proxy %>% clearGroup('critical_habitat_zone')
     
-    if(input$mpa){
+    if(input$critical_habitat_zone){
       
       # add mpas
       proxy %>%
-        addPolygons(data=mpa, lng=~lon, lat=~lat, group = 'mpa',
+        addPolygons(data=critical_habitat_zone,
+                    group = 'critical_habitat_zone',
                     fill = T, 
                     fillOpacity = 0.25, 
                     stroke = T, 
-                    # smoothFactor = 3,
                     dashArray = c(5,5), 
                     options = pathOptions(clickable = F),
                     weight = 1, 
@@ -347,87 +347,28 @@ function(input, output, session){
                     fillColor = 'darkgreen')
       
       # switch to show/hide
-      ifelse(input$mpa, showGroup(proxy, 'mpa'),hideGroup(proxy, 'mpa'))
+      ifelse(input$critical_habitat_zone, showGroup(proxy, 'critical_habitat_zone'),
+             hideGroup(proxy, 'critical_habitat_zone'))
     }
     
   })
   
-  # tc_lanes observer ------------------------------------------------------  
+  # static fishing zone ------------------------------------------------------  
   
   observe(priority = 4, {
     
     # define proxy
     proxy <- leafletProxy("map")
-    proxy %>% clearGroup('tc_lanes')
+    proxy %>% clearGroup('static_fishing_zone')
     
-    if(input$tc_lanes){
+    if(input$static_fishing_zone){
       
       # add polygons
       proxy %>%
-        addPolygons(data=tc_lanes, group = 'tc_lanes',
-                    fill = T, 
-                    fillOpacity = 0.4, 
-                    stroke = T, 
-                    # smoothFactor = 3,
-                    dashArray = c(5,5), 
-                    options = pathOptions(clickable = F),
-                    weight = 1, 
-                    color = 'purple', 
-                    fillColor = 'purple')
-      
-      # switch to show/hide
-      ifelse(input$tc_lanes, showGroup(proxy, 'tc_lanes'),hideGroup(proxy, 'tc_lanes'))
-    }
-    
-  })
-  
-  # tc_zone observer ------------------------------------------------------  
-  
-  observe(priority = 4, {
-    
-    # define proxy
-    proxy <- leafletProxy("map")
-    proxy %>% clearGroup('tc_zone')
-    
-    if(input$tc_zone){
-      
-      # add polygons
-      proxy %>%
-        addPolygons(data=tc_zone, group = 'tc_zone',
-                    fill = T, lng=~lon, lat=~lat,
-                    fillOpacity = 0.25, 
-                    stroke = T, 
-                    # smoothFactor = 3,
-                    dashArray = c(5,5), 
-                    options = pathOptions(clickable = F),
-                    weight = 1, 
-                    color = 'grey', 
-                    fillColor = 'grey')
-      
-      # switch to show/hide
-      ifelse(input$tc_zone, showGroup(proxy, 'tc_zone'),hideGroup(proxy, 'tc_zone'))
-    }
-    
-  })
-  
-  # static_zone observer ------------------------------------------------------  
-  
-  observe(priority = 4, {
-    
-    # define proxy
-    proxy <- leafletProxy("map")
-    proxy %>% clearGroup('static_zone')
-    
-    if(input$static_zone){
-      
-      # add polygons
-      proxy %>%
-        addPolygons(data=static_zone, group = 'static_zone',
-                    lat = ~lat, lng = ~lon,
+        addPolygons(data=static_fishing_zone, group = 'static_fishing_zone',
                     fill = T, 
                     fillOpacity = 0.25, 
                     stroke = T, 
-                    # smoothFactor = 3,
                     dashArray = c(5,5), 
                     options = pathOptions(clickable = F),
                     weight = 1, 
@@ -435,33 +376,120 @@ function(input, output, session){
                     fillColor = 'darkblue')
       
       # switch to show/hide
-      ifelse(input$static_zone, showGroup(proxy, 'static_zone'),hideGroup(proxy, 'static_zone'))
+      ifelse(input$static_fishing_zone, showGroup(proxy, 'static_fishing_zone'),
+             hideGroup(proxy, 'static_fishing_zone'))
     }
     
   })
   
-  # forage_areas observer ------------------------------------------------------  
+  # dynamic fishing zone ------------------------------------------------------  
   
   observe(priority = 4, {
     
     # define proxy
     proxy <- leafletProxy("map")
-    proxy %>% clearGroup('forage_areas')
+    proxy %>% clearGroup('dynamic_fishing_zone')
     
-    if(input$forage_areas){
+    if(input$dynamic_fishing_zone){
       
       # add polygons
       proxy %>%
-        addPolygons(data=forage_areas, group = 'forage_areas',
+        addPolygons(data=dynamic_fishing_zone, group = 'dynamic_fishing_zone',
                     fill = T, 
-                    fillOpacity = 0.25, 
+                    fillOpacity = 0.4, 
                     stroke = T, 
+                    dashArray = c(5,5), 
+                    options = pathOptions(clickable = F),
                     weight = 1, 
-                    color = 'darkslategrey', 
+                    color = 'orange', 
                     fillColor = 'orange')
       
       # switch to show/hide
-      ifelse(input$forage_areas, showGroup(proxy, 'forage_areas'),hideGroup(proxy, 'forage_areas'))
+      ifelse(input$dynamic_fishing_zone, showGroup(proxy, 'dynamic_fishing_zone'),
+             hideGroup(proxy, 'dynamic_fishing_zone'))
+    }
+    
+  })
+  
+  # dynamic fishing grid ------------------------------------------------------  
+  
+  observe(priority = 4, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('dynamic_fishing_grid')
+    
+    if(input$dynamic_fishing_grid){
+      
+      # add polygons
+      proxy %>%
+        addPolygons(data=dynamic_fishing_grid, group = 'dynamic_fishing_grid',
+                    fill = T, 
+                    fillOpacity = 0.4, 
+                    stroke = T, 
+                    dashArray = c(5,5), 
+                    weight = 1, 
+                    color = 'orange', 
+                    fillColor = 'orange',
+                    popup = ~paste0('Grid cell ID: ', ID))
+      
+      # switch to show/hide
+      ifelse(input$dynamic_fishing_grid, showGroup(proxy, 'dynamic_fishing_grid'),
+             hideGroup(proxy, 'dynamic_fishing_grid'))
+    }
+    
+  })
+  
+  # static shipping zone ------------------------------------------------------  
+  
+  observe(priority = 4, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('static_shipping_zone')
+    
+    if(input$static_shipping_zone){
+      
+      # add polygons
+      proxy %>%
+        addPolylines(data=static_shipping_zone, group = 'static_shipping_zone',
+                    options = pathOptions(clickable = F),
+                    weight = 1, 
+                    color = 'blue', 
+                    fillColor = 'blue')
+      
+      # switch to show/hide
+      ifelse(input$static_shipping_zone, showGroup(proxy, 'static_shipping_zone'),
+             hideGroup(proxy, 'static_shipping_zone'))
+    }
+    
+  })
+  
+  # dynamic shipping zone ------------------------------------------------------  
+  
+  observe(priority = 4, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('dynamic_shipping_zone')
+    
+    if(input$dynamic_shipping_zone){
+      
+      # add polygons
+      proxy %>%
+        addPolygons(data=dynamic_shipping_zone, group = 'dynamic_shipping_zone',
+                    fill = T, 
+                    fillOpacity = 0.4, 
+                    stroke = T, 
+                    dashArray = c(5,5), 
+                    options = pathOptions(clickable = F),
+                    weight = 1, 
+                    color = 'purple', 
+                    fillColor = 'purple')
+      
+      # switch to show/hide
+      ifelse(input$dynamic_shipping_zone, showGroup(proxy, 'dynamic_shipping_zone'),
+             hideGroup(proxy, 'dynamic_shipping_zone'))
     }
     
   })
@@ -482,7 +510,6 @@ function(input, output, session){
         addPolylines(tss_lines$lon, tss_lines$lat,
                      weight = .5,
                      color = 'grey',
-                     # smoothFactor = 3,
                      options = pathOptions(clickable = F),
                      group = 'tss') %>%
         addPolygons(tss_polygons$lon, tss_polygons$lat,

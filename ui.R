@@ -195,28 +195,32 @@ body <- dashboardBody(
                            # Map layers
                            helpText(tags$em('Map Layers')),
                            
-                           checkboxInput("mpa", 
-                                         label = 'Protected areas', value = T),
+                           checkboxInput("critical_habitat_zone", 
+                                         label = 'Critical habitat areas', value = T),
                            
                            checkboxInput("tss", 
                                          label = 'Shipping lanes', value = T),
                            
                            checkboxInput("legend", label = 'Legends', value = T),
                            
-                           # 2018 protections
+                           # Management layers
                            helpText(tags$em('Management areas')),
                            
-                           checkboxInput("tc_lanes", 
-                                         label = 'Dynamic Shipping lanes', value = F),
-                           
-                           checkboxInput("tc_zone", 
-                                         label = 'Reduced Speed Zone', value = F),
-                           
-                           checkboxInput("static_zone", 
+                           checkboxInput("static_fishing_zone", 
                                          label = 'Static fishery closure', value = F),
                            
-                           checkboxInput("forage_areas", 
-                                         label = 'Area subject to temporary fishery closure protocol', value = F)
+                           checkboxInput("dynamic_fishing_zone", 
+                                         label = 'Dynamic fishing zone', value = F),
+                           
+                           checkboxInput("dynamic_fishing_grid", 
+                                         label = 'Dynamic fishing grid', value = F),
+                           
+                           checkboxInput("static_shipping_zone", 
+                                         label = 'Static vessel slow zone', value = F),
+                           
+                           checkboxInput("dynamic_shipping_zone", 
+                                         label = 'Dynamic vessel slow zone', value = F)
+                           
                            
                            # tags$a(href="https://www.canada.ca/en/fisheries-oceans/news/2018/03/government-of-canada-unveils-its-plan-for-protecting-north-atlantic-right-whales-in-20180.html", "Click here for details")
                            

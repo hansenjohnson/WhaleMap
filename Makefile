@@ -4,7 +4,7 @@ remove_error = @bash src/remove_error.sh $<
 
 ## ALL ##
 .PHONY : all
-all : tracks obs sono latest tss mpa map
+all : tracks obs sono latest tss gis map
 
 ## TRACKS ##
 .PHONY : tracks
@@ -352,18 +352,12 @@ data/processed/tss.rda : R/proc_tss.R data/raw/tss/*
 	Rscript $<
 	$(remove_error)
 
-## MPA ##
-.PHONY : mpa
-mpa : data/processed/mpa.rds data/processed/management_areas.rda
+## GIS ##
+.PHONY : gis
+mpa : data/processed/gis.rda
 
 # Process mpa
-data/processed/mpa.rds : R/proc_mpa.R data/raw/mpa/*
-	$(report_error)
-	Rscript $<
-	$(remove_error)
-
-# Process management areas
-data/processed/management_areas.rda : R/proc_management_areas.R data/raw/gis/*/*
+data/processed/gis.rda : R/proc_gis.R data/raw/2019_whalemapdata/GIS_data/*/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)

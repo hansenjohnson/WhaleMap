@@ -33,9 +33,8 @@ source(paste0(pre,'R/functions.R'))
 # read in data
 obs = readRDS(paste0(pre, 'data/processed/observations.rds'))
 trk = readRDS(paste0(pre, 'data/processed/tracks.rds'))
-mpa = readRDS(paste0(pre, 'data/processed/mpa.rds'))
 load(paste0(pre, 'data/processed/tss.rda'))
-load(paste0(pre, 'data/processed/management_areas.rda'))
+load(paste0(pre, 'data/processed/gis.rda'))
 bb_file = paste0(pre, 'data/raw/gis/canadian_boundary/canadian_boundary.csv')
 
 # define species list
@@ -145,9 +144,9 @@ if(length(inLon)!=0){
 
 # add mpas
 map <- map %>%
-  addPolygons(data=mpa, fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
+  addPolygons(data=critical_habitat_zone, fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
               dashArray = c(5,5), options = pathOptions(clickable = F),
-              lng=~lon, lat=~lat, weight = 1, color = 'darkgreen', fillColor = 'darkgreen')
+              weight = 1, color = 'darkgreen', fillColor = 'darkgreen')
 
 # plot shipping lanes
 map <- map %>%

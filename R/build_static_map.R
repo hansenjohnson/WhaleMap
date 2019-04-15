@@ -145,10 +145,9 @@ build_static_map = function(english=TRUE){
   
   # read in data -------------------------------------------------------
   
-  # read in map polygons
-  mpa = readRDS('data/processed/mpa.rds')
+  # read in map data
   load('data/processed/tss.rda')
-  load('data/processed/management_areas.rda')
+  load('data/processed/gis.rda')
   
   # tracklines
   tracks = readRDS('data/processed/tracks.rds')
@@ -256,10 +255,10 @@ build_static_map = function(english=TRUE){
   
   # add mpas
   map <- map %>%
-    addPolygons(data=mpa, group = mpa_grp,
+    addPolygons(data=critical_habitat_zone, group = mpa_grp,
                 fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
                 dashArray = c(5,5), options = pathOptions(clickable = F),
-                lng=~lon, lat=~lat, weight = 1, color = 'darkgreen', fillColor = 'darkgreen')
+                weight = 1, color = 'darkgreen', fillColor = 'darkgreen')
   
   # plot shipping lanes
   
@@ -280,34 +279,29 @@ build_static_map = function(english=TRUE){
   
   # plot static speed reduction zone
   map <- map %>%
-    addPolygons(data=tc_zone, group = static_speed_grp,lng=~lon, lat=~lat,
-                fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
-                dashArray = c(5,5), options = pathOptions(clickable = F),
-                weight = .25, color = 'grey', fillColor = 'grey')
+    addPolylines(data=static_shipping_zone, group = static_speed_grp,
+                options = pathOptions(clickable = F), weight = 1, 
+                color = 'brown')
   
   # plot dynamic speed reduction zone
   map <- map %>%
-    addPolygons(data=tc_lanes, group = dynamic_speed_grp,
+    addPolygons(data=dynamic_shipping_zone, group = dynamic_speed_grp,
                 fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
                 dashArray = c(5,5), options = pathOptions(clickable = F),
                 weight = .25, color = 'purple', fillColor = 'purple')
   
   # plot static fisheries closue
   map <- map %>%
-    addPolygons(data=static_zone, group = static_fish_grp,lng=~lon, lat=~lat,
+    addPolygons(data=static_fishing_zone, group = static_fish_grp,
                 fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
                 dashArray = c(2,2), options = pathOptions(clickable = F),
                 weight = 1, color = 'darkblue', fillColor = 'darkblue')
   
-  # plot known foraging areas
+  # plot dynamic fisheries closures
   map <- map %>%
-    addPolygons(data=forage_areas, group = forage_areas_grp,
-                fill = T, 
-                fillOpacity = 0.25, 
-                stroke = T, 
-                weight = 1, 
-                color = 'darkslategrey', 
-                fillColor = 'orange')
+    addPolygons(data=dynamic_fishing_zone, group = forage_areas_grp,
+                fill = T, fillOpacity = 0.25, stroke = T, weight = 1, 
+                color = 'darkslategrey', fillColor = 'orange')
   
   # add tracks --------------------------------------------------------------
   
