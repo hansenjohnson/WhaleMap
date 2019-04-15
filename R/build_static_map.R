@@ -301,6 +301,9 @@ build_static_map = function(english=TRUE){
   map <- map %>%
     addPolygons(data=dynamic_fishing_zone, group = forage_areas_grp,
                 fill = T, fillOpacity = 0.25, stroke = T, weight = 1, 
+                color = 'darkslategrey', fillColor = 'orange') %>%
+    addPolygons(data=critical_habitat_zone, group = forage_areas_grp,
+                fill = T, fillOpacity = 0.25, stroke = T, weight = 1, 
                 color = 'darkslategrey', fillColor = 'orange')
   
   # add tracks --------------------------------------------------------------
