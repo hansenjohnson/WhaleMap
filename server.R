@@ -402,6 +402,15 @@ function(input, output, session){
                     options = pathOptions(clickable = F),
                     weight = 1, 
                     color = 'orange', 
+                    fillColor = 'orange') %>%
+        addPolygons(data=critical_habitat_zone, group = 'dynamic_fishing_zone',
+                    fill = T, 
+                    fillOpacity = 0.4, 
+                    stroke = T, 
+                    dashArray = c(5,5), 
+                    options = pathOptions(clickable = F),
+                    weight = 1, 
+                    color = 'orange', 
                     fillColor = 'orange')
       
       # switch to show/hide
@@ -430,7 +439,15 @@ function(input, output, session){
                     weight = 1, 
                     color = 'grey', 
                     fillColor = 'orange',
-                    popup = ~paste0('Grid cell ID: ', ID))
+                    popup = ~paste0('Grid cell ID: ', ID)) %>%
+        addPolygons(data=critical_habitat_grid, group = 'dynamic_fishing_grid',
+                    fill = T, 
+                    fillOpacity = 0.4, 
+                    stroke = T, 
+                    weight = 1, 
+                    color = 'grey', 
+                    fillColor = 'orange',
+                    popup = ~paste0('Grid cell ID: ', Grid_Index))
       
       # switch to show/hide
       ifelse(input$dynamic_fishing_grid, showGroup(proxy, 'dynamic_fishing_grid'),
