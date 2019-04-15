@@ -191,7 +191,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2018_cwi_jdmartin_sightings.rds \
 																	data/interim/2018_dfo_cetus_sightings.rds \
 																	data/interim/2018_jasco_detections.rds \
-																	data/interim/2018_noaa_twin_otter_sightings.rds \
+																	data/interim/2019_noaa_twin_otter_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
 
