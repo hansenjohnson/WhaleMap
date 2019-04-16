@@ -280,8 +280,8 @@ build_static_map = function(english=TRUE){
   # plot static speed reduction zone
   map <- map %>%
     addPolylines(data=static_shipping_zone, group = static_speed_grp,
-                options = pathOptions(clickable = F), weight = 1, 
-                color = 'brown')
+                options = pathOptions(clickable = F), weight = 3, 
+                color = 'red')
   
   # plot dynamic speed reduction zone
   map <- map %>%
