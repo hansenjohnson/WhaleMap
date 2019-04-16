@@ -240,13 +240,13 @@ body <- dashboardBody(
                                          label = span("Static shipping zone", 
                                                       tags$a(icon("info-sign", lib = "glyphicon"), 
                                                              target="_blank",
-                                                             href = "http://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html"))),
+                                                             href = "http://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html#toc_2"))),
                                          
                            checkboxInput("dynamic_shipping_zone", value = F,
                                          label = span("Dynamic vessel slow zone", 
                                                       tags$a(icon("info-sign", lib = "glyphicon"), 
                                                              target="_blank",
-                                                             href = "http://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html")))
+                                                             href = "http://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html#toc_3")))
                   )
            )
     ),
