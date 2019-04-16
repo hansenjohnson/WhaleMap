@@ -201,35 +201,45 @@ body <- dashboardBody(
                            checkboxInput("legend", label = 'Legends', value = T),
                            
                            # Management layers
-                           helpText(tags$em('Management Layers')),
+                           helpText(tags$em('Canadian management')),
                            
                            checkboxInput("critical_habitat_zone", 
                                          label = 'Critical habitat areas', value = T),
                            
-                           checkboxInput("static_fishing_zone", 
-                                         label = 'Static fishery closure', value = F),
+                           checkboxInput("static_fishing_zone", value = F,
+                                         label = span("Static fishery closure", 
+                                                      tags$a(icon("info-sign", lib = "glyphicon"), 
+                                                             href = "http://www.dfo-mpo.gc.ca/species-especes/mammals-mammiferes/narightwhale-baleinenoirean/fm-gp/index-eng.html"))),
                            
-                           checkboxInput("dynamic_fishing_zone", 
-                                         label = 'Dynamic fishing zone', value = F),
+                           checkboxInput("dynamic_fishing_zone", value = F,
+                                         label = span("Dynamic fishing zone", 
+                                                      tags$a(icon("info-sign", lib = "glyphicon"), 
+                                                             href = "http://www.dfo-mpo.gc.ca/species-especes/mammals-mammiferes/narightwhale-baleinenoirean/fm-gp/index-eng.html"))),
                            
-                           checkboxInput("dynamic_fishing_grid", 
-                                         label = 'Dynamic fishing grid', value = F),
+                           checkboxInput("dynamic_fishing_grid", value = F,
+                                         label = span("Dynamic fishing grid", 
+                                                      tags$a(icon("info-sign", lib = "glyphicon"), 
+                                                             href = "http://www.dfo-mpo.gc.ca/species-especes/mammals-mammiferes/narightwhale-baleinenoirean/fm-gp/index-eng.html"))),
                            
-                           checkboxInput("dynamic_fishing_10_fathom_contour", 
-                                         label = 'Dynamic fishing: 10-fathom contour', value = F),
+                           checkboxInput("dynamic_fishing_10_fathom_contour", value = F,
+                                         label = span("Dynamic fishing: 10-fathom contour", 
+                                                      tags$a(icon("info-sign", lib = "glyphicon"), 
+                                                             href = "http://www.dfo-mpo.gc.ca/species-especes/mammals-mammiferes/narightwhale-baleinenoirean/fm-gp/index-eng.html"))),
                            
-                           checkboxInput("dynamic_fishing_20_fathom_contour", 
-                                         label = 'Dynamic fishing: 20-fathom contour', value = F),
+                           checkboxInput("dynamic_fishing_20_fathom_contour", value = F,
+                                         label = span("Dynamic fishing: 20-fathom contour", 
+                                                      tags$a(icon("info-sign", lib = "glyphicon"), 
+                                                             href = "http://www.dfo-mpo.gc.ca/species-especes/mammals-mammiferes/narightwhale-baleinenoirean/fm-gp/index-eng.html"))),
                            
-                           checkboxInput("static_shipping_zone", 
-                                         label = 'Static vessel slow zone', value = F),
-                           
-                           checkboxInput("dynamic_shipping_zone", 
-                                         label = 'Dynamic vessel slow zone', value = F)
-                           
-                           
-                           # tags$a(href="https://www.canada.ca/en/fisheries-oceans/news/2018/03/government-of-canada-unveils-its-plan-for-protecting-north-atlantic-right-whales-in-20180.html", "Click here for details")
-                           
+                           checkboxInput("static_shipping_zone", value = F,
+                                         label = span("Static shipping zone", 
+                                                      tags$a(icon("info-sign", lib = "glyphicon"), 
+                                                             href = "http://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html"))),
+                                         
+                           checkboxInput("dynamic_shipping_zone", value = F,
+                                         label = span("Dynamic vessel slow zone", 
+                                                      tags$a(icon("info-sign", lib = "glyphicon"), 
+                                                             href = "http://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html")))
                   )
            )
     ),
