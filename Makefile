@@ -354,7 +354,7 @@ data/processed/tss.rda : R/proc_tss.R data/raw/tss/*
 
 ## GIS ##
 .PHONY : gis
-mpa : data/processed/gis.rda
+gis : data/processed/gis.rda R/proc_gis.R
 
 # Process mpa
 data/processed/gis.rda : R/proc_gis.R data/raw/2019_whalemapdata/GIS_data/*/*
