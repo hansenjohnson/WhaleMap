@@ -24,3 +24,6 @@ mkdir -p ${DATADIR}
 
 # download sas data
 wget -N ${URL} -P ${DATADIR}
+
+# process
+Rscript R/proc_sas.R

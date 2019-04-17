@@ -9,6 +9,12 @@ from_sas_file = 'data/raw/sas/xmlgenSight.pl'
 keep_sas_file = 'data/interim/sas_sightings.rds'
 to_sas_dir = 'shared/sas/'
 
+# switch to include sas on WhaleMap
+plot_sas = FALSE
+
+# switch to make WhaleMap data available for sas
+send_sas = TRUE
+
 # setup -------------------------------------------------------------------
 
 # libraries
@@ -103,12 +109,15 @@ if(file.exists(from_sas_file)){
   
   # write outputs -----------------------------------------------------------
   
-  # whalemap
-  saveRDS(object = to_keep, file = keep_sas_file)
+  if(plot_sas){
+    # whalemap
+    saveRDS(object = to_keep, file = keep_sas_file)
+  }
   
-  # sas
-  write.csv(x = to_send, file = paste0(to_sas_dir, 'whalemap-data.csv'), row.names = FALSE)
-  
+  if(send_sas){
+    # sas
+    write.csv(x = to_send, file = paste0(to_sas_dir, 'whalemap-data.csv'), row.names = FALSE)
+  }
 }
 
 # test --------------------------------------------------------------------
