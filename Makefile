@@ -192,6 +192,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2018_dfo_cetus_sightings.rds \
 																	data/interim/2018_jasco_detections.rds \
 																	data/interim/2019_noaa_twin_otter_sightings.rds \
+																	data/interim/2019_opportunistic_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
 
@@ -299,6 +300,12 @@ data/interim/2018_jasco_detections.rds : R/proc_2018_jasco_detections.R data/raw
 
 # 2019 noaa twin otter sightings
 data/interim/2019_noaa_twin_otter_sightings.rds : R/proc_2019_noaa_twin_otter.R data/raw/2019_noaa_twin_otter/edit_data/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2019 opportunistic sightings
+data/interim/2019_opportunistic_sightings.rds : R/proc_2019_opportunistic.R data/raw/2019_whalemapdata/2019-opportunistic-sightings/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
