@@ -1026,10 +1026,12 @@ function(input, output, session){
   # status table ------------------------------------------------------------
   
   # make status table
-  sdf = make_status_table('data/processed/status.txt')
+  sdf = make_status_table(status_file = status_file, index_file = index_file)
   
   # render table
-  output$status = renderTable({sdf}, striped = TRUE,
+  output$status = renderTable({sdf}, 
+                              striped = TRUE,
+                              sanitize.text.function = function(x) x,
                               hover = TRUE,
                               bordered = TRUE, colnames = TRUE,
                               align = 'l',
