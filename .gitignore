@@ -30,7 +30,6 @@ src/get_sas_url.sh
 
 # data files
 summary_report.pdf
-*.csv
 *.gps
 *.gpx
 *.xlsx

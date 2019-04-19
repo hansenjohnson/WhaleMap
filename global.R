@@ -61,7 +61,7 @@ sonoIcon = makeIcon("icons/sono.png", iconWidth = 10, iconHeight = 45)
 
 # status file
 status_file = 'data/processed/status.txt'
-index_file = 'data/processed/status_index.csv'
+index_file = 'status_index.csv'
 
 # load data ---------------------------------------------------------------
 
