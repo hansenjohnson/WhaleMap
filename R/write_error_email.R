@@ -45,8 +45,7 @@ if(length(er)!=0){
     emails = read.csv(id$email_list[bad], header = TRUE, stringsAsFactors = FALSE)$email
     
     # email pieces
-    subject = paste0("Subject: WhaleMap Error (",Sys.Date(),
-                     "): Cannot process data from ", id$name[bad])
+    subject = paste0("Subject: WhaleMap Error (", Sys.time(),"): Cannot process data from ", id$name[bad])
     from = "From: hansen.johnson@dal.ca"
     to = paste0("Bcc: ", paste(emails, collapse = ';'))
     message = paste0(
@@ -57,7 +56,7 @@ Please check your data for errors. Common issues include typos in the file name,
 
 If you have tried to make a correction, head to https://whalemap.ocean.dal.ca/WhaleMap to see if it was successful. WhaleMap updates every 15 minutes, so it should not take long to see your changes. You can also scroll down on WhaleMap to check the status table. If you see an error message next to your platform name, there is still a problem.
 
-If you're stumped, reply to this email for more help.
+If you cannot find an error and/or suspect the problem is related to WhaleMap, please reply to this email for more help.
 
 [Auto-generated email from WhaleMap]
 ")
@@ -73,6 +72,8 @@ If you're stumped, reply to this email for more help.
     message('Error message sent on: ', Sys.time())
     message('Recipients listed in: ', id$email_list[bad])
     
+  } else {
+    message('Error message already sent')
   }
   
 } else {
