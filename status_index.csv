@@ -1,4 +1,4 @@
 ﻿script,name,url,email_list
-proc_2019_noaa_twin_otter.R,NOAA NEFSC aerial survey sightings/tracks,https://www.nefsc.noaa.gov/psb/surveys/NARWSS.html,data/email/default.csv
+proc_2019_noaa_twin_otter.R,NOAA NEFSC aerial survey sightings/tracks,https://www.nefsc.noaa.gov/psb/surveys/NARWSS.html,data/raw/2019_noaa_twin_otter/edit_data/WhaleMap_email_list.csv
 proc_live_dcs.R,Dal/WHOI acoustic detections,http://dcs.whoi.edu/,data/email/default.csv
 proc_2019_opportunistic.R,DFO opportunistic sightings reports,http://dfo-mpo.gc.ca/species-especes/mammals-mammiferes/report-rapport/page01-eng.html,data/raw/2019_whalemapdata/2019-opportunistic-sightings/email_list.csv
