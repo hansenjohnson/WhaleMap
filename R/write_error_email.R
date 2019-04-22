@@ -6,6 +6,7 @@
 # data paths
 index_file = 'status_index.csv'
 status_file = 'data/processed/status.txt'
+default_email_list = 'data/email/default.csv'
 
 # email details
 email_file = 'error_email.txt'
@@ -41,8 +42,17 @@ if(length(er)!=0){
     # report error
     message('Error found in: ', id$script[bad])
     
+    # define email list file
+    efile = id$email_list[bad]
+    
     # read email list for bad script
-    emails = read.csv(id$email_list[bad], header = TRUE, stringsAsFactors = FALSE)$email
+    if(file.exists(efile)){
+      message('Sending to recipients listed in: ', efile)
+      emails = read.csv(efile, header = TRUE, stringsAsFactors = FALSE)$email  
+    } else {
+      message('Could not find ', efile, ', so deferring to the default email list here: ', default_email_list)
+      emails = read.csv(default_email_list, header = TRUE, stringsAsFactors = FALSE)$email  
+    }
     
     # email pieces
     subject = paste0("Subject: WhaleMap Error (", format(Sys.time(), '%b-%d %H:%M %Z'),"): Cannot process data from ", id$name[bad])
@@ -70,7 +80,6 @@ If you cannot find an error and/or suspect the problem is related to WhaleMap, p
     system(paste0('sendmail -vt < ', email_file))
     
     message('Error message sent on: ', Sys.time())
-    message('Recipients listed in: ', id$email_list[bad])
     
   } else {
     message('Error message already sent')
