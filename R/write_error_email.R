@@ -50,7 +50,7 @@ if(length(er)!=0){
     to = paste0("Bcc: ", paste(emails, collapse = ';'))
     message = paste0(
       "
-WhaleMap could not process the data from ", id$name[bad], " correctly! 
+WhaleMap could not process ", id$name[bad], " correctly! 
 
 Please check your data for errors. Common issues include typos in the file name, mixing time or lat/lon conventions, or using unknown species codes. It can be very helpful to check the formatting of a previous record. 
 
