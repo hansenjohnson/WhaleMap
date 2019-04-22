@@ -45,7 +45,7 @@ if(length(er)!=0){
     emails = read.csv(id$email_list[bad], header = TRUE, stringsAsFactors = FALSE)$email
     
     # email pieces
-    subject = paste0("Subject: WhaleMap Error (", Sys.time(),"): Cannot process data from ", id$name[bad])
+    subject = paste0("Subject: WhaleMap Error (", format(Sys.time(), '%b-%d %H:%M %Z'),"): Cannot process data from ", id$name[bad])
     from = "From: hansen.johnson@dal.ca"
     to = paste0("Bcc: ", paste(emails, collapse = ';'))
     message = paste0(
@@ -83,6 +83,8 @@ If you cannot find an error and/or suspect the problem is related to WhaleMap, p
   if(file.exists(email_file)){
     file.remove(email_file)
     message('Error no longer exists - removing email file')
+  } else {
+    message('No errors to report')
   }
 }
 
