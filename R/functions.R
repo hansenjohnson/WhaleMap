@@ -34,6 +34,13 @@ config_tracks = function(tracks){
               'name',
               'id')
   
+  # return blank table if input is empty
+  if(nrow(tracks)==0){
+    tracks = data.frame(matrix(nrow = 0, ncol = length(columns)))
+    colnames(tracks) = columns
+    return(tracks)
+  }
+  
   # configure column types
   if(is.null(tracks$time)){tracks$time = NA}
   tracks$time = as.POSIXct(tracks$time, tz = 'UTC', usetz = T)
