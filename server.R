@@ -689,7 +689,11 @@ function(input, output, session){
       if(input$latest){
         
         # add icons for latest position of live dcs platforms
-        proxy %>% addMarkers(data = LATEST(), ~lon, ~lat, icon = ~dcsIcons[platform],
+        proxy %>% 
+          addMapPane("lts", zIndex = 350) %>%
+          addMarkers(data = LATEST(), ~lon, ~lat, 
+                             icon = ~dcsIcons[platform],
+                             options=pathOptions(pane = "lts"),
                              popup = ~paste(sep = "<br/>",
                                             strong('Latest position'),
                                             paste0('Platform: ', as.character(platform)),
@@ -841,7 +845,7 @@ function(input, output, session){
   
   # inbounds data ------------------------------------------------------  
   
-  # determine deployments in map bounds
+  # determine tracks in map bounds
   tInBounds <- reactive({
     if (is.null(input$map_bounds))
       return(trk()[FALSE,])
@@ -854,7 +858,7 @@ function(input, output, session){
              lon >= lngRng[1] & lon <= lngRng[2])
   })
   
-  # determine detected calls in map bounds
+  # determine detections in map bounds
   dInBounds <- reactive({
     
     # determine which dataset to use based on display switches
