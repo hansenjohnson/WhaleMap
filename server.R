@@ -241,23 +241,23 @@ function(input, output, session){
       )
   })
   
-  # password warning -----------------------------------------------
+  # warnings --------------------------------------------------------
   
+  # password warnings
   observeEvent(input$go,{
     if(input$password == password){
       showNotification('Password was correct! Showing unverified and/or test data...',
                        duration = 7, closeButton = T, type = 'message')
-
+      
     } else if(input$password == jasco_password){
       showNotification('Password was correct! Showing JASCO test data...',
                        duration = 7, closeButton = T, type = 'message')
     } else {
-      
+      # no warning
     }
   })
   
-  # warnings --------------------------------------------------------
-  
+  # general warnings
   observe({
     
     # track warning
