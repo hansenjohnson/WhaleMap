@@ -57,9 +57,8 @@ body <- dashboardBody(
   fluidRow(
     tags$head(tags$script(HTML(jscode))),
     
-    # editor tab ----------------------------------------------------------
+    # sidebar ----------------------------------------------------------
     
-    # left column
     column(width = 3,
            
            # translator
@@ -79,6 +78,8 @@ body <- dashboardBody(
            
            # map editor
            tabBox(title = 'Editor', width = NULL,
+                  
+                  # data tab ----------------------------------------------------------
                   
                   # Select Data    
                   tabPanel(title = 'Data',
@@ -126,7 +127,33 @@ body <- dashboardBody(
                            
                            hr(),
                            
-                           #color by
+                           # checkbox data layers
+                           
+                           checkboxInput("tracks", label = 'Tracks', value = T),
+                           
+                           checkboxInput("possible", 
+                                         label = 'Possible detections/sightings', value = T),
+                           
+                           checkboxInput("detected", 
+                                         label = 'Definite detections/sightings', value = T),
+                           
+                           checkboxInput("sono", label = 'Sonobuoys', value = F),
+                           
+                           # unlock preliminary data
+                           tagAppendAttributes(
+                             passwordInput("password", 'Show unverified data:', value = "",
+                                           placeholder = 'Enter password'),
+                             `data-proxy-click` = "go"
+                           )
+                           
+                  ),
+                  
+                  # colors tab ----------------------------------------------------------
+                  
+                  # Customize plotting
+                  tabPanel(title = 'Colors',
+                  
+                           # Observations color variable
                            selectInput("colorby", "Color observations by:", choices =
                                          c('Score' = 'score',
                                            'Species' = 'species',
@@ -141,29 +168,7 @@ body <- dashboardBody(
                            
                            hr(),
                            
-                           # unlock preliminary data
-                           tagAppendAttributes(
-                             passwordInput("password", 'Show unverified data:', value = "",
-                                           placeholder = 'Enter password'),
-                             `data-proxy-click` = "go"
-                           )
-                           
-                           # hr(),
-                           # 
-                           # # add button to update date
-                           # actionButton("go", "Go!",
-                           #              style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
-                           # 
-                           # # add button to re-center
-                           # actionButton("zoom", "Center map")
-                  ),
-                  
-                  # layers tab ----------------------------------------------------------
-                  
-                  # Customize plotting
-                  tabPanel(title = 'Layers',
-                           
-                           # color palette
+                           # Observations color palette
                            selectInput("pal", "Choose color palette:",
                                        c("Temperature" = 2,
                                          "Viridis" = 8,
@@ -176,24 +181,46 @@ body <- dashboardBody(
                            
                            hr(),
                            
+                           # Tracks color variable
+                           selectInput("colorby_trk", "Color tracks by:", choices =
+                                         c('Score' = 'score',
+                                           'Species' = 'species',
+                                           'Day of year' = 'yday',
+                                           'Year' = 'year',
+                                           'Platform' = 'platform',
+                                           'Platform name' = 'name',
+                                           'Number' = 'number',
+                                           'Latitude' = 'lat',
+                                           'Longitude' = 'lon',
+                                           'Deployment' = 'id'), selected = 'score'),
+                           
+                           hr(),
+                           
+                           # Observations color palette
+                           selectInput("pal_trk", "Choose color palette:",
+                                       c("Temperature" = 2,
+                                         "Viridis" = 8,
+                                         "Gebco" = 6,
+                                         "Heat colors" = 1,
+                                         "Jet" = 7,
+                                         "Salinity" = 3,
+                                         "Density" = 4,
+                                         "Chlorophyll" = 5), selected = 8),
+                           
+                           hr()
+                           
+                  ),
+                  # layers tab ----------------------------------------------------------
+                  
+                  # Customize plotting
+                  tabPanel(title = 'Layers',
+                           
                            h5(strong('Choose layer(s):')),
-                           
-                           # Survey layers
-                           helpText(tags$em('Survey Layers')),
-                           
-                           checkboxInput("tracks", label = 'Tracks', value = T),
-                           
-                           checkboxInput("possible", label = 'Possible detections/sightings', value = T),
-                           
-                           checkboxInput("detected", 
-                                         label = 'Definite detections/sightings', value = T),
-                           
-                           checkboxInput("sono", label = 'Sonobuoys', value = F),
-                           
-                           checkboxInput("latest", label = 'Latest robot positions', value = T),
                            
                            # Map layers
                            helpText(tags$em('Map Layers')),
+                           
+                           checkboxInput("latest", label = 'Latest robot positions', value = T),
                            
                            checkboxInput("tss", 
                                          label = 'Shipping lanes', value = T),
