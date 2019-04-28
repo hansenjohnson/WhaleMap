@@ -15,7 +15,7 @@ function(input, output, session){
   }
   
   # sightings / detections
-  obs = readRDS('data/processed/observations.rds')
+  observations = readRDS('data/processed/observations.rds')
   
   # sonobuoys
   sono = readRDS('data/processed/sonobuoys.rds')
@@ -97,27 +97,112 @@ function(input, output, session){
   
   # reactive data -----------------------------------------------------------
   
-  # choose tracks year(s) and platform(s) (no cp without password)
-  Tracks <- eventReactive(input$go|input$go == 0, {
+  # subset track data
+  trk <- eventReactive(input$go|input$go == 0, {
     if(input$password == password){
-      tmp = tracks[tracks$year %in% years(),]
-      tmp[tmp$platform %in% platform(),]
+      
+      tracks %>%
+        filter(
+          year %in% years() & 
+            platform %in% platform() & 
+            yday %in% ydays()
+        )
+      
     } else if(input$password == jasco_password){
-      tmp = tracks[tracks$year %in% years(),]
-      tmp = tmp[tmp$platform %in% platform(),]
-      tmp[tmp$name!='cp_king_air',]
+      
+      tracks %>%
+        filter(
+          year %in% years() & 
+            platform %in% platform() & 
+            yday %in% ydays() &
+            name != 'cp_king_air'
+        )
+      
     } else {
-      tmp = tracks[tracks$year %in% years(),]
-      tmp = tmp[tmp$platform %in% platform(),]
-      tmp = tmp[tmp$name!='cp_king_air',]
-      tmp[tmp$name!='jasco_test',]
+      
+      tracks %>%
+        filter(
+          year %in% years() & 
+            platform %in% platform() & 
+            yday %in% ydays() &
+            !name %in% c('cp_king_air','jasco_test')
+        )
+      
     }
   })
   
-  # choose observations
-  Obs <- eventReactive(input$go|input$go == 0, {
-    tmp = obs[obs$year %in% years(),]
-    tmp[tmp$platform %in% platform(),]
+  # subset observation data
+  obs <- eventReactive(input$go|input$go == 0, {
+    if(input$password == password){
+      
+      observations %>%
+        filter(
+          year %in% years() & 
+            platform %in% platform() & 
+            yday %in% ydays() &
+            species %in% species()
+        ) %>%
+        droplevels()
+      
+    } else if(input$password == jasco_password){
+      
+      observations %>%
+        filter(
+          year %in% years() & 
+            platform %in% platform() & 
+            yday %in% ydays() &
+            species %in% species() &
+            score != 'possible visual'
+        ) %>%
+        droplevels()
+      
+    } else {
+      
+      observations %>%
+        filter(
+          year %in% years() & 
+            platform %in% platform() & 
+            yday %in% ydays() &
+            species %in% species() &
+            !name %in% c('jasco_test') &
+            score != 'possible visual'
+        ) %>%
+        droplevels()
+      
+    }
+  })
+  
+  # only possible
+  pos <- eventReactive(input$go|input$go == 0, {
+    
+    obs() %>%
+      filter(
+        score %in% c('possible acoustic', 'possible visual')
+      ) %>%
+      droplevels()
+    
+  })
+  
+  # only definite
+  det <- reactive({
+    
+    obs() %>%
+      filter(
+        score %in% c('definite acoustic', 'definite visual')
+      ) %>%
+      droplevels()
+    
+  })
+  
+  # combine track and observations
+  allBounds <- reactive({
+    
+    # combine limits
+    lat = c(obs()$lat, trk()$lat)
+    lon = c(obs()$lon, trk()$lon)
+    
+    # join in list
+    list(lat, lon)
   })
   
   # position for live dcs platform
@@ -125,69 +210,35 @@ function(input, output, session){
     LATEST <- eventReactive(input$go|input$go == 0, {
       
       if(input$password == password | input$password == jasco_password){
-        tmp = latest[latest$year %in% years(),]
-        tmp = tmp[tmp$platform %in% platform(),]
-        tmp = tmp[tmp$yday %in% ydays(),]
-        tmp
+        
+        latest %>%
+          filter(
+            year %in% years() &
+              yday %in% ydays() &
+              platform %in% platform()
+          )
+        
       } else {
-        tmp = latest[latest$year %in% years(),]
-        tmp = tmp[tmp$platform %in% platform(),]
-        tmp = tmp[tmp$yday %in% ydays(),]
-        tmp[tmp$name!='jasco_test',]
+        
+        latest %>%
+          filter(
+            year %in% years() &
+              yday %in% ydays() &
+              platform %in% platform() &
+              name != 'jasco_test'
+          )
+        
       }
-      
     })
   }
   
   # position for live dcs platform
   SONO <- eventReactive(input$go|input$go == 0, {
-    tmp = sono[sono$year %in% years(),]
-    tmp[tmp$yday %in% ydays(),]
-  })
-  
-  # choose track date range
-  TRACKS <- eventReactive(input$go|input$go == 0, {
-    Tracks()[Tracks()$yday %in% ydays(),]
-  })
-  
-  # choose species date range
-  OBS <- eventReactive(input$go|input$go == 0, {
-    Obs()[Obs()$yday %in% ydays(),]
-  })
-  
-  # choose species
-  spp <- eventReactive(input$go|input$go == 0, {
-    if(input$password == password|input$password == jasco_password){
-      droplevels(OBS()[OBS()$species %in% species(),])
-    } else {
-      tmp = droplevels(OBS()[OBS()$species %in% species(),])
-      tmp[tmp$name!='jasco_test',]
-    }
-  })
-  
-  # only possible
-  pos <- eventReactive(input$go|input$go == 0, {
-    if(input$password == password){
-      droplevels(spp()[spp()$score=='possible acoustic'|spp()$score=='possible visual',])
-    } else {
-      droplevels(spp()[spp()$score=='possible acoustic',])
-    }
-  })
-  
-  # only definite
-  det <- reactive({
-    droplevels(spp()[spp()$score=='definite acoustic'|spp()$score=='definite visual',])
-  })
-  
-  # combine track and observations
-  allBounds <- reactive({
-    
-    # combine limits
-    lat = c(spp()$lat, TRACKS()$lat)
-    lon = c(spp()$lon, TRACKS()$lon)
-    
-    # join in list
-    list(lat, lon)
+    sono %>%
+      filter(
+        year %in% years() &
+          yday %in% ydays()
+      )
   })
   
   # password warning -----------------------------------------------
@@ -210,7 +261,7 @@ function(input, output, session){
   observe({
     
     # track warning
-    if(nrow(TRACKS())>npts){
+    if(nrow(trk())>npts){
       showNotification(paste0('Warning! Tracklines have been turned off because 
                               you have chosen to plot more data than this application 
                               can currently handle (i.e. more than ', as.character(npts), ' points). 
@@ -244,16 +295,16 @@ function(input, output, session){
     if(colorby() %in% c('yday', 'lat', 'lon')){
       
       # use continuous palette
-      colorNumeric(palette_list[[ind]], spp()[,which(colnames(spp())==colorby())])  
+      colorNumeric(palette_list[[ind]], obs()[,which(colnames(obs())==colorby())])  
       
     } else if (colorby() == 'number'){
       
-      if(is.infinite(min(spp()$number, na.rm = T))){
+      if(is.infinite(min(obs()$number, na.rm = T))){
         # define colorbar limits if 'number' is selected without sightings data
         colorNumeric(palette_list[[ind]], c(NA,0), na.color = 'darkgrey')
       } else {
         # use continuous palette
-        colorNumeric(palette_list[[ind]], spp()$number, na.color = 'darkgrey')
+        colorNumeric(palette_list[[ind]], obs()$number, na.color = 'darkgrey')
       }
       
     } else if (colorby() == 'score'){
@@ -265,7 +316,7 @@ function(input, output, session){
     } else {
       
       # color by factor level
-      colorFactor(palette_list[[ind]], spp()[,which(colnames(spp())==colorby())])  
+      colorFactor(palette_list[[ind]], obs()[,which(colnames(obs())==colorby())])  
       
     }
   })
@@ -600,10 +651,10 @@ function(input, output, session){
     
     # tracks
     
-    if(input$tracks & nrow(TRACKS())<npts){
+    if(input$tracks & nrow(trk())<npts){
       
       # set up polyline plotting
-      tracks.df <- split(TRACKS(), TRACKS()$id)
+      tracks.df <- split(trk(), trk()$id)
       
       # add lines
       names(tracks.df) %>%
@@ -793,12 +844,12 @@ function(input, output, session){
   # determine deployments in map bounds
   tInBounds <- reactive({
     if (is.null(input$map_bounds))
-      return(TRACKS()[FALSE,])
+      return(trk()[FALSE,])
     bounds <- input$map_bounds
     latRng <- range(bounds$north, bounds$south)
     lngRng <- range(bounds$east, bounds$west)
     
-    subset(TRACKS(),
+    subset(trk(),
            lat >= latRng[1] & lat <= latRng[2] &
              lon >= lngRng[1] & lon <= lngRng[2])
   })
@@ -836,7 +887,7 @@ function(input, output, session){
   
   # create text summary
   output$summary <- renderUI({
-    if(nrow(spp())==0){
+    if(nrow(obs())==0){
       HTML('No data available...')
     } else {
       
@@ -897,7 +948,7 @@ function(input, output, session){
       obs = dInBounds()
     } else {
       # use all input data
-      obs = spp()  
+      obs = obs()  
     }
     
     # define input tracks
@@ -906,7 +957,7 @@ function(input, output, session){
       tracks = tInBounds()
     } else {
       # use all input data
-      tracks = TRACKS()  
+      tracks = trk()  
     }
     
     # conditionally remove possibles for plotting
