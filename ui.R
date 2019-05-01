@@ -139,7 +139,7 @@ body <- dashboardBody(
                            
                            checkboxInput("sono", label = 'Sonobuoys', value = F),
                            
-                           hr()
+                           hr(),
                            
                            # unlock preliminary data
                            tagAppendAttributes(
