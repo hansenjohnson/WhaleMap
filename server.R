@@ -49,41 +49,60 @@ function(input, output, session){
   
   # choose date -------------------------------------------------------
   
+  observe({
+    print(input$date)
+    })
+  
   dates <- reactive({
-    if (input$go == 0){ 
-      # yday list on startup
-      seq(Sys.Date()-tlag, Sys.Date(), 1)
-    } else {
-      # choose date on action button click
-      isolate({
-        if(input$dateType == 'select'){
-          input$date
-        } else if(input$dateType == 'range'){
-          seq(input$date[1], input$date[2], 1)
-        } else if(input$dateType == 'multiyear'){
-          yd = seq(yday(input$date[1]), yday(input$date[2]), 1)
-          as.Date(
-            unlist(
-              lapply(X = input$years, FUN = function(x){
-                as.Date(yd, origin = paste0(x,'-01-01'))
-              })), 
-            origin = '1970-01-01')
-        }
-      })
+    # if (is.null(input$date)){
+    #   
+    #   seq(Sys.Date()-tlag, Sys.Date(), 1)
+    #   
+    #   return()
+    # } 
+    
+    req(input$date)
+    
+    if(input$dateType == 'select'){
+      
+      input$date
+      
+    } else if(input$dateType == 'range'){
+      
+      seq(input$date[1], input$date[2], 1)
+      
+    } else if(input$dateType == 'multiyear'){
+      
+      yd = seq(yday(input$date[1]), yday(input$date[2]), 1)
+      as.Date(
+        unlist(
+          lapply(X = input$years, FUN = function(x){
+            as.Date(yd, origin = paste0(x,'-01-01'))
+          })), 
+        origin = '1970-01-01')
+      
     }
   })
   
   # choose species -----------------------------------------------------------
   
   # species
-  species <- eventReactive(input$go|input$go == 0,{
+  species <- reactive({
     input$species
   })
   
   # choose platform -----------------------------------------------------------
   
-  platform <- eventReactive(input$go|input$go == 0,{
+  platform <- reactive({
     input$platform
+  })
+  
+  # test -----------------------------------------------------------
+  
+  observe({
+    print(dates())
+    print(species())
+    print(platform())
   })
   
   # choose colors -----------------------------------------------------------
