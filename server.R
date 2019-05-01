@@ -89,10 +89,22 @@ function(input, output, session){
     input$platform
   })
   
-  # choose colorby -----------------------------------------------------------
+  # choose colors -----------------------------------------------------------
   
-  colorby <- eventReactive(input$go|input$go == 0,{
-    input$colorby  
+  colorby_obs <- eventReactive(input$go|input$go == 0,{
+    input$colorby_obs  
+  })
+  
+  colorby_trk <- eventReactive(input$go|input$go == 0,{
+    input$colorby_trk  
+  })
+  
+  pal_obs <- eventReactive(input$go|input$go == 0,{
+    input$pal_obs  
+  })
+  
+  pal_trk <- eventReactive(input$go|input$go == 0,{
+    input$pal_trk  
   })
   
   # reactive data -----------------------------------------------------------
@@ -284,39 +296,64 @@ function(input, output, session){
     
   })
   
-  # colorpal -----------------------------------------------------------------
+  # colorpals -----------------------------------------------------------------
   
   # define color palette for any column variable
-  colorpal <- reactive({
+  colorpal_obs <- reactive({
     
-    # define index of color selection for use in palette list
-    ind = as.numeric(input$pal)
+    # extract factor levels
+    n = unique(obs()[,which(colnames(obs())==colorby_obs())])
     
-    if(colorby() %in% c('yday', 'lat', 'lon')){
+    if(colorby_obs() %in% c('yday', 'lat', 'lon')){
       
       # use continuous palette
-      colorNumeric(palette_list[[ind]], obs()[,which(colnames(obs())==colorby())])  
+      colorNumeric(get_palette(pal = pal_obs(), n = length(n)), domain = n)
       
-    } else if (colorby() == 'number'){
+    } else if (colorby_obs() == 'number'){
       
       if(is.infinite(min(obs()$number, na.rm = T))){
         # define colorbar limits if 'number' is selected without sightings data
-        colorNumeric(palette_list[[ind]], c(NA,0), na.color = 'darkgrey')
+        colorNumeric(get_palette(pal = pal_obs(), n = length(n)), 
+                     c(NA,0), na.color = 'darkgrey')
       } else {
         # use continuous palette
-        colorNumeric(palette_list[[ind]], obs()$number, na.color = 'darkgrey')
+        colorNumeric(get_palette(pal = pal_obs(), n = length(n)), 
+                     obs()$number, na.color = 'darkgrey')
       }
       
-    } else if (colorby() == 'score'){
+    } else if (colorby_obs() == 'score' & pal_obs() == 'Default'){
       
       # hard wire colors for score factor levels
       colorFactor(levels = c('definite acoustic', 'possible acoustic', 'possible visual', 'definite visual'), 
-                  palette = c('red', 'yellow', 'grey', 'darkslategray'))  
+                  palette = c('red', 'yellow', 'grey', 'darkslategrey'))  
       
     } else {
       
       # color by factor level
-      colorFactor(palette_list[[ind]], obs()[,which(colnames(obs())==colorby())])  
+      colorFactor(get_palette(pal_obs(), length(n)), n)  
+      
+    }
+  })
+  
+  
+  # define color palette for any column variable
+  colorpal_trk <- reactive({
+    
+    if(colorby_trk() == 'platform' & pal_trk() == 'Default'){
+      
+      # hardwire colors for score factor levels
+      colorFactor(
+        levels = names(platform_cols),
+        palette = as.character(platform_cols)
+      )
+      
+    } else {
+      
+      # extract factor levels
+      n = unique(trk()[,which(colnames(trk())==colorby_trk())])
+      
+      # color by factor level
+      colorFactor(get_palette(pal = pal_trk(), n = length(n)), levels = n)
       
     }
   })
@@ -358,21 +395,32 @@ function(input, output, session){
         position = 'bottomleft')
   })
   
-  # extract trackline color ------------------------------------------------  
+  # getColor <- function(tracks) {
+  #   if(tracks$platform[1] == 'slocum') {
+  #     "blue"
+  #   } else if(tracks$platform[1] == 'plane') {
+  #     "#8B6914"
+  #   } else if(tracks$platform[1] == 'vessel'){
+  #     "black"
+  #   } else if(tracks$platform[1] == 'wave'){
+  #     "purple"
+  #   } else {
+  #     "darkgrey"
+  #   }
+  # }
   
-  getColor <- function(tracks) {
-    if(tracks$platform[1] == 'slocum') {
-      "blue"
-    } else if(tracks$platform[1] == 'plane') {
-      "#8B6914"
-    } else if(tracks$platform[1] == 'vessel'){
-      "black"
-    } else if(tracks$platform[1] == 'wave'){
-      "purple"
-    } else {
-      "darkgrey"
-    }
-  }
+  # getColor <- function(tracks, colorby = input$colorby_trk, colorby = colorpal_obs()) {
+  # 
+  #   # extract 
+  #   itrk = as.character(tracks[1,which(colnames(tracks)==colorby)])
+  #   
+  #   if(colorby == 'platform'){
+  #     as.character(platform_cols[itrk])
+  #   } else {
+  #     'black'
+  #   }
+  # }
+  
   
   # critical habitat zone ------------------------------------------------------  
   
@@ -656,6 +704,11 @@ function(input, output, session){
       # set up polyline plotting
       tracks.df <- split(trk(), trk()$id)
       
+      # get color palette
+      pal = colorpal_trk()
+      
+      ind = which(colnames(trk())==colorby_trk())
+      
       # add lines
       names(tracks.df) %>%
         purrr::walk( function(df) {
@@ -666,9 +719,8 @@ function(input, output, session){
                          lat=~lat, 
                          weight = 2,
                          smoothFactor = 1, 
-                         # highlightOptions = highlightOptions(opacity = 1, weight = 4),
                          options = markerOptions(removeOutsideVisibleBounds=TRUE, opacity = 0.5),
-                         color = getColor(tracks.df[[df]]),
+                         color = pal(tracks.df[[df]][1,ind]),
                          popup = paste0('Track ID: ', unique(tracks.df[[df]]$id)))
         })
     }
@@ -749,12 +801,12 @@ function(input, output, session){
     if(input$possible){
       
       # set up color palette plotting
-      pal <- colorpal()
+      pal <- colorpal_obs()
       
       # possible detections
       addCircleMarkers(map = proxy, data = pos(), ~lon, ~lat, group = 'possible',
                        radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
-                       fillColor = pal(pos()[,which(colnames(pos())==colorby())]),
+                       fillColor = pal(pos()[,which(colnames(pos())==colorby_obs())]),
                        popup = ~paste(sep = "<br/>" ,
                                       paste0("Species: ", species),
                                       paste0("Score: ", score),
@@ -779,12 +831,12 @@ function(input, output, session){
     if(input$detected){
       
       # set up color palette plotting
-      pal <- colorpal()
+      pal <- colorpal_obs()
       
       # definite detections
       addCircleMarkers(map = proxy, data = det(), ~lon, ~lat, group = 'detected',
                        radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
-                       fillColor = pal(det()[,which(colnames(det())==colorby())]),
+                       fillColor = pal(det()[,which(colnames(det())==colorby_obs())]),
                        popup = ~paste(sep = "<br/>" ,
                                       paste0("Species: ", species),
                                       paste0("Score: ", score),
@@ -806,6 +858,10 @@ function(input, output, session){
     # define proxy
     proxy <- leafletProxy("map")
     
+    # set up color palette for tracks
+    pal_trk <- colorpal_trk()
+    var_trk <- trk()[,which(colnames(trk())==colorby_trk())]
+    
     # determine which dataset to use based on display switches
     if(input$detected & input$possible){
       dat <- rbind(det(),pos())
@@ -814,23 +870,34 @@ function(input, output, session){
     } else if(!input$detected & input$possible){
       dat <- pos()
     } else {
-      proxy %>% clearControls()
+      proxy %>% clearControls() %>% 
+        addLegend(position = "bottomright",labFormat = labelFormat(big.mark = ""),
+                  pal = pal_trk, values = var_trk, 
+                  title = paste0('Tracks by ', colorby_trk()))
       return(NULL)
     }
     
-    # set up color palette plotting
-    pal <- colorpal()
-    var <- dat[,which(colnames(dat)==colorby())]
+    # set up color palette for observations
+    pal_obs <- colorpal_obs()
+    var_obs <- dat[,which(colnames(dat)==colorby_obs())]
     
-    # legend
-    if(input$legend){
+    if(input$legend & input$tracks & TRUE %in% c(input$detected, input$possible)){
       proxy %>% clearControls() %>% 
         addLegend(position = "bottomright",labFormat = labelFormat(big.mark = ""),
-                  pal = pal, values = var, 
-                  title = colorby())
+                  pal = pal_obs, values = var_obs, 
+                  title = paste0('Observations by ', colorby_obs())) %>%
+        addLegend(position = "bottomright",labFormat = labelFormat(big.mark = ""),
+                  pal = pal_trk, values = var_trk, 
+                  title = paste0('Tracks by ', colorby_trk()))
+    } else if(input$legend & !input$tracks & TRUE %in% c(input$detected, input$possible)){
+      proxy %>% clearControls() %>% 
+        addLegend(position = "bottomright",labFormat = labelFormat(big.mark = ""),
+                  pal = pal_obs, values = var_obs, 
+                  title = paste0('Observations by ', colorby_obs()))
     } else {
       proxy %>% clearControls()
     }
+    
   })
   
   # center map ------------------------------------------------------  
@@ -988,7 +1055,7 @@ function(input, output, session){
                      'y' = -1)
     
     # determine number of factor levels to color
-    ncol = length(unique(obs[,which(colnames(obs)==colorby())]))
+    ncol = length(unique(obs[,which(colnames(obs)==colorby_obs())]))
     
     # get input for color palette choice
     ind = as.numeric(input$pal)
@@ -1003,12 +1070,12 @@ function(input, output, session){
                          oce.colorsJet(ncol),
                          oceColorsViridis(ncol))
     
-    if(colorby() %in% c('number', 'lat','lon', 'year')){
+    if(colorby_obs() %in% c('number', 'lat','lon', 'year')){
       
       # replace all sightings/detections with '1' to facilitate stacked plotting
       obs$counter = 1
       
-      if(colorby() == 'year'){
+      if(colorby_obs() == 'year'){
         # convert year to factor
         obs$year = as.factor(obs$year)
       }
@@ -1017,11 +1084,11 @@ function(input, output, session){
       cols = palette_list2[[ind]]
       
       # define palette for discrete scale
-      fillcols = scale_fill_manual(values = cols, name = colorby())
+      fillcols = scale_fill_manual(values = cols, name = colorby_obs())
         
       # build plot
       g = ggplot(obs, aes(x = yday, y = counter))+
-        geom_bar(stat = "identity", na.rm = T, aes_string(fill = paste0(colorby())))+
+        geom_bar(stat = "identity", na.rm = T, aes_string(fill = paste0(colorby_obs())))+
         labs(x = '', y = '')+
         fillcols+
         facet_wrap(~cat, scales="free_y", nrow = 2)+
@@ -1032,22 +1099,22 @@ function(input, output, session){
         expand_limits(x = c(min(ydays()), max(ydays())))
       
     } else {
-      if(colorby()=='score'){
+      if(colorby_obs()=='score'){
         
         # manually define colors based on score
-        fillcols = scale_fill_manual(values = score_cols, name = colorby())
+        fillcols = scale_fill_manual(values = score_cols, name = colorby_obs())
         
         # order factors so possibles plot first
         obs$score <- factor(obs$score, 
                             levels=levels(obs$score)[order(levels(obs$score), decreasing = TRUE)])
         
-      } else if(colorby()=='yday'){
+      } else if(colorby_obs()=='yday'){
         
         # choose palette for continuous scale
         cols = palette_list[[ind]]
         
         # define colors for continuous scale
-        fillcols = scale_fill_gradientn(colours = cols, name = colorby())
+        fillcols = scale_fill_gradientn(colours = cols, name = colorby_obs())
         
       } else {
         
@@ -1055,12 +1122,12 @@ function(input, output, session){
         cols = palette_list2[[ind]]
         
         # define palette for discrete scale
-        fillcols = scale_fill_manual(values = cols, name = colorby())
+        fillcols = scale_fill_manual(values = cols, name = colorby_obs())
       }
       
       # build plot
       g = ggplot(obs, aes(x = yday))+
-        geom_bar(stat = "count", na.rm = T, aes_string(fill = paste0(colorby())))+
+        geom_bar(stat = "count", na.rm = T, aes_string(fill = paste0(colorby_obs())))+
         labs(x = '', y = '')+
         fillcols+
         facet_wrap(~cat, scales="free_y", nrow = 2)+

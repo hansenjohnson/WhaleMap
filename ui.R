@@ -154,58 +154,28 @@ body <- dashboardBody(
                   tabPanel(title = 'Colors',
                   
                            # Observations color variable
-                           selectInput("colorby", "Color observations by:", choices =
-                                         c('Score' = 'score',
-                                           'Species' = 'species',
-                                           'Day of year' = 'yday',
-                                           'Year' = 'year',
-                                           'Platform' = 'platform',
-                                           'Platform name' = 'name',
-                                           'Number' = 'number',
-                                           'Latitude' = 'lat',
-                                           'Longitude' = 'lon',
-                                           'Deployment' = 'id'), selected = 'score'),
+                           selectInput("colorby_obs", "Color observations by:", 
+                                       choices = colorby_obs_choices, 
+                                       selected = colorby_obs_choices[1]),
                            
                            hr(),
                            
                            # Observations color palette
-                           selectInput("pal", "Choose color palette:",
-                                       c("Temperature" = 2,
-                                         "Viridis" = 8,
-                                         "Gebco" = 6,
-                                         "Heat colors" = 1,
-                                         "Jet" = 7,
-                                         "Salinity" = 3,
-                                         "Density" = 4,
-                                         "Chlorophyll" = 5), selected = 8),
+                           selectInput("pal_obs", "Choose color palette:", 
+                                       choices = palette_list, selected = NULL),
                            
                            hr(),
                            
                            # Tracks color variable
-                           selectInput("colorby_trk", "Color tracks by:", choices =
-                                         c('Score' = 'score',
-                                           'Species' = 'species',
-                                           'Day of year' = 'yday',
-                                           'Year' = 'year',
-                                           'Platform' = 'platform',
-                                           'Platform name' = 'name',
-                                           'Number' = 'number',
-                                           'Latitude' = 'lat',
-                                           'Longitude' = 'lon',
-                                           'Deployment' = 'id'), selected = 'score'),
+                           selectInput("colorby_trk", "Color tracks by:", 
+                                       choices = colorby_trk_choices, 
+                                       selected = colorby_trk_choices[1]),
                            
                            hr(),
                            
-                           # Observations color palette
-                           selectInput("pal_trk", "Choose color palette:",
-                                       c("Temperature" = 2,
-                                         "Viridis" = 8,
-                                         "Gebco" = 6,
-                                         "Heat colors" = 1,
-                                         "Jet" = 7,
-                                         "Salinity" = 3,
-                                         "Density" = 4,
-                                         "Chlorophyll" = 5), selected = 8),
+                           # Tracks color palette
+                           selectInput("pal_trk", "Choose color palette:", 
+                                       choices =  palette_list, selected = NULL),
                            
                            hr()
                            

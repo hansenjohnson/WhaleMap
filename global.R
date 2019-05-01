@@ -21,20 +21,40 @@ source('R/functions.R')
 # definitions -------------------------------------------------------------
 
 # define color palette list to choose from
-palette_list = list(heat.colors(200), 
-                    oce.colorsTemperature(200),
-                    oce.colorsSalinity(200),
-                    oce.colorsDensity(200),
-                    oce.colorsChlorophyll(200),
-                    oce.colorsGebco(200),
-                    oce.colorsJet(200),
-                    oceColorsViridis(200))
+palette_list = c("Default", "Viridis", "Temperature", "Gebco", "Heat", "Jet", "Salinity", "Density","Chlorophyll")
 
 # define score colors
 score_cols = c('definite acoustic' = 'red', 
                'possible acoustic' = 'yellow', 
                'definite visual' = 'darkslategray',
                'possible visual' = 'gray')
+
+platform_cols = c(
+  'plane' = '#8B6914',
+  'vessel' = 'black',
+  'slocum' = 'blue',
+  'wave' = 'purple'
+)
+
+# observation colorby choices
+colorby_obs_choices = 
+  c('Score' = 'score',
+  'Species' = 'species',
+  'Day of year' = 'yday',
+  'Year' = 'year',
+  'Platform' = 'platform',
+  'Platform name' = 'name',
+  'Number' = 'number',
+  'Latitude' = 'lat',
+  'Longitude' = 'lon',
+  'Deployment' = 'id')
+
+# track colorby choices
+colorby_trk_choices = 
+  c('Platform' = 'platform',
+    'Year' = 'year',
+    'Platform name' = 'name',
+    'Deployment' = 'id')
 
 # define visual and acoustic platforms
 visual_platforms = c('plane', 'vessel')
