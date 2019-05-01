@@ -32,46 +32,43 @@ function(input, output, session){
     date_vec = format.Date(seq.Date(from = begin_date,to = end_date, by = 1), '%b-%d')
     
     switch(input$dateType,
+           'select' = dateInput('date', label = NULL,
+                                value = Sys.Date()),
            
-           'select' = selectInput("date", label = NULL,
-                                  choices = date_vec,
-                                  selected = format.Date(Sys.Date(), '%b-%d'), multiple = FALSE),
+           'range' = dateRangeInput('date', label = NULL,
+                                    start = Sys.Date() - tlag, end = Sys.Date()),
            
-           'range' = sliderInput("date", label = NULL, begin_date, end_date,
-                                 value = c(Sys.Date()-tlag, Sys.Date()), timeFormat = '%b-%d',
-                                 animate = F)
+           'multiyear' = list(
+             dateRangeInput('date', label = NULL, format = 'mm-dd',
+                            start = Sys.Date() - tlag, end = Sys.Date()),
+             selectInput('years', label = NULL, choices = seq(2014,2019,1), 
+                         selected = 2019, multiple = TRUE, selectize = TRUE)
+           )
     )
   })
   
   # choose date -------------------------------------------------------
   
-  # define start time
-  ydays <- reactive({
+  dates <- reactive({
     if (input$go == 0){ 
       # yday list on startup
-      seq(yday(Sys.Date()-tlag), yday(Sys.Date()), 1)
+      seq(Sys.Date()-tlag, Sys.Date(), 1)
     } else {
       # choose date on action button click
       isolate({
         if(input$dateType == 'select'){
-          yday(as.Date(input$date, format = '%b-%d'))
+          input$date
         } else if(input$dateType == 'range'){
-          seq(yday(input$date[1]), yday(input$date[2]), 1)
+          seq(input$date[1], input$date[2], 1)
+        } else if(input$dateType == 'multiyear'){
+          yd = seq(yday(input$date[1]), yday(input$date[2]), 1)
+          as.Date(
+            unlist(
+              lapply(X = input$years, FUN = function(x){
+                as.Date(yd, origin = paste0(x,'-01-01'))
+              })), 
+            origin = '1970-01-01')
         }
-      })
-    }
-  })
-  
-  # choose year -------------------------------------------------------
-  
-  years <- reactive({
-    # assign default year if action button hasn't been pushed yet  
-    if (input$go == 0){
-      as.character(year(Sys.Date()))
-    } else {
-      # choose year on action button click
-      isolate({
-        as.character(input$year)
       })
     }
   })
@@ -115,18 +112,16 @@ function(input, output, session){
       
       tracks %>%
         filter(
-          year %in% years() & 
-            platform %in% platform() & 
-            yday %in% ydays()
+          date %in% dates() & 
+            platform %in% platform()
         )
       
     } else if(input$password == jasco_password){
       
       tracks %>%
         filter(
-          year %in% years() & 
+          date %in% dates() & 
             platform %in% platform() & 
-            yday %in% ydays() &
             name != 'cp_king_air'
         )
       
@@ -134,9 +129,8 @@ function(input, output, session){
       
       tracks %>%
         filter(
-          year %in% years() & 
+          date %in% dates() & 
             platform %in% platform() & 
-            yday %in% ydays() &
             !name %in% c('cp_king_air','jasco_test')
         )
       
@@ -149,9 +143,8 @@ function(input, output, session){
       
       observations %>%
         filter(
-          year %in% years() & 
+          date %in% dates() & 
             platform %in% platform() & 
-            yday %in% ydays() &
             species %in% species()
         ) %>%
         droplevels()
@@ -160,9 +153,8 @@ function(input, output, session){
       
       observations %>%
         filter(
-          year %in% years() & 
+          date %in% dates() & 
             platform %in% platform() & 
-            yday %in% ydays() &
             species %in% species() &
             score != 'possible visual'
         ) %>%
@@ -172,9 +164,8 @@ function(input, output, session){
       
       observations %>%
         filter(
-          year %in% years() & 
+          date %in% dates() & 
             platform %in% platform() & 
-            yday %in% ydays() &
             species %in% species() &
             !name %in% c('jasco_test') &
             score != 'possible visual'
@@ -225,8 +216,7 @@ function(input, output, session){
         
         latest %>%
           filter(
-            year %in% years() &
-              yday %in% ydays() &
+            date %in% dates() & 
               platform %in% platform()
           )
         
@@ -234,8 +224,7 @@ function(input, output, session){
         
         latest %>%
           filter(
-            year %in% years() &
-              yday %in% ydays() &
+            date %in% dates() & 
               platform %in% platform() &
               name != 'jasco_test'
           )
@@ -248,8 +237,7 @@ function(input, output, session){
   SONO <- eventReactive(input$go|input$go == 0, {
     sono %>%
       filter(
-        year %in% years() &
-          yday %in% ydays()
+        date %in% dates()
       )
   })
   
@@ -289,7 +277,7 @@ function(input, output, session){
     }
     
     # year warning
-    if(min(years())<2017){
+    if(min(year(dates()))<2017){
       showNotification('Note: Data before 2017 are incomplete.', 
                        duration = 7, closeButton = T, type = 'warning')
     }
@@ -1060,6 +1048,10 @@ function(input, output, session){
     # choose palette for discrete scale
     cols = get_palette(pal = pal_obs(), n = ncol)
     
+    # define min and max yday
+    min_yday = min(yday(dates()))
+    max_yday = min(yday(dates()))
+    
     if(colorby_obs() %in% c('number', 'lat','lon', 'year')){
       
       # replace all sightings/detections with '1' to facilitate stacked plotting
@@ -1072,7 +1064,7 @@ function(input, output, session){
       
       # define palette for discrete scale
       fillcols = scale_fill_manual(values = cols, name = colorby_obs())
-        
+      
       # build plot
       g = ggplot(obs, aes(x = yday, y = counter))+
         geom_bar(stat = "identity", na.rm = T, aes_string(fill = paste0(colorby_obs())))+
@@ -1080,10 +1072,10 @@ function(input, output, session){
         fillcols+
         facet_wrap(~cat, scales="free_y", nrow = 2)+
         scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"), 
-                           breaks = seq(from = min(ydays()), to = max(ydays()), length.out = 6))+
+                           breaks = seq(from = min_yday, to = max_yday, length.out = 6))+
         geom_point(data = eff, aes(x = yday, y=y), pch=45, cex = 3, col = 'blue')+
         aes(text = paste('date: ', format(as.Date(as.character(yday), "%j"), "%d-%b")))+
-        expand_limits(x = c(min(ydays()), max(ydays())))
+        expand_limits(x = c(min_yday, max_yday))
       
     } else {
       if(colorby_obs()=='score' & pal_obs() == 'Default'){
@@ -1112,11 +1104,11 @@ function(input, output, session){
         labs(x = '', y = '')+
         fillcols+
         facet_wrap(~cat, scales="free_y", nrow = 2)+
-        scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"),
-                           breaks = seq(from = min(ydays()), to = max(ydays()), length.out = 6))+
+        scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"), 
+                           breaks = seq(from = min_yday, to = max_yday, length.out = 6))+
         geom_point(data = eff, aes(x = yday, y=y), pch=45, cex = 3, col = 'blue')+
         aes(text = paste('date: ', format(as.Date(as.character(yday), "%j"), "%d-%b")))+
-        expand_limits(x = c(min(ydays()), max(ydays())))
+        expand_limits(x = c(min_yday, max_yday))
     }
     
     # build interactive plot
