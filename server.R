@@ -304,7 +304,7 @@ function(input, output, session){
   })
   
   # general warnings
-  observe({
+  observeEvent(input$go,{
     
     # track warning
     if(nrow(trk())>npts){
@@ -915,7 +915,12 @@ function(input, output, session){
     pal_obs <- colorpal_obs()
     var_obs <- dat[,which(colnames(dat)==colorby_obs())]
     
-    if(input$legend & input$tracks & TRUE %in% c(input$detected, input$possible)){
+    # check numbers of plotting points
+    ptrk = nrow(trk())<npts & input$tracks
+    
+    if(input$legend & ptrk & TRUE %in% c(input$detected, input$possible)){
+      # plot tracks and observations
+      
       proxy %>% clearControls() %>% 
         addLegend(position = "bottomright",labFormat = labelFormat(big.mark = ""),
                   pal = pal_obs, values = var_obs, 
@@ -923,7 +928,10 @@ function(input, output, session){
         addLegend(position = "bottomright",labFormat = labelFormat(big.mark = ""),
                   pal = pal_trk, values = var_trk, 
                   title = paste0('Tracks by ', colorby_trk()))
-    } else if(input$legend & !input$tracks & TRUE %in% c(input$detected, input$possible)){
+      
+    } else if(input$legend & TRUE %in% c(input$detected, input$possible)){
+      # plot only observations
+      
       proxy %>% clearControls() %>% 
         addLegend(position = "bottomright",labFormat = labelFormat(big.mark = ""),
                   pal = pal_obs, values = var_obs, 
