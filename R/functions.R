@@ -2,6 +2,7 @@
 
 suppressPackageStartupMessages(library(sf))
 suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(RColorBrewer))
 
 clean_latlon = function(d){
   d$lat = as.character(d$lat)
@@ -184,11 +185,15 @@ get_palette = function(pal = 'Viridis', n = 200){
          "Viridis" = oce.colorsViridis(n),
          "Heat" = heat.colors(n),
          "Jet" = oce.colorsJet(n),
-         "Gebco" = oce.colorsGebco(n),
-         "Temperature" = oce.colorsTemperature(n),
-         "Salinity" = oce.colorsSalinity(n),
-         "Density" = oce.colorsDensity(n),
-         "Chlorophyll" = oce.colorsChlorophyll(n)
+         "Spectral" = brewer.pal(n, 'Spectral'),
+         "Greys" = brewer.pal(n, 'Greys'),
+         "Set1" = brewer.pal(n, 'Set1'),
+         "Set2" = brewer.pal(n, 'Set2'),
+         "Dark" = brewer.pal(n, 'Dark2'),
+         "RedBlue" = brewer.pal(n, 'RdBu'),
+         "RedYellowBlue" = brewer.pal(n, 'RdYlBu'),
+         "Paired" = brewer.pal(n, 'Paired'),
+         "Accent" = brewer.pal(n, 'Accent')
   )
 }
 

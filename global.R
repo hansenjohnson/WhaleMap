@@ -21,7 +21,9 @@ source('R/functions.R')
 # definitions -------------------------------------------------------------
 
 # define color palette list to choose from
-palette_list = c("Default", "Viridis", "Temperature", "Gebco", "Heat", "Jet", "Salinity", "Density","Chlorophyll")
+palette_list = c("Default", "Viridis", "Heat", "Jet", "Spectral", "Greys", 
+                 "RedBlue", "RedYellowBlue", "Dark", "Paired", "Accent", 
+                 "Set1", "Set2")
 
 # define score colors
 score_cols = c('definite acoustic' = 'red', 
