@@ -92,7 +92,7 @@ body <- dashboardBody(
                            # hr(),
                            
                            # choose date input
-                           radioButtons("dateType", label = 'Choose dates(s):', 
+                           radioButtons("dateType", label = 'Choose date(s):', 
                                         choiceNames = c('Specific date','Date range','Range among years'),
                                         choiceValues = c('select', 'range', 'multiyear'), selected = 'range'),
                            
@@ -124,6 +124,11 @@ body <- dashboardBody(
                                                     'vessel',
                                                     'buoy', 
                                                     'opportunistic')),
+                           
+                           hr(),
+                           
+                           # add platform name choice
+                           uiOutput("nameChoice"),
                            
                            hr(),
                            

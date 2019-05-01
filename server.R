@@ -23,14 +23,7 @@ function(input, output, session){
   # build date UI -------------------------------------------------------
   
   output$dateChoice <- renderUI({
-    
-    # set begin and end dates for slider
-    begin_date = as.Date('2019-01-01')
-    end_date = as.Date('2019-12-31')
-    
-    # make vector of all possible dates
-    date_vec = format.Date(seq.Date(from = begin_date,to = end_date, by = 1), '%b-%d')
-    
+
     switch(input$dateType,
            'select' = dateInput('date', label = NULL,
                                 value = Sys.Date()),
@@ -46,34 +39,34 @@ function(input, output, session){
            )
     )
   })
-  
+
   # choose date -------------------------------------------------------
   
-  observe({
-    print(input$date)
-    })
-  
   dates <- reactive({
-    # if (is.null(input$date)){
-    #   
-    #   seq(Sys.Date()-tlag, Sys.Date(), 1)
-    #   
-    #   return()
-    # } 
     
-    req(input$date)
+    # catch startup error
+    if(is.null(input$date)){
+      return(seq(Sys.Date()-tlag, Sys.Date(), 1))
+    }
     
+    # select date from variable inputs
     if(input$dateType == 'select'){
       
       input$date
       
     } else if(input$dateType == 'range'){
       
-      seq(input$date[1], input$date[2], 1)
+      seq(input$date[1], input$date[length(input$date)], 1)
       
     } else if(input$dateType == 'multiyear'){
       
-      yd = seq(yday(input$date[1]), yday(input$date[2]), 1)
+      # require year (catch startup error)
+      req(input$years)
+      
+      # sequence of year days between dates
+      yd = seq(yday(input$date[1]), yday(input$date[length(input$date)]), 1)
+      
+      # convert to dates across years
       as.Date(
         unlist(
           lapply(X = input$years, FUN = function(x){
@@ -84,25 +77,61 @@ function(input, output, session){
     }
   })
   
-  # choose species -----------------------------------------------------------
-  
-  # species
-  species <- reactive({
-    input$species
-  })
-  
   # choose platform -----------------------------------------------------------
   
   platform <- reactive({
     input$platform
   })
   
-  # test -----------------------------------------------------------
+  # name choices -----------------------------------------------------------
   
+  # extract names of active platform(s)
+  name_choices <- reactive({
+    rbind(tracks[c('date', 'platform', 'name')],
+          observations[c('date', 'platform', 'name')]) %>%
+      filter(date %in% dates() & platform %in% platform()) %>%
+      pull(name) %>%
+      as.character() %>%
+      unique()
+  })
+  
+  # build name UI -----------------------------------------------------------
+  
+  output$nameChoice <- renderUI({
+    
+    # construct UI
+    selectInput("name", "Choose platform name(s):", multiple = T,
+                choices = c('All', name_choices()), 
+                selected = 'All', selectize = TRUE)
+    
+  })
+  
+  # choose name -----------------------------------------------------------
+  
+  # name
+  name <- reactive({
+    # req(input$name)
+    
+    if('All' %in% input$name){
+      name_choices()
+    } else {
+      input$name  
+    }
+  })
+  
+  # test -----------------------------------------------------------
+
   observe({
     print(dates())
-    print(species())
     print(platform())
+    print(name())
+  })
+  
+  # choose species -----------------------------------------------------------
+  
+  # species
+  species <- eventReactive(input$go|input$go == 0,{
+    input$species
   })
   
   # choose colors -----------------------------------------------------------
@@ -132,7 +161,8 @@ function(input, output, session){
       tracks %>%
         filter(
           date %in% dates() & 
-            platform %in% platform()
+            name %in% name() &
+            platform %in% platform() 
         )
       
     } else if(input$password == jasco_password){
@@ -141,6 +171,7 @@ function(input, output, session){
         filter(
           date %in% dates() & 
             platform %in% platform() & 
+            name %in% name() &
             name != 'cp_king_air'
         )
       
@@ -150,6 +181,7 @@ function(input, output, session){
         filter(
           date %in% dates() & 
             platform %in% platform() & 
+            name %in% name() &
             !name %in% c('cp_king_air','jasco_test')
         )
       
@@ -164,6 +196,7 @@ function(input, output, session){
         filter(
           date %in% dates() & 
             platform %in% platform() & 
+            name %in% name() &
             species %in% species()
         ) %>%
         droplevels()
@@ -175,6 +208,7 @@ function(input, output, session){
           date %in% dates() & 
             platform %in% platform() & 
             species %in% species() &
+            name %in% name() &
             score != 'possible visual'
         ) %>%
         droplevels()
@@ -186,6 +220,7 @@ function(input, output, session){
           date %in% dates() & 
             platform %in% platform() & 
             species %in% species() &
+            name %in% name() &
             !name %in% c('jasco_test') &
             score != 'possible visual'
         ) %>%
@@ -236,6 +271,7 @@ function(input, output, session){
         latest %>%
           filter(
             date %in% dates() & 
+              name %in% name() &
               platform %in% platform()
           )
         
@@ -245,6 +281,7 @@ function(input, output, session){
           filter(
             date %in% dates() & 
               platform %in% platform() &
+              name %in% name() &
               name != 'jasco_test'
           )
         
