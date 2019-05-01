@@ -84,12 +84,12 @@ body <- dashboardBody(
                   # Select Data    
                   tabPanel(title = 'Data',
                            
-                           # choose year
-                           selectInput("year", label = 'Choose year(s):',
-                                       choices = years,
-                                       selected = '2019', multiple = TRUE),
-                           
-                           hr(),
+                           # # choose year
+                           # selectInput("year", label = 'Choose year(s):',
+                           #             choices = years,
+                           #             selected = '2019', multiple = TRUE),
+                           # 
+                           # hr(),
                            
                            # choose date input
                            radioButtons("dateType", label = 'Choose dates(s):', 
