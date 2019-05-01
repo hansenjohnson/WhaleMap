@@ -100,18 +100,6 @@ body <- dashboardBody(
                            
                            hr(),
                            
-                           # add species choice
-                           selectInput("species", "Choose species:", 
-                                       choices = c("Right whale" = "right",
-                                                   "Fin whale" = "fin",
-                                                   "Blue whale" = "blue",
-                                                   "Sei whale" = "sei",
-                                                   "Humpback whale" = "humpback"), 
-                                       selected = "right", 
-                                       multiple = T),
-                           
-                           hr(),
-                           
                            # add platform choice
                            selectInput("platform", "Choose platform(s):", multiple = T,
                                        choices = c("Slocum Glider" = "slocum",
@@ -132,7 +120,21 @@ body <- dashboardBody(
                            
                            hr(),
                            
+                           # add species choice
+                           selectInput("species", "Choose species:", 
+                                       choices = c("Right whale" = "right",
+                                                   "Fin whale" = "fin",
+                                                   "Blue whale" = "blue",
+                                                   "Sei whale" = "sei",
+                                                   "Humpback whale" = "humpback"), 
+                                       selected = "right", 
+                                       multiple = T),
+                           
+                           hr(),
+                           
                            # checkbox data layers
+                           
+                           h5(strong('Choose data layer(s):')),
                            
                            checkboxInput("tracks", label = 'Tracks', value = T),
                            
