@@ -84,13 +84,6 @@ body <- dashboardBody(
                   # Select Data    
                   tabPanel(title = 'Data',
                            
-                           # # choose year
-                           # selectInput("year", label = 'Choose year(s):',
-                           #             choices = years,
-                           #             selected = '2019', multiple = TRUE),
-                           # 
-                           # hr(),
-                           
                            # choose date input
                            radioButtons("dateType", label = 'Choose date(s):', 
                                         choiceNames = c('Specific date','Date range','Range among years'),
@@ -145,6 +138,8 @@ body <- dashboardBody(
                                          label = 'Definite detections/sightings', value = T),
                            
                            checkboxInput("sono", label = 'Sonobuoys', value = F),
+                           
+                           hr()
                            
                            # unlock preliminary data
                            tagAppendAttributes(
