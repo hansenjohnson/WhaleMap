@@ -110,21 +110,11 @@ function(input, output, session){
   
   # name
   name <- reactive({
-    # req(input$name)
-    
-    if('All' %in% input$name){
+    if('All' %in% input$name | input$go == 0){
       name_choices()
     } else {
       input$name  
     }
-  })
-  
-  # test -----------------------------------------------------------
-
-  observe({
-    print(dates())
-    print(platform())
-    print(name())
   })
   
   # choose species -----------------------------------------------------------
@@ -1105,8 +1095,8 @@ function(input, output, session){
     cols = get_palette(pal = pal_obs(), n = ncol)
     
     # define min and max yday
-    min_yday = min(yday(dates()))
-    max_yday = min(yday(dates()))
+    min_yday = isolate(min(yday(dates())))
+    max_yday = isolate(max(yday(dates())))
     
     if(colorby_obs() %in% c('number', 'lat','lon', 'year')){
       
