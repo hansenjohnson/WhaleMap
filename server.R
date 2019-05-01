@@ -1078,8 +1078,9 @@ function(input, output, session){
       obs = obs[obs$score!='possible acoustic' & obs$score!='possible visual',]
     }
     
-    # avoid error if no data selected or in map view
+    # add bogus data to handle no observations
     if(nrow(obs)==0 & nrow(tracks)!=0){
+      obs = observations[FALSE,]
       obs[1:2,] = rep(NA, ncol(obs))
       obs$score[1] = 'definite visual'
       obs$score[2] = 'definite acoustic'
