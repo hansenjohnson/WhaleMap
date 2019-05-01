@@ -1071,7 +1071,14 @@ function(input, output, session){
     }
     
     # avoid error if no data selected or in map view
-    if(nrow(obs)==0|nrow(tracks)==0){
+    if(nrow(obs)==0 & nrow(tracks)!=0){
+      obs[1:2,] = rep(NA, ncol(obs))
+      obs$score[1] = 'definite visual'
+      obs$score[2] = 'definite acoustic'
+    }
+    
+    # avoid error if no data selected or in map view
+    if(nrow(obs)==0 & nrow(tracks)==0){
       return(NULL)
     }
     
