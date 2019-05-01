@@ -29,7 +29,7 @@ plot_tracks = !on_server()
 flist = list.files(data_dir, pattern = '.gpx', full.names = T, recursive = T, ignore.case = T)
 
 # list to hold loop output
-TRK = list()
+TRK = vector('list', length = length(flist))
 
 # read and format data ----------------------------------------------------
 
@@ -83,10 +83,11 @@ if(length(flist!=0)){
     # catch null error
     if(is.null(TRK[[i]])){stop('Track in ', flist[i], ' not processed correctly!')}
     
-    # combine all flights
-    TRACKS = bind_cols(TRK)
-    
   }
+  
+  # combine all flights
+  TRACKS = bind_rows(TRK)
+  
 } else {
   
   # assign empty data frame
