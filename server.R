@@ -1057,18 +1057,8 @@ function(input, output, session){
     # determine number of factor levels to color
     ncol = length(unique(obs[,which(colnames(obs)==colorby_obs())]))
     
-    # get input for color palette choice
-    ind = as.numeric(input$pal)
-    
-    # list palettes for discrete scale (must be in the same order as palette_list)
-    palette_list2 = list(heat.colors(ncol), 
-                         oce.colorsTemperature(ncol),
-                         oce.colorsSalinity(ncol),
-                         oce.colorsDensity(ncol),
-                         oce.colorsChlorophyll(ncol),
-                         oce.colorsGebco(ncol),
-                         oce.colorsJet(ncol),
-                         oceColorsViridis(ncol))
+    # choose palette for discrete scale
+    cols = get_palette(pal = pal_obs(), n = ncol)
     
     if(colorby_obs() %in% c('number', 'lat','lon', 'year')){
       
@@ -1079,9 +1069,6 @@ function(input, output, session){
         # convert year to factor
         obs$year = as.factor(obs$year)
       }
-      
-      # choose palette for discrete scale
-      cols = palette_list2[[ind]]
       
       # define palette for discrete scale
       fillcols = scale_fill_manual(values = cols, name = colorby_obs())
@@ -1099,7 +1086,7 @@ function(input, output, session){
         expand_limits(x = c(min(ydays()), max(ydays())))
       
     } else {
-      if(colorby_obs()=='score'){
+      if(colorby_obs()=='score' & pal_obs() == 'Default'){
         
         # manually define colors based on score
         fillcols = scale_fill_manual(values = score_cols, name = colorby_obs())
@@ -1110,16 +1097,10 @@ function(input, output, session){
         
       } else if(colorby_obs()=='yday'){
         
-        # choose palette for continuous scale
-        cols = palette_list[[ind]]
-        
         # define colors for continuous scale
         fillcols = scale_fill_gradientn(colours = cols, name = colorby_obs())
         
       } else {
-        
-        # choose palette for discrete scale
-        cols = palette_list2[[ind]]
         
         # define palette for discrete scale
         fillcols = scale_fill_manual(values = cols, name = colorby_obs())
