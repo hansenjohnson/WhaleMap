@@ -187,10 +187,7 @@ body <- dashboardBody(
                   # Customize plotting
                   tabPanel(title = 'Layers',
                            
-                           h5(strong('Choose layer(s):')),
-                           
                            # Map layers
-                           helpText(tags$em('Map Layers')),
                            
                            checkboxInput("latest", label = 'Latest robot positions', value = T),
                            
