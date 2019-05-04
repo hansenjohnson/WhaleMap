@@ -333,7 +333,7 @@ data/interim/2019_dfo_cessna_sightings.rds : R/proc_2019_dfo_cessna_sightings.R 
 	$(remove_error)
 
 # 2019 tc dash8 sightings
-data/interim/2019_tc_dash8_sightings.rds : R/proc_2018_tc_dash8_sightings.R data/raw/2019_whalemapdata/TC_Dash8/*
+data/interim/2019_tc_dash8_sightings.rds : R/proc_2019_tc_dash8_sightings.R data/raw/2019_whalemapdata/TC_Dash8/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
