@@ -32,7 +32,7 @@ flist = list.files(data_dir, pattern = '(\\d{8})_Dash8_sightings.xls.$', full.na
 if(length(flist)!=0){
   
   # list to hold loop output
-  SIG = list()
+  SIG = vector('list', length = length(flist))
   
   # read and format data ----------------------------------------------------
   
@@ -46,38 +46,28 @@ if(length(flist)!=0){
     tmp = as.data.frame(read_excel(flist[i], sheet = 1, col_names = TRUE))
     
     # select columns of interest
-    # tmp = tmp[c(1,3,4,11,27,29)]
-    
-    # select columns of interest
-    tmp = data.frame(tmp$`WS_DATE (Ctr + ;)`,
-                     tmp$LATITUDE,
-                     tmp$LONGITUDE,
-                     tmp[,grep('TIME', colnames(tmp))],
-                     tmp$SPECIES_CD,
-                     tmp$NUMB
+    tmp = data.frame(date = tmp$Date_UTC,
+                     lat = tmp$Pos_lat,
+                     lon = tmp$Pos_long,
+                     time = tmp$Time_UTC,
+                     species = tmp$Sp_code,
+                     number = tmp$Nb_total
     )
     
-    # rename
-    colnames(tmp) = c('date','lat', 'lon', 'time', 'species', 'number')
-    
     # fix date
-    tmp$date = as.Date(tmp$date[1]) # onlys use first date
+    tmp$date = as.Date(tmp$date[1]) # only use first date
     
-    # remove columns without species
-    tmp = tmp[!is.na(tmp$species),]
+    # remove columns without data
+    tmp = tmp[!is.na(tmp$species)&
+                !is.na(tmp$lat)&
+                !is.na(tmp$lon)&
+                !is.na(tmp$time),]
     
     # skip if nothing seen
     if (nrow(tmp) == 0) next
     
-    # remove columns without lat lon
-    tmp = tmp[!is.na(tmp$lat),]
-    tmp = tmp[!is.na(tmp$lon),]
-    
-    # remove columns without timestamp
-    tmp = tmp[which(!is.na(tmp$time)),]
-    
     # fix time
-    tmp$time = as.POSIXct(tmp$time)
+    tmp$time = as.POSIXct(tmp$time, tz = 'UTC')
     tmp$time = as.POSIXct(paste0(tmp$date, ' ', hour(tmp$time), ':', minute(tmp$time), ':', second(tmp$time)), 
                           tz = 'UTC', usetz = T)
     
@@ -128,7 +118,9 @@ if(length(flist)!=0){
     tmp$species[tmp$species == 'FS'] = 'fin/sei'
     tmp$species[tmp$species == 'BA'] = 'minke'
     tmp$species[tmp$species == 'BM'] = 'blue'
-    tmp$species[tmp$species == 'LGWH'] = 'unknown whale'
+    tmp$species[tmp$species == 'LWNR'] = 'unknown rorqual'
+    tmp$species[tmp$species == 'UnWh'] = 'unknown large whale'
+    tmp$species[tmp$species == 'UC'] = 'unknown cetacean'
     
     # add metadata
     tmp$yday = yday(tmp$date)
@@ -147,9 +139,6 @@ if(length(flist)!=0){
   }
   
   # combine and save --------------------------------------------------------
-  
-  # catch errors
-  # if(length(SIG)!=length(flist)){stop('Not all sightings were processed!')}
   
   # combine all flights
   SIGS = bind_rows(SIG)
