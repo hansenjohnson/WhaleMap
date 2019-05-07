@@ -8,6 +8,9 @@ index_file = 'status_index.csv'
 status_file = 'data/processed/status.txt'
 default_email_list = 'data/email/default.csv'
 
+# path to sendmail executable
+sendmail = '/usr/sbin/sendmail'
+
 # email details
 email_file = 'error_email.txt'
 
@@ -77,7 +80,7 @@ If you cannot find an error and/or suspect the problem is related to WhaleMap, p
     close(fileConn)
 
     # send email
-    system(paste0('sendmail -vt < ', email_file))
+    system(paste0(sendmail, ' -vt < ', email_file))
 
     message('Error message sent on: ', Sys.time())
 
