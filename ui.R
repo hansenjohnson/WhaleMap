@@ -160,8 +160,6 @@ body <- dashboardBody(
                                        choices = colorby_obs_choices, 
                                        selected = colorby_obs_choices[1]),
                            
-                           hr(),
-                           
                            # Observations color palette
                            selectInput("pal_obs", "Choose color palette:", 
                                        choices = palette_list, selected = NULL),
@@ -173,13 +171,9 @@ body <- dashboardBody(
                                        choices = colorby_trk_choices, 
                                        selected = colorby_trk_choices[1]),
                            
-                           hr(),
-                           
                            # Tracks color palette
                            selectInput("pal_trk", "Choose color palette:", 
-                                       choices =  palette_list, selected = NULL),
-                           
-                           hr()
+                                       choices =  palette_list, selected = NULL)
                            
                   ),
                   # layers tab ----------------------------------------------------------
@@ -188,11 +182,15 @@ body <- dashboardBody(
                   tabPanel(title = 'Layers',
                            
                            # Map layers
+                           selectInput("basemap", label = "Choose basemap:",
+                                       choices =  basemap_choices, 
+                                       selected = basemap_choices[1]),
+                           
+                           checkboxInput("graticules", label = 'Graticules', value = F),
                            
                            checkboxInput("latest", label = 'Latest robot positions', value = T),
                            
-                           checkboxInput("tss", 
-                                         label = 'Shipping lanes', value = T),
+                           checkboxInput("tss", label = 'Shipping lanes', value = T),
                            
                            checkboxInput("legend", label = 'Legends', value = T),
                            

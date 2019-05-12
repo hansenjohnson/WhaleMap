@@ -394,67 +394,61 @@ function(input, output, session){
   
   # basemap -----------------------------------------------------------------
   
-  output$map <- renderLeaflet({
-    leaflet(tracks) %>% 
-      addProviderTiles(providers$Esri.OceanBasemap) %>%
-      fitBounds(~max(lon, na.rm = T), 
-                ~min(lat, na.rm = T), 
-                ~min(lon, na.rm = T), 
-                ~max(lat, na.rm = T)) %>%
+  # isolate({
+  # observeEvent(input$go,{
+    output$map <- renderLeaflet({
+      leaflet(tracks) %>% 
+        # addProviderTiles(providers[[input$basemap]]) %>%
+        fitBounds(~max(lon, na.rm = T), 
+                  ~min(lat, na.rm = T), 
+                  ~min(lon, na.rm = T), 
+                  ~max(lat, na.rm = T)) %>%
+
+        # add extra map features
+        addScaleBar(position = 'topright')%>%
+        addFullscreenControl(pseudoFullscreen = TRUE) %>%
+        addMeasure(
+          primaryLengthUnit = "kilometers",
+          secondaryLengthUnit = 'miles', 
+          primaryAreaUnit = "hectares",
+          secondaryAreaUnit="acres", 
+          activeColor = "darkslategray",
+          completedColor = "darkslategray",
+          position = 'bottomleft')
+    })
+  
+  # tile observer ------------------------------------------------------  
+  
+  observeEvent(input$go|input$go == 0, {
+    
+    # add tile
+    proxy <- leafletProxy("map") %>%
+      clearTiles() %>%
+      addProviderTiles(providers[[input$basemap]], group = 'basemap')
+  })
+ 
+  # graticules ------------------------------------------------------
+
+  observe(priority = 4, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('graticules')
+    
+    if(input$graticules){
       
       # add graticules
-      # addWMSTiles(
-      #   'https://gis.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer',
-      #   layers = c('1', '2', '3'),
-      #   options = WMSTileOptions(format = "image/png8", transparent = TRUE),
-      #   attribution = "NOAA") %>%
+      proxy %>%
+        addSimpleGraticule(zoomIntervals = graticule_ints, 
+                           group = 'graticules', 
+                           showOriginLabel = FALSE)
       
-      # use NOAA graticules
-      addWMSTiles(
-        "https://gis.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer/",
-        layers = c("1-degree grid", "5-degree grid"),
-        options = WMSTileOptions(format = "image/png8", transparent = TRUE),
-        attribution = NULL) %>%
-      
-      # add extra map features
-      addScaleBar(position = 'topright')%>%
-      addFullscreenControl(pseudoFullscreen = TRUE) %>%
-      addMeasure(
-        primaryLengthUnit = "kilometers",
-        secondaryLengthUnit = 'miles', 
-        primaryAreaUnit = "hectares",
-        secondaryAreaUnit="acres", 
-        activeColor = "darkslategray",
-        completedColor = "darkslategray",
-        position = 'bottomleft')
+      # switch to show/hide
+      ifelse(input$graticules, showGroup(proxy, 'graticules'),
+             hideGroup(proxy, 'graticules'))
+    }
+    
   })
-  
-  # getColor <- function(tracks) {
-  #   if(tracks$platform[1] == 'slocum') {
-  #     "blue"
-  #   } else if(tracks$platform[1] == 'plane') {
-  #     "#8B6914"
-  #   } else if(tracks$platform[1] == 'vessel'){
-  #     "black"
-  #   } else if(tracks$platform[1] == 'wave'){
-  #     "purple"
-  #   } else {
-  #     "darkgrey"
-  #   }
-  # }
-  
-  # getColor <- function(tracks, colorby = input$colorby_trk, colorby = colorpal_obs()) {
-  # 
-  #   # extract 
-  #   itrk = as.character(tracks[1,which(colnames(tracks)==colorby)])
-  #   
-  #   if(colorby == 'platform'){
-  #     as.character(platform_cols[itrk])
-  #   } else {
-  #     'black'
-  #   }
-  # }
-  
   
   # critical habitat zone ------------------------------------------------------  
   

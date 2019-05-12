@@ -20,6 +20,15 @@ source('R/functions.R')
 
 # definitions -------------------------------------------------------------
 
+# basemap choices
+basemap_choices = c("ESRI Ocean" = "Esri.OceanBasemap",
+                    "OpenStreetMap" = "OpenStreetMap.Mapnik",
+                    "Black and white" = "Stamen.TonerBackground",
+                    "ESRI Imagery" = "Esri.WorldImagery",
+                    "Grey" = "Esri.WorldGrayCanvas",
+                    "Blank - light" = "CartoDB.PositronNoLabels",
+                    "Blank - dark" = "CartoDB.DarkMatterNoLabels")
+
 # define color palette list to choose from
 palette_list = c("Default", "Viridis", "Heat", "Jet", "Spectral", "Greys", 
                  "RedBlue", "RedYellowBlue", "Dark", "Paired", "Accent", 
@@ -84,6 +93,19 @@ sonoIcon = makeIcon("icons/sono.png", iconWidth = 10, iconHeight = 45)
 # status file
 status_file = 'data/processed/status.txt'
 index_file = 'status_index.csv'
+
+# graticule intervals
+graticule_ints = list(
+  data.frame('start' = 0, 'end' = 2, 'interval' = 60),
+  data.frame('start' = 3, 'end' = 3, 'interval' = 20),
+  data.frame('start' = 4, 'end' = 4, 'interval' = 10),
+  data.frame('start' = 5, 'end' = 5, 'interval' = 5),
+  data.frame('start' = 6, 'end' = 6, 'interval' = 2),
+  data.frame('start' = 7, 'end' = 7, 'interval' = 1),
+  data.frame('start' = 8, 'end' = 8, 'interval' = 0.5),
+  data.frame('start' = 9, 'end' = 9, 'interval' = 0.25),
+  data.frame('start' = 10, 'end' = 15, 'interval' = 0.1)
+)
 
 # load data ---------------------------------------------------------------
 
