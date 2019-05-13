@@ -33,6 +33,7 @@ data/processed/tracks.rds : R/proc_tracks.R \
 														data/interim/2019_noaa_twin_otter_tracks.rds \
 														data/interim/2019_dfo_cessna_tracks.rds \
 														data/interim/2019_tc_dash8_tracks.rds \
+														data/interim/2019_tc_dash7_tracks.rds \
 														data/interim/dcs_archived_tracks.rds \
 														data/interim/dcs_live_tracks.rds
 	$(report_error)
@@ -171,6 +172,12 @@ data/interim/2019_tc_dash8_tracks.rds : R/proc_2019_tc_dash8_tracks.R data/raw/2
 	Rscript $<
 	$(remove_error)
 
+# 2019 TC dash7 tracks
+data/interim/2019_tc_dash7_tracks.rds : R/proc_2019_tc_dash7_tracks.R data/raw/2019_whalemapdata/TC_Dash7/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
 # DCS archived tracks
 data/interim/dcs_archived_tracks.rds : R/proc_archived_dcs.R data/raw/dcs/archived/*/*
 	$(report_error)
@@ -209,6 +216,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2019_opportunistic_sightings.rds \
 																	data/interim/2019_dfo_cessna_sightings.rds \
 																	data/interim/2019_tc_dash8_sightings.rds \
+																	data/interim/2019_tc_dash7_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
 
@@ -334,6 +342,12 @@ data/interim/2019_dfo_cessna_sightings.rds : R/proc_2019_dfo_cessna_sightings.R 
 
 # 2019 tc dash8 sightings
 data/interim/2019_tc_dash8_sightings.rds : R/proc_2019_tc_dash8_sightings.R data/raw/2019_whalemapdata/TC_Dash8/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2019 tc dash7 sightings
+data/interim/2019_tc_dash7_sightings.rds : R/proc_2019_tc_dash7_sightings.R data/raw/2019_whalemapdata/TC_Dash7/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
