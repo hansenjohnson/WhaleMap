@@ -155,6 +155,13 @@ body <- dashboardBody(
                   # Customize plotting
                   tabPanel(title = 'Colors',
                   
+                           # Basemap
+                           selectInput("basemap", label = "Choose basemap:",
+                                       choices =  basemap_choices, 
+                                       selected = basemap_choices[1]),
+                           
+                           hr(),
+                           
                            # Observations color variable
                            selectInput("colorby_obs", "Color observations by:", 
                                        choices = colorby_obs_choices, 
@@ -180,11 +187,6 @@ body <- dashboardBody(
                   
                   # Customize plotting
                   tabPanel(title = 'Layers',
-                           
-                           # Map layers
-                           selectInput("basemap", label = "Choose basemap:",
-                                       choices =  basemap_choices, 
-                                       selected = basemap_choices[1]),
                            
                            checkboxInput("graticules", label = 'Graticules', value = F),
                            
