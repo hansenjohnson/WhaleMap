@@ -7,7 +7,7 @@
 data_dir = 'data/raw/2019_whalemapdata/TC_Dash7/'
 
 # output file name
-ofile = '2019_tc_dash8_tracks.rds'
+ofile = '2019_tc_dash7_tracks.rds'
 
 # output directory
 output_dir = 'data/interim/'
