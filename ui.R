@@ -87,7 +87,7 @@ body <- dashboardBody(
                            # choose date input
                            radioButtons("dateType", label = 'Choose date(s):', 
                                         choiceNames = c('Specific date','Date range','Range among years'),
-                                        choiceValues = c('select', 'range', 'multiyear'), selected = 'range'),
+                                        choiceValues = c('select', 'range', 'multiyear'), selected = 'multiyear'),
                            
                            uiOutput("dateChoice"),
                            

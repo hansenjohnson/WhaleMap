@@ -32,8 +32,13 @@ function(input, output, session){
                                     start = Sys.Date() - tlag, end = Sys.Date()),
            
            'multiyear' = list(
-             dateRangeInput('date', label = NULL, format = 'mm-dd',
-                            start = Sys.Date() - tlag, end = Sys.Date()),
+             sliderInput('date', label = NULL, 
+                         min = as.Date('2019-01-01'), 
+                         max = as.Date('2019-12-31'),
+                         value = c(Sys.Date()-tlag, Sys.Date()), 
+                         step = 1,
+                         timeFormat = '%b-%d',
+                         animate = F),
              selectInput('years', label = NULL, choices = seq(2014,2019,1), 
                          selected = 2019, multiple = TRUE, selectize = TRUE)
            )
