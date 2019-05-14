@@ -137,8 +137,6 @@ body <- dashboardBody(
                            checkboxInput("detected", 
                                          label = 'Definite detections/sightings', value = T),
                            
-                           checkboxInput("sono", label = 'Sonobuoys', value = F),
-                           
                            hr(),
                            
                            # unlock preliminary data
