@@ -186,6 +186,8 @@ body <- dashboardBody(
                   # Customize plotting
                   tabPanel(title = 'Layers',
                            
+                           helpText(tags$em('Map layers')),
+                           
                            checkboxInput("graticules", label = 'Graticules', value = F),
                            
                            checkboxInput("latest", label = 'Latest robot positions', value = T),
