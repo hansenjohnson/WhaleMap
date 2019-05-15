@@ -92,8 +92,7 @@ function(input, output, session){
   
   # extract names of active platform(s)
   name_choices <- reactive({
-    rbind(tracks[c('date', 'platform', 'name')],
-          observations[c('date', 'platform', 'name')]) %>%
+    bind_rows(tracks[c('date', 'platform', 'name')], observations[c('date', 'platform', 'name')]) %>%
       filter(date %in% dates() & platform %in% platform()) %>%
       pull(name) %>%
       as.character() %>%
