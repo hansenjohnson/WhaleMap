@@ -402,37 +402,33 @@ function(input, output, session){
   
   # basemap -----------------------------------------------------------------
   
-  # isolate({
-  # observeEvent(input$go,{
-    output$map <- renderLeaflet({
-      leaflet(tracks) %>% 
-        # addProviderTiles(providers[[input$basemap]]) %>%
-        fitBounds(~max(lon, na.rm = T), 
-                  ~min(lat, na.rm = T), 
-                  ~min(lon, na.rm = T), 
-                  ~max(lat, na.rm = T)) %>%
-
-        # add extra map features
-        addScaleBar(position = 'topright')%>%
-        addFullscreenControl(pseudoFullscreen = TRUE) %>%
-        addMeasure(
-          primaryLengthUnit = "kilometers",
-          secondaryLengthUnit = 'miles', 
-          primaryAreaUnit = "hectares",
-          secondaryAreaUnit="acres", 
-          activeColor = "darkslategray",
-          completedColor = "darkslategray",
-          position = 'bottomleft')
-    })
+  output$map <- renderLeaflet({
+    leaflet(tracks) %>% 
+      fitBounds(~max(lon, na.rm = T), 
+                ~min(lat, na.rm = T), 
+                ~min(lon, na.rm = T), 
+                ~max(lat, na.rm = T)) %>%
+      
+      # add extra map features
+      addScaleBar(position = 'topright')%>%
+      addFullscreenControl(pseudoFullscreen = TRUE) %>%
+      addMeasure(
+        primaryLengthUnit = "kilometers",
+        secondaryLengthUnit = 'miles', 
+        primaryAreaUnit = "hectares",
+        secondaryAreaUnit="acres", 
+        activeColor = "darkslategray",
+        completedColor = "darkslategray",
+        position = 'bottomleft')
+  })
   
   # tile observer ------------------------------------------------------  
   
-  observeEvent(input$go|input$go == 0, {
-    
+  observeEvent(input$basemap, {
     # add tile
-    proxy <- leafletProxy("map") %>%
+    leafletProxy("map") %>%
       clearTiles() %>%
-      addProviderTiles(providers[[input$basemap]], group = 'basemap')
+      addProviderTiles(providers[[input$basemap]], layerId = 'basemap')
   })
  
   # graticules ------------------------------------------------------
