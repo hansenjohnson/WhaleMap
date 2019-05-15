@@ -288,7 +288,7 @@ function(input, output, session){
       )
   })
   
-  # release notificaiton  ------------------------------------------
+  # release notification  ------------------------------------------
   
   showNotification(
     ui = 'WhaleMap has some new features!',
