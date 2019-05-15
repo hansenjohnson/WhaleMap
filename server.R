@@ -74,9 +74,13 @@ function(input, output, session){
           lapply(X = input$years, FUN = function(x){
             as.Date(yd, origin = paste0(x,'-01-01'))
           })), 
-        origin = '1970-01-01')
+        origin = '1970-01-01')-1
       
     }
+  })
+  
+  observe({
+    print(dates())
   })
   
   # choose platform -----------------------------------------------------------
