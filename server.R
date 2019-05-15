@@ -724,7 +724,7 @@ function(input, output, session){
   # track observer ------------------------------------------------------  
   
   # observe(priority = 3, {
-  observeEvent(input$tracks|input$go|input$go == 0, {
+  observeEvent(input$tracks|input$go|input$go == 0, priority = 3, {
     
     # define proxy
     proxy <- leafletProxy("map")
