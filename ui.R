@@ -62,7 +62,7 @@ body <- dashboardBody(
     column(width = 3,
            
            # translator
-           box(width = NULL, solidHeader = F, collapsible = T, title = 'Translate / Traduire', status = 'primary',
+           box(width = NULL, solidHeader = F, collapsible = T, title = 'Translate / Traduire', status = 'primary',collapsed = T,
                HTML('
                   <div id="google_translate_element"></div>
                   
