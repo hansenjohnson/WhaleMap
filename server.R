@@ -293,7 +293,7 @@ function(input, output, session){
   showNotification(
     ui = 'WhaleMap has some new features!',
     action = a(target="_blank", href = "https://whalemap.ocean.dal.ca/features.html", "Check them out here"), 
-    duration = 20, closeButton = T, type = 'message')
+    duration = NULL, closeButton = T, type = 'message')
   
   # warnings --------------------------------------------------------
   
