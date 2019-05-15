@@ -292,6 +292,13 @@ function(input, output, session){
       )
   })
   
+  # release notificaiton  ------------------------------------------
+  
+  showNotification(
+    ui = 'WhaleMap has some new features!',
+    action = a(target="_blank", href = "https://whalemap.ocean.dal.ca/features.html", "Check them out here"),
+    closeButton = T, type = 'message')
+  
   # warnings --------------------------------------------------------
   
   # password warnings
