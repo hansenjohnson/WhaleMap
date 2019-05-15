@@ -11,21 +11,21 @@ header <-  dashboardHeader(title = 'WhaleMap',
                              icon = 'More Information',
                              badgeStatus = NULL,
                              headerText = "",
-                             notificationItem("Help",
-                                              icon = icon('question-sign', lib = 'glyphicon'),
-                                              href = "http://leviathan.ocean.dal.ca/leviathan_docs/WhaleMap-help.html"),
-                             notificationItem("Data details",
-                                              icon = icon('signal', lib = 'glyphicon'),
-                                              href = "http://leviathan.ocean.dal.ca/leviathan_docs/WhaleMap-data.html"),
+                             notificationItem("Cite",
+                                              icon = icon('education', lib = 'glyphicon'),
+                                              href = "https://whalemap.ocean.dal.ca/#cite"),
+                             notificationItem("Contact",
+                                              icon = icon('envelope', lib = 'glyphicon'),
+                                              href = "https://whalemap.ocean.dal.ca/#contact"),
                              notificationItem("Code",
                                               icon = icon('console', lib = 'glyphicon'),
                                               href = "https://github.com/hansenjohnson/WhaleMap"),
                              notificationItem("View/Report Issues",
-                                              icon = icon('remove-sign', lib = 'glyphicon'),
+                                              icon = icon('exclamation-sign', lib = 'glyphicon'),
                                               href = "https://github.com/hansenjohnson/WhaleMap/issues"),
                              notificationItem("Home",
                                               icon = icon("home"),
-                                              href = "/"),
+                                              href = "https://whalemap.ocean.dal.ca/"),
                              notificationItem(Sys.getenv("R_SHNYSRVINST"),
                                               icon = icon("tag"),
                                               href = "#")
@@ -57,13 +57,12 @@ body <- dashboardBody(
   fluidRow(
     tags$head(tags$script(HTML(jscode))),
     
-    # editor tab ----------------------------------------------------------
+    # sidebar ----------------------------------------------------------
     
-    # left column
     column(width = 3,
            
            # translator
-           box(width = NULL, solidHeader = F, collapsible = T, title = 'Translate / Traduire', status = 'primary',
+           box(width = NULL, solidHeader = F, collapsible = T, title = 'Translate / Traduire', status = 'primary',collapsed = T,
                HTML('
                   <div id="google_translate_element"></div>
                   
@@ -80,34 +79,17 @@ body <- dashboardBody(
            # map editor
            tabBox(title = 'Editor', width = NULL,
                   
+                  # data tab ----------------------------------------------------------
+                  
                   # Select Data    
                   tabPanel(title = 'Data',
                            
-                           # choose year
-                           selectInput("year", label = 'Choose year(s):',
-                                       choices = years,
-                                       selected = '2019', multiple = TRUE),
-                           
-                           hr(),
-                           
                            # choose date input
-                           radioButtons("dateType", label = 'Choose dates(s):', 
-                                        choiceNames = c('Specific date:','Range of dates:'),
-                                        choiceValues = c('select', 'range'), selected = 'range'),
+                           radioButtons("dateType", label = 'Choose date(s):', 
+                                        choiceNames = c('Specific date','Date range','Range among years'),
+                                        choiceValues = c('select', 'range', 'multiyear'), selected = 'multiyear'),
                            
                            uiOutput("dateChoice"),
-                           
-                           hr(),
-                           
-                           # add species choice
-                           selectInput("species", "Choose species:", 
-                                       choices = c("Right whale" = "right",
-                                                   "Fin whale" = "fin",
-                                                   "Blue whale" = "blue",
-                                                   "Sei whale" = "sei",
-                                                   "Humpback whale" = "humpback"), 
-                                       selected = "right", 
-                                       multiple = T),
                            
                            hr(),
                            
@@ -126,18 +108,34 @@ body <- dashboardBody(
                            
                            hr(),
                            
-                           #color by
-                           selectInput("colorby", "Color observations by:", choices =
-                                         c('Score' = 'score',
-                                           'Species' = 'species',
-                                           'Day of year' = 'yday',
-                                           'Year' = 'year',
-                                           'Platform' = 'platform',
-                                           'Platform name' = 'name',
-                                           'Number' = 'number',
-                                           'Latitude' = 'lat',
-                                           'Longitude' = 'lon',
-                                           'Deployment' = 'id'), selected = 'score'),
+                           # add platform name choice
+                           uiOutput("nameChoice"),
+                           
+                           hr(),
+                           
+                           # add species choice
+                           selectInput("species", "Choose species:", 
+                                       choices = c("Right whale" = "right",
+                                                   "Fin whale" = "fin",
+                                                   "Blue whale" = "blue",
+                                                   "Sei whale" = "sei",
+                                                   "Humpback whale" = "humpback"), 
+                                       selected = "right", 
+                                       multiple = T),
+                           
+                           hr(),
+                           
+                           # checkbox data layers
+                           
+                           h5(strong('Choose data layer(s):')),
+                           
+                           checkboxInput("tracks", label = 'Tracks', value = T),
+                           
+                           checkboxInput("possible", 
+                                         label = 'Possible detections/sightings', value = T),
+                           
+                           checkboxInput("detected", 
+                                         label = 'Definite detections/sightings', value = T),
                            
                            hr(),
                            
@@ -148,55 +146,53 @@ body <- dashboardBody(
                              `data-proxy-click` = "go"
                            )
                            
-                           # hr(),
-                           # 
-                           # # add button to update date
-                           # actionButton("go", "Go!",
-                           #              style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
-                           # 
-                           # # add button to re-center
-                           # actionButton("zoom", "Center map")
                   ),
                   
+                  # colors tab ----------------------------------------------------------
+                  
+                  # Customize plotting
+                  tabPanel(title = 'Colors',
+                  
+                           # Basemap
+                           selectInput("basemap", label = "Choose basemap:",
+                                       choices =  basemap_choices, 
+                                       selected = basemap_choices[1]),
+                           
+                           hr(),
+                           
+                           # Observations color variable
+                           selectInput("colorby_obs", "Color observations by:", 
+                                       choices = colorby_obs_choices, 
+                                       selected = colorby_obs_choices[1]),
+                           
+                           # Observations color palette
+                           selectInput("pal_obs", "Choose color palette:", 
+                                       choices = palette_list, selected = NULL),
+                           
+                           hr(),
+                           
+                           # Tracks color variable
+                           selectInput("colorby_trk", "Color tracks by:", 
+                                       choices = colorby_trk_choices, 
+                                       selected = colorby_trk_choices[1]),
+                           
+                           # Tracks color palette
+                           selectInput("pal_trk", "Choose color palette:", 
+                                       choices =  palette_list, selected = NULL)
+                           
+                  ),
                   # layers tab ----------------------------------------------------------
                   
                   # Customize plotting
                   tabPanel(title = 'Layers',
                            
-                           # color palette
-                           selectInput("pal", "Choose color palette:",
-                                       c("Temperature" = 2,
-                                         "Viridis" = 8,
-                                         "Gebco" = 6,
-                                         "Heat colors" = 1,
-                                         "Jet" = 7,
-                                         "Salinity" = 3,
-                                         "Density" = 4,
-                                         "Chlorophyll" = 5), selected = 8),
+                           helpText(tags$em('Map layers')),
                            
-                           hr(),
-                           
-                           h5(strong('Choose layer(s):')),
-                           
-                           # Survey layers
-                           helpText(tags$em('Survey Layers')),
-                           
-                           checkboxInput("tracks", label = 'Tracks', value = T),
-                           
-                           checkboxInput("possible", label = 'Possible detections/sightings', value = T),
-                           
-                           checkboxInput("detected", 
-                                         label = 'Definite detections/sightings', value = T),
-                           
-                           checkboxInput("sono", label = 'Sonobuoys', value = F),
+                           checkboxInput("graticules", label = 'Graticules', value = F),
                            
                            checkboxInput("latest", label = 'Latest robot positions', value = T),
                            
-                           # Map layers
-                           helpText(tags$em('Map Layers')),
-                           
-                           checkboxInput("tss", 
-                                         label = 'Shipping lanes', value = T),
+                           checkboxInput("tss", label = 'Shipping lanes', value = T),
                            
                            checkboxInput("legend", label = 'Legends', value = T),
                            

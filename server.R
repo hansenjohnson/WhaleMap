@@ -15,7 +15,7 @@ function(input, output, session){
   }
   
   # sightings / detections
-  obs = readRDS('data/processed/observations.rds')
+  observations = readRDS('data/processed/observations.rds')
   
   # sonobuoys
   sono = readRDS('data/processed/sonobuoys.rds')
@@ -23,56 +23,102 @@ function(input, output, session){
   # build date UI -------------------------------------------------------
   
   output$dateChoice <- renderUI({
-    
-    # set begin and end dates for slider
-    begin_date = as.Date('2019-01-01')
-    end_date = as.Date('2019-12-31')
-    
-    # make vector of all possible dates
-    date_vec = format.Date(seq.Date(from = begin_date,to = end_date, by = 1), '%b-%d')
-    
+
     switch(input$dateType,
+           'select' = dateInput('date', label = NULL,
+                                value = Sys.Date()),
            
-           'select' = selectInput("date", label = NULL,
-                                  choices = date_vec,
-                                  selected = format.Date(Sys.Date(), '%b-%d'), multiple = FALSE),
+           'range' = dateRangeInput('date', label = NULL,
+                                    start = Sys.Date() - tlag, end = Sys.Date()),
            
-           'range' = sliderInput("date", label = NULL, begin_date, end_date,
-                                 value = c(Sys.Date()-tlag, Sys.Date()), timeFormat = '%b-%d',
-                                 animate = F)
+           'multiyear' = list(
+             sliderInput('date', label = NULL, 
+                         min = as.Date('2019-01-01'), 
+                         max = as.Date('2019-12-31'),
+                         value = c(Sys.Date()-tlag, Sys.Date()), 
+                         step = 1,
+                         timeFormat = '%b-%d',
+                         animate = F),
+             selectInput('years', label = NULL, choices = seq(2014,2019,1), 
+                         selected = 2019, multiple = TRUE, selectize = TRUE)
+           )
     )
   })
-  
+
   # choose date -------------------------------------------------------
   
-  # define start time
-  ydays <- reactive({
-    if (input$go == 0){ 
-      # yday list on startup
-      seq(yday(Sys.Date()-tlag), yday(Sys.Date()), 1)
-    } else {
-      # choose date on action button click
-      isolate({
-        if(input$dateType == 'select'){
-          yday(as.Date(input$date, format = '%b-%d'))
-        } else if(input$dateType == 'range'){
-          seq(yday(input$date[1]), yday(input$date[2]), 1)
-        }
-      })
+  dates <- reactive({
+    
+    # catch startup error
+    if(is.null(input$date)){
+      return(seq(Sys.Date()-tlag, Sys.Date(), 1))
+    }
+    
+    # select date from variable inputs
+    if(input$dateType == 'select'){
+      
+      input$date
+      
+    } else if(input$dateType == 'range'){
+      
+      seq(input$date[1], input$date[length(input$date)], 1)
+      
+    } else if(input$dateType == 'multiyear'){
+      
+      # require year (catch startup error)
+      req(input$years)
+      
+      # sequence of year days between dates
+      yd = seq(yday(input$date[1]), yday(input$date[length(input$date)]), 1)
+      
+      # convert to dates across years
+      as.Date(
+        unlist(
+          lapply(X = input$years, FUN = function(x){
+            as.Date(yd, origin = paste0(x,'-01-01'))
+          })), 
+        origin = '1970-01-01')
+      
     }
   })
   
-  # choose year -------------------------------------------------------
+  # choose platform -----------------------------------------------------------
   
-  years <- reactive({
-    # assign default year if action button hasn't been pushed yet  
-    if (input$go == 0){
-      as.character(year(Sys.Date()))
+  platform <- reactive({
+    input$platform
+  })
+  
+  # name choices -----------------------------------------------------------
+  
+  # extract names of active platform(s)
+  name_choices <- reactive({
+    rbind(tracks[c('date', 'platform', 'name')],
+          observations[c('date', 'platform', 'name')]) %>%
+      filter(date %in% dates() & platform %in% platform()) %>%
+      pull(name) %>%
+      as.character() %>%
+      unique()
+  })
+  
+  # build name UI -----------------------------------------------------------
+  
+  output$nameChoice <- renderUI({
+    
+    # construct UI
+    selectInput("name", "Choose platform name(s):", multiple = T,
+                choices = c('All', name_choices()), 
+                selected = 'All', selectize = TRUE)
+    
+  })
+  
+  # choose name -----------------------------------------------------------
+  
+  # name
+  name <- reactive({
+    if('All' %in% input$name | input$go == 0){
+      name_choices()
     } else {
-      # choose year on action button click
-      isolate({
-        as.character(input$year)
-      })
+      input$name  
     }
   })
   
@@ -83,41 +129,132 @@ function(input, output, session){
     input$species
   })
   
-  # choose platform -----------------------------------------------------------
+  # choose colors -----------------------------------------------------------
   
-  platform <- eventReactive(input$go|input$go == 0,{
-    input$platform
+  colorby_obs <- eventReactive(input$go|input$go == 0,{
+    input$colorby_obs  
   })
   
-  # choose colorby -----------------------------------------------------------
+  colorby_trk <- eventReactive(input$go|input$go == 0,{
+    input$colorby_trk  
+  })
   
-  colorby <- eventReactive(input$go|input$go == 0,{
-    input$colorby  
+  pal_obs <- eventReactive(input$go|input$go == 0,{
+    input$pal_obs  
+  })
+  
+  pal_trk <- eventReactive(input$go|input$go == 0,{
+    input$pal_trk  
   })
   
   # reactive data -----------------------------------------------------------
   
-  # choose tracks year(s) and platform(s) (no cp without password)
-  Tracks <- eventReactive(input$go|input$go == 0, {
+  # subset track data
+  trk <- eventReactive(input$go|input$go == 0, {
     if(input$password == password){
-      tmp = tracks[tracks$year %in% years(),]
-      tmp[tmp$platform %in% platform(),]
+      
+      tracks %>%
+        filter(
+          date %in% dates() & 
+            name %in% name() &
+            platform %in% platform() 
+        )
+      
     } else if(input$password == jasco_password){
-      tmp = tracks[tracks$year %in% years(),]
-      tmp = tmp[tmp$platform %in% platform(),]
-      tmp[tmp$name!='cp_king_air',]
+      
+      tracks %>%
+        filter(
+          date %in% dates() & 
+            platform %in% platform() & 
+            name %in% name() &
+            name != 'cp_king_air'
+        )
+      
     } else {
-      tmp = tracks[tracks$year %in% years(),]
-      tmp = tmp[tmp$platform %in% platform(),]
-      tmp = tmp[tmp$name!='cp_king_air',]
-      tmp[tmp$name!='jasco_test',]
+      
+      tracks %>%
+        filter(
+          date %in% dates() & 
+            platform %in% platform() & 
+            name %in% name() &
+            !name %in% c('cp_king_air','jasco_test')
+        )
+      
     }
   })
   
-  # choose observations
-  Obs <- eventReactive(input$go|input$go == 0, {
-    tmp = obs[obs$year %in% years(),]
-    tmp[tmp$platform %in% platform(),]
+  # subset observation data
+  obs <- eventReactive(input$go|input$go == 0, {
+    if(input$password == password){
+      
+      observations %>%
+        filter(
+          date %in% dates() & 
+            platform %in% platform() & 
+            name %in% name() &
+            species %in% species()
+        ) %>%
+        droplevels()
+      
+    } else if(input$password == jasco_password){
+      
+      observations %>%
+        filter(
+          date %in% dates() & 
+            platform %in% platform() & 
+            species %in% species() &
+            name %in% name() &
+            score != 'possible visual'
+        ) %>%
+        droplevels()
+      
+    } else {
+      
+      observations %>%
+        filter(
+          date %in% dates() & 
+            platform %in% platform() & 
+            species %in% species() &
+            name %in% name() &
+            !name %in% c('jasco_test') &
+            score != 'possible visual'
+        ) %>%
+        droplevels()
+      
+    }
+  })
+  
+  # only possible
+  pos <- eventReactive(input$go|input$go == 0, {
+    
+    obs() %>%
+      filter(
+        score %in% c('possible acoustic', 'possible visual')
+      ) %>%
+      droplevels()
+    
+  })
+  
+  # only definite
+  det <- reactive({
+    
+    obs() %>%
+      filter(
+        score %in% c('definite acoustic', 'definite visual')
+      ) %>%
+      droplevels()
+    
+  })
+  
+  # combine track and observations
+  allBounds <- reactive({
+    
+    # combine limits
+    lat = c(obs()$lat, trk()$lat)
+    lon = c(obs()$lon, trk()$lon)
+    
+    # join in list
+    list(lat, lon)
   })
   
   # position for live dcs platform
@@ -125,92 +262,64 @@ function(input, output, session){
     LATEST <- eventReactive(input$go|input$go == 0, {
       
       if(input$password == password | input$password == jasco_password){
-        tmp = latest[latest$year %in% years(),]
-        tmp = tmp[tmp$platform %in% platform(),]
-        tmp = tmp[tmp$yday %in% ydays(),]
-        tmp
+        
+        latest %>%
+          filter(
+            date %in% dates() & 
+              name %in% name() &
+              platform %in% platform()
+          )
+        
       } else {
-        tmp = latest[latest$year %in% years(),]
-        tmp = tmp[tmp$platform %in% platform(),]
-        tmp = tmp[tmp$yday %in% ydays(),]
-        tmp[tmp$name!='jasco_test',]
+        
+        latest %>%
+          filter(
+            date %in% dates() & 
+              platform %in% platform() &
+              name %in% name() &
+              name != 'jasco_test'
+          )
+        
       }
-      
     })
   }
   
   # position for live dcs platform
   SONO <- eventReactive(input$go|input$go == 0, {
-    tmp = sono[sono$year %in% years(),]
-    tmp[tmp$yday %in% ydays(),]
+    sono %>%
+      filter(
+        date %in% dates()
+      )
   })
   
-  # choose track date range
-  TRACKS <- eventReactive(input$go|input$go == 0, {
-    Tracks()[Tracks()$yday %in% ydays(),]
-  })
+  # release notificaiton  ------------------------------------------
   
-  # choose species date range
-  OBS <- eventReactive(input$go|input$go == 0, {
-    Obs()[Obs()$yday %in% ydays(),]
-  })
+  showNotification(
+    ui = 'WhaleMap has some new features!',
+    action = a(target="_blank", href = "https://whalemap.ocean.dal.ca/features.html", "Check them out here"),
+    closeButton = T, type = 'message')
   
-  # choose species
-  spp <- eventReactive(input$go|input$go == 0, {
-    if(input$password == password|input$password == jasco_password){
-      droplevels(OBS()[OBS()$species %in% species(),])
-    } else {
-      tmp = droplevels(OBS()[OBS()$species %in% species(),])
-      tmp[tmp$name!='jasco_test',]
-    }
-  })
+  # warnings --------------------------------------------------------
   
-  # only possible
-  pos <- eventReactive(input$go|input$go == 0, {
-    if(input$password == password){
-      droplevels(spp()[spp()$score=='possible acoustic'|spp()$score=='possible visual',])
-    } else {
-      droplevels(spp()[spp()$score=='possible acoustic',])
-    }
-  })
-  
-  # only definite
-  det <- reactive({
-    droplevels(spp()[spp()$score=='definite acoustic'|spp()$score=='definite visual',])
-  })
-  
-  # combine track and observations
-  allBounds <- reactive({
-    
-    # combine limits
-    lat = c(spp()$lat, TRACKS()$lat)
-    lon = c(spp()$lon, TRACKS()$lon)
-    
-    # join in list
-    list(lat, lon)
-  })
-  
-  # password warning -----------------------------------------------
-  
+  # password warnings
   observeEvent(input$go,{
     if(input$password == password){
       showNotification('Password was correct! Showing unverified and/or test data...',
                        duration = 7, closeButton = T, type = 'message')
-
+      
     } else if(input$password == jasco_password){
       showNotification('Password was correct! Showing JASCO test data...',
                        duration = 7, closeButton = T, type = 'message')
     } else {
-      
+      # no warning
     }
   })
   
-  # warnings --------------------------------------------------------
-  
-  observe({
+  # general warnings
+  observeEvent(input$go,{
     
     # track warning
-    if(nrow(TRACKS())>npts){
+    if(nrow(trk())>npts){
       showNotification(paste0('Warning! Tracklines have been turned off because 
                               you have chosen to plot more data than this application 
                               can currently handle (i.e. more than ', as.character(npts), ' points). 
@@ -226,102 +335,132 @@ function(input, output, session){
     }
     
     # year warning
-    if(min(years())<2017){
+    if(min(year(dates()))<2017){
       showNotification('Note: Data before 2017 are incomplete.', 
                        duration = 7, closeButton = T, type = 'warning')
     }
     
   })
   
-  # colorpal -----------------------------------------------------------------
+  # colorpals -----------------------------------------------------------------
   
   # define color palette for any column variable
-  colorpal <- reactive({
+  colorpal_obs <- reactive({
     
-    # define index of color selection for use in palette list
-    ind = as.numeric(input$pal)
+    # extract factor levels
+    n = unique(obs()[,which(colnames(obs())==colorby_obs())])
     
-    if(colorby() %in% c('yday', 'lat', 'lon')){
+    if(colorby_obs() %in% c('yday', 'lat', 'lon')){
       
       # use continuous palette
-      colorNumeric(palette_list[[ind]], spp()[,which(colnames(spp())==colorby())])  
+      colorNumeric(get_palette(pal = pal_obs(), n = length(n)), domain = n)
       
-    } else if (colorby() == 'number'){
+    } else if (colorby_obs() == 'number'){
       
-      if(is.infinite(min(spp()$number, na.rm = T))){
+      if(is.infinite(min(obs()$number, na.rm = T))){
         # define colorbar limits if 'number' is selected without sightings data
-        colorNumeric(palette_list[[ind]], c(NA,0), na.color = 'darkgrey')
+        colorNumeric(get_palette(pal = pal_obs(), n = length(n)), 
+                     c(NA,0), na.color = 'darkgrey')
       } else {
         # use continuous palette
-        colorNumeric(palette_list[[ind]], spp()$number, na.color = 'darkgrey')
+        colorNumeric(get_palette(pal = pal_obs(), n = length(n)), 
+                     obs()$number, na.color = 'darkgrey')
       }
       
-    } else if (colorby() == 'score'){
+    } else if (colorby_obs() == 'score' & pal_obs() == 'Default'){
       
       # hard wire colors for score factor levels
       colorFactor(levels = c('definite acoustic', 'possible acoustic', 'possible visual', 'definite visual'), 
-                  palette = c('red', 'yellow', 'grey', 'darkslategray'))  
+                  palette = c('red', 'yellow', 'grey', 'darkslategrey'))  
       
     } else {
       
       # color by factor level
-      colorFactor(palette_list[[ind]], spp()[,which(colnames(spp())==colorby())])  
+      colorFactor(get_palette(pal_obs(), length(n)), n)  
+      
+    }
+  })
+  
+  
+  # define color palette for any column variable
+  colorpal_trk <- reactive({
+    
+    if(colorby_trk() == 'platform' & pal_trk() == 'Default'){
+      
+      # hardwire colors for score factor levels
+      colorFactor(
+        levels = names(platform_cols),
+        palette = as.character(platform_cols)
+      )
+      
+    } else {
+      
+      # extract factor levels
+      n = unique(trk()[,which(colnames(trk())==colorby_trk())])
+      
+      # color by factor level
+      colorFactor(get_palette(pal = pal_trk(), n = length(n)), levels = n)
       
     }
   })
   
   # basemap -----------------------------------------------------------------
   
-  output$map <- renderLeaflet({
-    leaflet(tracks) %>% 
-      addProviderTiles(providers$Esri.OceanBasemap) %>%
-      fitBounds(~max(lon, na.rm = T), 
-                ~min(lat, na.rm = T), 
-                ~min(lon, na.rm = T), 
-                ~max(lat, na.rm = T)) %>%
+  # isolate({
+  # observeEvent(input$go,{
+    output$map <- renderLeaflet({
+      leaflet(tracks) %>% 
+        # addProviderTiles(providers[[input$basemap]]) %>%
+        fitBounds(~max(lon, na.rm = T), 
+                  ~min(lat, na.rm = T), 
+                  ~min(lon, na.rm = T), 
+                  ~max(lat, na.rm = T)) %>%
+
+        # add extra map features
+        addScaleBar(position = 'topright')%>%
+        addFullscreenControl(pseudoFullscreen = TRUE) %>%
+        addMeasure(
+          primaryLengthUnit = "kilometers",
+          secondaryLengthUnit = 'miles', 
+          primaryAreaUnit = "hectares",
+          secondaryAreaUnit="acres", 
+          activeColor = "darkslategray",
+          completedColor = "darkslategray",
+          position = 'bottomleft')
+    })
+  
+  # tile observer ------------------------------------------------------  
+  
+  observeEvent(input$go|input$go == 0, {
+    
+    # add tile
+    proxy <- leafletProxy("map") %>%
+      clearTiles() %>%
+      addProviderTiles(providers[[input$basemap]], group = 'basemap')
+  })
+ 
+  # graticules ------------------------------------------------------
+
+  observe(priority = 4, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('graticules')
+    
+    if(input$graticules){
       
       # add graticules
-      # addWMSTiles(
-      #   'https://gis.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer',
-      #   layers = c('1', '2', '3'),
-      #   options = WMSTileOptions(format = "image/png8", transparent = TRUE),
-      #   attribution = "NOAA") %>%
+      proxy %>%
+        addSimpleGraticule(zoomIntervals = graticule_ints, 
+                           group = 'graticules', 
+                           showOriginLabel = FALSE)
       
-      # use NOAA graticules
-      addWMSTiles(
-        "https://gis.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer/",
-        layers = c("1-degree grid", "5-degree grid"),
-        options = WMSTileOptions(format = "image/png8", transparent = TRUE),
-        attribution = NULL) %>%
-      
-      # add extra map features
-      addScaleBar(position = 'topright')%>%
-      addFullscreenControl(pseudoFullscreen = TRUE) %>%
-      addMeasure(
-        primaryLengthUnit = "kilometers",
-        secondaryLengthUnit = 'miles', 
-        primaryAreaUnit = "hectares",
-        secondaryAreaUnit="acres", 
-        activeColor = "darkslategray",
-        completedColor = "darkslategray",
-        position = 'bottomleft')
-  })
-  
-  # extract trackline color ------------------------------------------------  
-  
-  getColor <- function(tracks) {
-    if(tracks$platform[1] == 'slocum') {
-      "blue"
-    } else if(tracks$platform[1] == 'plane') {
-      "#8B6914"
-    } else if(tracks$platform[1] == 'vessel'){
-      "black"
-    } else if(tracks$platform[1] == 'wave'){
-      "purple"
-    } else {
-      "darkgrey"
+      # switch to show/hide
+      ifelse(input$graticules, showGroup(proxy, 'graticules'),
+             hideGroup(proxy, 'graticules'))
     }
-  }
+    
+  })
   
   # critical habitat zone ------------------------------------------------------  
   
@@ -600,10 +739,15 @@ function(input, output, session){
     
     # tracks
     
-    if(input$tracks & nrow(TRACKS())<npts){
+    if(input$tracks & nrow(trk())<npts){
       
       # set up polyline plotting
-      tracks.df <- split(TRACKS(), TRACKS()$id)
+      tracks.df <- split(trk(), trk()$id)
+      
+      # get color palette
+      pal = colorpal_trk()
+      
+      ind = which(colnames(trk())==colorby_trk())
       
       # add lines
       names(tracks.df) %>%
@@ -615,9 +759,8 @@ function(input, output, session){
                          lat=~lat, 
                          weight = 2,
                          smoothFactor = 1, 
-                         # highlightOptions = highlightOptions(opacity = 1, weight = 4),
                          options = markerOptions(removeOutsideVisibleBounds=TRUE, opacity = 0.5),
-                         color = getColor(tracks.df[[df]]),
+                         color = pal(tracks.df[[df]][1,ind]),
                          popup = paste0('Track ID: ', unique(tracks.df[[df]]$id)))
         })
     }
@@ -638,7 +781,11 @@ function(input, output, session){
       if(input$latest){
         
         # add icons for latest position of live dcs platforms
-        proxy %>% addMarkers(data = LATEST(), ~lon, ~lat, icon = ~dcsIcons[platform],
+        proxy %>% 
+          addMapPane("lts", zIndex = 350) %>%
+          addMarkers(data = LATEST(), ~lon, ~lat, 
+                             icon = ~dcsIcons[platform],
+                             options=pathOptions(pane = "lts"),
                              popup = ~paste(sep = "<br/>",
                                             strong('Latest position'),
                                             paste0('Platform: ', as.character(platform)),
@@ -654,35 +801,6 @@ function(input, output, session){
     })
   }
   
-  # sono observer ------------------------------------------------------  
-  
-  observe(priority = 1, {
-    
-    # define proxy
-    proxy <- leafletProxy("map")
-    proxy %>% clearGroup('sono')
-    
-    # add sonobuoys
-    if(input$sono){
-      
-      # add icons for latest position of live dcs platforms
-      proxy %>% addMarkers(data = SONO(), ~lon, ~lat, group='sono', icon = sonoIcon,
-                           popup = ~paste(sep = "<br/>",
-                                          strong('Sonobuoy position'),
-                                          paste0('Date: ', as.character(date)),
-                                          paste0('Time: ', as.character(time), ' UTC'),
-                                          paste0('ID: ', as.character(stn_id)),
-                                          paste0('SN: ', as.character(sn)),
-                                          paste0('Position: ', 
-                                                 as.character(lat), ', ', as.character(lon)))
-                           # label = ~paste0('sonobuoy ', as.character(stn_id), ': ', 
-                           #                 as.character(date), ' UTC'), group = 'sono'
-                           )
-      
-    }
-    
-  })
-  
   # possible observer ------------------------------------------------------  
   
   observe(priority = 2,{
@@ -694,12 +812,12 @@ function(input, output, session){
     if(input$possible){
       
       # set up color palette plotting
-      pal <- colorpal()
+      pal <- colorpal_obs()
       
       # possible detections
       addCircleMarkers(map = proxy, data = pos(), ~lon, ~lat, group = 'possible',
                        radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
-                       fillColor = pal(pos()[,which(colnames(pos())==colorby())]),
+                       fillColor = pal(pos()[,which(colnames(pos())==colorby_obs())]),
                        popup = ~paste(sep = "<br/>" ,
                                       paste0("Species: ", species),
                                       paste0("Score: ", score),
@@ -724,12 +842,12 @@ function(input, output, session){
     if(input$detected){
       
       # set up color palette plotting
-      pal <- colorpal()
+      pal <- colorpal_obs()
       
       # definite detections
       addCircleMarkers(map = proxy, data = det(), ~lon, ~lat, group = 'detected',
                        radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
-                       fillColor = pal(det()[,which(colnames(det())==colorby())]),
+                       fillColor = pal(det()[,which(colnames(det())==colorby_obs())]),
                        popup = ~paste(sep = "<br/>" ,
                                       paste0("Species: ", species),
                                       paste0("Score: ", score),
@@ -751,6 +869,10 @@ function(input, output, session){
     # define proxy
     proxy <- leafletProxy("map")
     
+    # set up color palette for tracks
+    pal_trk <- colorpal_trk()
+    var_trk <- trk()[,which(colnames(trk())==colorby_trk())]
+    
     # determine which dataset to use based on display switches
     if(input$detected & input$possible){
       dat <- rbind(det(),pos())
@@ -759,23 +881,42 @@ function(input, output, session){
     } else if(!input$detected & input$possible){
       dat <- pos()
     } else {
-      proxy %>% clearControls()
+      proxy %>% clearControls() %>% 
+        addLegend(position = "bottomright",labFormat = labelFormat(big.mark = ""),
+                  pal = pal_trk, values = var_trk, 
+                  title = paste0('Tracks by ', colorby_trk()))
       return(NULL)
     }
     
-    # set up color palette plotting
-    pal <- colorpal()
-    var <- dat[,which(colnames(dat)==colorby())]
+    # set up color palette for observations
+    pal_obs <- colorpal_obs()
+    var_obs <- dat[,which(colnames(dat)==colorby_obs())]
     
-    # legend
-    if(input$legend){
+    # check numbers of plotting points
+    ptrk = nrow(trk())<npts & input$tracks
+    
+    if(input$legend & ptrk & TRUE %in% c(input$detected, input$possible)){
+      # plot tracks and observations
+      
       proxy %>% clearControls() %>% 
         addLegend(position = "bottomright",labFormat = labelFormat(big.mark = ""),
-                  pal = pal, values = var, 
-                  title = colorby())
+                  pal = pal_obs, values = var_obs, 
+                  title = paste0('Observations by ', colorby_obs())) %>%
+        addLegend(position = "bottomright",labFormat = labelFormat(big.mark = ""),
+                  pal = pal_trk, values = var_trk, 
+                  title = paste0('Tracks by ', colorby_trk()))
+      
+    } else if(input$legend & TRUE %in% c(input$detected, input$possible)){
+      # plot only observations
+      
+      proxy %>% clearControls() %>% 
+        addLegend(position = "bottomright",labFormat = labelFormat(big.mark = ""),
+                  pal = pal_obs, values = var_obs, 
+                  title = paste0('Observations by ', colorby_obs()))
     } else {
       proxy %>% clearControls()
     }
+    
   })
   
   # center map ------------------------------------------------------  
@@ -790,20 +931,20 @@ function(input, output, session){
   
   # inbounds data ------------------------------------------------------  
   
-  # determine deployments in map bounds
+  # determine tracks in map bounds
   tInBounds <- reactive({
     if (is.null(input$map_bounds))
-      return(TRACKS()[FALSE,])
+      return(trk()[FALSE,])
     bounds <- input$map_bounds
     latRng <- range(bounds$north, bounds$south)
     lngRng <- range(bounds$east, bounds$west)
     
-    subset(TRACKS(),
+    subset(trk(),
            lat >= latRng[1] & lat <= latRng[2] &
              lon >= lngRng[1] & lon <= lngRng[2])
   })
   
-  # determine detected calls in map bounds
+  # determine detections in map bounds
   dInBounds <- reactive({
     
     # determine which dataset to use based on display switches
@@ -836,7 +977,7 @@ function(input, output, session){
   
   # create text summary
   output$summary <- renderUI({
-    if(nrow(spp())==0){
+    if(nrow(obs())==0){
       HTML('No data available...')
     } else {
       
@@ -897,7 +1038,7 @@ function(input, output, session){
       obs = dInBounds()
     } else {
       # use all input data
-      obs = spp()  
+      obs = obs()  
     }
     
     # define input tracks
@@ -906,7 +1047,7 @@ function(input, output, session){
       tracks = tInBounds()
     } else {
       # use all input data
-      tracks = TRACKS()  
+      tracks = trk()  
     }
     
     # conditionally remove possibles for plotting
@@ -914,8 +1055,16 @@ function(input, output, session){
       obs = obs[obs$score!='possible acoustic' & obs$score!='possible visual',]
     }
     
+    # add bogus data to handle no observations
+    if(nrow(obs)==0 & nrow(tracks)!=0){
+      obs = observations[FALSE,]
+      obs[1:2,] = rep(NA, ncol(obs))
+      obs$score[1] = 'definite visual'
+      obs$score[2] = 'definite acoustic'
+    }
+    
     # avoid error if no data selected or in map view
-    if(nrow(obs)==0|nrow(tracks)==0){
+    if(nrow(obs)==0 & nrow(tracks)==0){
       return(NULL)
     }
     
@@ -933,87 +1082,72 @@ function(input, output, session){
                      'y' = -1)
     
     # determine number of factor levels to color
-    ncol = length(unique(obs[,which(colnames(obs)==colorby())]))
+    ncol = length(unique(obs[,which(colnames(obs)==colorby_obs())]))
     
-    # get input for color palette choice
-    ind = as.numeric(input$pal)
+    # choose palette for discrete scale
+    cols = get_palette(pal = pal_obs(), n = ncol)
     
-    # list palettes for discrete scale (must be in the same order as palette_list)
-    palette_list2 = list(heat.colors(ncol), 
-                         oce.colorsTemperature(ncol),
-                         oce.colorsSalinity(ncol),
-                         oce.colorsDensity(ncol),
-                         oce.colorsChlorophyll(ncol),
-                         oce.colorsGebco(ncol),
-                         oce.colorsJet(ncol),
-                         oceColorsViridis(ncol))
+    # define min and max yday
+    min_yday = isolate(min(yday(dates())))
+    max_yday = isolate(max(yday(dates())))
     
-    if(colorby() %in% c('number', 'lat','lon', 'year')){
+    if(colorby_obs() %in% c('number', 'lat','lon', 'year')){
       
       # replace all sightings/detections with '1' to facilitate stacked plotting
       obs$counter = 1
       
-      if(colorby() == 'year'){
+      if(colorby_obs() == 'year'){
         # convert year to factor
         obs$year = as.factor(obs$year)
       }
       
-      # choose palette for discrete scale
-      cols = palette_list2[[ind]]
-      
       # define palette for discrete scale
-      fillcols = scale_fill_manual(values = cols, name = colorby())
-        
+      fillcols = scale_fill_manual(values = cols, name = colorby_obs())
+      
       # build plot
       g = ggplot(obs, aes(x = yday, y = counter))+
-        geom_bar(stat = "identity", na.rm = T, aes_string(fill = paste0(colorby())))+
+        geom_bar(stat = "identity", na.rm = T, aes_string(fill = paste0(colorby_obs())))+
         labs(x = '', y = '')+
         fillcols+
         facet_wrap(~cat, scales="free_y", nrow = 2)+
         scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"), 
-                           breaks = seq(from = min(ydays()), to = max(ydays()), length.out = 6))+
+                           breaks = seq(from = min_yday, to = max_yday, length.out = 6))+
         geom_point(data = eff, aes(x = yday, y=y), pch=45, cex = 3, col = 'blue')+
         aes(text = paste('date: ', format(as.Date(as.character(yday), "%j"), "%d-%b")))+
-        expand_limits(x = c(min(ydays()), max(ydays())))
+        expand_limits(x = c(min_yday, max_yday))
       
     } else {
-      if(colorby()=='score'){
+      if(colorby_obs()=='score' & pal_obs() == 'Default'){
         
         # manually define colors based on score
-        fillcols = scale_fill_manual(values = score_cols, name = colorby())
+        fillcols = scale_fill_manual(values = score_cols, name = colorby_obs())
         
         # order factors so possibles plot first
         obs$score <- factor(obs$score, 
                             levels=levels(obs$score)[order(levels(obs$score), decreasing = TRUE)])
         
-      } else if(colorby()=='yday'){
-        
-        # choose palette for continuous scale
-        cols = palette_list[[ind]]
+      } else if(colorby_obs()=='yday'){
         
         # define colors for continuous scale
-        fillcols = scale_fill_gradientn(colours = cols, name = colorby())
+        fillcols = scale_fill_gradientn(colours = cols, name = colorby_obs())
         
       } else {
         
-        # choose palette for discrete scale
-        cols = palette_list2[[ind]]
-        
         # define palette for discrete scale
-        fillcols = scale_fill_manual(values = cols, name = colorby())
+        fillcols = scale_fill_manual(values = cols, name = colorby_obs())
       }
       
       # build plot
       g = ggplot(obs, aes(x = yday))+
-        geom_bar(stat = "count", na.rm = T, aes_string(fill = paste0(colorby())))+
+        geom_bar(stat = "count", na.rm = T, aes_string(fill = paste0(colorby_obs())))+
         labs(x = '', y = '')+
         fillcols+
         facet_wrap(~cat, scales="free_y", nrow = 2)+
-        scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"),
-                           breaks = seq(from = min(ydays()), to = max(ydays()), length.out = 6))+
+        scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"), 
+                           breaks = seq(from = min_yday, to = max_yday, length.out = 6))+
         geom_point(data = eff, aes(x = yday, y=y), pch=45, cex = 3, col = 'blue')+
         aes(text = paste('date: ', format(as.Date(as.character(yday), "%j"), "%d-%b")))+
-        expand_limits(x = c(min(ydays()), max(ydays())))
+        expand_limits(x = c(min_yday, max_yday))
     }
     
     # build interactive plot
