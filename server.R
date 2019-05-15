@@ -16,10 +16,7 @@ function(input, output, session){
   
   # sightings / detections
   observations = readRDS('data/processed/observations.rds')
-  
-  # sonobuoys
-  sono = readRDS('data/processed/sonobuoys.rds')
-  
+ 
   # build date UI -------------------------------------------------------
   
   output$dateChoice <- renderUI({
