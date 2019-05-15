@@ -79,10 +79,6 @@ function(input, output, session){
     }
   })
   
-  observe({
-    print(dates())
-  })
-  
   # choose platform -----------------------------------------------------------
   
   platform <- reactive({
