@@ -15,9 +15,10 @@ output_dir = 'data/interim/'
 # setup -------------------------------------------------------------------
 
 # libraries
-library(lubridate, quietly = T, warn.conflicts = F)
-suppressMessages(library(rgdal, quietly = T, warn.conflicts = F))
-library(tools, quietly = T, warn.conflicts = F)
+suppressPackageStartupMessages(library(lubridate))
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(rgdal))
+suppressPackageStartupMessages(library(tools))
 suppressPackageStartupMessages(library(readxl))
 
 # functions
@@ -92,7 +93,7 @@ for(i in seq_along(flist)){
 # combine and save --------------------------------------------------------
 
 # combine all flights
-TRACKS = do.call(rbind, TRK)
+TRACKS = bind_rows(TRK)
 
 # config flight data
 t1 = config_tracks(TRACKS)
@@ -162,7 +163,7 @@ for(i in seq_along(flist)){
 # combine --------------------------------------------------------
 
 # combine all flights
-TRACKS = do.call(rbind, TRK)
+TRACKS = bind_rows(TRK)
 
 # config flight data
 tracks = config_tracks(TRACKS)
