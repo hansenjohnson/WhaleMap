@@ -82,7 +82,7 @@ if(length(flist!=0)){
   }
   
   # combine all flights
-  sig = bind_cols(SIG)
+  sig = bind_rows(SIG)
   
 } else {
   
