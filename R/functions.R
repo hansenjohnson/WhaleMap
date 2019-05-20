@@ -421,7 +421,7 @@ subset_canadian = function(df,
   df_sf = st_as_sf(df, coords = c("lon", "lat"), crs = crs_ref, agr = "constant", remove = FALSE)
   
   # spatial subsets
-  df_in = st_within(x = df_sf, y = can, sparse = FALSE)[,1]
+  df_in = st_within(x = df_sf, y = can, sparse = FALSE, prepared = FALSE)[,1]
   df_can = df_sf[df_in,]
   
   # convert back to data.frame
