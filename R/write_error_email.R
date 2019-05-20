@@ -60,7 +60,7 @@ if(length(er)!=0){
     # email pieces
     subject = paste0("Subject: WhaleMap Error (", format(Sys.time(), '%b-%d %H:%M %Z'),"): Cannot process data from ", id$name[bad])
     from = "From: hansen.johnson@dal.ca"
-    to = paste0("Bcc: ", paste(emails, collapse = ';'))
+    to = paste0("To: ", paste(emails, collapse = ','))
     txt = paste0(
 "
 WhaleMap could not process ", id$name[bad], " correctly!
