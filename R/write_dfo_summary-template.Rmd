@@ -25,8 +25,9 @@ suppressPackageStartupMessages(library(leaflet.extras))
 pre = '../'
 
 # for testing
-# params=data.frame(start = as.Date('2019-04-04'),
-                  # stop = as.Date('2019-04-03'))
+# params=data.frame(start = as.Date('2019-05-18'),
+#                   stop = as.Date('2019-05-18'))
+# pre = './'
 
 source(paste0(pre,'R/functions.R'))
 
@@ -66,6 +67,9 @@ if(t0 == t1){
 } else {
   data_range = paste0(params$start, ' to ', params$stop)
 }
+
+# for testing
+# print(obs)
 ```
 
 \begin{center}
