@@ -10,6 +10,7 @@ weekly_report_day = 'Friday'
 
 ## rewrite all reports (will take a long time, maybe an hour or so)
 rewrite_reports = FALSE
+rewrite_from = as.Date('2019-01-01')
 
 ## remove .tex files
 remove_tex = TRUE
@@ -86,11 +87,11 @@ if(today_name == weekly_report_day){
   render_report(report_date=yesterday, daily = FALSE)
 }
 
-## rewrite all reports for given period (default is since Jan 1 2018) ##
+## rewrite all reports for given period ##
 if(rewrite_reports){
   
   # define date sequence
-  date_seq = seq.Date(from = as.Date('2019-01-01'), to = Sys.Date(), by = 1)
+  date_seq = seq.Date(from = rewrite_from, to = Sys.Date(), by = 1)
   
   # build reports
   for(i in seq_along(date_seq)){
