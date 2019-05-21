@@ -417,8 +417,8 @@ function(input, output, session){
         secondaryLengthUnit = 'miles', 
         primaryAreaUnit = "hectares",
         secondaryAreaUnit="acres", 
-        activeColor = "darkslategray",
-        completedColor = "darkslategray",
+        activeColor = "#006622",
+        completedColor = "#004d1a",
         position = 'bottomleft')
   })
   
