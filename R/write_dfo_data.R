@@ -17,12 +17,19 @@ if(!dir.exists(outdir)){dir.create(outdir)}
 # read in observation data
 obs = readRDS('data/processed/observations.rds')
 
-# subset
+# subset to year
 obs = filter(obs, year == yr & !is.na(lat) & !is.na(lon))
 obs = subset_canadian(obs)
 
+# subset right whale sightings
+rw_sig = filter(obs, species == 'right' & score == 'definite visual')
+
+# sort by date
+rw_sig = rw_sig[order(rw_sig$date, decreasing = T),]
+
 # write to csv
 write.csv(x = obs, file = paste0(outdir, 'observations.csv'), row.names = F)
+write.csv(x = rw_sig, file = paste0(outdir, 'narw_sightings.csv'), row.names = F)
 
 # proc tracks -------------------------------------------------------------
 
