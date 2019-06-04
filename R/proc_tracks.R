@@ -8,19 +8,14 @@ source('R/functions.R')
 tracks_list = list.files('data/interim', pattern = 'tracks', full.names = T)
 
 # read in files
-for(i in seq_along(tracks_list)){
-
+TRK = vector('list', length(tracks_list))
+for(ii in seq_along(tracks_list)){
   # get data
-  itrack = readRDS(tracks_list[[i]])
-  # itrack = config_tracks(itrack)
-
-  if(i==1){
-    tracks = itrack
-  }
-
-  # add to list
-  tracks = rbind(tracks, itrack)
+  TRK[[ii]] = readRDS(tracks_list[[ii]])
 }
+
+# flatten list
+tracks = bind_rows(TRK)
 
 # remove duplicates
 tracks = tracks[which(!duplicated(tracks)),]

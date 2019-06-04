@@ -15,7 +15,7 @@ for(ii in seq_along(obs_list)){
 }
 
 # combine
-obs = do.call(rbind,OBS)
+obs = bind_rows(OBS)
 
 # remove duplicates
 obs = obs[!duplicated(obs[,c('lat', 'lon', 'date', 'species', 'number')]),]
