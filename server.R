@@ -89,11 +89,13 @@ function(input, output, session){
   
   # extract names of active platform(s)
   name_choices <- reactive({
-    bind_rows(tracks[c('date', 'platform', 'name')], observations[c('date', 'platform', 'name')]) %>%
-      filter(date %in% dates() & platform %in% platform()) %>%
-      pull(name) %>%
-      as.character() %>%
-      unique()
+    suppressWarnings(
+      bind_rows(tracks[c('date', 'platform', 'name')], observations[c('date', 'platform', 'name')]) %>%
+        filter(date %in% dates() & platform %in% platform()) %>%
+        pull(name) %>%
+        as.character() %>%
+        unique()
+    )
   })
   
   # build name UI -----------------------------------------------------------
@@ -814,6 +816,8 @@ function(input, output, session){
                        popup = ~paste(sep = "<br/>" ,
                                       paste0("Species: ", species),
                                       paste0("Score: ", score),
+                                      paste0("Number: ", number),
+                                      paste0("Calves: ", calves),
                                       paste0("Platform: ", platform),
                                       paste0("Name: ", name),
                                       paste0('Date: ', as.character(date)),
@@ -845,6 +849,7 @@ function(input, output, session){
                                       paste0("Species: ", species),
                                       paste0("Score: ", score),
                                       paste0("Number: ", number),
+                                      paste0("Calves: ", calves),
                                       paste0("Platform: ", platform),
                                       paste0("Name: ", name),
                                       paste0('Date: ', as.character(date)),
@@ -1084,18 +1089,22 @@ function(input, output, session){
     min_yday = isolate(min(yday(dates())))
     max_yday = isolate(max(yday(dates())))
     
-    if(colorby_obs() %in% c('number', 'lat','lon', 'year')){
+    if(colorby_obs() %in% c('number', 'calves', 'lat','lon', 'year')){
       
       # replace all sightings/detections with '1' to facilitate stacked plotting
       obs$counter = 1
       
-      if(colorby_obs() == 'year'){
-        # convert year to factor
-        obs$year = as.factor(obs$year)
-      }
+      # convert to factor for discrete colouring
+      obs[,colorby_obs()] = as.factor(obs[,colorby_obs()])
+      
+      # if(colorby_obs() == 'year'){
+      #   # convert year to factor
+      #   obs$year = as.factor(obs$year)
+      # }
       
       # define palette for discrete scale
-      fillcols = scale_fill_manual(values = cols, name = colorby_obs())
+      fillcols = scale_fill_manual(values = cols, name = colorby_obs(), 
+                                   na.value = 'darkslategrey')
       
       # build plot
       g = ggplot(obs, aes(x = yday, y = counter))+

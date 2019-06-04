@@ -262,7 +262,7 @@ if(nrow(trk)==0){
 sig = obs[obs$species == 'right' & obs$score == 'definite visual',]
 
 # format table
-sig = sig[,c('date','time', 'lat', 'lon', 'number', 'platform', 'name')]
+sig = sig[,c('date','time', 'lat', 'lon', 'number', 'calves', 'platform', 'name')]
 
 # sort by time
 sig = sig[order(sig$time),]

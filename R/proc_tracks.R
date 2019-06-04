@@ -15,10 +15,13 @@ for(ii in seq_along(tracks_list)){
 }
 
 # flatten list
-tracks = bind_rows(TRK)
+tracks = suppressWarnings(bind_rows(TRK))
 
 # remove duplicates
 tracks = tracks[which(!duplicated(tracks)),]
+
+# config tracks
+tracks = config_tracks(tracks)
 
 # save
 saveRDS(tracks, 'data/processed/tracks.rds')

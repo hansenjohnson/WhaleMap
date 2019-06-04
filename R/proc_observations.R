@@ -15,7 +15,7 @@ for(ii in seq_along(obs_list)){
 }
 
 # combine
-obs = bind_rows(OBS)
+obs = suppressWarnings(bind_rows(OBS))
 
 # remove duplicates
 obs = obs[!duplicated(obs[,c('lat', 'lon', 'date', 'species', 'number')]),]
@@ -28,8 +28,12 @@ obs$species = factor(obs$species)
 obs$lat = round(obs$lat,4)
 obs$lon = round(obs$lon,4)
 
+# configure observations
+obs = config_observations(obs)
+
 # rename score categories
-levels(obs$score) = c('definite visual', 'possible visual', 'definite acoustic', 'possible acoustic')
+obs$score = factor(obs$score, levels = c('detected', 'possibly detected', 'possibly sighted', 'sighted'), 
+       labels = c('definite acoustic', 'possible acoustic', 'possible visual', 'definite visual'))
 
 # save
 saveRDS(obs, 'data/processed/observations.rds')

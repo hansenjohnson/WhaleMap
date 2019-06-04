@@ -51,6 +51,7 @@ platform_cols = c(
 colorby_obs_choices = 
   c('Score' = 'score',
   'Species' = 'species',
+  'Calves' = 'calves',
   'Day of year' = 'yday',
   'Year' = 'year',
   'Platform' = 'platform',
