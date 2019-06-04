@@ -27,7 +27,7 @@ source('R/functions.R')
 flist = list.files(data_dir, full.names = TRUE, recursive = FALSE)
 
 # list output column names for sightings
-cnames = c('time','lat','lon','date', 'yday','species','score','number','year','platform','name','id')
+cnames = c('time','lat','lon','date','yday','species','score','number','calves','year','platform','name','id')
 
 TRK = list()
 SIG = list()
@@ -75,7 +75,7 @@ for(i in seq_along(flist)){
   # tracklines --------------------------------------------------------------
   
   # take important columns
-  trk = tmp[,c('time','lat','lon', 'altitude','speed','date','yday', 'year',  'platform', 'name', 'id')]
+  trk = tmp[,c('time','lat','lon', 'altitude','speed','date','yday', 'year','platform', 'name', 'id')]
   
   # re-order
   trk = trk[order(trk$time, decreasing = TRUE),]
@@ -109,6 +109,9 @@ for(i in seq_along(flist)){
     sig$species[sig$SPCODE == 'FIWH'] = 'fin'
     sig$species[sig$SPCODE == 'MIWH'] = 'minke'
     sig$species[sig$SPCODE == 'BLWH'] = 'blue'
+    
+    # determine calves
+    sig$calves = sig$CALVES
     
     # drop unknown codes
     sig = sig[which(!is.na(sig$species)),]
