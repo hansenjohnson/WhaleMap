@@ -93,6 +93,7 @@ config_observations = function(obs){
               'species',
               'score',
               'number',
+              'mom_calf',
               'year',
               'platform',
               'name',
@@ -141,6 +142,9 @@ config_observations = function(obs){
   
   if(is.null(obs$number)){obs$number = NA}
   obs$number = as.numeric(obs$number)
+  
+  if(is.null(obs$mom_calf)){obs$mom_calf = NA}
+  obs$mom_calf = as.logical(obs$mom_calf)
   
   # re-order
   obs = obs[c(columns)]
