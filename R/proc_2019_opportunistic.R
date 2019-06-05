@@ -13,14 +13,14 @@ cnames = c('date', 'time', 'lat', 'lon', 'number', 'calves', 'platform', 'photos
 # setup -------------------------------------------------------------------
 
 suppressPackageStartupMessages(library(lubridate))
-suppressPackageStartupMessages(library(xlsx))
+suppressPackageStartupMessages(library(gdata))
 
 source('R/functions.R')
 
 # process data ------------------------------------------------------------
 
 # read in spp and obs keys
-sig = read.xls(ifile)
+sig = gdata::read.xls(ifile)
 
 # remove extra columns
 sig = sig[,1:length(cnames)]
