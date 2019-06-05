@@ -2,7 +2,7 @@
 # process 2019 dfo opportunistic right whales sightings
 
 # input file
-ifile = 'data/raw/2019_whalemapdata/2019-opportunistic-sightings/2019-narw-opportunistic-sightings.xlsx'
+ifile = 'data/raw/2019_whalemapdata/2019-opportunistic-sightings/2019-narw-opportunistic-sightings.csv'
 
 # directory for output
 ofile = 'data/interim/2019_opportunistic_sightings.rds'
@@ -13,14 +13,14 @@ cnames = c('date', 'time', 'lat', 'lon', 'number', 'calves', 'platform', 'photos
 # setup -------------------------------------------------------------------
 
 suppressPackageStartupMessages(library(lubridate))
-suppressPackageStartupMessages(library(gdata))
+suppressPackageStartupMessages(library(data.table))
 
 source('R/functions.R')
 
 # process data ------------------------------------------------------------
 
 # read in spp and obs keys
-sig = gdata::read.xls(ifile)
+sig = read.csv(ifile)
 
 # remove extra columns
 sig = sig[,1:length(cnames)]
