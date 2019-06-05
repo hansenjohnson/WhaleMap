@@ -143,8 +143,8 @@ config_observations = function(obs){
   if(is.null(obs$number)){obs$number = NA}
   obs$number = as.numeric(obs$number)
   
-  if(is.null(obs$mom_calf)){obs$mom_calf = NA}
-  obs$mom_calf = as.numeric(obs$mom_calf)
+  if(is.null(obs$calves)){obs$calves = NA}
+  obs$calves = as.numeric(obs$calves)
   
   # re-order
   obs = obs[c(columns)]
