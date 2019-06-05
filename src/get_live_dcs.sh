@@ -18,8 +18,8 @@ declare -A URL
 
 # assign paths to detection data for each deployment
 URL=(
-	[2019-02-20_buoy_nybight]=http://dcs.whoi.edu/nyb0219/nyb0219_buoy_html/ptracks/manual_analysis.csv
-	[2018-12-01_slocum_we03]=http://dcs.whoi.edu/gom1218/gom1218_we03_html/ptracks/manual_analysis.csv
+	[2019-06-04_slocum_fundy]=http://dcs.whoi.edu/dal0619/dal0619_fundy_html/ptracks/manual_analysis.csv
+	[2019-02-20_buoy_nybight]=http://dcs.whoi.edu/nyb0219/nyb0219_buoy_html/ptracks/manual_analysis.csv	
 )
 
 # download data
