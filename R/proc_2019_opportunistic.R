@@ -2,23 +2,29 @@
 # process 2019 dfo opportunistic right whales sightings
 
 # input file
-ifile = 'data/raw/2019_whalemapdata/2019-opportunistic-sightings/2019-narw-opportunistic-sightings.csv'
+ifile = 'data/raw/2019_whalemapdata/2019-opportunistic-sightings/2019-narw-opportunistic-sightings.xlsx'
 
 # directory for output
 ofile = 'data/interim/2019_opportunistic_sightings.rds'
 
+# column names (in order of sheet)
+cnames = c('date', 'time', 'lat', 'lon', 'number', 'calves', 'platform', 'photos', 'verified', 'notes')
+
 # setup -------------------------------------------------------------------
 
 suppressPackageStartupMessages(library(lubridate))
-suppressPackageStartupMessages(library(data.table))
+suppressPackageStartupMessages(library(xlsx))
+
 source('R/functions.R')
 
 # process data ------------------------------------------------------------
 
 # read in spp and obs keys
-sig = fread(ifile)
-sig = as.data.frame(sig)
-colnames(sig) = c('date', 'time', 'lat', 'lon', 'number', 'platform', 'photos', 'verified', 'notes')
+sig = read.xls(ifile)
+
+# remove extra columns
+sig = sig[,1:length(cnames)]
+colnames(sig) = cnames
 
 # pass blank table if input is empty
 if(nrow(sig) == 0){
@@ -33,7 +39,7 @@ if(nrow(sig) == 0){
   
   # wrangle time
   time = paste0(sig$date, ' ', sig$time)
-  sig$time = as.POSIXct(time, format = '%m/%d/%Y %H:%M:%S', tz = 'UTC', usetz=TRUE)
+  sig$time = as.POSIXct(time, format = '%m/%d/%Y %H:%M:%S %p', tz = 'UTC', usetz=TRUE)
   
   # wrangle date
   sig$date = as.Date(sig$date, format = '%m/%d/%Y')
@@ -58,6 +64,11 @@ if(nrow(sig) == 0){
   sig$number = as.character(sig$number)
   sig$number = gsub(pattern = "\\?", replacement = NA, x = sig$number)
   sig$number = as.numeric(sig$number)
+  
+  # convert calves to numeric
+  sig$calves = as.character(sig$calves)
+  sig$calves = gsub(pattern = "\\?", replacement = NA, x = sig$calves)
+  sig$calves = as.numeric(sig$calves)
   
   # clean lat lons
   sig = clean_latlon(sig)
