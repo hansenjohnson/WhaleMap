@@ -5,9 +5,10 @@ proc_dcs = function(data_dir, output_dir, det_fname, track_fname, ext = ""){
   # setup -------------------------------------------------------------------
   
   # libraries
-  library(lubridate, quietly = T, warn.conflicts = F)
-  library(sp, quietly = T, warn.conflicts = F)
-  library(reshape2, quietly = T, warn.conflicts = F)
+  suppressPackageStartupMessages(library(tidyverse))
+  suppressPackageStartupMessages(library(lubridate))
+  suppressPackageStartupMessages(library(sp))
+  suppressPackageStartupMessages(library(reshape2))
   source('R/functions.R')
   
   # list names of potential input species
@@ -121,7 +122,7 @@ proc_dcs = function(data_dir, output_dir, det_fname, track_fname, ext = ""){
   # create trackline file ---------------------------------------------------
   
   # flatten list
-  tracks = do.call(rbind, TRK)
+  tracks = suppressWarnings(bind_rows(TRK))
   
   # sort by time (important for plotting)
   tracks = tracks[order(tracks$id, tracks$time),]
@@ -135,13 +136,14 @@ proc_dcs = function(data_dir, output_dir, det_fname, track_fname, ext = ""){
   # create detections file --------------------------------------------------
   
   # flatten list
-  detections = do.call(rbind, DET)
+  detections = suppressWarnings(bind_rows(DET))
   
   # remove absences to reduce data frame size
   detections = detections[detections$score!='not detected',]
   
-  # add number column
+  # add number and calve column
   detections$number = NA
+  detections$calves = NA
   
   # config data types
   detections = config_observations(detections)
