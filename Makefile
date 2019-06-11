@@ -155,7 +155,7 @@ data/interim/2018_jasco_tracks.rds : R/proc_2018_jasco_tracks.R data/raw/jasco/t
 	$(remove_error)
 
 # 2019 NOAA twin otter tracks
-data/interim/2019_noaa_twin_otter_tracks.rds : R/proc_2019_noaa_twin_otter.R data/raw/2019_noaa_twin_otter/edit_data/*
+data/interim/2019_noaa_twin_otter_tracks.rds : R/proc_2019_noaa_twin_otter.R data/raw/2019_noaa_twin_otter/edit_data/WhaleMap/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
@@ -323,7 +323,7 @@ data/interim/2018_jasco_detections.rds : R/proc_2018_jasco_detections.R data/raw
 	$(remove_error)
 
 # 2019 noaa twin otter sightings
-data/interim/2019_noaa_twin_otter_sightings.rds : R/proc_2019_noaa_twin_otter.R data/raw/2019_noaa_twin_otter/edit_data/*
+data/interim/2019_noaa_twin_otter_sightings.rds : R/proc_2019_noaa_twin_otter.R data/raw/2019_noaa_twin_otter/edit_data/WhaleMap/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
