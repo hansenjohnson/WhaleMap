@@ -40,9 +40,9 @@ rclone sync drive:"2019/2019 NEFSC Survey Data/Flights/" "2019_noaa_twin_otter/"
 # printf "\n*** Checking NEAq CWI Dropbox ***\n\n"
 # rclone sync dropbox:"NEAq_CWI Effort_2018" "2018_neaq_cwi/" --backup-dir backups -v --exclude *.JPG --exclude *.mp4
 
-# Sync MICS 2018 vessel data Dropbox
-# printf "\n*** Checking MICS Dropbox ***\n\n"
-# rclone sync dropbox:"Right Whale 2018" "2018_mics_sightings/" --backup-dir backups -v --exclude *.JPG --exclude *.mp4
+# Sync MICS 2019 vessel data Google
+printf "\n*** Checking MICS Drive ***\n\n"
+rclone sync drive:"Right Whale data 2019" "2019_mics/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
 # Sync JASCO server
 # printf "\n*** Checking JASCO Server ***\n\n"
