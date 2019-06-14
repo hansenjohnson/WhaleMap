@@ -61,7 +61,8 @@ for(i in seq_along(flist)){
   
   # catch timing error
   if(tmp$time[1]<as.POSIXct('2000-01-01 00:00:00')){
-    message('Timing error detected! Re-assigning timestamps based on filename and assumed sample rate')
+    message('Timing error detected in file: ', flist[i])
+    message('Re-assigning timestamps based on filename and assumed sample rate')
     tmp$time = as.POSIXct(strsplit(basename(flist[i]),'-')[[1]][1], format = '%Y%m%d', tz = 'UTC')
     tmp$time = tmp$time + seq(0, length.out = nrow(tmp), by = 1)
   }
