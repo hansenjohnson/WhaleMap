@@ -8,3 +8,5 @@ proc_2019_tc_dash8_sightings.R,TC Dash 8 aerial survey sightings,http://www.tc.g
 proc_2019_tc_dash8_tracks.R,TC Dash 8 aerial survey tracks,http://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html,data/raw/2019_whalemapdata/TC_Dash8/email_list.csv
 proc_2019_tc_dash7_sightings.R,TC Dash 7 aerial survey sightings,http://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html,data/raw/2019_whalemapdata/TC_Dash7/email_list.csv
 proc_2019_tc_dash7_tracks.R,TC Dash 7 aerial survey tracks,http://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html,data/raw/2019_whalemapdata/TC_Dash7/email_list.csv
+proc_2019_mics_sightings.R, MICS vessel survey sightings,https://www.rorqual.com/english/home,data/email/default.csv
+proc_2019_mics_tracks.R,MICS vessel survey tracks,https://www.rorqual.com/english/home,data/email/default.csv
