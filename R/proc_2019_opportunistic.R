@@ -39,7 +39,7 @@ if(nrow(sig) == 0){
   
   # wrangle time
   time = paste0(sig$date, ' ', sig$time)
-  sig$time = as.POSIXct(time, format = '%m/%d/%Y %H:%M:%S %p', tz = 'UTC', usetz=TRUE)
+  sig$time = as.POSIXct(time, format = '%m/%d/%Y %H:%M:%S', tz = 'UTC', usetz=TRUE)
   
   # wrangle date
   sig$date = as.Date(sig$date, format = '%m/%d/%Y')
