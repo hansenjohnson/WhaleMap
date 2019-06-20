@@ -27,7 +27,7 @@ printf "\n*** Checking DFO Google Drive ***\n\n"
 # rclone sync whalemapdata:"WhaleMapData_Master/2018/" "2018_whalemapdata/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf
 rclone sync whalemapdata:"WhaleMapData_Master/2019/" "2019_whalemapdata/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf
 
-# Sync NOAA 2018 aerial data Google drive
+# Sync NOAA aerial data Google drive
 printf "\n*** Checking NOAA Google Drive ***\n\n"
 # printf "2018 Flight data \n\n"
 # rclone sync drive:"2018/2018 NEFSC Survey Data/Flights/" "2018_noaa_twin_otter/" --drive-skip-gdocs --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
@@ -36,9 +36,9 @@ printf "\n*** Checking NOAA Google Drive ***\n\n"
 printf "2019 Flight data \n\n"
 rclone sync drive:"2019/2019 NEFSC Survey Data/Flights/" "2019_noaa_twin_otter/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
-# Sync NEAq 2018 vessel data Dropbox
-# printf "\n*** Checking NEAq CWI Dropbox ***\n\n"
-# rclone sync dropbox:"NEAq_CWI Effort_2018" "2018_neaq_cwi/" --backup-dir backups -v --exclude *.JPG --exclude *.mp4
+# Sync NEAq vessel data Dropbox
+printf "\n*** Checking NEAq CWI Dropbox ***\n\n"
+rclone sync dropbox:"NEAq 2019 Survey Data (prior to QC))" "2019_neaq/" --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
 # Sync MICS 2019 vessel data Google
 printf "\n*** Checking MICS Drive ***\n\n"
