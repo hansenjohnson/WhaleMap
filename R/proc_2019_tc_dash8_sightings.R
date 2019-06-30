@@ -45,6 +45,11 @@ if(length(flist)!=0){
     # read in data
     tmp = as.data.frame(read_excel(flist[i], sheet = 1, col_names = TRUE))
     
+    if(!'Pos_lat' %in% names(tmp)){
+      message('Skipping file without position data: ', flist[i])
+      next
+    }
+    
     # select columns of interest
     tmp = data.frame(date = tmp$Date_UTC,
                      lat = tmp$Pos_lat,
