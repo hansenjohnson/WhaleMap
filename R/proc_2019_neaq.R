@@ -65,6 +65,13 @@ for(i in seq_along(flist)){
     i1 = c(i1,nrow(tmp))
   }
   
+  if(length(i0) < length(i1)){
+    i0 = 1
+    i1 = nrow(tmp)
+    message('Could not match on/off effort lines in: ', flist[i])
+    message('Plotting uncorrected effort data...')
+  }
+  
   # fill in leg stage info for each effort segment
   EFF = list()
   for(j in 1:length(i0)){
@@ -103,12 +110,15 @@ for(i in seq_along(flist)){
   # take only sightings
   sig = droplevels(tmp[which(as.character(tmp$SPECCODE)!=""),])
   
-  # get lat lons
-  sig$lat = sig$LAT...SIGHTINGS
-  sig$lon = sig$LONG...SIGHTINGS
+  # find data columns by name
+  ilat = which(colnames(sig) %in% c('LATITUDE', 'LAT...SIGHTINGS'))
+  ilon = which(colnames(sig) %in% c('LONGITUDE', 'LONG...SIGHTINGS'))
+  inum = which(colnames(sig) %in% c('NUMBER', 'NUMBER...SIGHTINGS'))
   
-  # get number of individuals
-  sig$number = sig$NUMBER...SIGHTINGS
+  # extract data
+  sig$lat = sig[,ilat]
+  sig$lon = sig[,ilon]
+  sig$number = sig[,inum]
   
   # get score
   sig$score[which(sig$number>0)] = 'sighted'
