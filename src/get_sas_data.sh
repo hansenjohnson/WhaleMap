@@ -13,8 +13,8 @@ elif [[ "$unamestr" == 'Darwin' ]]; then
 	SSHDIR=/Users/hansenjohnson
 fi
 
-# define data directory
-DATADIR=${DESTDIR}/data/raw/sas/
+# move to project directory
+cd ${DESTDIR}
 
 # define URL
 . ./src/get_sas_url.sh
