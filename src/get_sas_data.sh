@@ -16,6 +16,9 @@ fi
 # move to project directory
 cd ${DESTDIR}
 
+# define data directory
+DATADIR=${DESTDIR}/data/raw/sas/
+
 # define URL
 . ./src/get_sas_url.sh
 
