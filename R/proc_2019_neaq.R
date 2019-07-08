@@ -29,8 +29,8 @@ for(i in seq_along(flist)){
   tmp = read.csv(flist[i])
   
   # determine vessel and timezone
-  isrv = strsplit(as.character(flist[i]), split = '-')[[1]][4]
-  if(isrv == 'NEA'){
+  isrv = strsplit(as.character(flist[i]), split = '-')[[1]][5]
+  if(isrv == 'N'){
     itz = 'America/New_York'
     ivs = 'nereid'
   } else {
