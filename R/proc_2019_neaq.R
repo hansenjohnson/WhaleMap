@@ -30,16 +30,17 @@ for(i in seq_along(flist)){
   
   # determine vessel and timezone
   isrv = strsplit(as.character(flist[i]), split = '-')[[1]][5]
-  if(isrv == 'N'){
+  if(isrv == 'N.csv'){
     itz = 'America/New_York'
     ivs = 'nereid'
+    tmp$time = as.POSIXct(tmp$Time, tz = itz)
   } else {
     itz = 'America/Halifax'
     ivs = 'jdmartin'
+    tmp$time = as.POSIXct(tmp$Time, format = '%Y-%m-%dT%H:%M:%S', tz = itz)
   }
   
   # wrangle time
-  tmp$time = as.POSIXct(tmp$Time, tz = itz, usetz = T)
   tmp$date = as.Date(tmp$time)
   tmp$yday = yday(tmp$time)
   tmp$year = year(tmp$time)
