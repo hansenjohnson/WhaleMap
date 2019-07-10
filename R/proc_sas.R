@@ -90,7 +90,13 @@ if(file.exists(from_sas_file)){
   # compare sas whalemap ----------------------------------------------------
   
   # read in whalemap observations
-  obs = readRDS(obs_file) %>%
+  obs = readRDS(obs_file) 
+  
+  # add identifier
+  obs$whalemap_id = sprintf('%06d', seq(1, nrow(obs),1))
+  
+  # filter
+  obs = obs %>%
     filter(date >= t0 & date <= t1 & species == 'right' & 
              score %in% c('definite visual') &
              !is.na(time) & !is.na(lat) & !is.na(lon))
