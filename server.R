@@ -175,7 +175,7 @@ function(input, output, session){
           date %in% dates() & 
             platform %in% platform() & 
             name %in% name() &
-            !name %in% c('cp_king_air','jasco_test')
+            !(name %in% hidden_platforms)
         )
       
     }
@@ -214,7 +214,7 @@ function(input, output, session){
             platform %in% platform() & 
             species %in% species() &
             name %in% name() &
-            !name %in% c('jasco_test') &
+            !(name %in% hidden_platforms) &
             score != 'possible visual'
         ) %>%
         droplevels()
@@ -275,7 +275,7 @@ function(input, output, session){
             date %in% dates() & 
               platform %in% platform() &
               name %in% name() &
-              name != 'jasco_test'
+              !(name %in% hidden_platforms)
           )
         
       }

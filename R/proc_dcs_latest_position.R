@@ -1,57 +1,49 @@
-# extract latest position(s) from live glider data
+## proc_dcs_latest_position ##
+# extract latest position(s) from live acoustic data
 
-# user input --------------------------------------------------------------
+# input -------------------------------------------------------------------
 
-infile = 'data/interim/dcs_live_tracks.rds'
-jasco_file = 'data/interim/2018_jasco_tracks.rds'
+dcs_file = 'data/interim/dcs_live_tracks.rds'
+vik_file = 'data/interim/2019_dfo_viking_tracks.rds'
 outfile = 'data/processed/dcs_live_latest_position.rds'
+
+# setup -------------------------------------------------------------------
+
+source('R/functions.R')
 
 # process -----------------------------------------------------------------
 
-if(file.exists(infile)){
+if(file.exists(dcs_file) & file.exists(vik_file)){
   
-  # read in data
-  tracks = readRDS(infile)
+  # find latest detection data
+  dcs = find_latest(dcs_file)
+  vik = find_latest(vik_file)
   
-  # remove NAs
-  tracks = tracks[!is.na(tracks$lat),]
+  # combine
+  latest = rbind.data.frame(dcs, vik, make.row.names = FALSE)
   
-  # split tracks by deployment
-  dep = split(tracks, tracks$id)
+  # save
+  saveRDS(latest, file = outfile)
   
-  # determine latest observation from each deployment
-  latest = lapply(dep, function(x){
-    x[nrow(x),]
-  })
+} else if(file.exists(dcs_file)){
   
-  # flatten list
-  latest = do.call(rbind,latest)
+  latest = find_latest(dcs_file)
   
-  # add jasco position
-  if(file.exists(jasco_file)){
-    
-    # read jasco file
-    jasco = readRDS(jasco_file)
-    
-    # isolate latest jasco position
-    jmax = jasco[jasco$time==max(jasco$time, na.rm = TRUE),]
-    
-    # add to latest data frame
-    latest = rbind.data.frame(latest, jmax, make.row.names = FALSE)
-    
-  }
+  # save
+  saveRDS(latest, file = outfile)
   
-  # save output
+} else if(file.exists(vik_file)){
+  
+  latest = find_latest(vik_file)
+  
+  # save
   saveRDS(latest, file = outfile)
   
 } else {
-  message('No live dcs data detected')
+  message('No live acoustic data detected')
   
   # remove latest position file
   if(file.exists(outfile)){
     file.remove(outfile)  
   }
-  
 }
-
-

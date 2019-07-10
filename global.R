@@ -108,6 +108,11 @@ graticule_ints = list(
   data.frame('start' = 10, 'end' = 15, 'interval' = 0.1)
 )
 
+# hidden platforms
+hidden_platforms = c('cp_king_air', 'jasco_test', 'VIKING-AZMP-ESG', 
+                     'VIKING-BP', 'VIKING-IML-BA', 'VIKING-IML7', 
+                     'VIKING-PMZA-VAS')
+
 # load data ---------------------------------------------------------------
 
 # read in map polygons

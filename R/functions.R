@@ -434,3 +434,24 @@ subset_canadian = function(df,
   
   return(out)
 }
+
+find_latest = function(infile){
+# find latest track position  
+  
+  # read in data
+  tracks = readRDS(infile)
+  
+  # remove NAs
+  tracks = tracks[!is.na(tracks$lat),]
+  
+  # split tracks by deployment
+  dep = split(tracks, tracks$id)
+  
+  # determine latest observation from each deployment
+  latest = lapply(dep, function(x){
+    x[nrow(x),]
+  })
+  
+  # flatten list
+  latest = do.call(rbind,latest)
+}

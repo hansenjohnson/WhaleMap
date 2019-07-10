@@ -141,6 +141,11 @@ build_static_map = function(english=TRUE){
     }
   }
   
+  # hidden platforms
+  hidden_platforms = c('jasco_test', 'VIKING-AZMP-ESG', 
+                       'VIKING-BP', 'VIKING-IML-BA', 'VIKING-IML7', 
+                       'VIKING-PMZA-VAS')
+  
   # create destination directory
   outdir = dirname(fout)
   if(!dir.exists(outdir)){dir.create(outdir)}
@@ -158,7 +163,7 @@ build_static_map = function(english=TRUE){
   lfile = 'data/processed/dcs_live_latest_position.rds'
   if(file.exists(lfile)){
     latest = readRDS(lfile)
-    latest = latest[latest$name!='jasco_test',] # do not plot jasco test data
+    latest = latest[!(latest$name %in% hidden_platforms),] # do not plot test data
   }
   
   # sightings / detections
@@ -168,12 +173,12 @@ build_static_map = function(english=TRUE){
   
   # tracklines
   Tracks = tracks[tracks$date >= t0,]; rm(tracks)
-  Tracks = Tracks[Tracks$name!='cp_king_air',] # do not plot C&P data
-  Tracks = Tracks[Tracks$name!='jasco_test',] # do not plot jasco test data
+  Tracks = Tracks[Tracks$name!='cp_king_air',] # do not plot C&P track data
+  Tracks = Tracks[!(Tracks$name %in% hidden_platforms),] # do not plot test data
   
   # observations
   Obs = obs[obs$date >= t0,]; rm(obs)
-  Obs = Obs[Obs$name!='jasco_test',] # do not plot jasco test data
+  Obs = Obs[!(Obs$name %in% hidden_platforms),] # do not plot test data
   
   # select species
   spp = Obs[Obs$species == 'right',]
