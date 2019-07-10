@@ -36,6 +36,7 @@ data/processed/tracks.rds : R/proc_tracks.R \
 														data/interim/2019_tc_dash7_tracks.rds \
 														data/interim/2019_mics_tracks.rds \
 														data/interim/2019_neaq_tracks.rds \
+														data/interim/2019_dfo_viking_tracks.rds \
 														data/interim/dcs_archived_tracks.rds \
 														data/interim/dcs_live_tracks.rds
 	$(report_error)
@@ -192,6 +193,12 @@ data/interim/2019_neaq_tracks.rds : R/proc_2019_neaq.R data/raw/2019_neaq/*.csv
 	Rscript $<
 	$(remove_error)
 
+# 2019 DFO viking tracks
+data/interim/2019_dfo_viking_tracks.rds : R/proc_2019_dfo_viking.R data/raw/2019_whalemapdata/DFO_viking_buoys/*.csv
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
 # DCS archived tracks
 data/interim/dcs_archived_tracks.rds : R/proc_archived_dcs.R data/raw/dcs/archived/*/*
 	$(report_error)
@@ -233,6 +240,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2019_tc_dash7_sightings.rds \
 																	data/interim/2019_mics_sightings.rds \
 																	data/interim/2019_neaq_sightings.rds \
+																	data/interim/2019_dfo_viking_detections.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
 
@@ -368,11 +376,13 @@ data/interim/2019_tc_dash7_sightings.rds : R/proc_2019_tc_dash7_sightings.R data
 	Rscript $<
 	$(remove_error)
 
+# 2019 MICS sightings
 data/interim/2019_mics_sightings.rds : R/proc_2019_mics_sightings.R data/raw/2019_mics/*.xlsx
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
+# 2019 NEAQ sightings
 data/interim/2019_neaq_sightings.rds : R/proc_2019_neaq.R data/raw/2019_neaq/*.csv
 	$(report_error)
 	Rscript $<
@@ -383,6 +393,12 @@ data/interim/2019_neaq_sightings.rds : R/proc_2019_neaq.R data/raw/2019_neaq/*.c
 # 	$(report_error)
 # 	Rscript $<
 # 	$(remove_error)
+
+# 2019 DFO viking detections
+data/interim/2019_dfo_viking_detections.rds : R/proc_2019_dfo_viking.R data/raw/2019_whalemapdata/DFO_viking_buoys/*.csv
+	$(report_error)
+	Rscript $<
+	$(remove_error)
 
 # DCS archived detections
 data/interim/dcs_archived_detections.rds : R/proc_archived_dcs.R data/raw/dcs/archived/*
@@ -412,7 +428,9 @@ data/processed/sonobuoys.rds : 	R/proc_sonobuoys.R \
 latest : data/processed/dcs_live_latest_position.rds
 
 # Process dcs positions
-data/processed/dcs_live_latest_position.rds : R/proc_dcs_latest_position.R data/interim/dcs_live_tracks.rds data/interim/2018_jasco_tracks.rds
+data/processed/dcs_live_latest_position.rds : R/proc_dcs_latest_position.R \
+																							data/interim/dcs_live_tracks.rds \
+																							data/interim/2019_dfo_viking_tracks.rds
 	$(report_error)
 	Rscript $<
 	$(remove_error)
