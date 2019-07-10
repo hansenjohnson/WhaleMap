@@ -93,7 +93,7 @@ if(file.exists(from_sas_file)){
   obs = readRDS(obs_file) 
   
   # add identifier
-  obs$whalemap_id = sprintf('%06d', seq(1, nrow(obs),1))
+  obs$whalemap_id = seq(1, nrow(obs),1)
   
   # filter
   obs = obs %>%
