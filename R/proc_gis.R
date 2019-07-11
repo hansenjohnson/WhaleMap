@@ -21,9 +21,9 @@ ref = "+proj=longlat +init=epsg:3857"
 # process -----------------------------------------------------------------
 
 # read shipping data
-static_shipping_zone = readOGR(paste0(gis_dir, '/static_shipping_zone/')) %>%
+static_shipping_zone = readOGR(paste0(gis_dir, '/static_shipping_zone-july/')) %>%
   spTransform(ref)
-dynamic_shipping_zone = readOGR(paste0(gis_dir, '/dynamic_shipping_zone/')) %>%
+dynamic_shipping_zone = readOGR(paste0(gis_dir, '/dynamic_shipping_zone-july/')) %>%
   spTransform(ref)
 
 # read fishing data
