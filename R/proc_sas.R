@@ -111,6 +111,9 @@ if(file.exists(from_sas_file)){
   # determine records to send to SAS
   to_send = filter(obs, !m_obs %in% m_sas & !name %in% c('noaa_twin_otter'))  
   
+  # reorder data by date
+  to_send = to_send[order(to_send$date, decreasing = TRUE),]
+  
   # add another level to flag duplicates on a different day (?)
   
   # write outputs -----------------------------------------------------------
