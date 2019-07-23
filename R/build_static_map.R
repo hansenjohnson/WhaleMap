@@ -73,10 +73,11 @@ build_static_map = function(english=TRUE){
     rw_position = 'Position: '
     
     # define basemap
-    basemap = 'OpenStreetMap.France'
+    basemap = 'OpenStreetMap.Mapnik'
+    # basemap = 'OpenStreetMap.France'
     
     # basemap labels
-    basemap_grp = 'OpenStreetMap-Français'
+    basemap_grp = 'OpenStreetMap'
     blank_grp = 'Fond de carte'
     oceanmap_grp = 'Fond de l\'océan'
     
