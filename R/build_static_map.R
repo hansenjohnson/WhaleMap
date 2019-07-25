@@ -27,10 +27,13 @@ build_static_map = function(english=TRUE){
     rw_position = 'Position: '
     
     # define basemap
-    basemap = 'OpenStreetMap.Mapnik'
+    can_basemap_url = "https://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT_CBCT_GEOM_3857/MapServer/tile/{z}/{y}/{x}?m4h=t"
+    can_labels_url = "https://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT_TXT_3857/MapServer/tile/{z}/{y}/{x}?m4h=t"
+    can_attribution_url = "https://www.nrcan.gc.ca/earth-sciences/geography/topographic-information/free-data-geogratis/licence/17285"
+    can_attribution_txt = "Canada Base Map © Natural Resources Canada"
     
     # basemap labels
-    basemap_grp = 'OpenStreetMap'
+    basemap_grp = 'Canada'
     blank_grp = 'Basemap'
     oceanmap_grp = 'Ocean basemap'
     
@@ -47,7 +50,6 @@ build_static_map = function(english=TRUE){
     forage_areas_grp = 'Area subject to temporary fishery closure protocol'
     
     # output path
-    # fout = '../server_index/whale_map_en-tmp.html'
     fout = './static_map/whale_map_en.html'
     
   } else {
@@ -73,11 +75,13 @@ build_static_map = function(english=TRUE){
     rw_position = 'Position: '
     
     # define basemap
-    basemap = 'OpenStreetMap.Mapnik'
-    # basemap = 'OpenStreetMap.France'
+    can_basemap_url = "https://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT_CBCT_GEOM_3857/MapServer/tile/{z}/{y}/{x}?m4h=t"
+    can_labels_url = "https://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBCT_TXT_3857/MapServer/tile/{z}/{y}/{x}?m4h=t"
+    can_attribution_url = "https://www.nrcan.gc.ca/earth-sciences/geography/topographic-information/free-data-geogratis/licence/17285"
+    can_attribution_txt = "La Carte de Base du Canada © Ressources naturelles Canada"
     
     # basemap labels
-    basemap_grp = 'OpenStreetMap'
+    basemap_grp = 'Canada'
     blank_grp = 'Fond de carte'
     oceanmap_grp = 'Fond de l\'océan'
     
@@ -94,7 +98,6 @@ build_static_map = function(english=TRUE){
     forage_areas_grp = 'Zones soumises au protocole de fermeture temporaire'
     
     # output path
-    # fout = '../server_index/whale_map_fr-tmp.html'
     fout = './static_map/whale_map_fr.html'
   }
   
@@ -197,8 +200,12 @@ build_static_map = function(english=TRUE){
   # start basemap
   map <- leaflet() %>%
     
-    # add ocean basemap
-    addProviderTiles(providers[[basemap]], group=basemap_grp) %>%
+    # add canada gov tiles
+    addTiles(urlTemplate = can_basemap_url, group = basemap_grp) %>%
+    addTiles(urlTemplate = can_labels_url, group = basemap_grp,
+             attribution = paste0('<a href=\"', can_attribution_url, '\">', can_attribution_txt, '</a>')) %>%
+  
+    # add other provider tiles
     addProviderTiles(providers$CartoDB.PositronNoLabels, group=blank_grp) %>%
     addProviderTiles(providers$Esri.OceanBasemap, group=oceanmap_grp) %>%
     
@@ -239,13 +246,6 @@ build_static_map = function(english=TRUE){
                 dynamic_speed_grp,
                 static_fish_grp,
                 forage_areas_grp)) %>%
-    
-    # # use NOAA graticules
-    # addWMSTiles(
-    #   "https://gis.ngdc.noaa.gov/arcgis/services/graticule/MapServer/WMSServer/",
-    #   layers = c("1-degree grid", "5-degree grid"),
-    #   options = WMSTileOptions(format = "image/png8", transparent = TRUE),
-    #   attribution = NULL,group = graticules_grp) %>%
     
     # add legend
     addLegend(position = "bottomright",
