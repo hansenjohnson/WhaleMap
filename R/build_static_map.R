@@ -1,10 +1,10 @@
 # static map - english/french version
 
-build_static_map = function(english=TRUE){
+build_static_map = function(type = 'whalemap'){
   
   # translation -------------------------------------------------------------
   
-  if(english){
+  if(type == 'dfo-en' | type == 'whalemap'){
     
     # define category names
     acoustic_lab = 'Acoustic'
@@ -50,9 +50,13 @@ build_static_map = function(english=TRUE){
     forage_areas_grp = 'Area subject to temporary fishery closure protocol'
     
     # output path
-    fout = './static_map/whale_map_en.html'
+    if(type == 'whalemap'){
+      fout = './static_map/whalemap.html'  
+    } else {
+      fout = './static_map/whale_map_en.html'  
+    }
     
-  } else {
+  } else if(type == 'dfo-fr'){
     
     # define category names
     acoustic_lab = 'Acoustique'
@@ -99,6 +103,8 @@ build_static_map = function(english=TRUE){
     
     # output path
     fout = './static_map/whale_map_fr.html'
+  } else {
+    stop('Unknown type! Please choose from \'whalemap\', \'dfo-en\', or \'dfo-fr\' ')
   }
   
   # setup -------------------------------------------------------------------
@@ -204,7 +210,7 @@ build_static_map = function(english=TRUE){
     addTiles(urlTemplate = can_basemap_url, group = basemap_grp) %>%
     addTiles(urlTemplate = can_labels_url, group = basemap_grp,
              attribution = paste0('<a href=\"', can_attribution_url, '\">', can_attribution_txt, '</a>')) %>%
-  
+    
     # add other provider tiles
     addProviderTiles(providers$CartoDB.PositronNoLabels, group=blank_grp) %>%
     addProviderTiles(providers$Esri.OceanBasemap, group=oceanmap_grp) %>%
@@ -217,10 +223,29 @@ build_static_map = function(english=TRUE){
                  '<small>', date_title,'<br>',
                  format(t0, '%Y-%m-%d'), ' - ',
                  format(t1, '%Y-%m-%d'), '</small>',
-                 '</div>')) %>%
-    
-    # layer control
-    addLayersControl(
+                 '</div>'))
+  
+  # layer control
+  if(type == 'whalemap'){
+    map <- map %>% addLayersControl(
+      baseGroups = c(
+        oceanmap_grp,
+        basemap_grp,
+        blank_grp
+      ),
+      overlayGroups = c(survey_grp,
+                        robot_grp,
+                        rw_grp,
+                        mpa_grp,
+                        tss_grp,
+                        static_speed_grp,
+                        dynamic_speed_grp,
+                        static_fish_grp,
+                        forage_areas_grp
+      ),
+      options = layersControlOptions(collapsed = TRUE), position = 'topright')
+  } else {
+    map <- map %>% addLayersControl(
       baseGroups = c(
         basemap_grp,
         blank_grp,
@@ -236,16 +261,17 @@ build_static_map = function(english=TRUE){
                         static_fish_grp,
                         forage_areas_grp
       ),
-      options = layersControlOptions(collapsed = TRUE), position = 'topright') %>%
-    
-    # hide groups
-    hideGroup(c(survey_grp,
-                graticules_grp,
-                robot_grp,
-                static_speed_grp,
-                dynamic_speed_grp,
-                static_fish_grp,
-                forage_areas_grp)) %>%
+      options = layersControlOptions(collapsed = TRUE), position = 'topright')
+  }
+  
+  # hide groups
+  map <- map %>% hideGroup(c(survey_grp,
+                     graticules_grp,
+                     robot_grp,
+                     static_speed_grp,
+                     dynamic_speed_grp,
+                     static_fish_grp,
+                     forage_areas_grp)) %>%
     
     # add legend
     addLegend(position = "bottomright",
@@ -288,8 +314,8 @@ build_static_map = function(english=TRUE){
   # plot static speed reduction zone
   map <- map %>%
     addPolylines(data=static_shipping_zone, group = static_speed_grp,
-                options = pathOptions(clickable = F), weight = 3, 
-                color = 'red')
+                 options = pathOptions(clickable = F), weight = 3, 
+                 color = 'red')
   
   # plot dynamic speed reduction zone
   map <- map %>%
@@ -371,6 +397,7 @@ build_static_map = function(english=TRUE){
 }
 
 # build english map
-suppressWarnings(build_static_map(english = TRUE))
-suppressWarnings(build_static_map(english = FALSE))
+suppressWarnings(build_static_map(type = 'whalemap'))
+suppressWarnings(build_static_map(type = 'dfo-en'))
+suppressWarnings(build_static_map(type = 'dfo-fr'))
 
