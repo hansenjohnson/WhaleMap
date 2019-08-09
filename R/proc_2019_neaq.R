@@ -37,7 +37,11 @@ for(i in seq_along(flist)){
   } else {
     itz = 'America/Halifax'
     ivs = 'jdmartin'
-    tmp$time = as.POSIXct(tmp$Time, format = '%Y-%m-%dT%H:%M:%S', tz = itz)
+    if(length(grep(pattern = ' ', x = as.character(tmp$Time[1])))==1){
+      tmp$time = as.POSIXct(as.character(tmp$Time), tz = itz)
+    } else {
+      tmp$time = as.POSIXct(tmp$Time, format = '%Y-%m-%dT%H:%M:%S', tz = itz)  
+    }
   }
   
   # wrangle time
