@@ -16,6 +16,7 @@ suppressPackageStartupMessages(library(shinydashboard))
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(plotly))
 suppressPackageStartupMessages(library(leaflet.extras))
+suppressPackageStartupMessages(library(shinybusy))
 source('R/functions.R')
 
 # definitions -------------------------------------------------------------
