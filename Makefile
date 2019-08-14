@@ -37,6 +37,8 @@ data/processed/tracks.rds : R/proc_tracks.R \
 														data/interim/2019_mics_tracks.rds \
 														data/interim/2019_neaq_tracks.rds \
 														data/interim/2019_dfo_viking_tracks.rds \
+														data/interim/2019_dfo_cp_tracks.rds \
+														data/interim/2019_dfo_twin_otter_tracks.rds \
 														data/interim/dcs_archived_tracks.rds \
 														data/interim/dcs_live_tracks.rds
 	$(report_error)
@@ -195,6 +197,18 @@ data/interim/2019_neaq_tracks.rds : R/proc_2019_neaq.R data/raw/2019_neaq/*.csv
 
 # 2019 DFO viking tracks
 data/interim/2019_dfo_viking_tracks.rds : R/proc_2019_dfo_viking.R data/raw/2019_whalemapdata/DFO_viking_buoys/*.csv
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2019 DFO C&P tracks
+data/interim/2019_dfo_cp_tracks.rds : R/proc_2019_dfo_cp_tracks.R data/raw/2019_whalemapdata/DFO_CP_NARWFlights/*/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2019 DFO twin otter tracks
+data/interim/2019_dfo_twin_otter_tracks.rds : R/proc_2019_dfo_twin_otter_tracks.R data/raw/2019_whalemapdata/DFO_twin_otter/*/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
