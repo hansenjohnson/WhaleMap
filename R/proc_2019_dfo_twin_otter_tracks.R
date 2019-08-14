@@ -20,6 +20,9 @@ suppressPackageStartupMessages(library(lubridate))
 # functions
 source('R/functions.R')
 
+# plot tracks?
+plot_tracks = !on_server()
+
 # list files to process
 flist = list.files(data_dir, pattern = '(\\d{8}).csv', full.names = T, recursive = T, ignore.case = T)
 
