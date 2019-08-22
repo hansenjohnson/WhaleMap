@@ -20,7 +20,8 @@ spp_key = data.frame(
   species = c('fin', 'right', 'minke', 'sei', 'humpback', 'harbor porpoise', 'grey seal','pilot whale'))
 
 # list data files
-flist = list.files(data_dir, pattern = '\\d{4}-\\d{2}-\\d{2}-*', full.names = T)
+flist = list.files(data_dir, pattern = '\\d{4}-\\d{2}-\\d{2}-', full.names = T, include.dirs = F)
+flist = flist[grep(flist, pattern = ".csv$")]
 
 TRK = SIG = vector('list', length = length(flist))
 for(i in seq_along(flist)){
