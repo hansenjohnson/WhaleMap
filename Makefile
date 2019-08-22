@@ -35,7 +35,7 @@ data/processed/tracks.rds : R/proc_tracks.R \
 														data/interim/2019_tc_dash8_tracks.rds \
 														data/interim/2019_tc_dash7_tracks.rds \
 														data/interim/2019_mics_tracks.rds \
-														data/interim/2019_neaq_tracks.rds \
+														# data/interim/2019_neaq_tracks.rds
 														data/interim/2019_dfo_viking_tracks.rds \
 														data/interim/2019_dfo_cp_tracks.rds \
 														data/interim/2019_dfo_twin_otter_tracks.rds \
@@ -190,10 +190,10 @@ data/interim/2019_mics_tracks.rds : R/proc_2019_mics_tracks.R data/raw/2019_mics
 	$(remove_error)
 
 # 2019 NEAq tracks
-data/interim/2019_neaq_tracks.rds : R/proc_2019_neaq.R data/raw/2019_neaq/*.csv
-	$(report_error)
-	Rscript $<
-	$(remove_error)
+#data/interim/2019_neaq_tracks.rds : R/proc_2019_neaq.R data/raw/2019_neaq/*.csv
+#	$(report_error)
+#	Rscript $<
+#	$(remove_error)
 
 # 2019 DFO viking tracks
 data/interim/2019_dfo_viking_tracks.rds : R/proc_2019_dfo_viking.R data/raw/2019_whalemapdata/DFO_viking_buoys/*.csv
@@ -253,7 +253,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2019_tc_dash8_sightings.rds \
 																	data/interim/2019_tc_dash7_sightings.rds \
 																	data/interim/2019_mics_sightings.rds \
-																	data/interim/2019_neaq_sightings.rds \
+																	# data/interim/2019_neaq_sightings.rds
 																	data/interim/2019_dfo_viking_detections.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
@@ -397,10 +397,10 @@ data/interim/2019_mics_sightings.rds : R/proc_2019_mics_sightings.R data/raw/201
 	$(remove_error)
 
 # 2019 NEAQ sightings
-data/interim/2019_neaq_sightings.rds : R/proc_2019_neaq.R data/raw/2019_neaq/*.csv
-	$(report_error)
-	Rscript $<
-	$(remove_error)
+#data/interim/2019_neaq_sightings.rds : R/proc_2019_neaq.R data/raw/2019_neaq/*.csv
+#	$(report_error)
+#	Rscript $<
+#	$(remove_error)
 
 # # NOAA SAS map sightings
 # data/interim/sas_sightings.rds : R/proc_sas.R data/raw/sas/*
