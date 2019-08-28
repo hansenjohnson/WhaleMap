@@ -16,6 +16,7 @@ output_dir = 'data/interim/'
 
 # libraries
 suppressPackageStartupMessages(library(lubridate))
+suppressPackageStartupMessages(library(rgdal))
 
 # functions
 source('R/functions.R')
@@ -24,7 +25,7 @@ source('R/functions.R')
 plot_tracks = !on_server()
 
 # list files to process
-flist = list.files(data_dir, pattern = '(\\d{8}).csv', full.names = T, recursive = T, ignore.case = T)
+flist = list.files(data_dir, pattern = '(^\\d{8})', full.names = T, recursive = T, ignore.case = T)
 
 # list to hold loop output
 TRK = vector('list', length = length(flist))
@@ -40,18 +41,43 @@ if(length(flist!=0)){
       next
     }
     
-    # read in file
-    tmp = read.csv(flist[i])
+    if(length(grep(pattern = '.csv$', x = flist[i]))==1){
+      
+      # read in file
+      tmp = read.csv(flist[i])
+      
+      # dummy variable for speed and altitude
+      tmp$speed = NA
+      tmp$altitude = NA
+      
+      # select and rename important columns
+      colnames(tmp) = c('lat', 'lon', 'time', 'speed', 'altitude')
+      
+      # add timestamp
+      tmp$time = as.POSIXct(tmp$time, format = '%Y-%m-%dT%H:%M:%S', tz = 'UTC')
     
-    # dummy variable for speed and altitude
-    tmp$speed = NA
-    tmp$altitude = NA
-    
-    # select and rename important columns
-    colnames(tmp) = c('lat', 'lon', 'time', 'speed', 'altitude')
-    
-    # add timestamp
-    tmp$time = as.POSIXct(tmp$time, format = '%Y-%m-%dT%H:%M:%S', tz = 'UTC')
+    } else {
+      
+      # read in file
+      tmp = readOGR(dsn = flist[i], layer="track_points", verbose = F)
+      
+      # convert to data frame
+      tmp = as.data.frame(tmp)
+      
+      # dummy variable for speed
+      tmp$speed = NA
+      
+      # select and rename important columns
+      tmp = data.frame(tmp$time, tmp$coords.x1, tmp$coords.x2, tmp$speed, tmp$ele)
+      colnames(tmp) = c('time', 'lon', 'lat', 'speed', 'altitude')
+      
+      # remove columns without timestamp
+      tmp = tmp[which(!is.na(tmp$time)),]
+      
+      # add timestamp
+      tmp$time = as.POSIXct(tmp$time, format = '%Y/%m/%d %H:%M:%OS', tz = 'UTC')
+      
+    }
     
     # subsample (use default subsample rate)
     tracks = subsample_gps(gps = tmp)
