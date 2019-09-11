@@ -26,7 +26,9 @@ source('R/functions.R')
 plot_tracks = !on_server()
 
 # list files to process
-flist = list.files(data_dir, pattern = '.gpx', full.names = T, recursive = T, ignore.case = T)
+flist_gpx = list.files(data_dir, pattern = '.gpx', full.names = T, recursive = T, ignore.case = T)
+flist_kml = list.files(data_dir, pattern = '.kml', full.names = T, recursive = T, ignore.case = T)
+flist = c(flist_gpx,flist_kml)
 
 # list to hold loop output
 TRK = vector('list', length = length(flist))
@@ -42,21 +44,56 @@ if(length(flist!=0)){
       next
     }
     
-    # read in file
-    tmp = readOGR(dsn = flist[i], layer="track_points", verbose = F)
+    if(length(grep(pattern = '.gpx$', x = flist[i]))==1){
+      
+      # read in file
+      tmp = readOGR(dsn = flist[i], layer="track_points", verbose = F)
+      
+      # convert to data frame
+      tmp = as.data.frame(tmp)
+      
+      # dummy variable for speed
+      tmp$speed = NA
+      
+      # select and rename important columns
+      tmp = data.frame(tmp$time, tmp$coords.x1, tmp$coords.x2, tmp$speed, tmp$ele)
+      colnames(tmp) = c('time', 'lon', 'lat', 'speed', 'altitude')
+      
+      # add timestamp
+      tmp$time = as.POSIXct(tmp$time, format = '%Y/%m/%d %H:%M:%OS', tz = 'UTC')
+      
+    } else {
+      
+      # read in kml file
+      kml_text = suppressWarnings(readLines(flist[i]))
+      
+      # find coordinates and timestamps
+      icoords = grep("*([^<]+?) *<\\/gx:coord>",kml_text)  
+      itimes = grep("*([^<]+?) *<\\/when>"  ,kml_text)  
+      
+      # extract coordinates
+      crd = gsub(pattern = "</gx:coord>",replacement = "", x = kml_text[icoords])
+      crd = gsub(pattern = "<gx:coord>",replacement = "", x = crd)
+      crd = trimws(crd, which = 'both')
+      crd = strsplit(crd," ")
+      tmp = as.data.frame(do.call(rbind,crd))
+      colnames(tmp) = c('lon', 'lat', 'altitude')
+      tmp$lon = as.numeric(as.character(tmp$lon))
+      tmp$lat = as.numeric(as.character(tmp$lat))
+      tmp$altitude = as.numeric(as.character(tmp$altitude))
+      
+      # extract times
+      tim = gsub(pattern = "</when>",replacement = "", x = kml_text[itimes])
+      tim = gsub(pattern = "<when>",replacement = "", x = tim)
+      tim = trimws(tim, which = 'both')
+      tmp$time = as.POSIXct(tim, format = '%Y-%m-%dT%H:%M:%S', tz = 'UTC')
     
-    # convert to data frame
-    tmp = as.data.frame(tmp)
+      # dummy variable for speed
+      tmp$speed = NA
     
-    # dummy variable for speed
-    tmp$speed = NA
-    
-    # select and rename important columns
-    tmp = data.frame(tmp$time, tmp$coords.x1, tmp$coords.x2, tmp$speed, tmp$ele)
-    colnames(tmp) = c('time', 'lon', 'lat', 'speed', 'altitude')
-    
-    # add timestamp
-    tmp$time = as.POSIXct(tmp$time, format = '%Y/%m/%d %H:%M:%OS', tz = 'UTC')
+      # quick plot
+      # plot_track(tmp)
+    }
     
     # subsample (use default subsample rate)
     tracks = subsample_gps(gps = tmp)
@@ -73,10 +110,10 @@ if(length(flist!=0)){
     tracks$name = 'dfo_cp'
     tracks$id = paste(tracks$date, tracks$platform, tracks$name, sep = '_')
     
-    # plot track
-    if(plot_tracks){
-      plot_save_track(tracks, flist[i])
-    }
+    # # plot track
+    # if(plot_tracks){
+    #   plot_save_track(tracks, flist[i])
+    # }
     
     # add to list
     TRK[[i]] = tracks
