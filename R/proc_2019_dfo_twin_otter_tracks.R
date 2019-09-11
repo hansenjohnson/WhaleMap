@@ -25,7 +25,7 @@ source('R/functions.R')
 plot_tracks = !on_server()
 
 # list files to process
-flist = list.files(data_dir, pattern = '(^\\d{8})', full.names = T, recursive = T, ignore.case = T)
+flist = list.files(data_dir, pattern = '(^\\d{8}....$)', full.names = T, recursive = T, ignore.case = T)
 
 # list to hold loop output
 TRK = vector('list', length = length(flist))
