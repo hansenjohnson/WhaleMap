@@ -202,7 +202,7 @@ data/interim/2019_dfo_viking_tracks.rds : R/proc_2019_dfo_viking.R data/raw/2019
 	$(remove_error)
 
 # 2019 DFO C&P tracks
-data/interim/2019_dfo_cp_tracks.rds : R/proc_2019_dfo_cp_tracks.R data/raw/2019_whalemapdata/DFO_CP_NARWFlights/*/*
+data/interim/2019_dfo_cp_tracks.rds : R/proc_2019_dfo_cp_tracks.R data/raw/2019_whalemapdata/DFO_CP_NARWFlights/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
