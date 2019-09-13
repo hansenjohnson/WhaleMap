@@ -152,9 +152,9 @@ build_static_map = function(type = 'whalemap'){
   }
   
   # hidden platforms
-  hidden_platforms = c('jasco_test', 'VIKING-AZMP-ESG', 
-                       'VIKING-BP', 'VIKING-IML-BA', 'VIKING-IML7', 
-                       'VIKING-PMZA-VAS')
+  hidden_platforms = c('jasco_test', 'dfo_viking_AZMP-ESG', 
+                       'dfo_viking_BP', 'dfo_viking_IML-BA', 'dfo_viking_IML7', 
+                       'dfo_viking_PMZA-VAS')
   
   # create destination directory
   outdir = dirname(fout)
