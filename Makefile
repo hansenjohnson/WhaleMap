@@ -409,7 +409,7 @@ data/interim/2019_neaq_sightings.rds : R/proc_2019_neaq.R data/raw/2019_neaq/*.c
 # 	$(remove_error)
 
 # 2019 DFO viking detections
-data/interim/2019_dfo_viking_detections.rds : R/proc_2019_dfo_viking.R data/raw/2019_whalemapdata/DFO_viking_buoys/*.csv
+data/interim/2019_dfo_viking_detections.rds : R/proc_live_viking.R data/raw/viking/live.json
 	$(report_error)
 	Rscript $<
 	$(remove_error)

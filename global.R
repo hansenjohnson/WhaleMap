@@ -110,9 +110,9 @@ graticule_ints = list(
 )
 
 # hidden platforms
-hidden_platforms = c('cp_king_air', 'jasco_test', 'VIKING-AZMP-ESG', 
-                     'VIKING-BP', 'VIKING-IML-BA', 'VIKING-IML7', 
-                     'VIKING-PMZA-VAS')
+hidden_platforms = c('cp_king_air', 'jasco_test', 'dfo_viking_AZMP-ESG', 
+                     'dfo_viking_BP', 'dfo_viking_IML-BA', 'dfo_viking_IML7', 
+                     'dfo_viking_PMZA-VAS')
 
 # load data ---------------------------------------------------------------
 
