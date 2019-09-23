@@ -8,7 +8,7 @@ vik_file = 'data/interim/2019_dfo_viking_tracks.rds'
 outfile = 'data/processed/dcs_live_latest_position.rds'
 
 # process viking
-proc_viking = FALSE
+proc_viking = TRUE
 
 # setup -------------------------------------------------------------------
 
