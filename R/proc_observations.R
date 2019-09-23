@@ -18,7 +18,7 @@ for(ii in seq_along(obs_list)){
 obs = suppressWarnings(bind_rows(OBS))
 
 # remove duplicates
-obs = obs[!duplicated(obs[,c('lat', 'lon', 'date', 'species', 'number')]),]
+obs = obs[!duplicated(obs[,c('lat', 'lon', 'date', 'time', 'species', 'number')]),]
 
 # select only focal species, and reset factor levels
 obs = obs[obs$species %in% c('right', 'fin', 'sei', 'humpback', 'blue'),]
