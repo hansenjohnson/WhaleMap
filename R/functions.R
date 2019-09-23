@@ -436,7 +436,7 @@ subset_canadian = function(df,
   return(out)
 }
 
-find_latest = function(infile){
+find_latest = function(infile, remove_old = TRUE){
 # find latest track position  
   
   # read in data
@@ -455,4 +455,15 @@ find_latest = function(infile){
   
   # flatten list
   latest = do.call(rbind,latest)
+  
+  # remove positions more than 2 weeks old
+  if(remove_old){
+    # find platforms
+    old = which(abs(as.numeric(latest$date) - as.numeric(Sys.Date())) > 14)
+    # print warning
+    message("Removing ", length(old), " platform(s) from live DCS list because their latest reported positions are more than 14 days old. The platform(s) ids are:\n", paste(latest$id[old], collapse = '\n'))
+    # remove
+    latest = latest[-c(old),]
+  }
+  
 }
