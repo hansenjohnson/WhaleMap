@@ -421,7 +421,11 @@ function(input, output, session){
         secondaryAreaUnit="acres", 
         activeColor = "#006622",
         completedColor = "#004d1a",
-        position = 'bottomleft')
+        position = 'bottomleft') 
+    
+      # addControlGPS(options = gpsOptions(position = "topleft", activate = FALSE, 
+      #                                              autoCenter = TRUE, maxZoom = 8, 
+      #                                              setView = TRUE))
   })
   
   # tile observer ------------------------------------------------------  
@@ -454,6 +458,27 @@ function(input, output, session){
              hideGroup(proxy, 'graticules'))
     }
     
+  })
+  
+  # noaa charts ------------------------------------------------------
+  
+  observe(priority = 4, {
+
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('noaa')
+
+    if(input$noaa){
+
+      # add noaa charts
+      proxy %>%
+        addTiles(urlTemplate = '//tileservice.charts.noaa.gov/tiles/50000_1/{z}/{x}/{y}.png', group = 'noaa')
+
+      # switch to show/hide
+      ifelse(input$noaa, showGroup(proxy, 'noaa'),
+             hideGroup(proxy, 'noaa'))
+    }
+
   })
   
   # critical habitat zone ------------------------------------------------------  
