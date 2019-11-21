@@ -40,7 +40,7 @@ if(length(flist!=0)){
   # read files
   for(i in seq_along(flist)){
     
-    if(file.size(flist[i])<51200){
+    if(file.size(flist[i])<100){
       next
     }
     
@@ -67,30 +67,49 @@ if(length(flist!=0)){
       # read in kml file
       kml_text = suppressWarnings(readLines(flist[i]))
       
-      # find coordinates and timestamps
-      icoords = grep("*([^<]+?) *<\\/gx:coord>",kml_text)  
-      itimes = grep("*([^<]+?) *<\\/when>"  ,kml_text)  
+      if(length(grep(pattern = 'coordinates', x = kml_text))==0){
+        
+        # find coordinates and timestamps
+        icoords = grep("*([^<]+?) *<\\/gx:coord>",kml_text)  
+        itimes = grep("*([^<]+?) *<\\/when>"  ,kml_text)  
+        
+        # extract coordinates
+        crd = gsub(pattern = "</gx:coord>",replacement = "", x = kml_text[icoords])
+        crd = gsub(pattern = "<gx:coord>",replacement = "", x = crd)
+        crd = trimws(crd, which = 'both')
+        crd = strsplit(crd," ")
+        tmp = as.data.frame(do.call(rbind,crd))
+        colnames(tmp) = c('lon', 'lat', 'altitude')
+        tmp$lon = as.numeric(as.character(tmp$lon))
+        tmp$lat = as.numeric(as.character(tmp$lat))
+        tmp$altitude = as.numeric(as.character(tmp$altitude))
+        
+        # extract times
+        tim = gsub(pattern = "</when>",replacement = "", x = kml_text[itimes])
+        tim = gsub(pattern = "<when>",replacement = "", x = tim)
+        tim = trimws(tim, which = 'both')
+        tmp$time = as.POSIXct(tim, format = '%Y-%m-%dT%H:%M:%S', tz = 'UTC')
+        
+        # dummy variable for speed
+        tmp$speed = NA
+        
+      } else {
+        
+        # read in kml file
+        tmp = readOGR(dsn = flist[i], verbose = F, pointDropZ = FALSE)
+        
+        # extract coordinates
+        tmp = as.data.frame(coordinates(tmp))
+        
+        # name columns
+        colnames(tmp) = c('lon', 'lat')
+        
+        # add dummy variables for time and speed
+        tmp$time = NA
+        tmp$speed = NA
+        
+      }
       
-      # extract coordinates
-      crd = gsub(pattern = "</gx:coord>",replacement = "", x = kml_text[icoords])
-      crd = gsub(pattern = "<gx:coord>",replacement = "", x = crd)
-      crd = trimws(crd, which = 'both')
-      crd = strsplit(crd," ")
-      tmp = as.data.frame(do.call(rbind,crd))
-      colnames(tmp) = c('lon', 'lat', 'altitude')
-      tmp$lon = as.numeric(as.character(tmp$lon))
-      tmp$lat = as.numeric(as.character(tmp$lat))
-      tmp$altitude = as.numeric(as.character(tmp$altitude))
-      
-      # extract times
-      tim = gsub(pattern = "</when>",replacement = "", x = kml_text[itimes])
-      tim = gsub(pattern = "<when>",replacement = "", x = tim)
-      tim = trimws(tim, which = 'both')
-      tmp$time = as.POSIXct(tim, format = '%Y-%m-%dT%H:%M:%S', tz = 'UTC')
-    
-      # dummy variable for speed
-      tmp$speed = NA
-    
       # quick plot
       # plot_track(tmp)
     }
