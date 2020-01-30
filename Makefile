@@ -39,6 +39,7 @@ data/processed/tracks.rds : R/proc_tracks.R \
 														data/interim/2019_dfo_viking_tracks.rds \
 														data/interim/2019_dfo_cp_tracks.rds \
 														data/interim/2019_dfo_twin_otter_tracks.rds \
+														data/interim/2020_noaa_twin_otter_tracks.rds \
 														data/interim/dcs_archived_tracks.rds \
 														data/interim/dcs_live_tracks.rds
 	$(report_error)
@@ -213,6 +214,12 @@ data/interim/2019_dfo_twin_otter_tracks.rds : R/proc_2019_dfo_twin_otter_tracks.
 	Rscript $<
 	$(remove_error)
 
+# 2020 NOAA twin otter tracks
+data/interim/2020_noaa_twin_otter_tracks.rds : R/proc_2020_noaa_twin_otter.R data/raw/2020_noaa_twin_otter/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
 # DCS archived tracks
 data/interim/dcs_archived_tracks.rds : R/proc_archived_dcs.R data/raw/dcs/archived/*/*
 	$(report_error)
@@ -255,6 +262,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2019_mics_sightings.rds \
 																	data/interim/2019_neaq_sightings.rds \
 																	data/interim/2019_dfo_viking_detections.rds \
+																	data/interim/2020_noaa_twin_otter_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
 
@@ -410,6 +418,12 @@ data/interim/2019_neaq_sightings.rds : R/proc_2019_neaq.R data/raw/2019_neaq/*.c
 
 # 2019 DFO viking detections
 data/interim/2019_dfo_viking_detections.rds : R/proc_live_viking.R data/raw/viking/live.json
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2020 noaa twin otter sightings
+data/interim/2020_noaa_twin_otter_sightings.rds : R/proc_2020_noaa_twin_otter.R data/raw/2020_noaa_twin_otter/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)

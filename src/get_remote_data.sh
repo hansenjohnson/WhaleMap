@@ -29,20 +29,16 @@ rclone sync whalemapdata:"WhaleMapData_Master/2019/" "2019_whalemapdata/" --driv
 
 # Sync NOAA aerial data Google drive
 printf "\n*** Checking NOAA Google Drive ***\n\n"
-# printf "2018 Flight data \n\n"
-# rclone sync drive:"2018/2018 NEFSC Survey Data/Flights/" "2018_noaa_twin_otter/" --drive-skip-gdocs --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
-# printf "2018 Sonobuoy data \n\n"
-# rclone sync drive:"2018/2018 Sonobuoy recordings/sonobuoy_metadata/" "noaa_sonobuoys/" --drive-formats csv --backup-dir backups -v --exclude *.wav --exclude *.txt
-printf "2019 Flight data \n\n"
-rclone sync drive:"2019/2019 NEFSC Survey Data/Flights/" "2019_noaa_twin_otter/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
+printf "2020 Flight data \n\n"
+rclone sync drive:"WhaleMap" "2020_noaa_twin_otter/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
 # Sync NEAq vessel data Dropbox
-printf "\n*** Checking NEAq CWI Dropbox ***\n\n"
-rclone sync dropbox:"NEAq 2019 Survey Data (prior to QC))" "2019_neaq/" --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
+# printf "\n*** Checking NEAq CWI Dropbox ***\n\n"
+# rclone sync dropbox:"NEAq 2019 Survey Data (prior to QC))" "2019_neaq/" --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
 # Sync MICS 2019 vessel data Google
-printf "\n*** Checking MICS Drive ***\n\n"
-rclone sync drive:"Right Whale data 2019" "2019_mics/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
+# printf "\n*** Checking MICS Drive ***\n\n"
+# rclone sync drive:"Right Whale data 2019" "2019_mics/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
 # Sync JASCO server
 # printf "\n*** Checking JASCO Server ***\n\n"
