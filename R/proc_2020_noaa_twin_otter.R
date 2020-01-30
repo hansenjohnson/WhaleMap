@@ -10,6 +10,9 @@ data_dir = 'data/raw/2020_noaa_twin_otter/'
 track_file = '2020_noaa_twin_otter_tracks.rds'
 sighting_file = '2020_noaa_twin_otter_sightings.rds'
 
+# email file
+email_file = 'WhaleMap_email_list.csv'
+
 # output directory
 output_dir = 'data/interim/'
 
@@ -35,6 +38,11 @@ for(i in seq_along(flist)){
   
   # isolate file
   ifile = flist[i]
+  
+  # skip email file
+  if(basename(ifile) == email_file){
+    next
+  }
   
   # determine file extension
   ext = file_ext(ifile)
