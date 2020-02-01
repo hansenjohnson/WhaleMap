@@ -23,6 +23,7 @@ URL=(
 	[2020-01-14_slocum_we04]=http://dcs.whoi.edu/sbnms0120/sbnms0120_we04_html/ptracks/manual_analysis.csv
 	[2020-01-15_buoy_nybnw]=http://dcs.whoi.edu/nybnw0120/nybnw0120_buoy_html/ptracks/manual_analysis.csv
 	[2020-01-15_buoy_nybse]=http://dcs.whoi.edu/nybse0120/nybse0120_buoy_html/ptracks/manual_analysis.csv
+	[2020-01-30_slocum_we14]=http://dcs.whoi.edu/hatteras0120/hatteras0120_we14_html/ptracks/manual_analysis.csv
 )
 
 # download data
