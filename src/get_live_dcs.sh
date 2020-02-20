@@ -1,5 +1,5 @@
 #!/bin/bash
-# download live LFDCS detections, then process using R script
+# download live LFDCS detections
 
 # Extract OS name
 unamestr=`uname`
