@@ -30,14 +30,14 @@ function(input, output, session){
            
            'multiyear' = list(
              sliderInput('date', label = NULL, 
-                         min = as.Date('2019-01-01'), 
-                         max = as.Date('2019-12-31'),
+                         min = as.Date('2020-01-01'), 
+                         max = as.Date('2020-12-31'),
                          value = c(Sys.Date()-tlag, Sys.Date()), 
                          step = 1,
                          timeFormat = '%b-%d',
                          animate = F),
-             selectInput('years', label = NULL, choices = seq(2014,2019,1), 
-                         selected = 2019, multiple = TRUE, selectize = TRUE)
+             selectInput('years', label = NULL, choices = seq(2014,2020,1), 
+                         selected = 2020, multiple = TRUE, selectize = TRUE)
            )
     )
   })
