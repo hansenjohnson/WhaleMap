@@ -30,7 +30,7 @@ spp_key = data.frame(
 # process -----------------------------------------------------------------
 
 # read in file
-tmp = read_csv(ifile, col_types = cols())
+tmp = suppressWarnings(read_csv(ifile, col_types = cols()))
 
 # wrangle time
 tmp$time = as.POSIXct(paste0(tmp$DATE_LOCAL, ' ', tmp$TIME_LOCAL), format = '%d-%b-%y %H:%M:%S', tz = 'America/New_York', usetz = T)
