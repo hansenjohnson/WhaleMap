@@ -65,7 +65,7 @@ sig$number = as.numeric(sig$number)
 # survey data -------------------------------------------------------------
 
 # isolate survey data
-noaa = sig[sig$platform=='NOAA Twin Otter',]
+# noaa = sig[sig$platform=='NOAA Twin Otter',]
 she = sig[sig$platform=='CWI- the Shelagh',]
 tc = sig[sig$platform=='TC-Dash 8',]
 cnp = sig[sig$platform=='C&P plane (DFO)'|sig$platform=='C&P plane',]
@@ -74,7 +74,7 @@ neaq = sig[sig$platform=='Nereid -NEAq',]
 # mics = sig[sig$platform=='MICS',]
 
 # clean and save survey data
-clean_sig(noaa, 'plane', 'noaa_twin_otter')
+# clean_sig(noaa, 'plane', 'noaa_twin_otter')
 clean_sig(she, 'vessel', 'shelagh')
 clean_sig(tc, 'plane', 'tc_dash8')
 clean_sig(cnp, 'plane', 'cnp')

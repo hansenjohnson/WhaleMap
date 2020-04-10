@@ -4,7 +4,7 @@ remove_error = @bash src/remove_error.sh $<
 
 ## ALL ##
 .PHONY : all
-all : tracks obs sono latest tss gis map
+all : tracks obs latest tss gis map
 
 ## TRACKS ##
 .PHONY : tracks
@@ -12,19 +12,17 @@ tracks : data/processed/tracks.rds
 
 # Combine all tracks
 data/processed/tracks.rds : R/proc_tracks.R \
-														data/interim/narwc_tracks.rds \
+														data/interim/nefsc_historical_tracks.rds \
 														data/interim/2015-2017_mics_tracks.rds \
 														data/interim/2016_shelagh_tracks.rds \
 														data/interim/2017_shelagh_tracks.rds \
 														data/interim/2017_dfo_twin_otter_tracks.rds \
-														data/interim/2017_noaa_twin_otter_tracks.rds \
 														data/interim/2017_tc_dash8_tracks.rds \
 														data/interim/2018_dfo_twin_otter_tracks.rds \
 														data/interim/2018_dfo_partenavia_tracks.rds \
 														data/interim/2018_dfo_cessna_tracks.rds \
 														data/interim/2018_tc_dash7_tracks.rds \
 														data/interim/2018_tc_dash8_tracks.rds \
-														data/interim/2018_noaa_twin_otter_tracks.rds \
 														data/interim/2018_neaq_nereid_tracks.rds \
 														data/interim/2018_cwi_jdmartin_tracks.rds \
 														data/interim/2018_mics_tracks.rds \
@@ -46,8 +44,8 @@ data/processed/tracks.rds : R/proc_tracks.R \
 	Rscript $<
 	$(remove_error)
 
-# historical Canadian NARWC data [add rds to dependency list above!]
-data/interim/narwc_tracks.rds : R/proc_narwc.R data/raw/narwc/*
+# historical NEFSC tracks
+data/interim/nefsc_historical_tracks.rds : R/proc_nefsc_historical.R data/raw/nefsc/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
@@ -72,12 +70,6 @@ data/interim/2017_shelagh_tracks.rds : R/proc_2017_shelagh_tracks.R data/raw/201
 
 # 2017 DFO twin otter tracks
 data/interim/2017_dfo_twin_otter_tracks.rds : R/proc_2017_dfo_twin_otter_tracks.R data/raw/2017_dfo_twin_otter_tracks/*
-	$(report_error)
-	Rscript $<
-	$(remove_error)
-
-# 2017 NOAA twin otter tracks
-data/interim/2017_noaa_twin_otter_tracks.rds : R/proc_2017_noaa_twin_otter_tracks.R data/raw/2017_noaa_twin_otter/edit_data/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
@@ -123,12 +115,6 @@ data/interim/2018_tc_dash8_tracks.rds : R/proc_2018_tc_dash8_tracks.R data/raw/2
 	# $(report_error)
 	# Rscript $<
 	# $(remove_error)
-
-# 2018 NOAA twin otter tracks
-data/interim/2018_noaa_twin_otter_tracks.rds : R/proc_2018_noaa_twin_otter.R data/raw/2018_noaa_twin_otter/edit_data/*
-	$(report_error)
-	Rscript $<
-	$(remove_error)
 
 # 2018 NEAq nereid tracks
 data/interim/2018_neaq_nereid_tracks.rds : R/proc_2018_neaq_nereid.R data/raw/2018_neaq_cwi/*
@@ -238,7 +224,7 @@ obs : data/processed/observations.rds
 
 # Combine all sightings
 data/processed/observations.rds : R/proc_observations.R \
-																	data/interim/narwc_sightings.rds \
+																	data/interim/nefsc_historical_sightings.rds \
 																	data/interim/2015-2017_mics_sightings.rds \
 																	data/interim/2016_shelagh_sightings.rds \
 																	data/interim/2017_*_sightings.rds \
@@ -249,7 +235,6 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2018_tc_dash8_sightings.rds \
 																	data/interim/2018_dfo_partenavia_sightings.rds \
 																	data/interim/2018_dfo_cessna_sightings.rds \
-																	data/interim/2018_noaa_twin_otter_sightings.rds \
 																	data/interim/2018_neaq_nereid_sightings.rds \
 																	data/interim/2018_cwi_jdmartin_sightings.rds \
 																	data/interim/2018_dfo_cetus_sightings.rds \
@@ -270,8 +255,8 @@ data/processed/observations.rds : R/proc_observations.R \
 	Rscript $<
 	$(remove_error)
 
-# historical Canadian NARWC sightings [add rds to dependency list above!]
-data/interim/narwc_sightings.rds : R/proc_narwc.R data/raw/narwc/*
+# historical NEFSC sightings
+data/interim/nefsc_historical_sightings.rds : R/proc_nefsc_historical.R data/raw/nefsc/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
@@ -289,11 +274,9 @@ data/interim/2016_shelagh_sightings.rds : R/proc_2016_shelagh.R data/raw/2016_sh
 	$(remove_error)
 
 # 2017 sightings
-data/interim/2017_*_sightings.rds : R/proc_2017_sightings.R data/raw/2017_sightings/* \
-																		R/proc_2017_noaa_twin_otter_sightings.R data/raw/2017_noaa_twin_otter/canada2017_ap.csv
+data/interim/2017_*_sightings.rds : R/proc_2017_sightings.R data/raw/2017_sightings/*
 	$(report_error)
-	Rscript R/proc_2017_sightings.R
-	Rscript R/proc_2017_noaa_twin_otter_sightings.R
+	Rscript R/proc_2017_sightings.R	
 	$(remove_error)
 
 # 2018 opportunistic sightings
@@ -334,12 +317,6 @@ data/interim/2018_dfo_partenavia_sightings.rds : R/proc_2018_dfo_partenavia_sigh
 
 # 2018 dfo cessna sightings
 data/interim/2018_dfo_cessna_sightings.rds : R/proc_2018_dfo_cessna_sightings.R data/raw/2018_whalemapdata/DFO_cessna/*
-	$(report_error)
-	Rscript $<
-	$(remove_error)
-
-# 2018 noaa twin otter sightings
-data/interim/2018_noaa_twin_otter_sightings.rds : R/proc_2018_noaa_twin_otter.R data/raw/2018_noaa_twin_otter/edit_data/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
@@ -436,17 +413,6 @@ data/interim/dcs_archived_detections.rds : R/proc_archived_dcs.R data/raw/dcs/ar
 
 # DCS live detections
 data/interim/dcs_live_detections.rds : R/proc_live_dcs.R data/raw/dcs/live/*
-	$(report_error)
-	Rscript $<
-	$(remove_error)
-
-## SONOBUOYS ##
-.PHONY : sono
-sono : data/processed/sonobuoys.rds
-
-# Process sonobuoys
-data/processed/sonobuoys.rds : 	R/proc_sonobuoys.R \
-																data/raw/noaa_sonobuoys/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)

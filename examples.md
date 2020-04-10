@@ -19,7 +19,7 @@ File sync / transfer
 
 ```
 # transfer to WhaleMap
-rsync -rtv file.txt hansen@whalemap:/srv/shiny-server/WhaleMap/
+rsync -rtv file.txt hansen@whalemapvm:/srv/shiny-server/WhaleMap/
 ```
 ***
 
