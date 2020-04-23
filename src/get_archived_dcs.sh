@@ -18,15 +18,18 @@ declare -A URL
 
 # assign paths to detection data for each deployment
 URL=(
-  [2020-01-30_slocum_we14]=http://dcs.whoi.edu/hatteras0120/hatteras0120_we14_html/ptracks/manual_analysis.csv
+	[2020-03-06_slocum_we04]=http://dcs.whoi.edu/sbnms0320/sbnms0320_we04_html/ptracks/manual_analysis.csv
+	[2019-12-17_slocum_we03]=http://dcs.whoi.edu/gom1219/gom1219_we03_html/ptracks/manual_analysis.csv
+	[2019-12-21_slocum_we16]=http://dcs.whoi.edu/cox1219/cox1219_we16_html/ptracks/manual_analysis.csv
+  	[2020-01-30_slocum_we14]=http://dcs.whoi.edu/hatteras0120/hatteras0120_we14_html/ptracks/manual_analysis.csv
 	[2020-02-05_slocum_we15]=http://dcs.whoi.edu/hatteras0120/hatteras0120_we15_html/ptracks/manual_analysis.csv
-  [2020-01-14_slocum_we04]=http://dcs.whoi.edu/sbnms0120/sbnms0120_we04_html/ptracks/manual_analysis.csv
-  [2019-02-20_buoy_nybight]=http://dcs.whoi.edu/nyb0219/nyb0219_buoy_html/ptracks/manual_analysis.csv
+  	[2020-01-14_slocum_we04]=http://dcs.whoi.edu/sbnms0120/sbnms0120_we04_html/ptracks/manual_analysis.csv
+  	[2019-02-20_buoy_nybight]=http://dcs.whoi.edu/nyb0219/nyb0219_buoy_html/ptracks/manual_analysis.csv
 	[2019-09-25_slocum_scotia]=http://dcs.whoi.edu/dal0919/dal0919_scotia_html/ptracks/manual_analysis.csv  
 	[2019-09-04_slocum_capx638]=http://dcs.whoi.edu/twr0919/twr0919_capx638_html/ptracks/manual_analysis.csv
 	[2019-08-10_slocum_dal556]=http://dcs.whoi.edu/dal0819/dal0819_dal556_html/ptracks/manual_analysis.csv
 	[2019-08-28_slocum_bond]=http://dcs.whoi.edu/dal0819/dal0819_bond_html/ptracks/manual_analysis.csv
-  [2019-06-05_slocum_scotia]=http://dcs.whoi.edu/dal0619/dal0619_scotia_html/ptracks/manual_analysis.csv
+  	[2019-06-05_slocum_scotia]=http://dcs.whoi.edu/dal0619/dal0619_scotia_html/ptracks/manual_analysis.csv
 	[2019-07-24_slocum_bond]=http://dcs.whoi.edu/dal0719/dal0719_bond_html/ptracks/manual_analysis.csv
 	[2019-06-04_slocum_fundy]=http://dcs.whoi.edu/dal0619/dal0619_fundy_html/ptracks/manual_analysis.csv
 	[2019-03-13_slocum_scotia]=http://dcs.whoi.edu/dal0319/dal0319_scotia_html/ptracks/manual_analysis.csv
