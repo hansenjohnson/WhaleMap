@@ -44,10 +44,8 @@ build_static_map = function(type = 'whalemap'){
     rw_grp = 'Right whale observations'
     mpa_grp = 'Protected areas'
     tss_grp = 'Shipping lanes'
-    static_speed_grp = 'Static speed reduction zone'
-    dynamic_speed_grp = 'Dynamic speed reduction zone'
-    static_fish_grp = 'Static fisheries closure'
-    forage_areas_grp = 'Area subject to temporary fishery closure protocol'
+    tc_zone_grp = 'Speed reduction zones'
+    dfo_zone_grp = 'Area subject to temporary fishery closure protocol'
     
     # output path
     if(type == 'whalemap'){
@@ -96,10 +94,8 @@ build_static_map = function(type = 'whalemap'){
     rw_grp = 'Observations de baleines noires'
     mpa_grp = 'Zones protégées'
     tss_grp = 'Couloirs de navigation'
-    static_speed_grp = 'Zone statique de réduction de vitesse'
-    dynamic_speed_grp = 'Zone dynamique de réduction de vitesse'
-    static_fish_grp = 'Fermeture statique de la pêche'
-    forage_areas_grp = 'Zones soumises au protocole de fermeture temporaire'
+    tc_zone_grp = 'Zones de réduction de vitesse'
+    dfo_zone_grp = 'Zones soumises au protocole de fermeture temporaire'
     
     # output path
     fout = './static_map/whale_map_fr.html'
@@ -238,11 +234,8 @@ build_static_map = function(type = 'whalemap'){
                         rw_grp,
                         mpa_grp,
                         tss_grp,
-                        static_speed_grp,
-                        dynamic_speed_grp,
-                        static_fish_grp,
-                        forage_areas_grp
-      ),
+                        tc_zone_grp,
+                        dfo_zone_grp),
       options = layersControlOptions(collapsed = TRUE), position = 'topright')
   } else {
     map <- map %>% addLayersControl(
@@ -256,10 +249,8 @@ build_static_map = function(type = 'whalemap'){
                         rw_grp,
                         mpa_grp,
                         tss_grp,
-                        static_speed_grp,
-                        dynamic_speed_grp,
-                        static_fish_grp,
-                        forage_areas_grp
+                        tc_zone_grp,
+                        dfo_zone_grp
       ),
       options = layersControlOptions(collapsed = TRUE), position = 'topright')
   }
@@ -268,10 +259,8 @@ build_static_map = function(type = 'whalemap'){
   map <- map %>% hideGroup(c(survey_grp,
                      graticules_grp,
                      robot_grp,
-                     static_speed_grp,
-                     dynamic_speed_grp,
-                     static_fish_grp,
-                     forage_areas_grp)) %>%
+                     tc_zone_grp,
+                     dfo_zone_grp)) %>%
     
     # add legend
     addLegend(position = "bottomright",
@@ -311,34 +300,19 @@ build_static_map = function(type = 'whalemap'){
                 options = pathOptions(clickable = F),
                 group = tss_grp)
   
-  # plot static speed reduction zone
+  # plot tc zone
   map <- map %>%
-    addPolylines(data=static_shipping_zone, group = static_speed_grp,
-                 options = pathOptions(clickable = F), weight = 3, 
-                 color = 'red')
-  
-  # plot dynamic speed reduction zone
-  map <- map %>%
-    addPolygons(data=dynamic_shipping_zone, group = dynamic_speed_grp,
+    addPolygons(data=tc_zone, group = tc_zone_grp,
                 fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
-                dashArray = c(5,5), options = pathOptions(clickable = F),
-                weight = .25, color = 'purple', fillColor = 'purple')
+                dashArray = c(2,2), popup = ~paste0(ID),
+                weight = 1, color = 'darkgreen', fillColor = 'darkgreen')
   
-  # plot static fisheries closue
+  # plot dfo_zone
   map <- map %>%
-    addPolygons(data=static_fishing_zone, group = static_fish_grp,
+    addPolygons(data=dfo_zone, group = dfo_zone_grp,
                 fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
                 dashArray = c(2,2), options = pathOptions(clickable = F),
                 weight = 1, color = 'darkblue', fillColor = 'darkblue')
-  
-  # plot dynamic fisheries closures
-  map <- map %>%
-    addPolygons(data=dynamic_fishing_zone, group = forage_areas_grp,
-                fill = T, fillOpacity = 0.25, stroke = T, weight = 1, 
-                color = 'darkslategrey', fillColor = 'orange') %>%
-    addPolygons(data=critical_habitat_zone, group = forage_areas_grp,
-                fill = T, fillOpacity = 0.25, stroke = T, weight = 1, 
-                color = 'darkslategrey', fillColor = 'orange')
   
   # add tracks --------------------------------------------------------------
   
