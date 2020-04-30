@@ -199,52 +199,22 @@ body <- dashboardBody(
                            checkboxInput("legend", label = 'Legends', value = T),
                            
                            # Management layers
-                           helpText(tags$em('Canadian management')),
+                           helpText(tags$em('Canadian management areas (2020)')),
                            
                            checkboxInput("critical_habitat_zone", 
                                          label = 'Critical habitat areas', value = T),
-                           
-                           checkboxInput("static_fishing_zone", value = F,
-                                         label = span("Static fishery closure", 
-                                                      tags$a(icon("info-sign", lib = "glyphicon"),
-                                                             target="_blank",
-                                                             href = "http://www.dfo-mpo.gc.ca/species-especes/mammals-mammiferes/narightwhale-baleinenoirean/fm-gp/index-eng.html"))),
-                           
-                           checkboxInput("dynamic_fishing_zone", value = F,
-                                         label = span("Dynamic fishing zone", 
+            
+                           checkboxInput("dfo_zone", value = F,
+                                         label = span("Fishing management areas", 
                                                       tags$a(icon("info-sign", lib = "glyphicon"), 
                                                              target="_blank",
-                                                             href = "http://www.dfo-mpo.gc.ca/species-especes/mammals-mammiferes/narightwhale-baleinenoirean/fm-gp/index-eng.html"))),
+                                                             href = "http://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html"))),
                            
-                           checkboxInput("dynamic_fishing_grid", value = F,
-                                         label = span("Dynamic fishing grid", 
-                                                      tags$a(icon("info-sign", lib = "glyphicon"),
-                                                             target="_blank",
-                                                             href = "http://www.dfo-mpo.gc.ca/species-especes/mammals-mammiferes/narightwhale-baleinenoirean/fm-gp/index-eng.html"))),
-                           
-                           checkboxInput("dynamic_fishing_10_fathom_contour", value = F,
-                                         label = span("Dynamic fishing: 10-fathom contour", 
-                                                      tags$a(icon("info-sign", lib = "glyphicon"),
-                                                             target="_blank",
-                                                             href = "http://www.dfo-mpo.gc.ca/species-especes/mammals-mammiferes/narightwhale-baleinenoirean/fm-gp/index-eng.html"))),
-                           
-                           checkboxInput("dynamic_fishing_20_fathom_contour", value = F,
-                                         label = span("Dynamic fishing: 20-fathom contour", 
+                           checkboxInput("tc_zone", value = F,
+                                         label = span("Shipping management areas", 
                                                       tags$a(icon("info-sign", lib = "glyphicon"), 
                                                              target="_blank",
-                                                             href = "http://www.dfo-mpo.gc.ca/species-especes/mammals-mammiferes/narightwhale-baleinenoirean/fm-gp/index-eng.html"))),
-                           
-                           checkboxInput("static_shipping_zone", value = F,
-                                         label = span("Static shipping zone", 
-                                                      tags$a(icon("info-sign", lib = "glyphicon"), 
-                                                             target="_blank",
-                                                             href = "http://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html#toc_2"))),
-                                         
-                           checkboxInput("dynamic_shipping_zone", value = F,
-                                         label = span("Dynamic vessel slow zone", 
-                                                      tags$a(icon("info-sign", lib = "glyphicon"), 
-                                                             target="_blank",
-                                                             href = "http://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html#toc_3")))
+                                                             href = "https://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html")))
                   )
            )
     ),
