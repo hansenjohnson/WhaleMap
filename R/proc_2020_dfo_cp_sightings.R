@@ -47,8 +47,8 @@ if(length(flist)!=0){
     tmp = suppressMessages(read_excel(flist[i]))
     
     # determine start and end indices of data
-    i0 = which(tmp[,1] == 'ID')
-    i1 = grep('record', x = tmp$...1)
+    i0 = grep('ID', x = tmp[[1]])
+    i1 = grep('record', x = tmp[[1]])
     
     # find bad columns (from excel formatting)
     bad_cols = which(is.na(tmp[i0,]))
