@@ -264,6 +264,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2020_noaa_twin_otter_sightings.rds \
 																	data/interim/2020_dfo_cessna_sightings.rds \
 																	data/interim/2020_tc_dash8_sightings.rds \
+																	data/interim/2020_dfo_cp_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
 
@@ -429,6 +430,12 @@ data/interim/2020_dfo_cessna_sightings.rds : R/proc_2020_dfo_cessna_sightings.R 
 
 # 2020 tc dash8 sightings
 data/interim/2020_tc_dash8_sightings.rds : R/proc_2020_tc_dash8_sightings.R data/raw/2020_whalemapdata/TC_Dash8/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2020 dfo cp sightings
+data/interim/2020_dfo_cp_sightings.rds : R/proc_2020_dfo_cp_sightings.R data/raw/2020_whalemapdata/2020-C&P/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)

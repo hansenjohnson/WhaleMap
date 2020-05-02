@@ -179,6 +179,32 @@ ddm2dd = function(DDM){
   return(dd)
 }
 
+# convert ddm to dd for a single lat or lon column
+ddm2dd_col = function(DDM){
+  
+  # convert to character
+  tmp = as.character(DDM)
+  
+  # remove unwanted characters
+  tmp = gsub(pattern = '-', replacement = '', x = tmp)
+  tmp = gsub(pattern = 'N|W', replacement = '', x = tmp)
+  tmp = gsub(pattern = ',', replacement = '', x = tmp)
+  tmp = gsub(pattern = '\'', replacement = '', x = tmp)
+  
+  # replace deg symbol with space
+  tmp = gsub(pattern = '°', replacement = ' ', x = tmp)
+  
+  # split parts
+  ddm = strsplit(tmp, split = ' ')
+  deg = as.numeric(unlist(ddm)[1])
+  min = as.numeric(unlist(ddm)[2])
+  
+  # compute
+  dd = deg+min/60
+  
+  return(dd)
+}
+
 get_palette = function(pal = 'Viridis', n = 200){
   ## get a given color palette, pal, of a specific length, n
   
