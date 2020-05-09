@@ -540,6 +540,29 @@ function(input, output, session){
     
   })
   
+  # full grid observer ------------------------------------------------------  
+  
+  observe(priority = 4, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('full_grid')
+    
+    if(input$full_grid){
+      
+      # add polygons
+      proxy %>%
+          addPolygons(data = full_grid, color = 'grey',
+                      group = 'full_grid',weight = 2, 
+                      popup = ~paste0(Grid_Index))
+      
+      # switch to show/hide
+      ifelse(input$full_grid, showGroup(proxy, 'full_grid'),
+             hideGroup(proxy, 'full_grid'))
+    }
+    
+  })
+  
   # tc zone observer ------------------------------------------------------  
   
   observe(priority = 4, {

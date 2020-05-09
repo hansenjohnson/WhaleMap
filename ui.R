@@ -203,6 +203,9 @@ body <- dashboardBody(
                            
                            checkboxInput("critical_habitat_zone", 
                                          label = 'Critical habitat areas', value = T),
+                           
+                           checkboxInput("full_grid", 
+                                         label = 'Management Grid', value = F),
             
                            checkboxInput("dfo_zone", value = F,
                                          label = span("Fishing management areas", 
