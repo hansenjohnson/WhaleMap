@@ -4,6 +4,7 @@ suppressPackageStartupMessages(library(sf))
 suppressPackageStartupMessages(library(tools))
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(RColorBrewer))
+suppressPackageStartupMessages(library(lubridate))
 
 clean_latlon = function(d){
   d$lat = as.character(d$lat)
