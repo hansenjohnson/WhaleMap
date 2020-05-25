@@ -3,6 +3,7 @@ proc_2020_noaa_twin_otter.R,NOAA NEFSC aerial survey sightings/tracks,https://ww
 proc_live_dcs.R,Dal/WHOI acoustic detections,http://dcs.whoi.edu/,data/email/default.csv
 proc_2020_opportunistic.R,DFO opportunistic sightings reports,https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
 proc_2020_dfo_cessna_sightings.R,DFO Cessna aerial survey sightings,https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
+proc_2020_dfo_twin_otter_sightings.R,DFO Twin Otter aerial survey sightings,https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
 proc_2020_dfo_twin_otter_tracks.R,DFO Twin Otter aerial survey tracks,https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
 proc_2020_dfo_cessna_tracks.R,DFO Cessna aerial survey tracks,https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
 proc_2020_dfo_cp_sightings.R,DFO Conservation & Protection aerial sightings,https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
