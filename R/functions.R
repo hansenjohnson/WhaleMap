@@ -6,6 +6,13 @@ suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(RColorBrewer))
 suppressPackageStartupMessages(library(lubridate))
 
+read_GPX = function(ifile){
+  tmp = sf::st_read(ifile, layer = "track_points", quiet = TRUE)
+  out = data.frame(time = tmp$time, sf::st_coordinates(tmp), altitude = tmp$ele)
+  colnames(out) = c('time', 'lon', 'lat', 'altitude')
+  return(out)
+}
+
 clean_latlon = function(d){
   d$lat = as.character(d$lat)
   d$lat = gsub(",","",d$lat)
