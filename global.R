@@ -84,9 +84,9 @@ years = c('2014', '2015', '2016', '2017', '2018', '2019')
 
 # make dcs icons
 dcsIcons = iconList(
-  slocum = makeIcon("icons/slocum.png", iconWidth = 40, iconHeight = 40),
+  slocum = makeIcon("icons/slocum.png", iconWidth = 38, iconHeight = 38),
   wave = makeIcon("icons/wave.png", iconWidth = 35, iconHeight = 30),
-  buoy = makeIcon("icons/buoy.png", iconWidth = 50, iconHeight = 40)
+  buoy = makeIcon("icons/buoy.png", iconWidth = 44, iconHeight = 34, iconAnchorX = 22, iconAnchorY = 28)
 )
 
 # make sono icon
@@ -110,9 +110,7 @@ graticule_ints = list(
 )
 
 # hidden platforms
-hidden_platforms = c('cp_king_air', 'jasco_test', 'dfo_viking_AZMP-ESG', 
-                     'dfo_viking_BP', 'dfo_viking_IML-BA', 'dfo_viking_IML7', 
-                     'dfo_viking_PMZA-VAS')
+hidden_platforms = c('cp_king_air', 'jasco_test')
 
 # load data ---------------------------------------------------------------
 
