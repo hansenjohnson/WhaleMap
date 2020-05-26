@@ -26,7 +26,7 @@ data/processed/tracks.rds : R/proc_tracks.R \
 														data/interim/2018_neaq_nereid_tracks.rds \
 														data/interim/2018_cwi_jdmartin_tracks.rds \
 														data/interim/2018_mics_tracks.rds \
-														data/interim/2018_dfo_cetus_tracks.rds \														
+														data/interim/2018_dfo_cetus_tracks.rds \
 														data/interim/2019_noaa_twin_otter_tracks.rds \
 														data/interim/2019_dfo_cessna_tracks.rds \
 														data/interim/2019_tc_dash8_tracks.rds \
@@ -251,7 +251,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2018_dfo_cessna_sightings.rds \
 																	data/interim/2018_neaq_nereid_sightings.rds \
 																	data/interim/2018_cwi_jdmartin_sightings.rds \
-																	data/interim/2018_dfo_cetus_sightings.rds \																	
+																	data/interim/2018_dfo_cetus_sightings.rds \
 																	data/interim/2019_noaa_twin_otter_sightings.rds \
 																	data/interim/2019_opportunistic_sightings.rds \
 																	data/interim/2019_dfo_cessna_sightings.rds \
