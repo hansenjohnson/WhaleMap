@@ -9,3 +9,4 @@ proc_2020_dfo_cessna_tracks.R,DFO Cessna aerial survey tracks,https://www.dfo-mp
 proc_2020_dfo_cp_sightings.R,DFO Conservation & Protection aerial sightings,https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
 proc_2020_tc_dash8_sightings.R,TC Dash 8 aerial survey sightings,http://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html,data/email/default.csv
 proc_2020_tc_dash8_tracks.R,TC Dash 8 aerial survey tracks,http://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html,data/email/default.csv
+proc_2020_dfo_viking.R,DFO viking buoy acoustic detections,https://ogsl.ca/viking/?lg=en,data/email/default.csv
