@@ -158,16 +158,6 @@ function(input, output, session){
             platform %in% platform() 
         )
       
-    } else if(input$password == jasco_password){
-      
-      tracks %>%
-        filter(
-          date %in% dates() & 
-            platform %in% platform() & 
-            name %in% name() &
-            name != 'cp_king_air'
-        )
-      
     } else {
       
       tracks %>%
@@ -191,18 +181,6 @@ function(input, output, session){
             platform %in% platform() & 
             name %in% name() &
             species %in% species()
-        ) %>%
-        droplevels()
-      
-    } else if(input$password == jasco_password){
-      
-      observations %>%
-        filter(
-          date %in% dates() & 
-            platform %in% platform() & 
-            species %in% species() &
-            name %in% name() &
-            score != 'possible visual'
         ) %>%
         droplevels()
       
@@ -259,7 +237,7 @@ function(input, output, session){
   if(file.exists(lfile)){
     LATEST <- eventReactive(input$go|input$go == 0, {
       
-      if(input$password == password | input$password == jasco_password){
+      if(input$password == password){
         
         latest %>%
           filter(
@@ -304,12 +282,6 @@ function(input, output, session){
     if(input$password == password){
       showNotification('Password was correct! Showing unverified and/or test data...',
                        duration = 7, closeButton = T, type = 'message')
-      
-    } else if(input$password == jasco_password){
-      showNotification('Password was correct! Showing JASCO test data...',
-                       duration = 7, closeButton = T, type = 'message')
-    } else {
-      # no warning
     }
   })
   

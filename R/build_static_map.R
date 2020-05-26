@@ -148,7 +148,7 @@ build_static_map = function(type = 'whalemap'){
   }
   
   # hidden platforms
-  hidden_platforms = c('jasco_test')
+  hidden_platforms = c('cp_king_air', 'jasco_test')
   
   # create destination directory
   outdir = dirname(fout)
@@ -177,7 +177,6 @@ build_static_map = function(type = 'whalemap'){
   
   # tracklines
   Tracks = tracks[tracks$date >= t0,]; rm(tracks)
-  Tracks = Tracks[Tracks$name!='cp_king_air',] # do not plot C&P track data
   Tracks = Tracks[!(Tracks$name %in% hidden_platforms),] # do not plot test data
   
   # observations

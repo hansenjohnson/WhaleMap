@@ -26,8 +26,7 @@ data/processed/tracks.rds : R/proc_tracks.R \
 														data/interim/2018_neaq_nereid_tracks.rds \
 														data/interim/2018_cwi_jdmartin_tracks.rds \
 														data/interim/2018_mics_tracks.rds \
-														data/interim/2018_dfo_cetus_tracks.rds \
-														data/interim/2018_jasco_tracks.rds \
+														data/interim/2018_dfo_cetus_tracks.rds \														
 														data/interim/2019_noaa_twin_otter_tracks.rds \
 														data/interim/2019_dfo_cessna_tracks.rds \
 														data/interim/2019_tc_dash8_tracks.rds \
@@ -143,12 +142,6 @@ data/interim/2018_dfo_cetus_tracks.rds : R/proc_2018_dfo_cetus_tracks.R data/raw
 	Rscript $<
 	$(remove_error)
 
-# 2018 JASCO glider tracks
-data/interim/2018_jasco_tracks.rds : R/proc_2018_jasco_tracks.R data/raw/jasco/track.csv
-	$(report_error)
-	Rscript $<
-	$(remove_error)
-
 # 2019 NOAA twin otter tracks
 data/interim/2019_noaa_twin_otter_tracks.rds : R/proc_2019_noaa_twin_otter.R data/raw/2019_noaa_twin_otter/edit_data/WhaleMap/*
 	$(report_error)
@@ -258,8 +251,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2018_dfo_cessna_sightings.rds \
 																	data/interim/2018_neaq_nereid_sightings.rds \
 																	data/interim/2018_cwi_jdmartin_sightings.rds \
-																	data/interim/2018_dfo_cetus_sightings.rds \
-																	data/interim/2018_jasco_detections.rds \
+																	data/interim/2018_dfo_cetus_sightings.rds \																	
 																	data/interim/2019_noaa_twin_otter_sightings.rds \
 																	data/interim/2019_opportunistic_sightings.rds \
 																	data/interim/2019_dfo_cessna_sightings.rds \
@@ -361,12 +353,6 @@ data/interim/2018_cwi_jdmartin_sightings.rds : R/proc_2018_cwi_jdmartin.R data/r
 
 # 2018 dfo tag vessel sightings
 data/interim/2018_dfo_cetus_sightings.rds : R/proc_2018_dfo_cetus_sightings.R data/raw/2018_whalemapdata/DFO_vessel_cetus/*
-	$(report_error)
-	Rscript $<
-	$(remove_error)
-
-# 2018 JASCO detections
-data/interim/2018_jasco_detections.rds : R/proc_2018_jasco_detections.R data/raw/jasco/detections.csv
 	$(report_error)
 	Rscript $<
 	$(remove_error)
