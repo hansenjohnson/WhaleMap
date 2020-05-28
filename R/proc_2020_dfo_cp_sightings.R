@@ -30,7 +30,7 @@ spp_key = data.frame(
 # process -----------------------------------------------------------------
 
 # list files to process
-flist = list.files(data_dir, pattern = 'Mammal(\\d{8}).xls$', full.names = T, recursive = T)
+flist = list.files(data_dir, pattern = '(\\d{8})_(*.*).xls$', full.names = T, recursive = T)
 
 # list to hold loop output
 SIG = vector('list', length = length(flist))
