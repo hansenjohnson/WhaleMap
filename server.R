@@ -633,6 +633,33 @@ function(input, output, session){
                          color = pal(tracks.df[[df]][1,ind]),
                          popup = paste0('Track ID: ', unique(tracks.df[[df]]$id)))
         })
+      
+      # set up buoy plotting
+      buoy.df <- trk() %>%
+        filter(platform == 'buoy') %>%
+        arrange(time) %>%
+        group_by(id) %>%
+        dplyr::slice(1)
+      buoy.df <- split(buoy.df, buoy.df$id)
+      
+      # add circles
+      names(buoy.df) %>%
+        purrr::walk( function(df) {
+          proxy <<- proxy %>%
+            addCircleMarkers(data=buoy.df[[df]], 
+                             radius = 6, 
+                             opacity = 1,
+                             stroke = T, 
+                             fill = T,
+                             fillOpacity = 0,
+                             weight = 1.5,
+                             group = 'tracks', 
+                             lng=~lon, 
+                             lat=~lat, 
+                             color = pal(tracks.df[[df]][1,ind]),
+                             popup = paste0('Track ID: ', unique(tracks.df[[df]]$id)))
+        })
+      
     }
     
   })
