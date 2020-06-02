@@ -17,6 +17,23 @@ det_file = 'data/interim/2020_dfo_viking_detections.rds'
 
 source('R/functions.R')
 suppressPackageStartupMessages(library(jsonlite))
+suppressPackageStartupMessages(library(httr))
+
+# functions ---------------------------------------------------------------
+
+get_jsn = function(jsn_url){
+  
+  # connect to url
+  r = httr::GET(jsn_url)
+  
+  # extract content
+  txt = httr::content(r, "text", encoding = 'UTF-8')
+  
+  # convert to json
+  jsn = jsonlite::fromJSON(txt)
+  
+  return(jsn)
+}
 
 # tracks ------------------------------------------------------------------
 
@@ -39,8 +56,10 @@ for(ii in seq_along(pos$name)){
   # define status URL
   status_url = paste0('https://harverstervikingbaleine.prod.ogsl.ca/api/buoy_status/', ibuoy ,'?date_range_min=', start_date, '&date_range_max=', end_date)
   
+  # get jsn data
+  tmp = get_jsn(status_url)
+  
   # convert to table
-  tmp = jsonlite::fromJSON(status_url)
   TRK[[ii]] = tibble(
     date = as.Date(names(tmp)),
     name = ibuoy,
@@ -79,17 +98,8 @@ saveRDS(object = tracks, file = trk_file)
 # define detection url
 detection_url = paste0('https://www.ogsl.ca/beluga/biodiversity/occurrenceMeasurements/paginatedOccurrenceMeasurements?%24expand=event%2C+event%2Flocation%2C+event%2FdateFormat%2C+extradata%2C+establishmentMeans&%24filter=event%2FeventDateTime+ge+datetime%27',start_date,'T00%3A42%3A28.000Z%27+and+event%2FeventDateTime+le+datetime%27',end_date,'T23%3A40%3A38.000Z%27+and+event%2Fdataset%2Fcollection%2Fid+in+(29)&%24orderby=&%24skip=0&%24top=100&%24language=en')
 
-# download file (using system call to wget)
-tmp_file = paste0(raw_dir, 'detections.json')
-system(paste0('wget -O "', tmp_file, '" "', detection_url,'" -q'))
-
-# read in detection data
-tmp = suppressWarnings(as.character(readLines(tmp_file)))
-tmp = gsub(x = tmp, pattern = "callback\\(", replacement = "")
-tmp = substr(tmp, start = 1, stop = nchar(tmp)-1)
-
-# extract data
-jsn = jsonlite::fromJSON(tmp)
+# get jsn data
+jsn = get_jsn(detection_url)
 
 det = tibble(
   time = as.POSIXct(jsn$event$dateText, tz = 'UTC'),
