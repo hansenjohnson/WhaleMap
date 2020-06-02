@@ -19,6 +19,9 @@ source('R/functions.R')
 suppressPackageStartupMessages(library(jsonlite))
 suppressPackageStartupMessages(library(httr))
 
+# ignore SSL certificate errors
+httr::set_config(httr::config(ssl_verifypeer = 0L)) 
+
 # functions ---------------------------------------------------------------
 
 get_jsn = function(jsn_url){
