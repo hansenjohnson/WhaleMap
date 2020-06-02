@@ -6,10 +6,11 @@
 # buoy positions / names
 pos_file = 'data/raw/2020_viking/buoy_positions.csv'
 
-# track file
-trk_file = 'data/interim/2020_dfo_viking_tracks.rds'
+# raw file directory (store downloaded json)
+raw_dir = 'data/raw/2020_viking/'
 
-# detection file
+# output files
+trk_file = 'data/interim/2020_dfo_viking_tracks.rds'
 det_file = 'data/interim/2020_dfo_viking_detections.rds'
 
 # setup -------------------------------------------------------------------
@@ -78,17 +79,26 @@ saveRDS(object = tracks, file = trk_file)
 # define detection url
 detection_url = paste0('https://www.ogsl.ca/beluga/biodiversity/occurrenceMeasurements/paginatedOccurrenceMeasurements?%24expand=event%2C+event%2Flocation%2C+event%2FdateFormat%2C+extradata%2C+establishmentMeans&%24filter=event%2FeventDateTime+ge+datetime%27',start_date,'T00%3A42%3A28.000Z%27+and+event%2FeventDateTime+le+datetime%27',end_date,'T23%3A40%3A38.000Z%27+and+event%2Fdataset%2Fcollection%2Fid+in+(29)&%24orderby=&%24skip=0&%24top=100&%24language=en')
 
-# download detections
-tmp = jsonlite::fromJSON(detection_url)
+# download file (using system call to wget)
+tmp_file = paste0(raw_dir, 'detections.json')
+system(paste0('wget -O "', tmp_file, '" "', detection_url,'" -q'))
+
+# read in detection data
+tmp = suppressWarnings(as.character(readLines(tmp_file)))
+tmp = gsub(x = tmp, pattern = "callback\\(", replacement = "")
+tmp = substr(tmp, start = 1, stop = nchar(tmp)-1)
+
+# extract data
+jsn = jsonlite::fromJSON(tmp)
 
 det = tibble(
-  time = as.POSIXct(tmp$event$dateText, tz = 'UTC'),
+  time = as.POSIXct(jsn$event$dateText, tz = 'UTC'),
   date = as.Date(time),
   yday = yday(date),
   year = year(date),
-  lat = tmp$event$location$latitude,
-  lon = tmp$event$location$longitude,
-  name = paste0('dfo_viking_', tmp$event$location$name__),
+  lat = jsn$event$location$latitude,
+  lon = jsn$event$location$longitude,
+  name = paste0('dfo_viking_', jsn$event$location$name__),
   species = 'right',
   score = 'detected',
   number = NA,
