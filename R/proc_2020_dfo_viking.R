@@ -42,7 +42,7 @@ get_jsn = function(jsn_url){
 
 # start and end date
 start_date = '2020-05-01'
-end_date = Sys.Date()
+end_date = Sys.Date()+1
 
 # read in buoy table
 pos = read_csv(pos_file, col_types = cols())
