@@ -21,7 +21,7 @@ suppressPackageStartupMessages(library(readxl))
 source('R/functions.R')
 
 # list files to process
-flist = list.files(data_dir, pattern = 'xls$', full.names = T, recursive = T)
+flist = list.files(data_dir, pattern = '(\\d{8}).xlsx$', full.names = T, recursive = T)
 
 # only proceed if sightings files exist
 if(length(flist)!=0){
@@ -38,7 +38,7 @@ if(length(flist)!=0){
     if (file.size(flist[i]) == 0) next
     
     # read in data
-    tmp = read_excel('~/Desktop/20200520.xlsx') %>%
+    tmp = read_excel(flist[i]) %>%
       transmute(
         date = as.Date(date_UTC),
         time = as.POSIXct(paste0(date, ' ', format(time_UTC, '%H:%M:%S')), tz = 'UTC'),
