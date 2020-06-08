@@ -52,6 +52,13 @@ if(length(flist!=0)){
     tmp$lon = abs(as.numeric(tmp$long))*-1
     tmp$number = as.numeric(tmp$nb_tot)
     
+    # add calves if column exists
+    if("Mother_Calf_Pair" %in% colnames(tmp)){
+      tmp$calves = as.numeric(tmp$Mother_Calf_Pair)
+    } else {
+      tmp$calves = NA
+    }
+    
     # add metadata
     tmp$yday = yday(tmp$date)
     tmp$year = year(tmp$date)
@@ -71,7 +78,7 @@ if(length(flist!=0)){
     tmp$species[tmp$sp_code == 'FS'] = 'fin/sei'
     
     # select columns of interest
-    tmp = tmp[,c('time','lat','lon','date', 'yday','species','score','number','year','platform','name','id')]
+    tmp = tmp[,c('time','lat','lon','date', 'yday','species','score','number','calves', 'year','platform','name','id')]
     
     # remove NA sightings
     tmp = tmp[!is.na(tmp$species),]
