@@ -54,7 +54,7 @@ render_report = function(template = "R/write_dfo_summary-template.Rmd",
     ## daily-extend report ##
     
     # set time interval for daily report
-    t0 = report_date-2
+    t0 = report_date-3
     t1 = report_date
     
     # define output directory
@@ -77,7 +77,7 @@ render_report = function(template = "R/write_dfo_summary-template.Rmd",
     if(!dir.exists(weekly_dir)){dir.create(weekly_dir, recursive = TRUE)}
     
     # define output file - must be relative to location of template
-    output_file = paste0('../', weekly_dir, t0, '_WhaleMap_weekly_summary.pdf')
+    output_file = paste0('../', weekly_dir, t1, '_WhaleMap_weekly_summary.pdf')
   }
   
   # render report
