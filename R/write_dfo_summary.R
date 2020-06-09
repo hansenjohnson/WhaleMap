@@ -47,7 +47,7 @@ render_report = function(template = "R/write_dfo_summary-template.Rmd",
     if(!dir.exists(daily_dir)){dir.create(daily_dir, recursive = TRUE)}
     
     # define output file - must be relative to location of template
-    output_file = paste0('../', daily_dir, t0, '_WhaleMap_daily_summary.pdf')
+    output_file = paste0('../', daily_dir, t1, '_WhaleMap_daily_summary.pdf')
     
   } else if(type == 'daily-extended'){
     
@@ -62,7 +62,7 @@ render_report = function(template = "R/write_dfo_summary-template.Rmd",
     if(!dir.exists(extended_dir)){dir.create(extended_dir, recursive = TRUE)}
     
     # define output file - must be relative to location of template
-    output_file = paste0('../', extended_dir, t0, '_WhaleMap_daily-extended_summary.pdf')
+    output_file = paste0('../', extended_dir, t1, '_WhaleMap_daily-extended_summary.pdf')
     
   } else if(type == 'weekly'){
     
