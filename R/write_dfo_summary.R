@@ -27,14 +27,14 @@ yesterday = today-1
 render_report = function(template = "R/write_dfo_summary-template.Rmd", 
                          outdir = report_dir, 
                          report_date = yesterday, 
-                         daily = TRUE){
+                         type = 'daily'){
   
   # libraries
   library(knitr)
   library(rmarkdown)
 
   # define file names and paths
-  if(daily){
+  if(type == 'daily'){
     
     ## daily report ##
     
@@ -49,7 +49,22 @@ render_report = function(template = "R/write_dfo_summary-template.Rmd",
     # define output file - must be relative to location of template
     output_file = paste0('../', daily_dir, t0, '_WhaleMap_daily_summary.pdf')
     
-  } else {
+  } else if(type == 'daily-extended'){
+    
+    ## daily-extend report ##
+    
+    # set time interval for daily report
+    t0 = report_date-2
+    t1 = report_date
+    
+    # define output directory
+    extended_dir = paste0(outdir, 'daily-extended/')
+    if(!dir.exists(extended_dir)){dir.create(extended_dir, recursive = TRUE)}
+    
+    # define output file - must be relative to location of template
+    output_file = paste0('../', extended_dir, t0, '_WhaleMap_daily-extended_summary.pdf')
+    
+  } else if(type == 'weekly'){
     
     ## weekly report ##
     
@@ -80,11 +95,14 @@ render_report = function(template = "R/write_dfo_summary-template.Rmd",
 # make reports ------------------------------------------------------------
 
 ## render daily report ##
-render_report(report_date=yesterday, daily = TRUE)
+render_report(report_date=yesterday, type = 'daily')
+
+## render extendeddaily report ##
+render_report(report_date=yesterday, type = 'daily-extended')
 
 ## render weekly report ##
 if(today_name == weekly_report_day){
-  render_report(report_date=yesterday, daily = FALSE)
+  render_report(report_date=yesterday, type = 'weekly')
 }
 
 ## rewrite all reports for given period ##
@@ -97,11 +115,11 @@ if(rewrite_reports){
   for(i in seq_along(date_seq)){
     
     # render daily report
-    render_report(report_date=date_seq[i], daily = TRUE)
+    render_report(report_date=date_seq[i], type = 'daily')
     
     # render weekly report
     if(format(date_seq[i], '%A') == weekly_report_day){
-      render_report(report_date=date_seq[i]-1, daily = FALSE)
+      render_report(report_date=date_seq[i]-1, type = 'weekly')
     }
     
   }
