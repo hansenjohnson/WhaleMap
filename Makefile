@@ -449,7 +449,7 @@ data/interim/2020_dfo_viking_detections.rds : R/proc_2020_dfo_viking.R
 	$(remove_error)
 
 # 2020 opportunistic sightings
-data/interim/2020_ccgs_sightings.rds : R/proc_2020_ccgs_sightings.R data/raw/2020_whalemapdata/2020-CCGS-sightings/*
+data/interim/2020_ccgs_sightings.rds : R/proc_2020_ccgs_sightings.R data/raw/2020_whalemapdata/2020-CCGS/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)

@@ -4,7 +4,7 @@
 # input -------------------------------------------------------------------
 
 # input file
-ifile = 'data/raw/2020_whalemapdata/2020-CCGS-sightings/2020-CCGS-sightings.csv'
+ifile = 'data/raw/2020_whalemapdata/2020-CCGS/2020-CCGS-sightings.csv'
 
 # directory for output
 ofile = 'data/interim/2020_ccgs_sightings.rds'
