@@ -204,11 +204,11 @@ ddm2dd_col = function(DDM){
   
   # split parts
   ddm = strsplit(tmp, split = ' ')
-  deg = as.numeric(unlist(ddm)[1])
-  min = as.numeric(unlist(ddm)[2])
+  deg = sapply(ddm,function(x){x[[1]]})
+  min = sapply(ddm,function(x){x[[2]]})
   
   # compute
-  dd = deg+min/60
+  dd = as.numeric(deg)+as.numeric(min)/60
   
   return(dd)
 }
