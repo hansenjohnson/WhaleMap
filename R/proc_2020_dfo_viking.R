@@ -27,7 +27,7 @@ httr::set_config(httr::config(ssl_verifypeer = 0L))
 get_jsn = function(jsn_url){
   
   # connect to url
-  r = httr::GET(jsn_url)
+  r = httr::RETRY("GET", jsn_url)
   
   # extract content
   txt = httr::content(r, "text", encoding = 'UTF-8')
