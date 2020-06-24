@@ -201,6 +201,7 @@ ddm2dd_col = function(DDM){
   
   # replace deg symbol with space
   tmp = gsub(pattern = '°', replacement = ' ', x = tmp)
+  tmp = gsub(pattern = '`', replacement = ' ', x = tmp)
   
   # split parts
   ddm = strsplit(tmp, split = ' ')
@@ -209,6 +210,34 @@ ddm2dd_col = function(DDM){
   
   # compute
   dd = as.numeric(deg)+as.numeric(min)/60
+  
+  return(dd)
+}
+
+# convert ddm to dd for a single lat or lon column
+dms2dd_col = function(DDM){
+  
+  # convert to character
+  tmp = as.character(DDM)
+  
+  # remove unwanted characters
+  tmp = gsub(pattern = '-', replacement = '', x = tmp)
+  tmp = gsub(pattern = 'N|W', replacement = '', x = tmp)
+  tmp = gsub(pattern = ',', replacement = '', x = tmp)
+  
+  # replace symbols to separate minutes and seconds
+  tmp = gsub(pattern = '°', replacement = ' ', x = tmp)
+  tmp = gsub(pattern = '`', replacement = ' ', x = tmp)
+  tmp = gsub(pattern = '\'', replacement = ' ', x = tmp)
+  
+  # split parts
+  ddm = strsplit(tmp, split = ' ')
+  deg = sapply(ddm,function(x){x[[1]]})
+  min = sapply(ddm,function(x){x[[2]]})
+  sec = sapply(ddm,function(x){x[[3]]})
+  
+  # compute
+  dd = as.numeric(deg)+as.numeric(min)/60+as.numeric(sec)/3600
   
   return(dd)
 }
