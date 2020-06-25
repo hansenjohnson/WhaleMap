@@ -45,7 +45,7 @@ for(i in seq_along(flist)){
   tracks$yday = yday(tracks$date)
   tracks$year = year(tracks$date)
   tracks$platform = 'vessel'
-  tracks$name = 'niha'
+  tracks$name = 'calanus'
   tracks$id = paste(tracks$date, tracks$platform, tracks$name, sep = '_')
   
   # add to list
