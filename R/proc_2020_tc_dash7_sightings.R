@@ -70,7 +70,7 @@ if(length(flist)!=0){
     
     # convert lat lon data type
     tmp$lat = ddm2dd_col(as.character(tmp$lat))
-    tmp$lon = ddm2dd_col(as.character(tmp$lon))
+    tmp$lon = -ddm2dd_col(as.character(tmp$lon))
     
     # add species identifiers
     tmp$species = toupper(tmp$species)
