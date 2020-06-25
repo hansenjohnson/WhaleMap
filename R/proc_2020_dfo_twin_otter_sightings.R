@@ -48,6 +48,7 @@ if(length(flist)!=0){
         number = nb_tot,
         yday = yday(date),
         year = year(date),
+        calves = as.character(Mother_Calf_Pair),
         score = 'sighted',
         platform = 'plane',
         name = 'dfo_twin_otter',
@@ -86,6 +87,10 @@ if(length(flist)!=0){
   # make empty data frame
   SIGS = data.frame()
 }
+
+# fix calves error
+SIGS$calves[SIGS$calves=='n'] = "0"
+SIGS$calves = as.numeric(SIGS$calves)
 
 # config flight data
 sig = config_observations(SIGS)
