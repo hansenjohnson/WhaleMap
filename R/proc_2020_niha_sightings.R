@@ -39,10 +39,10 @@ for(i in seq_along(flist)){
   tmp = suppressMessages(as.data.frame(read_excel(ifile, skip = 3)))
   
   # extract required columns
-  tmp = tmp[c(1,2,4,6)]
+  tmp = tmp[c(1,2,4,6,7,8)]
   
   # rename
-  colnames(tmp) = c('time', 'lat', 'lon', 'number')
+  colnames(tmp) = c('time', 'lat', 'lon', 'number', 'calves','score')
 
   # update metadata
   tmp$lat = dms2dd_col(tmp$lat)
@@ -51,11 +51,12 @@ for(i in seq_along(flist)){
   tmp$time = with_tz(as.POSIXct(paste0(fdate, ' ', format(tmp$time, '%H:%M:%S')), tz = 'America/Halifax'), tzone = 'UTC')
   tmp$year = year(tmp$date)
   tmp$yday = yday(tmp$date)
-  tmp$score = 'sighted'
+  tmp$score[tmp$score=='definite visual'] = 'sighted'
+  tmp$score[tmp$score=='possible visual'] = 'possibly sighted'
   tmp$species = 'right'
   tmp$calves = NA
   tmp$platform = 'vessel'
-  tmp$name = 'niha'
+  tmp$name = 'calanus'
   tmp$id = paste(tmp$date, tmp$platform, tmp$name, sep = '_')
   
   # add to list
