@@ -15,7 +15,7 @@ ofile = 'data/interim/2020_tc_dash7_tracks.rds'
 source('R/functions.R')
 
 # list files to process
-flist = list.files(data_dir, pattern = '^(\\d{8})_Dash7_tracklog.*.csv$', full.names = T, recursive = T)
+flist = list.files(data_dir, pattern = '(\\d{8})_Dash7_tracklog.*.csv$', full.names = T, recursive = T)
 
 # list to hold loop output
 TRK = vector('list', length = length(flist))
