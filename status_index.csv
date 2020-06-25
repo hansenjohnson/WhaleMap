@@ -13,3 +13,5 @@ proc_2020_dfo_viking.R,DFO viking buoy acoustic detections,https://ogsl.ca/vikin
 proc_2020_ccgs_sightings.R,Canadian Coast Guard sightings ,https://www.ccg-gcc.gc.ca/index-eng.html,data/email/default.csv
 proc_2020_niha_sightings.R,Hawkins survey sightings,http://nickhawkinsphotography.com/,data/email/default.csv
 proc_2020_niha_tracks.R,Hawkins survey tracks,http://nickhawkinsphotography.com/,data/email/default.csv
+proc_2020_tc_dash7_sightings.R,TC Dash 7 aerial survey sightings,http://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html,data/email/default.csv
+proc_2020_tc_dash7_tracks.R,TC Dash 7 aerial survey tracks,http://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html,data/email/default.csv
