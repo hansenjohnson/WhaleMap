@@ -5,6 +5,8 @@ suppressPackageStartupMessages(library(tools))
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(RColorBrewer))
 suppressPackageStartupMessages(library(lubridate))
+suppressPackageStartupMessages(library(sp))
+suppressPackageStartupMessages(library(rgeos))
 
 read_GPX = function(ifile){
   tmp = sf::st_read(ifile, layer = "track_points", quiet = TRUE)
@@ -367,9 +369,6 @@ subsample_gps = function(gps, n=60, tol = 0.001, plot_comparison=FALSE, full_res
   
   if(simplify){
     # simplify the geometry using Douglas-Peuker algorithm
-    
-    suppressPackageStartupMessages(library(sp))
-    suppressPackageStartupMessages(library(rgeos))
     
     # return full resolution tracks if desired or if timestamps are not unique
     if(full_res){
