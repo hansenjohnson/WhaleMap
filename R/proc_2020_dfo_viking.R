@@ -99,7 +99,7 @@ saveRDS(object = tracks, file = trk_file)
 # detections --------------------------------------------------------------
 
 # define detection url
-detection_url = paste0('https://www.ogsl.ca/beluga/biodiversity/occurrenceMeasurements/paginatedOccurrenceMeasurements?%24expand=event%2C+event%2Flocation%2C+event%2FdateFormat%2C+extradata%2C+establishmentMeans&%24filter=event%2FeventDateTime+ge+datetime%27',start_date,'T00%3A42%3A28.000Z%27+and+event%2FeventDateTime+le+datetime%27',end_date,'T23%3A40%3A38.000Z%27+and+event%2Fdataset%2Fcollection%2Fid+in+(29)&%24orderby=&%24skip=0&%24top=100&%24language=en')
+detection_url = paste0('https://www.ogsl.ca/beluga/biodiversity/occurrenceMeasurements/paginatedOccurrenceMeasurements?%24expand=event%2C+event%2Flocation%2C+event%2FdateFormat%2C+extradata%2C+establishmentMeans&%24filter=event%2FeventDateTime+ge+datetime%27',start_date,'T00%3A42%3A28.000Z%27+and+event%2FeventDateTime+le+datetime%27',end_date,'T23%3A40%3A38.000Z%27+and+event%2Fdataset%2Fcollection%2Fid+in+(29)&%24orderby=&%24language=en')
 
 # get jsn data
 jsn = get_jsn(detection_url)
