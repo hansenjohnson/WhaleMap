@@ -68,7 +68,7 @@ if(length(flist)!=0){
     sig = idf %>%
       separate(col = `Target Position`, into = c('lat','lon'), sep = ' ') %>%
       transmute(
-        time = with_tz(as.POSIXct(Create, format = '%m/%d %H:%M:%S', tz = 'America/Halifax'), tzone = 'UTC'),
+        time = as.POSIXct(Create, format = '%m/%d %H:%M:%S', tz = 'UTC'),
         date = as.Date(time),
         year = year(time),
         yday = yday(time),
