@@ -51,14 +51,15 @@ if(length(flist)!=0){
                      number = tmp$Nb_total
     )
     
-    # fix date
-    tmp$date = as.Date(tmp$date[1]) # only use first date
     
     # remove columns without data
     tmp = tmp[!is.na(tmp$species)&
                 !is.na(tmp$lat)&
                 !is.na(tmp$lon)&
                 !is.na(tmp$time),]
+    
+    # fix date
+    tmp$date = as.Date(tmp$date[1]) # only use first date
     
     # skip if nothing seen
     if (nrow(tmp) == 0) next
