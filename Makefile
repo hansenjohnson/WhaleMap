@@ -37,6 +37,7 @@ data/processed/tracks.rds : R/proc_tracks.R \
 														data/interim/2019_dfo_twin_otter_tracks.rds \
 														data/interim/2020_noaa_twin_otter_tracks.rds \
 														data/interim/2020_dfo_cessna_tracks.rds \
+														data/interim/2020_dfo_cessna2_tracks.rds \
 														data/interim/2020_tc_dash8_tracks.rds \
 														data/interim/2020_dfo_twin_otter_tracks.rds \
 														data/interim/2020_dfo_viking_tracks.rds \
@@ -204,6 +205,12 @@ data/interim/2020_dfo_cessna_tracks.rds : R/proc_2020_dfo_cessna_tracks.R data/r
 	Rscript $<
 	$(remove_error)
 
+# 2020 DFO cessna2 tracks
+data/interim/2020_dfo_cessna2_tracks.rds : R/proc_2020_dfo_cessna2_tracks.R data/raw/2020_whalemapdata/DFO_Cessna2/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
 # 2020 TC dash8 tracks
 data/interim/2020_tc_dash8_tracks.rds : R/proc_2020_tc_dash8_tracks.R data/raw/2020_whalemapdata/TC_Dash8/*
 	$(report_error)
@@ -275,6 +282,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2019_neaq_sightings.rds \
 																	data/interim/2020_noaa_twin_otter_sightings.rds \
 																	data/interim/2020_dfo_cessna_sightings.rds \
+																	data/interim/2020_dfo_cessna2_sightings.rds \
 																	data/interim/2020_tc_dash8_sightings.rds \
 																	data/interim/2020_dfo_cp_sightings.rds \
 																	data/interim/2020_opportunistic_sightings.rds \
@@ -430,6 +438,12 @@ data/interim/2020_noaa_twin_otter_sightings.rds : R/proc_2020_noaa_twin_otter.R 
 
 # 2020 dfo cessna sightings
 data/interim/2020_dfo_cessna_sightings.rds : R/proc_2020_dfo_cessna_sightings.R data/raw/2020_whalemapdata/DFO_cessna/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+	
+# 2020 dfo cessna2 sightings	
+data/interim/2020_dfo_cessna2_sightings.rds : R/proc_2020_dfo_cessna2_sightings.R data/raw/2020_whalemapdata/DFO_Cessna2/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
