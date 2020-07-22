@@ -114,6 +114,24 @@ config_observations = function(obs){
   if(nrow(obs)==0){
     obs = data.frame(matrix(nrow = 0, ncol = length(columns)))
     colnames(obs) = columns
+    
+    obs = obs %>%
+      mutate(
+        time = as.POSIXct(time),
+        lat = as.numeric(lat),
+        lon = as.numeric(lon),
+        date = as.Date(date),
+        yday = as.numeric(yday),
+        species = as.character(species),
+        score = as.character(score),
+        number = as.numeric(number),
+        calves = as.numeric(calves),
+        year = as.numeric(year),
+        platform = as.character(platform),
+        name = as.character(name),
+        id = as.character(id)
+      )
+    
     return(obs)
   }
   
