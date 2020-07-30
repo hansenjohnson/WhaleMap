@@ -98,8 +98,7 @@ if(file.exists(from_sas_file)){
   # filter
   obs = obs %>%
     filter(date >= t0 & date <= t1 & species == 'right' & 
-             score %in% c('definite visual') &
-             !is.na(time) & !is.na(lat) & !is.na(lon))
+             score %in% c('definite visual') & !is.na(lat) & !is.na(lon))
   
   # define columns to compare
   m_obs = paste0(obs$date, round(obs$lat,0), round(obs$lon,0))
@@ -145,11 +144,11 @@ if(file.exists(from_sas_file)){
 # # New additions to SAS map
 # leaflet() %>%
 #   addProviderTiles(providers$Esri.OceanBasemap) %>%
-#   
+# 
 #   # existing SAS
-#   addCircleMarkers(data = sas, lat = ~lat, lng = ~lon, label = ~id, radius = 4, 
+#   addCircleMarkers(data = sas, lat = ~lat, lng = ~lon, label = ~id, radius = 4,
 #                    stroke = TRUE, weight = 2, color = 'black', fillColor = 'grey', fillOpacity = .8) %>%
-#   
+# 
 #   # from whalemap
 #   addMarkers(data = to_send, lat = ~lat, lng = ~lon, label = ~id)
 # 
