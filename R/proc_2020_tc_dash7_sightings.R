@@ -37,8 +37,15 @@ if(length(flist)!=0){
     # read in data
     tmp = as.data.frame(read_excel(flist[i], sheet = 1, col_names = TRUE))
     
+    # check for position data
     if(!'Pos_lat' %in% names(tmp)){
       message('Skipping file without position data: ', flist[i])
+      next
+    }
+    
+    # check for sightings data
+    if(length(tmp$Pos_lat)==1 & is.na(tmp$Pos_lat[1])){
+      message('Skipping file without sightings data: ', flist[i])
       next
     }
     
