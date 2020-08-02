@@ -38,8 +38,8 @@ printf "\n*** Checking Hawkins Drive ***\n\n"
 rclone sync drive:"2020_Nick Hawkins" "2020_niha/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf --exclude *.HEIC --exclude *.png --exclude *.PNG
 
 # Sync NEAq vessel data Dropbox
-# printf "\n*** Checking NEAq CWI Dropbox ***\n\n"
-# rclone sync dropbox:"NEAq 2019 Survey Data (prior to QC))" "2019_neaq/" --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
+printf "\n*** Checking NEAq CWI Dropbox ***\n\n"
+rclone sync drive:"WhaleMap-NEAq" "2020_neaq/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf --exclude *.HEIC --exclude *.png --exclude *.PNG
 
 # move to project directory
 cd ${DESTDIR}

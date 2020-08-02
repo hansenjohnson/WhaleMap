@@ -43,6 +43,7 @@ data/processed/tracks.rds : R/proc_tracks.R \
 														data/interim/2020_dfo_viking_tracks.rds \
 														data/interim/2020_niha_tracks.rds \
 														data/interim/2020_tc_dash7_tracks.rds \
+														data/interim/2020_neaq_tracks.rds \
 														data/interim/dcs_archived_tracks.rds \
 														data/interim/dcs_live_tracks.rds
 	$(report_error)
@@ -241,6 +242,12 @@ data/interim/2020_tc_dash7_tracks.rds : R/proc_2020_tc_dash7_tracks.R data/raw/2
 	Rscript $<
 	$(remove_error)
 
+# 2020 NEAq tracks
+data/interim/2020_neaq_tracks.rds : R/proc_2020_neaq.R data/raw/2020_neaq/*.csv
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
 # DCS archived tracks
 data/interim/dcs_archived_tracks.rds : R/proc_archived_dcs.R data/raw/dcs/archived/*/*
 	$(report_error)
@@ -291,6 +298,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2020_ccgs_sightings.rds \
 																	data/interim/2020_niha_sightings.rds \
 																	data/interim/2020_tc_dash7_sightings.rds \
+																	data/interim/2020_neaq_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
 
@@ -492,6 +500,12 @@ data/interim/2020_niha_sightings.rds : R/proc_2020_niha_sightings.R data/raw/202
 
 # 2020 tc dash7 sightings
 data/interim/2020_tc_dash7_sightings.rds : R/proc_2020_tc_dash7_sightings.R data/raw/2020_whalemapdata/TC_Dash7/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2020 NEAQ sightings
+data/interim/2020_neaq_sightings.rds : R/proc_2020_neaq.R data/raw/2020_neaq/*.csv
 	$(report_error)
 	Rscript $<
 	$(remove_error)
