@@ -1,5 +1,5 @@
 #!/bin/bash
-# download live Viking buoy detections, then process using R script
+# download and process live Viking buoy detections
 
 # Extract OS name
 unamestr=`uname`
@@ -13,18 +13,8 @@ elif [[ "$unamestr" == 'Darwin' ]]; then
 	SSHDIR=/Users/hansenjohnson
 fi
 
-# define start and end dates of query
-T0="2019-06-01"
-T1=`date +%Y-%m-%d`
+# move to WhaleMap directory
+cd $DESTDIR
 
-# define URL
-URL="https://www.ogsl.ca/beluga/biodiversity/occurrenceMeasurements/paginatedOccurrenceMeasurements?%24expand=event%2C+event%2Flocation%2C+event%2FdateFormat%2C+extradata%2C+establishmentMeans&%24filter=event%2FeventDateTime+ge+datetime%27"${T0}"T00%3A42%3A28.000Z%27+and+event%2FeventDateTime+le+datetime%27"${T1}"T23%3A40%3A38.000Z%27+and+event%2Fdataset%2Fcollection%2Fid+in+(29)&%24orderby=&%24skip=0&%24top=100&%24language=en"
-
-# define data directory
-DATADIR=${DESTDIR}/data/raw/viking/
-
-# make data directory
-mkdir -p ${DATADIR}
-
-# download buoy detections
-wget -N ${URL} -O ${DATADIR}live.json
+# process viking data
+Rscript R/proc_2020_dfo_viking.R
