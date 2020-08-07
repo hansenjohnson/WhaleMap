@@ -28,7 +28,7 @@ for(i in seq_along(flist)){
   tmp = read_excel(flist[i]) %>%
     transmute(
       time = as.POSIXct(as.character(`Date (UTC)`), format = '%Y-%d-%m %H:%M:%S'),
-      date = as.Date(time),
+      date = lubridate::date(time),
       pos = Start_pos,
       species = Species,
       score = ID_cert,
@@ -69,7 +69,7 @@ for(i in seq_along(flist)){
   tmp$species[tmp$species == 'Harbour porpoise'] = 'porpoise'
   tmp$species[tmp$species == 'Humpback whale'] = 'humpback'
   tmp$species[tmp$species == 'Sei whale'] = 'sei'
-  tmp$species[tmp$species == 'Right whale'] = 'right'
+  tmp$species[tmp$species == 'North Atlantic right whale'] = 'right'
   tmp$species[tmp$species == 'Fin whale'] = 'fin'
   tmp$species[tmp$species == 'Minke whale'] = 'minke'
   tmp$species[tmp$species == 'Blue whale'] = 'blue'
