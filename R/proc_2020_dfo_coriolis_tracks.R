@@ -25,14 +25,29 @@ TRK = vector('list', length = length(flist))
 # read files
 for(i in seq_along(flist)){
   
-  # read in file
-  tmp = read_csv(flist[i], col_types = cols()) %>%
-    transmute(
-      date = Date,
-      time = as.POSIXct(paste0(date, ' ', Time), tz = 'UTC'),
-      lat = Latitude,
-      lon = Longitude
-    )
+  # read csv header
+  hd = readLines(flist[i], n = 100)
+  
+  # find last line of metadata
+  ln = grep(pattern = 'trkpt,', x = hd)
+  if(length(ln)==0){
+    tmp = read_csv(flist[i], col_types = cols())  %>%
+      transmute(
+        date = Date,
+        time = as.POSIXct(paste0(date, ' ', Time), tz = 'UTC'),
+        lat = Latitude,
+        lon = Longitude
+      )
+  } else {
+    # read in file
+    tmp = read_csv(flist[i], col_types = cols(), skip = ln) %>%
+      transmute(
+        time,
+        date = as_date(time),
+        lat,
+        lon
+      ) 
+  }
   
   # dummy variable for speed/altitude
   tmp$speed = NA
