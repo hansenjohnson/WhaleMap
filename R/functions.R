@@ -225,6 +225,18 @@ ddm2dd_col = function(DDM){
   
   # split parts
   ddm = strsplit(tmp, split = ' ')
+  
+  # remove entries that were not split correctly
+  bad = which(sapply(ddm,length)!=2)
+  if(length(bad>0)){
+    message(length(bad), ' bad position(s) found!')
+    for(ibad in 1:length(bad)){
+      ddm[[bad[ibad]]][1] = NA
+      ddm[[bad[ibad]]][2] = NA
+    }
+  }
+  
+  # split into deg and min
   deg = sapply(ddm,function(x){x[[1]]})
   min = sapply(ddm,function(x){x[[2]]})
   
