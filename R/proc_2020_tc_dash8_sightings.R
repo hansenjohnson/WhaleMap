@@ -15,10 +15,7 @@ output_dir = 'data/interim/'
 # setup -------------------------------------------------------------------
 
 # libraries
-suppressPackageStartupMessages(library(lubridate))
-suppressPackageStartupMessages(library(rgdal))
 suppressPackageStartupMessages(library(tools))
-suppressPackageStartupMessages(library(measurements))
 suppressPackageStartupMessages(library(readxl))
 suppressPackageStartupMessages(library(stringr))
 
@@ -59,8 +56,14 @@ if(length(flist)!=0){
                      number = tmp$Nb_total
     )
     
-    # fix date
-    tmp$date = as.Date(tmp$date[1]) # only use first date
+    # set date
+    if(is.na(tmp$date[1])){
+      # assign from filename
+      tmp$date = as.Date(strsplit(basename(flist[i]), '_')[[1]][1], format = '%Y%m%d')
+    } else {
+      # assign from data
+      tmp$date = as.Date(tmp$date[1]) # only use first date
+    }
     
     # remove columns without data
     tmp = tmp[!is.na(tmp$species)&
@@ -76,43 +79,9 @@ if(length(flist)!=0){
     tmp$time = as.POSIXct(paste0(tmp$date, ' ', hour(tmp$time), ':', minute(tmp$time), ':', second(tmp$time)), 
                           tz = 'UTC', usetz = T)
     
-    # convert lat lon data type
-    tmp$lat = as.character(tmp$lat)
-    tmp$lon = as.character(tmp$lon)
-    
-    # add zeros to lat lons if necessary
-    for(idf in 1:nrow(tmp)){
-      if(str_count(tmp$lat[idf], ' ') == 0){
-        tmp$lat[idf] = paste0(substr(tmp$lat[idf], 1, 2), ' ', substr(tmp$lat[idf], 3, 8))
-      }
-      if(str_count(tmp$lon[idf], ' ') == 0){
-        tmp$lon[idf] = paste0(substr(tmp$lon[idf], 1, 2), ' ', substr(tmp$lon[idf], 3, 8))
-      }
-    }
-    
-    # remove any letter
-    tmp$lat = gsub(pattern = 'N', replacement = '', x = tmp$lat)
-    tmp$lon = gsub(pattern = 'W', replacement = '', x = tmp$lon)
-    
-    # remove any commas
-    tmp$lat = gsub(pattern = ',', replacement = ' ', x = tmp$lat)
-    tmp$lon = gsub(pattern = ',', replacement = ' ', x = tmp$lon)
-    
-    # remove minus sign
-    tmp$lon = gsub(pattern = '-', replacement = '', x = tmp$lon)
-    
-    # determine lat lon format
-    if(str_count(tmp$lat[1], ' ') == 2){
-      ll_type = 'deg_min_sec'
-    } else {
-      ll_type = 'deg_dec_min'
-    }
-    
-    # convert to decimal degrees (loop because vector behaviour is strange)
-    for(ii in 1:nrow(tmp)){
-      tmp$lat[ii] = round(as.numeric(measurements::conv_unit(tmp$lat[ii], from = ll_type, to = 'dec_deg')), 5)
-      tmp$lon[ii] = round(as.numeric(measurements::conv_unit(tmp$lon[ii], from = ll_type, to = 'dec_deg'))*-1, 5)
-    }
+    # fix lat/lon
+    tmp$lat = ddm2dd_col(tmp$lat)
+    tmp$lon = -ddm2dd_col(tmp$lon)
     
     # add species identifiers
     tmp$species = toupper(tmp$species)
