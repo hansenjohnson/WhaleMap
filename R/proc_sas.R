@@ -113,6 +113,10 @@ if(file.exists(from_sas_file)){
   # reorder data by date
   to_send = to_send[order(to_send$date, decreasing = TRUE),]
   
+  # fill in dummy time data if needed
+  bad_times = is.na(to_send$time)
+  to_send$time[bad_times] = as.POSIXct(paste0(to_send$date[bad_times], ' 12:00:00 UTC'))
+  
   # add another level to flag duplicates on a different day (?)
   
   # write outputs -----------------------------------------------------------
