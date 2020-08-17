@@ -19,6 +19,8 @@ source('R/functions.R')
 # list files to process
 flist = list.files(data_dir, pattern = 'DailySightings_*.*.xlsx$', full.names = T, recursive = T)
 
+flist_mdy = c('DailySightings_20200813.xlsx', 'DailySightings_20200814.xlsx')
+
 # list to hold loop output
 SIG = vector('list', length = length(flist))
 # read files
@@ -27,13 +29,24 @@ for(i in seq_along(flist)){
   # read in data
   tmp = read_excel(flist[i]) %>%
     transmute(
-      time = as.POSIXct(as.character(`Date (UTC)`), format = '%Y-%d-%m %H:%M:%S'),
-      date = lubridate::date(time),
+      time = as.POSIXct(`Date (UTC)`, tz = 'UTC'),
       pos = Start_pos,
       species = Species,
       score = ID_cert,
       number = Best
     )
+  
+  # extract date from filename
+  dt = as.Date(strsplit(basename(flist[i]), '_')[[1]][2], format = '%Y%m%d.xlsx')
+  
+  # extract time from file
+  h_m_s = sapply(strsplit(as.character(tmp$time), ' '), FUN = function(x){x[2]})
+  
+  # fix time
+  tmp$time = as.POSIXct(paste0(dt,' ', h_m_s), tz = 'UTC')
+  
+  # add date
+  tmp$date = lubridate::date(tmp$time)
   
   # extract lat / lon
   lat = lapply(strsplit(tmp$pos, split = ' '),FUN = function(x){x[[1]]})
