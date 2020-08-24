@@ -196,7 +196,7 @@ if(length(inLon)!=0){
 
 # show map text
 if(length(inLon)!=0){
-  cat('For interactive map, go to: https://whalemap.ocean.dal.ca/WhaleMap/ \n')
+  cat('For interactive map, go to: https://whalemap.org/WhaleMap/ \n')
   cat('\\clearpage \n')
 } else {
   cat('*No effort or observations were recorded during this period*')
