@@ -27,7 +27,7 @@ source('R/functions.R')
 # process -----------------------------------------------------------------
 
 # list all flight directories
-flist = list.files(data_dir, full.names = TRUE, recursive = FALSE)
+flist = list.files(data_dir,pattern = '^f_', full.names = TRUE, recursive = FALSE)
 
 # list output column names for sightings
 cnames = c('time','lat','lon','date','yday','species','score','number','calves','year','platform','name','id')
@@ -38,11 +38,6 @@ for(i in seq_along(flist)){
   
   # isolate file
   ifile = flist[i]
-  
-  # skip email file
-  if(basename(ifile) == email_file){
-    next
-  }
   
   # determine file extension
   ext = file_ext(ifile)
@@ -145,7 +140,7 @@ for(i in seq_along(flist)){
     # make empty data frame
     sig = data.frame(matrix(ncol = length(cnames), nrow = 0))
     colnames(sig) = cnames
-    
+    sig = config_observations(sig)
   }
   
   # add to the list
