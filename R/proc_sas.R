@@ -10,7 +10,7 @@ keep_sas_file = 'data/interim/sas_sightings.rds'
 to_sas_dir = 'shared/sas/'
 
 # switch to include sas on WhaleMap
-plot_sas = FALSE
+plot_sas = TRUE
 
 # switch to make WhaleMap data available for sas
 send_sas = TRUE
@@ -122,6 +122,10 @@ if(file.exists(from_sas_file)){
   # write outputs -----------------------------------------------------------
   
   if(plot_sas){
+    
+    # subset to only opportunistic
+    to_keep = to_keep[to_keep$platform == 'opportunistic',]
+    
     # whalemap
     saveRDS(object = to_keep, file = keep_sas_file)
   }
@@ -135,11 +139,12 @@ if(file.exists(from_sas_file)){
 # test --------------------------------------------------------------------
 
 # # new additions to WhaleMap
+# library(leaflet)
 # leaflet() %>%
 #   addProviderTiles(providers$Esri.OceanBasemap) %>%
-#   
+# 
 #   # existing whalemap
-#   addCircleMarkers(data = obs, lat = ~lat, lng = ~lon, label = ~id, radius = 4, 
+#   addCircleMarkers(data = obs, lat = ~lat, lng = ~lon, label = ~id, radius = 4,
 #                    stroke = TRUE, weight = 2, color = 'black', fillColor = 'grey', fillOpacity = .8) %>%
 # 
 #   # from SAS

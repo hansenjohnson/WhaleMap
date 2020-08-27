@@ -307,6 +307,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2020_tc_dash7_sightings.rds \
 																	data/interim/2020_neaq_sightings.rds \
 																	data/interim/2020_dfo_coriolis_sightings.rds \
+																	data/interim/sas_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
 
@@ -526,6 +527,12 @@ data/interim/2020_dfo_coriolis_sightings.rds : R/proc_2020_dfo_coriolis_sighting
 
 # DCS archived detections
 data/interim/dcs_archived_detections.rds : R/proc_archived_dcs.R data/raw/dcs/archived/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# RWSAS sightings
+data/interim/sas_sightings.rds : R/proc_sas.R
 	$(report_error)
 	Rscript $<
 	$(remove_error)
