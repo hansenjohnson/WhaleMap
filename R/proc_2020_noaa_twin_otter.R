@@ -49,13 +49,24 @@ for(i in seq_along(flist)){
     tmp = read_excel(ifile, guess_max = 4e3)
   }
   
+  # find time column
+  tcol = grep(pattern = 'datetime', x = colnames(tmp), ignore.case = TRUE)
+  
+  # rename
+  colnames(tmp)[tcol] = 'DateTime'
+  
   # wrangle time
-  tmp$time = as.POSIXct(tmp$DateTime, format = '%Y-%m-%d %H:%M:%S', tz = 'UTC', usetz = T)
+  tmp$time = as.POSIXct(as.character(tmp$DateTime), 
+                        format = '%Y-%m-%d %H:%M:%S', tz = 'America/New_York', usetz = T)
   
   # try a different format if previous did not work
   if(is.na(tmp$time[1])){
-    tmp$time = as.POSIXct(tmp$DateTime, format = '%m/%d/%Y %H:%M', tz = 'UTC', usetz = T)
+    tmp$time = as.POSIXct(as.character(tmp$DateTime), 
+                          format = '%m/%d/%Y %H:%M', tz = 'America/New_York', usetz = T)
   }
+  
+  # convert timezone
+  tmp$time = with_tz(tmp$time, tzone = 'UTC')
   
   # other time vars
   tmp$date = as.Date(tmp$time)
