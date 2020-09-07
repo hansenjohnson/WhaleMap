@@ -45,7 +45,7 @@ platform_cols = c(
   'plane' = '#8B6914',
   'vessel' = 'black',
   'slocum' = 'blue',
-  'wave' = 'purple'
+  'rpas' = 'purple'
 )
 
 # observation colorby choices
@@ -70,7 +70,7 @@ colorby_trk_choices =
     'Deployment' = 'id')
 
 # define visual and acoustic platforms
-visual_platforms = c('plane', 'vessel')
+visual_platforms = c('plane', 'vessel', 'rpas')
 acoustic_platforms = c('slocum', 'buoy', 'wave')
 
 # define track point plotting threshold
@@ -78,9 +78,6 @@ npts = 250000
 
 # define time lag for startup plotting
 tlag = 14 # days
-
-# define year choices for ui input
-years = c('2014', '2015', '2016', '2017', '2018', '2019')
 
 # make dcs icons
 dcsIcons = iconList(

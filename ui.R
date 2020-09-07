@@ -98,11 +98,13 @@ body <- dashboardBody(
                                        choices = c("Slocum Glider" = "slocum",
                                                    "Plane" = "plane",
                                                    "Vessel" = "vessel",
+                                                   'RPAS' = 'rpas',
                                                    "Buoy" = "buoy",
                                                    "Opportunistic" = "opportunistic"), 
                                        selected = c('slocum', 
                                                     'plane',
                                                     'vessel',
+                                                    'rpas',
                                                     'buoy', 
                                                     'opportunistic')),
                            

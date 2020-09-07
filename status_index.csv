@@ -20,3 +20,4 @@ proc_2020_neaq.R,New England Aquarium survey sightings/tracks,https://www.anders
 proc_2020_dfo_coriolis_sightings.R,DFO Coriolis vessel survey sightings,https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
 proc_2020_dfo_coriolis_tracks.R,DFO Coriolis vessel survey tracks,https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
 proc_2020_unb_sightings.R,University of New Brunswick sightings,https://www.unb.ca/faculty-staff/directory/science-ase-bio/davies-kimberley.html,data/email/default.csv
+proc_2020_tc_rpas_tracks.R,Transport Canada RPAS,https://tc.canada.ca/en/transport-canada-testing-innovative-drone-technology-safeguard-north-atlantic-right-whales-gulf-st-lawrence,data/email/default.csv
