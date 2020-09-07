@@ -36,6 +36,10 @@ critical_habitat_zone = readOGR(paste0(gis_dir, '/critical_habitat_zone/')) %>%
 full_grid = readOGR(paste0(gis_dir, '/Full_ATL_grids/')) %>%
   spTransform(ref)
 
+# read management grid
+tc_ra = readOGR(paste0(gis_dir, '/NARW_RA_2020/')) %>%
+  spTransform(ref)
+
 # # test with leaflet
 # library(leaflet)
 # leaflet() %>%
@@ -43,15 +47,15 @@ full_grid = readOGR(paste0(gis_dir, '/Full_ATL_grids/')) %>%
 #   addLayersControl(
 #     overlayGroups = c('tc_zone',
 #                       'dfo_zone',
-#                       'full_grid',
+#                       'tc_ra',
 #                       'critical_habitat_zone')
 #     ) %>%
 #   addPolygons(data = tc_zone, color = 'blue', popup = ~paste0(ID),
 #                group = 'tc_zone',weight = 2) %>%
 #   addPolygons(data = dfo_zone, color = 'orange',
 #               group = 'dfo_zone',weight = 2) %>%
-#   addPolygons(data = full_grid, color = 'grey',
-#               group = 'full_grid',weight = 2, popup = ~paste0(Grid_Index)) %>%
+#   addPolygons(data = tc_ra, color = 'grey',
+#               group = 'tc_ra',weight = 2) %>%
 #   addPolygons(data = critical_habitat_zone, color = 'darkgreen',
 #               group = 'critical_habitat_zone', weight = 2)
 
@@ -60,4 +64,5 @@ save(tc_zone,
      dfo_zone,
      critical_habitat_zone,
      full_grid,
+     tc_ra,
      file = paste0(output_dir, 'gis.rda'))

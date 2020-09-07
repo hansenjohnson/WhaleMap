@@ -565,6 +565,35 @@ function(input, output, session){
     
   })
   
+  # tc ra observer ------------------------------------------------------  
+  
+  observe(priority = 4, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('tc_ra')
+    
+    if(input$tc_ra){
+      
+      # add polygons
+      proxy %>%
+        addPolygons(data=tc_ra, group = 'tc_ra',
+                    fill = T, 
+                    fillOpacity = 0.25, 
+                    stroke = T, 
+                    dashArray = c(5,5), 
+                    options = pathOptions(clickable = F),
+                    weight = 1, 
+                    color = 'orange', 
+                    fillColor = 'orange')
+      
+      # switch to show/hide
+      ifelse(input$tc_ra, showGroup(proxy, 'tc_ra'),
+             hideGroup(proxy, 'tc_ra'))
+    }
+    
+  })
+  
   # tss observer ------------------------------------------------------  
   
   observe(priority = 4, {

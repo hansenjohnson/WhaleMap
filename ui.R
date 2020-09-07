@@ -219,7 +219,13 @@ body <- dashboardBody(
                                          label = span("Shipping management areas", 
                                                       tags$a(icon("info-sign", lib = "glyphicon"), 
                                                              target="_blank",
-                                                             href = "https://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html")))
+                                                             href = "https://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html"))),
+                           
+                           checkboxInput("tc_ra", value = F,
+                                         label = span("Transport Canada restricted area",
+                                                      tags$a(icon("info-sign", lib = "glyphicon"),
+                                                             target="_blank",
+                                                             href = "https://tc.canada.ca/en/ministerial-orders-interim-orders-directives-directions-response-letters/interim-order-protection-north-atlantic-right-whales-eubalaena-glacialis-near-shediac-valley")))
                   )
            )
     ),
