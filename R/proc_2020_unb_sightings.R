@@ -25,14 +25,18 @@ SIG = vector('list', length = length(flist))
 for(ii in seq_along(flist)){
   
   # read in spp and obs keys
-  SIG[[ii]] = read_csv(flist[ii], col_types = cols()) %>%
+  tmp = read_csv(flist[ii], col_types = cols()) %>%
+    rename(
+      lat = contains('Latitude', ignore.case = TRUE),
+      lon = contains('Longitude', ignore.case = TRUE)
+    ) %>%
     transmute(
       date = as.Date(`Date (YYYY-MM-DD)`),
       yday = yday(date),
       year = year(date),
       time = as.POSIXct(paste0(as.character(date), ' ', `Time (UTC)`, ' UTC')),
-      lat = `Latitude (Decimal degree)`,
-      lon = `Longitude (Decimal degree)`,
+      lat,
+      lon,
       species = Species,
       number = Number,
       calves = Calves,
@@ -41,6 +45,23 @@ for(ii in seq_along(flist)){
       name = 'UNB',
       id = paste0(date, '_', platform, '_', name)
     )
+  
+  # determine ll type
+  ll_ddm = grep(pattern = ' ', x = tmp$lat[1])
+  
+  # convert if necessary
+  if(length(ll_ddm)>0){
+    tmp$lat = ddm2dd_col(tmp$lat)  
+    tmp$lon = ddm2dd_col(tmp$lon)  
+  }
+  
+  # check for errors
+  if(TRUE %in% is.na(c(tmp$lon,tmp$lat))){
+    warning('Position error detected in file: ', flist[ii])
+  }
+  
+  # add data to list
+  SIG[[ii]] = tmp
 }
 
 # combine
@@ -48,7 +69,7 @@ sig = bind_rows(SIG)
 
 # fix scores
 sig$score[sig$score == 'definite'] = 'sighted'
-sig$score[sig$score == 'possible'] = 'possibly sighted'
+sig$score[sig$score %in% c('probable', 'possible')] = 'possibly sighted'
 
 # config data types
 sig = config_observations(sig)
