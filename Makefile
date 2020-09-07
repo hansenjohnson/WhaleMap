@@ -307,6 +307,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2020_tc_dash7_sightings.rds \
 																	data/interim/2020_neaq_sightings.rds \
 																	data/interim/2020_dfo_coriolis_sightings.rds \
+																	data/interim/2020_unb_sightings.rds \
 																	data/interim/sas_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
@@ -521,6 +522,12 @@ data/interim/2020_neaq_sightings.rds : R/proc_2020_neaq.R data/raw/2020_neaq/*.c
 
 # 2020 DFO Corliolis sightings
 data/interim/2020_dfo_coriolis_sightings.rds : R/proc_2020_dfo_coriolis_sightings.R data/raw/2020_whalemapdata/DFO_Coriolis/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2020 UNB sightings
+data/interim/2020_unb_sightings.rds : R/proc_2020_unb_sightings.R data/raw/2020_unb/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
