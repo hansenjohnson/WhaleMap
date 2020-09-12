@@ -30,6 +30,7 @@ for(ii in seq_along(flist)){
       lat = contains('Latitude', ignore.case = TRUE),
       lon = contains('Longitude', ignore.case = TRUE)
     ) %>%
+    na.omit() %>%
     transmute(
       date = as.Date(`Date (YYYY-MM-DD)`),
       yday = yday(date),
