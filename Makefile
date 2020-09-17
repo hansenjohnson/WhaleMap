@@ -45,6 +45,7 @@ data/processed/tracks.rds : R/proc_tracks.R \
 														data/interim/2020_tc_dash7_tracks.rds \
 														data/interim/2020_neaq_tracks.rds \
 														data/interim/2020_dfo_coriolis_tracks.rds \
+														data/interim/2020_dfo_hudson_tracks.rds \
 														data/interim/2020_tc_rpas_tracks.rds \
 														data/interim/dcs_archived_tracks.rds \
 														data/interim/dcs_live_tracks.rds
@@ -262,6 +263,12 @@ data/interim/2020_tc_rpas_tracks.rds : R/proc_2020_tc_rpas_tracks.R data/raw/202
 	Rscript $<
 	$(remove_error)
 
+# 2020 DFO Hudson
+data/interim/2020_dfo_hudson_tracks.rds : R/proc_2020_dfo_hudson_tracks.R data/raw/2020_whalemapdata/DFO_Hudson/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
 # DCS archived tracks
 data/interim/dcs_archived_tracks.rds : R/proc_archived_dcs.R data/raw/dcs/archived/*/*
 	$(report_error)
@@ -315,6 +322,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2020_neaq_sightings.rds \
 																	data/interim/2020_dfo_coriolis_sightings.rds \
 																	data/interim/2020_unb_sightings.rds \
+																	data/interim/2020_dfo_hudson_sightings.rds \
 																	data/interim/sas_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
@@ -535,6 +543,12 @@ data/interim/2020_dfo_coriolis_sightings.rds : R/proc_2020_dfo_coriolis_sighting
 
 # 2020 UNB sightings
 data/interim/2020_unb_sightings.rds : R/proc_2020_unb_sightings.R data/raw/2020_unb/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2020 DFO Hudson sightings
+data/interim/2020_dfo_hudson_sightings.rds : R/proc_2020_dfo_hudson_sightings.R data/raw/2020_whalemapdata/DFO_Hudson/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
