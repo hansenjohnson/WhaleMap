@@ -4,7 +4,7 @@
 # input -------------------------------------------------------------------
 
 # input directory
-gis_dir = 'data/raw/sma/shapefile-right-whale-sma-all/'
+gis_dir = 'data/raw/sma/'
 
 # output file
 ofile = 'data/processed/sma.rda'
