@@ -659,6 +659,38 @@ function(input, output, session){
     
   })
   
+  # sma observer ------------------------------------------------------  
+  
+  observe(priority = 4, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('sma')
+    
+    if(input$sma){
+      
+      # add polygons
+      proxy %>%
+        addPolygons(data=sma, group = 'sma',
+                    fill = T, 
+                    fillOpacity = 0.25, 
+                    stroke = T, 
+                    options = pathOptions(clickable = T),
+                    popup = ~paste(sep = "<br/>" ,
+                                   "US Seasonal Management Area",
+                                   paste0(Restr_Area),
+                                   paste0("Active: ", active)),
+                    weight = 1, 
+                    color = 'brown', 
+                    fillColor = 'brown')
+      
+      # switch to show/hide
+      ifelse(input$sma, showGroup(proxy, 'sma'),
+             hideGroup(proxy, 'sma'))
+    }
+    
+  })
+  
   # track observer ------------------------------------------------------  
   
   # observe(priority = 3, {

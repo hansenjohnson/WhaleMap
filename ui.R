@@ -227,13 +227,18 @@ body <- dashboardBody(
                                                              target="_blank",
                                                              href = "https://tc.canada.ca/en/ministerial-orders-interim-orders-directives-directions-response-letters/interim-order-protection-north-atlantic-right-whales-eubalaena-glacialis-near-shediac-valley"))),
                            
-                           # Management layers
+                           # USA management layers
                            helpText(tags$em('US management areas')),
+                           checkboxInput("sma", value = F,
+                                         label = span("Seasonal management areas", 
+                                                      tags$a(icon("info-sign", lib = "glyphicon"), 
+                                                             target="_blank",
+                                                             href = "https://www.fisheries.noaa.gov/national/endangered-species-conservation/reducing-vessel-strikes-north-atlantic-right-whales#seasonal-management-areas---northeast"))),
                            checkboxInput("dma", value = T,
                                          label = span("Dynamic management areas", 
                                                       tags$a(icon("info-sign", lib = "glyphicon"), 
                                                              target="_blank",
-                                                             href = "https://www.fisheries.noaa.gov/national/endangered-species-conservation/reducing-vessel-strikes-north-atlantic-right-whales")))
+                                                             href = "https://www.fisheries.noaa.gov/national/endangered-species-conservation/reducing-vessel-strikes-north-atlantic-right-whales#dynamic-management-areas")))
                   )
            )
     ),

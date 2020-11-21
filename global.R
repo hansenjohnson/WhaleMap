@@ -115,6 +115,7 @@ hidden_platforms = c('cp_king_air', 'jasco_test')
 load('data/processed/tss.rda')
 load('data/processed/gis.rda')
 load('data/processed/dma.rda')
+load('data/processed/sma.rda')
 
 # read in password file
 load('data/processed/password.rda')

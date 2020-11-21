@@ -46,7 +46,8 @@ build_static_map = function(type = 'whalemap'){
     tss_grp = 'Shipping lanes'
     tc_zone_grp = 'Speed reduction zones'
     dfo_zone_grp = 'Area subject to temporary fishery closure protocol'
-    dma_grp = 'US Dynamic Management Area'
+    dma_grp = 'US Dynamic Management Areas'
+    sma_grp = 'US Seasonal Management Areas'
     
     # output path
     if(type == 'whalemap'){
@@ -98,6 +99,7 @@ build_static_map = function(type = 'whalemap'){
     tc_zone_grp = 'Zones de réduction de vitesse'
     dfo_zone_grp = 'Zones soumises au protocole de fermeture temporaire'
     dma_grp = 'Zone de gestion dynamique des États-Unis'
+    sma_grp = 'Zone de gestion saisonnière des États-Unis'
     
     # output path
     fout = './static_map/whale_map_fr.html'
@@ -162,6 +164,7 @@ build_static_map = function(type = 'whalemap'){
   load('data/processed/tss.rda')
   load('data/processed/gis.rda')
   load('data/processed/dma.rda')
+  load('data/processed/sma.rda')
   
   # tracklines
   tracks = readRDS('data/processed/tracks.rds')
@@ -236,7 +239,8 @@ build_static_map = function(type = 'whalemap'){
                         tss_grp,
                         tc_zone_grp,
                         dfo_zone_grp,
-                        dma_grp),
+                        dma_grp,
+                        sma_grp),
       options = layersControlOptions(collapsed = TRUE), position = 'topright')
   } else {
     map <- map %>% addLayersControl(
@@ -252,7 +256,8 @@ build_static_map = function(type = 'whalemap'){
                         tss_grp,
                         tc_zone_grp,
                         dfo_zone_grp,
-                        dma_grp
+                        dma_grp,
+                        sma_grp
       ),
       options = layersControlOptions(collapsed = TRUE), position = 'topright')
   }
@@ -262,7 +267,8 @@ build_static_map = function(type = 'whalemap'){
                      graticules_grp,
                      robot_grp,
                      tc_zone_grp,
-                     dfo_zone_grp)) %>%
+                     dfo_zone_grp,
+                     sma_grp)) %>%
     
     # add legend
     addLegend(position = "bottomright",
@@ -315,6 +321,16 @@ build_static_map = function(type = 'whalemap'){
                 fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
                 dashArray = c(2,2), options = pathOptions(clickable = F),
                 weight = 1, color = 'darkblue', fillColor = 'darkblue')
+  
+  # plot US SMAs
+  map <- map %>%
+    addPolygons(data=sma, group = sma_grp,
+                fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
+                popup = ~paste(sep = "<br/>" ,
+                               sma_grp,
+                               paste0(Restr_Area),
+                               paste0("Active: ", active)),
+                weight = 1, color = 'brown', fillColor = 'brown') 
   
   # plot US DMAs
   if(!('data.frame' %in% class(dma))){
