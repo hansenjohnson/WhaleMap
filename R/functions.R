@@ -50,6 +50,22 @@ config_tracks = function(tracks){
   if(nrow(tracks)==0){
     tracks = data.frame(matrix(nrow = 0, ncol = length(columns)))
     colnames(tracks) = columns
+    
+    tracks = tracks %>%
+      mutate(
+        time = as.POSIXct(time),
+        lat = as.numeric(lat),
+        lon = as.numeric(lon),
+        speed = as.numeric(speed),
+        altitude = as.numeric(altitude),
+        date = as.Date(date),
+        yday = as.numeric(yday),
+        year = as.numeric(year),
+        platform = as.character(platform),
+        name = as.character(name),
+        id = as.character(id)
+      )
+    
     return(tracks)
   }
   
@@ -497,16 +513,18 @@ subsample_gps = function(gps, n=60, tol = 0.001, plot_comparison=FALSE, full_res
 }
 
 subset_canadian = function(df, 
-                           crs_string = "+init=epsg:3857", 
-                           bb_file = 'data/raw/gis/canadian_boundary/canadian_boundary.csv'){
+                           crs_string = "+init=epsg:3857"){
   
   # catch and return empty input data
   if(nrow(df)==0){
     return(df)
   }
   
-  # read
-  bb = read.csv(bb_file)
+  # define bounding box of canadian region
+  bb = data.frame(
+    lon = c(-72, -67.279444, -67.743056, -67.468056, -65.699722, -65, -40, -40, -72, -72),
+    lat = c(46, 44.186667, 42.887222, 42.518889, 40.451389, 40, 40, 67, 67, 46)
+  )
   
   # coordinate reference
   crs_ref = st_crs(crs_string)
