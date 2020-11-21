@@ -16,8 +16,8 @@ source('R/functions.R')
 
 # read in spp and obs keys
 spp_key = data.frame(
-  code = c('FIWH', 'RIWH', 'MIWH', 'SEWH', 'HUWH', 'HAPO', 'GRSE', 'PIWH'),
-  species = c('fin', 'right', 'minke', 'sei', 'humpback', 'harbor porpoise', 'grey seal','pilot whale'))
+  code = c('FIWH', 'RIWH', 'SEWH', 'HUWH', 'BLWH'),
+  species = c('fin', 'right', 'sei', 'humpback', 'blue'))
 
 # list data files
 flist = list.files(data_dir, pattern = '\\d{8}_*.*_raw.csv$', full.names = T, recursive = T)
