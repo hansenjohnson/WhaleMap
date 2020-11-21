@@ -26,22 +26,14 @@ mkdir -p backups
 printf "\n*** Checking DFO Google Drive ***\n\n"
 rclone sync whalemapdata:"WhaleMapData_Master/2020/" "2020_whalemapdata/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
 
+# Sync CCS aerial data Google drive
+printf "\n*** Checking CCS Google Drive ***\n\n"
+rclone sync drive:"WhaleMap_CCS" "2021_ccs/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
+
 # Sync NOAA aerial data Google drive
 printf "\n*** Checking NOAA Google Drive ***\n\n"
 printf "2020 Flight data \n\n"
 rclone sync drive:"WhaleMap" "2020_noaa_twin_otter/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
-
-# Sync Hawkins 2020 vessel data Google
-# printf "\n*** Checking Hawkins Drive ***\n\n"
-# rclone sync drive:"2020_Nick Hawkins" "2020_niha/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf --exclude *.HEIC --exclude *.png --exclude *.PNG
-
-# Sync NEAq vessel data Dropbox
-# printf "\n*** Checking NEAq CWI Dropbox ***\n\n"
-# rclone sync drive:"WhaleMap-NEAq" "2020_neaq/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf --exclude *.HEIC --exclude *.png --exclude *.PNG
-
-# Sync UNB opportunistic vessel data Dropbox
-# printf "\n*** Checking UNB Dropbox ***\n\n"
-# rclone sync drive:"WhaleMap-UNB" "2020_unb/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf --exclude *.HEIC --exclude *.png --exclude *.PNG
 
 # move to project directory
 cd ${DESTDIR}

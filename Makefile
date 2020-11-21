@@ -47,6 +47,7 @@ data/processed/tracks.rds : R/proc_tracks.R \
 														data/interim/2020_dfo_coriolis_tracks.rds \
 														data/interim/2020_dfo_hudson_tracks.rds \
 														data/interim/2020_tc_rpas_tracks.rds \
+														data/interim/2021_ccs_tracks.rds \
 														data/interim/dcs_archived_tracks.rds \
 														data/interim/dcs_live_tracks.rds
 	$(report_error)
@@ -118,12 +119,6 @@ data/interim/2018_tc_dash8_tracks.rds : R/proc_2018_tc_dash8_tracks.R data/raw/2
 	$(report_error)
 	Rscript $<
 	$(remove_error)
-
-# # 2018 CP king air tracks
-# data/interim/2018_cp_king_air_tracks.rds : R/proc_2018_cp_king_air_tracks.R data/raw/2018_whalemapdata/CP_king_air/*
-	# $(report_error)
-	# Rscript $<
-	# $(remove_error)
 
 # 2018 NEAq nereid tracks
 data/interim/2018_neaq_nereid_tracks.rds : R/proc_2018_neaq_nereid.R data/raw/2018_neaq_cwi/*
@@ -269,6 +264,12 @@ data/interim/2020_dfo_hudson_tracks.rds : R/proc_2020_dfo_hudson_tracks.R data/r
 	Rscript $<
 	$(remove_error)
 
+# 2021 CCS
+data/interim/2021_ccs_tracks.rds : R/proc_2021_ccs.R data/raw/2021_ccs/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
 # DCS archived tracks
 data/interim/dcs_archived_tracks.rds : R/proc_archived_dcs.R data/raw/dcs/archived/*/*
 	$(report_error)
@@ -323,6 +324,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2020_dfo_coriolis_sightings.rds \
 																	data/interim/2020_unb_sightings.rds \
 																	data/interim/2020_dfo_hudson_sightings.rds \
+																	data/interim/2021_ccs_sightings.rds \
 																	data/interim/sas_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
@@ -457,12 +459,6 @@ data/interim/2019_neaq_sightings.rds : R/proc_2019_neaq.R data/raw/2019_neaq/*.c
 	Rscript $<
 	$(remove_error)
 
-# # NOAA SAS map sightings
-# data/interim/sas_sightings.rds : R/proc_sas.R data/raw/sas/*
-# 	$(report_error)
-# 	Rscript $<
-# 	$(remove_error)
-
 # 2020 noaa twin otter sightings
 data/interim/2020_noaa_twin_otter_sightings.rds : R/proc_2020_noaa_twin_otter.R data/raw/2020_noaa_twin_otter/*
 	$(report_error)
@@ -549,6 +545,12 @@ data/interim/2020_unb_sightings.rds : R/proc_2020_unb_sightings.R data/raw/2020_
 
 # 2020 DFO Hudson sightings
 data/interim/2020_dfo_hudson_sightings.rds : R/proc_2020_dfo_hudson_sightings.R data/raw/2020_whalemapdata/DFO_Hudson/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2021 CCS
+data/interim/2021_ccs_sightings.rds : R/proc_2021_ccs.R data/raw/2021_ccs/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
