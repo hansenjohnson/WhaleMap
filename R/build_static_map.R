@@ -161,6 +161,7 @@ build_static_map = function(type = 'whalemap'){
   # read in map data
   load('data/processed/tss.rda')
   load('data/processed/gis.rda')
+  load('data/processed/dma.rda')
   
   # tracklines
   tracks = readRDS('data/processed/tracks.rds')
