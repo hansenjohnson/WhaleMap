@@ -61,21 +61,6 @@ body <- dashboardBody(
     
     column(width = 3,
            
-           # translator
-           box(width = NULL, solidHeader = F, collapsible = T, title = 'Translate / Traduire', status = 'primary',collapsed = T,
-               HTML('
-                  <div id="google_translate_element"></div>
-                  
-                  <script type="text/javascript">
-                  function googleTranslateElementInit() {
-                  new google.translate.TranslateElement({pageLanguage: \'en\', layout: google.translate.TranslateElement.InlineLayout.SIMPLE},   \'google_translate_element\');
-                  }
-                  </script>
-                  
-                  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-                  ')
-           ),
-           
            # map editor
            tabBox(title = 'Editor', width = NULL,
                   
