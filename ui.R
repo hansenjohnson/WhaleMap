@@ -62,7 +62,7 @@ body <- dashboardBody(
     column(width = 3,
            
            # map editor
-           tabBox(title = 'Editor', width = NULL,
+           tabBox(title = NULL, width = NULL,
                   
                   # data tab ----------------------------------------------------------
                   
