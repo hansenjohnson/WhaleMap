@@ -46,6 +46,7 @@ build_static_map = function(type = 'whalemap'){
     tss_grp = 'Shipping lanes'
     tc_zone_grp = 'Speed reduction zones'
     dfo_zone_grp = 'Area subject to temporary fishery closure protocol'
+    dma_grp = 'US Dynamic Management Area'
     
     # output path
     if(type == 'whalemap'){
@@ -96,6 +97,7 @@ build_static_map = function(type = 'whalemap'){
     tss_grp = 'Couloirs de navigation'
     tc_zone_grp = 'Zones de réduction de vitesse'
     dfo_zone_grp = 'Zones soumises au protocole de fermeture temporaire'
+    dma_grp = 'Zone de gestion dynamique des États-Unis'
     
     # output path
     fout = './static_map/whale_map_fr.html'
@@ -232,7 +234,8 @@ build_static_map = function(type = 'whalemap'){
                         mpa_grp,
                         tss_grp,
                         tc_zone_grp,
-                        dfo_zone_grp),
+                        dfo_zone_grp,
+                        dma_grp),
       options = layersControlOptions(collapsed = TRUE), position = 'topright')
   } else {
     map <- map %>% addLayersControl(
@@ -247,7 +250,8 @@ build_static_map = function(type = 'whalemap'){
                         mpa_grp,
                         tss_grp,
                         tc_zone_grp,
-                        dfo_zone_grp
+                        dfo_zone_grp,
+                        dma_grp
       ),
       options = layersControlOptions(collapsed = TRUE), position = 'topright')
   }
@@ -310,6 +314,19 @@ build_static_map = function(type = 'whalemap'){
                 fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
                 dashArray = c(2,2), options = pathOptions(clickable = F),
                 weight = 1, color = 'darkblue', fillColor = 'darkblue')
+  
+  # plot US DMAs
+  if(!('data.frame' %in% class(dma))){
+    map <- map %>%
+      addPolygons(data=dma, group = dma_grp,
+                  fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
+                  dashArray = c(2,2), 
+                  popup = ~paste(sep = "<br/>" ,
+                                 dma_grp,
+                                 paste0(name),
+                                 paste0("Expires: ", expiration)),
+                  weight = 1, color = 'orange', fillColor = 'orange') 
+  }
   
   # add tracks --------------------------------------------------------------
   

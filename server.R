@@ -626,6 +626,38 @@ function(input, output, session){
   
   })
   
+  # dma observer ------------------------------------------------------  
+  
+  observe(priority = 4, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('dma')
+    
+    if(input$dma & class(dma) != 'data.frame'){
+      
+      # add polygons
+      proxy %>%
+        addPolygons(data=dma, group = 'dma',
+                    fill = T, 
+                    fillOpacity = 0.25, 
+                    stroke = T, 
+                    dashArray = c(5,5), 
+                    options = pathOptions(clickable = T),
+                    popup = ~paste(sep = "<br/>" ,
+                                   "US Dynamic Management Area",
+                                   paste0(name),
+                                   paste0("Expires: ", expiration)),
+                    weight = 1, 
+                    color = 'orange', 
+                    fillColor = 'orange')
+      
+      # switch to show/hide
+      ifelse(input$dma, showGroup(proxy, 'dma'),
+             hideGroup(proxy, 'dma'))
+    }
+    
+  })
   
   # track observer ------------------------------------------------------  
   

@@ -200,7 +200,7 @@ body <- dashboardBody(
                            
                            checkboxInput("legend", label = 'Legends', value = T),
                            
-                           # Management layers
+                           # Canadian management layers
                            helpText(tags$em('Canadian management areas (2020)')),
                            
                            checkboxInput("critical_habitat_zone", 
@@ -225,7 +225,15 @@ body <- dashboardBody(
                                          label = span("Transport Canada restricted area",
                                                       tags$a(icon("info-sign", lib = "glyphicon"),
                                                              target="_blank",
-                                                             href = "https://tc.canada.ca/en/ministerial-orders-interim-orders-directives-directions-response-letters/interim-order-protection-north-atlantic-right-whales-eubalaena-glacialis-near-shediac-valley")))
+                                                             href = "https://tc.canada.ca/en/ministerial-orders-interim-orders-directives-directions-response-letters/interim-order-protection-north-atlantic-right-whales-eubalaena-glacialis-near-shediac-valley"))),
+                           
+                           # Management layers
+                           helpText(tags$em('US management areas')),
+                           checkboxInput("dma", value = T,
+                                         label = span("Dynamic management areas", 
+                                                      tags$a(icon("info-sign", lib = "glyphicon"), 
+                                                             target="_blank",
+                                                             href = "https://www.fisheries.noaa.gov/national/endangered-species-conservation/reducing-vessel-strikes-north-atlantic-right-whales")))
                   )
            )
     ),
