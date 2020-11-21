@@ -52,9 +52,9 @@ if(length(dmas)>0){
   
   # check expiration times
   e_times = as.POSIXct(md$expiration, tz = 'America/New_York')
-  e_times = with_tz(e_times, tzone = Sys.timezone())
-  if(TRUE %in% c(e_times<Sys.time())){
-    stop("Expired DMA detected!")
+  e_times = as.Date(with_tz(e_times, tzone = Sys.timezone()))
+  if(TRUE %in% c(e_times<Sys.Date())){
+    warning("Expired DMA detected!")
   }
   
   # convert to spatial polygon data frame
