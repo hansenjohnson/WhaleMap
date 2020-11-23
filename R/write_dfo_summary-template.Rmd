@@ -36,7 +36,6 @@ obs = readRDS(paste0(pre, 'data/processed/observations.rds'))
 trk = readRDS(paste0(pre, 'data/processed/tracks.rds'))
 load(paste0(pre, 'data/processed/tss.rda'))
 load(paste0(pre, 'data/processed/gis.rda'))
-bb_file = paste0(pre, 'data/raw/gis/canadian_boundary/canadian_boundary.csv')
 
 # define species list
 spp_list = c('right', 'fin', 'sei', 'humpback', 'blue')
@@ -52,14 +51,14 @@ obs = obs %>%
            score %in% c('definite visual','definite acoustic') &
            name != 'jasco_test' &
            !is.na(lat) & !is.na(lon))
-obs = subset_canadian(obs, bb_file = bb_file)
+obs = subset_canadian(obs)
   
 # subset tracks
 trk = trk %>%
   filter(date >= t0 & date <= t1 & 
            name != 'jasco_test' &
            !is.na(lat) & !is.na(lon))
-trk = subset_canadian(trk, bb_file = bb_file)
+trk = subset_canadian(trk)
 
 # create data to/from message
 if(t0 == t1){
