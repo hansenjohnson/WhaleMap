@@ -4,7 +4,7 @@
 # user input --------------------------------------------------------------
 
 # directory to look for files
-data_dir = 'data/raw/2021_ccs/'
+data_dir = 'data/raw/2021_ccs/aerial/'
 
 # directory for output
 trk_ofile = 'data/interim/2021_ccs_tracks.rds'
