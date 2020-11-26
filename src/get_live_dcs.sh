@@ -20,7 +20,6 @@ declare -A URL
 URL=(
   [2020-11-19_slocum_ru34]=http://dcs.whoi.edu/rutgers1120/rutgers1120_ru34_html/ptracks/manual_analysis.csv
   [2020-11-15_slocum_we16]=http://dcs.whoi.edu/cox1120/cox1120_we16_html/ptracks/manual_analysis.csv
-	[2020-10-15_slocum_fundy]=http://dcs.whoi.edu/dal1020/dal1020_fundy_html/ptracks/manual_analysis.csv
 	[2020-07-31_buoy_mamv]=http://dcs.whoi.edu/mamv0720/mamv0720_mamv_html/ptracks/manual_analysis.csv
 	[2020-07-30_buoy_njatl]=http://dcs.whoi.edu/njatl0720/njatl0720_njatl_html/ptracks/manual_analysis.csv		
 	[2020-01-15_buoy_nybnw]=http://dcs.whoi.edu/nybnw0120/nybnw0120_buoy_html/ptracks/manual_analysis.csv
