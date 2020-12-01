@@ -46,14 +46,13 @@ if(length(dmas)>0){
   # extract polygon metadata and name rows by id
   md = data.frame(
     name = xml_attr(dmas,attr = 'name'),
-    expiration = xml_attr(dmas,attr = 'expdate')
+    expiration = paste0(xml_attr(dmas,attr = 'expdate'), ' UTC')
   ) 
   rownames(md) = xml_attr(dmas, attr = 'id')
   
   # check expiration times
-  e_times = as.POSIXct(md$expiration, tz = 'America/New_York')
-  e_times = as.Date(with_tz(e_times, tzone = Sys.timezone()))
-  if(TRUE %in% c(e_times<Sys.Date())){
+  e_dates = as.Date(as.POSIXct(md$expiration, tz = 'UTC'))
+  if(TRUE %in% c(e_dates<Sys.Date())){
     warning("Expired DMA detected!")
   }
   
