@@ -111,10 +111,9 @@ hidden_platforms = c('cp_king_air', 'jasco_test')
 
 # load data ---------------------------------------------------------------
 
-# read in map polygons
+# read in static map polygons
 load('data/processed/tss.rda')
 load('data/processed/gis.rda')
-load('data/processed/dma.rda')
 load('data/processed/sma.rda')
 
 # read in password file

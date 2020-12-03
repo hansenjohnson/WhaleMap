@@ -17,6 +17,9 @@ function(input, output, session){
   # sightings / detections
   observations = readRDS('data/processed/observations.rds')
  
+  # dynamic map polygons
+  load('data/processed/dma.rda')
+  
   # build date UI -------------------------------------------------------
   
   output$dateChoice <- renderUI({
