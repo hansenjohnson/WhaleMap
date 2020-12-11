@@ -280,7 +280,7 @@ build_static_map = function(type = 'whalemap'){
     addFullscreenControl(pseudoFullscreen = F)
   
   # center on entire region
-  map <- setView(map = map, lng = -65, lat = 45, zoom = 5)
+  map <- setView(map = map, lng = -65, lat = 45, zoom = 4)
   
   # plot polygons -----------------------------------------------------------
   
