@@ -30,7 +30,8 @@ if(length(flist)>0){
     tmp = read.csv(flist[ii])
     
     # wrangle time
-    tmp$time = as.POSIXct(tmp$Time..EDT., format = '%Y-%m-%dT%H:%M:%S', tz = 'America/New_York')
+    tmp$time = as.POSIXct(tmp[,grep('time..e', tolower(colnames(tmp)))], 
+                          format = '%Y-%m-%dT%H:%M:%S', tz = 'America/New_York')
     tmp$date = as.Date(tmp$time)
     tmp$yday = yday(tmp$time)
     tmp$year = year(tmp$time)
@@ -94,7 +95,7 @@ if(length(flist)>0){
     }
     
     # combine all effort segments
-    TRK[[i]] = bind_rows(EFF)
+    TRK[[ii]] = bind_rows(EFF)
     
     # sightings ---------------------------------------------------------------
     
@@ -123,7 +124,7 @@ if(length(flist)>0){
     sig = sig[,c('time','lat','lon','date', 'yday','species','score','number','calves','year','platform','name','id')]
     
     # add to the list
-    SIG[[i]] = sig
+    SIG[[ii]] = sig
     
   }
 }
