@@ -44,6 +44,7 @@ if(file.exists(from_sas_file)){
     lat = as.numeric(xml_attr(tmp, "lat")),
     lon = as.numeric(xml_attr(tmp, "lon")),
     number = as.numeric(xml_attr(tmp, "groupsize")),
+    calves = as.character(xml_attr(tmp, "momcalf")),
     platform = as.character(xml_attr(tmp, "category")),
     score = as.character(xml_attr(tmp, "description"))
   )
@@ -51,6 +52,7 @@ if(file.exists(from_sas_file)){
   # convert column types
   sas$platform = as.character(sas$platform)
   sas$score = as.character(sas$score)
+  sas$calves = ifelse(sas$calves=='Yes', yes = 1, no = 0)
   
   # list opportunistic platforms
   opp_list = c('Opportunistic', 
