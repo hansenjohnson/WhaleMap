@@ -7,10 +7,10 @@ The goal of this software is to rapidly and effectively collect and share whale 
 ## Demonstration
 
 See the homepage with summary map here:
-https://whalemap.ocean.dal.ca/  
+https://whalemap.org/  
 
 And see the Shiny App interactive map page here:
-https://whalemap.ocean.dal.ca/WhaleMap/
+https://whalemap.org/WhaleMap/
 
 ## Project structure
 
