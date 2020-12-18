@@ -20,8 +20,8 @@ spp_key = data.frame(
   species = c('fin', 'right', 'sei', 'humpback', 'blue'))
 
 # list data files
-flist = toupper(list.files(data_dir, pattern = '\\d{8}_*.*.csv$',ignore.case = T, full.names = T, recursive = T))
-blist = basename(flist)
+flist = list.files(data_dir, pattern = '\\d{8}_*.*.csv$',ignore.case = T, full.names = T, recursive = T)
+blist = toupper(basename(flist))
 
 # identify unique dates
 dates = unique(substr(blist,1,8))
