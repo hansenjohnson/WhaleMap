@@ -48,6 +48,7 @@ data/processed/tracks.rds : R/proc_tracks.R \
 														data/interim/2020_dfo_hudson_tracks.rds \
 														data/interim/2020_tc_rpas_tracks.rds \
 														data/interim/2021_ccs_tracks.rds \
+														data/interim/2021_neaq_aerial_tracks.rds \
 														data/interim/dcs_archived_tracks.rds \
 														data/interim/dcs_live_tracks.rds
 	$(report_error)
@@ -270,6 +271,12 @@ data/interim/2021_ccs_tracks.rds : R/proc_2021_ccs.R data/raw/2021_ccs/*
 	Rscript $<
 	$(remove_error)
 
+# 2021 NEAq aerial
+data/interim/2021_neaq_aerial_tracks.rds : R/proc_2021_neaq_aerial.R data/raw/2021_neaq_aerial/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
 # DCS archived tracks
 data/interim/dcs_archived_tracks.rds : R/proc_archived_dcs.R data/raw/dcs/archived/*/*
 	$(report_error)
@@ -325,6 +332,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2020_unb_sightings.rds \
 																	data/interim/2020_dfo_hudson_sightings.rds \
 																	data/interim/2021_ccs_sightings.rds \
+																	data/interim/2021_neaq_aerial_sightings.rds \
 																	data/interim/sas_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
@@ -551,6 +559,12 @@ data/interim/2020_dfo_hudson_sightings.rds : R/proc_2020_dfo_hudson_sightings.R 
 
 # 2021 CCS
 data/interim/2021_ccs_sightings.rds : R/proc_2021_ccs.R data/raw/2021_ccs/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2021 NEAq aerial
+data/interim/2021_neaq_aerial_sightings.rds : R/proc_2021_neaq_aerial.R data/raw/2021_neaq_aerial/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
