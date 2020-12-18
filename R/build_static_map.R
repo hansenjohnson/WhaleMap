@@ -4,7 +4,49 @@ build_static_map = function(type = 'whalemap'){
   
   # translation -------------------------------------------------------------
   
-  if(type == 'dfo-en' | type == 'whalemap'){
+  if(type == 'whalemap'){
+    
+    # define category names
+    acoustic_lab = 'Acoustic'
+    visual_lab = 'Visual'
+    
+    # basemap title
+    main_title = 'Right whale observations'
+    date_title = 'Data from:'
+    
+    # robot popup labels
+    robot_main = 'Latest position'
+    robot_date = 'Time: '
+    robot_position = 'Position: '
+    
+    # robot popup labels
+    rw_main = 'Right whale'
+    rw_number = 'Number of whales: '
+    rw_calves = 'Number of calves: '
+    rw_date = 'Date: '
+    rw_position = 'Position: '
+    
+    # basemap labels
+    basemap_grp = 'OpenStreetMap'
+    blank_grp = 'Basemap'
+    oceanmap_grp = 'Ocean basemap'
+    
+    # define layer labels
+    survey_grp = 'Survey tracks'
+    robot_grp = 'Latest robot positions'
+    graticules_grp = 'Graticules'
+    rw_grp = 'Right whale observations'
+    tss_grp = 'Shipping lanes'
+    mpa_grp = 'Canadian protected areas'
+    tc_zone_grp = 'Canadian speed reduction zones'
+    dfo_zone_grp = 'Areas subject to Canadian fishery closure protocol'
+    sma_grp = 'US Seasonal Management Areas'
+    dma_grp = 'US Right Whale Slow Zones'
+    
+    # output path
+    fout = './static_map/whalemap.html'  
+    
+  } else if(type == 'dfo-en'){
     
     # define category names
     acoustic_lab = 'Acoustic'
@@ -42,19 +84,16 @@ build_static_map = function(type = 'whalemap'){
     robot_grp = 'Latest robot positions'
     graticules_grp = 'Graticules'
     rw_grp = 'Right whale observations'
-    mpa_grp = 'Protected areas'
     tss_grp = 'Shipping lanes'
-    tc_zone_grp = 'Speed reduction zones'
-    dfo_zone_grp = 'Area subject to temporary fishery closure protocol'
-    dma_grp = 'US Dynamic Management Areas'
+    mpa_grp = 'Canadian protected areas'
+    tc_zone_grp = 'Canadian speed reduction zones'
+    dfo_zone_grp = 'Areas subject to Canadian fishery closure protocol'
     sma_grp = 'US Seasonal Management Areas'
+    dma_grp = 'US Right Whale Slow Zones'
     
     # output path
-    if(type == 'whalemap'){
-      fout = './static_map/whalemap.html'  
-    } else {
-      fout = './static_map/whale_map_en.html'  
-    }
+    
+    fout = './static_map/whale_map_en.html'
     
   } else if(type == 'dfo-fr'){
     
@@ -202,19 +241,23 @@ build_static_map = function(type = 'whalemap'){
   
   # basemap -----------------------------------------------------------------
   
-  # start basemap
-  map <- leaflet() %>%
-    
-    # add canada gov tiles
-    addTiles(urlTemplate = can_basemap_url, group = basemap_grp) %>%
-    addTiles(urlTemplate = can_labels_url, group = basemap_grp,
-             attribution = paste0('<a href=\"', can_attribution_url, '\">', can_attribution_txt, '</a>')) %>%
-    
-    # add other provider tiles
-    addProviderTiles(providers$CartoDB.PositronNoLabels, group=blank_grp) %>%
-    addProviderTiles(providers$Esri.OceanBasemap, group=oceanmap_grp) %>%
-    
-    # title and last updated message
+  # add basemap tiles
+  if(type == 'whalemap'){
+    map <- leaflet() %>%
+      addProviderTiles(providers$OpenStreetMap, group=basemap_grp) %>%
+      addProviderTiles(providers$CartoDB.PositronNoLabels, group=blank_grp) %>%
+      addProviderTiles(providers$Esri.OceanBasemap, group=oceanmap_grp)
+  } else {
+    map <- leaflet() %>%
+      addTiles(urlTemplate = can_basemap_url, group = basemap_grp) %>%
+      addTiles(urlTemplate = can_labels_url, group = basemap_grp,
+               attribution = paste0('<a href=\"', can_attribution_url, '\">', can_attribution_txt, '</a>')) %>%
+      addProviderTiles(providers$CartoDB.PositronNoLabels, group=blank_grp) %>%
+      addProviderTiles(providers$Esri.OceanBasemap, group=oceanmap_grp)
+  }
+  
+  # title and last updated message
+  map <- map %>% 
     addControl(position = "topright",
                paste0(
                  '<div align="center">',
@@ -235,12 +278,12 @@ build_static_map = function(type = 'whalemap'){
       overlayGroups = c(survey_grp,
                         robot_grp,
                         rw_grp,
-                        mpa_grp,
                         tss_grp,
+                        mpa_grp,
                         tc_zone_grp,
                         dfo_zone_grp,
-                        dma_grp,
-                        sma_grp),
+                        sma_grp,
+                        dma_grp),
       options = layersControlOptions(collapsed = TRUE), position = 'topright')
   } else {
     map <- map %>% addLayersControl(
@@ -252,23 +295,22 @@ build_static_map = function(type = 'whalemap'){
       overlayGroups = c(survey_grp,
                         robot_grp,
                         rw_grp,
-                        mpa_grp,
                         tss_grp,
+                        mpa_grp,
                         tc_zone_grp,
                         dfo_zone_grp,
-                        dma_grp,
-                        sma_grp
-      ),
+                        sma_grp,
+                        dma_grp),
       options = layersControlOptions(collapsed = TRUE), position = 'topright')
   }
   
   # hide groups
   map <- map %>% hideGroup(c(survey_grp,
-                     graticules_grp,
-                     robot_grp,
-                     tc_zone_grp,
-                     dfo_zone_grp,
-                     sma_grp)) %>%
+                             graticules_grp,
+                             robot_grp,
+                             tc_zone_grp,
+                             dfo_zone_grp,
+                             sma_grp)) %>%
     
     # add legend
     addLegend(position = "bottomright",
