@@ -20,24 +20,25 @@ spp_key = data.frame(
   species = c('fin', 'right', 'sei', 'humpback', 'blue'))
 
 # list data files
-flist = list.files(data_dir, pattern = '\\d{8}_*.*.csv$',ignore.case = T, full.names = F, recursive = T)
+flist = toupper(list.files(data_dir, pattern = '\\d{8}_*.*.csv$',ignore.case = T, full.names = T, recursive = T))
+blist = basename(flist)
 
 # identify unique dates
-dates = unique(substr(flist,1,8))
+dates = unique(substr(blist,1,8))
 
 TRK = SIG = vector('list', length = length(dates))
 for(ii in seq_along(dates)){
   
   # construct file names
-  rfile = paste0(data_dir,dates[ii],'_RAW.csv')
-  pfile = paste0(data_dir,dates[ii],'_URI.csv')
+  rfile = paste0(dates[ii],'_RAW.CSV')
+  pfile = paste0(dates[ii],'_URI.CSV')
   
   # read in data
-  if(file.exists(pfile)){
-    tmp = read.csv(pfile)
+  if(pfile %in% blist){
+    tmp = read.csv(flist[which(pfile == blist)])
     ifile=pfile
-  } else if(file.exists(rfile)){
-    tmp = read.csv(rfile)
+  } else if(rfile %in% blist){
+    tmp = read.csv(flist[which(rfile == blist)])
     ifile=rfile
   } else {
     message('No file found for ',dates[ii])
