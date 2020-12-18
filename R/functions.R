@@ -31,6 +31,24 @@ clean_latlon = function(d){
   return(d)
 }
 
+qc_latlon = function(df){
+  # longitude
+  bad_lon = which(df$lon < -95 | df$lon > 25)
+  if(length(bad_lon)>0){
+    df$lon[bad_lon] = NA
+    message(length(bad_lon), ' points exceeded longitude boundaries! Setting to NA...')  
+  }
+  
+  # latitude
+  bad_lat = which(df$lat < 0 | df$lat > 80)
+  if(length(bad_lat)>0){
+    df$lat[bad_lat] = NA
+    message(length(bad_lat), ' points exceeded latitude boundaries! Setting to NA...')
+  }
+  
+  return(df)
+}
+
 config_tracks = function(tracks){
   
   # list required column names
@@ -102,6 +120,9 @@ config_tracks = function(tracks){
   
   if(is.null(tracks$id)){tracks$id = NA}
   tracks$id = as.character(tracks$id)
+  
+  # qc latlon
+  tracks = qc_latlon(tracks)
   
   # re-order
   tracks = tracks[c(columns)]
@@ -190,6 +211,9 @@ config_observations = function(obs){
   
   if(is.null(obs$calves)){obs$calves = NA}
   obs$calves = as.numeric(obs$calves)
+  
+  # qc latlon
+  obs = qc_latlon(obs)
   
   # re-order
   obs = obs[c(columns)]
