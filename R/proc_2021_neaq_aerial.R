@@ -82,7 +82,7 @@ for(ii in seq_along(dates)){
   if(length(i0) != length(i1)){
     i0 = 1
     i1 = nrow(tmp)
-    message('Could not match on/off effort lines in: ', flist[i])
+    message('Could not match on/off effort lines in: ', ifile)
     message('Plotting uncorrected effort data...')
   }
   
