@@ -30,3 +30,4 @@ wget -N ${URL} -P ${DATADIR}
 
 # process
 Rscript R/proc_dma.R
+make
