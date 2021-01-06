@@ -5,9 +5,19 @@
 
 # input files
 obs_file = 'data/processed/observations.rds'
-from_sas_file = 'data/raw/sas/xmlgenSight.pl'
+from_sas_file = 'data/raw/sas/xmlgenSAS_H.pl'
+sas_key_file = 'data/raw/sas/RWSASorganizations.xlsx'
 keep_sas_file = 'data/interim/sas_sightings.rds'
 to_sas_dir = 'shared/sas/'
+
+# list WhaleMap platform names to not send from WhaleMap to RWSAS
+no_send_list = c('noaa_twin_otter')
+
+# # list organizations to not plot on WhaleMap from SAS
+# no_plot_list = c("NOAA|Southeast Fisheries Science Center (SEFSC) | Miami")
+
+# define latitude below which dedicated surveys are excluded from WhaleMap
+sas_lat = 36.5
 
 # switch to include sas on WhaleMap
 plot_sas = TRUE
@@ -19,6 +29,7 @@ send_sas = TRUE
 
 # libraries
 suppressPackageStartupMessages(library(xml2))
+suppressPackageStartupMessages(library(readxl))
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(lubridate))
 source('R/functions.R')
@@ -53,6 +64,15 @@ if(file.exists(from_sas_file)){
   sas$platform = as.character(sas$platform)
   sas$score = as.character(sas$score)
   sas$calves = ifelse(sas$calves=='Yes', yes = 1, no = 0)
+  
+  # read in org key
+  org_key = read_excel(sas_key_file)
+  
+  # read in org codes
+  org_codes = as.numeric(xml_attr(tmp, "obs_org"))
+  
+  # define sas organizations
+  sas_org = org_key$Observer_org[match(table = org_key$Code, x = org_codes)]
   
   # list opportunistic platforms
   opp_list = c('Opportunistic', 
@@ -108,10 +128,12 @@ if(file.exists(from_sas_file)){
   m_sas = paste0(sas$date, round(sas$lat,0), round(sas$lon,0))
   
   # determine records to add to WhaleMap
-  to_keep = filter(sas, !m_sas %in% m_obs)  
+  to_keep = sas %>%
+    filter(!(m_sas %in% m_obs) & !(lat <= sas_lat & platform != 'opportunistic'))
   
   # determine records to send to SAS
-  to_send = filter(obs, !m_obs %in% m_sas & !name %in% c('noaa_twin_otter'))  
+  to_send = obs %>%
+    filter(!(m_obs %in% m_sas) & !(name %in% no_send_list))  
   
   # reorder data by date
   to_send = to_send[order(to_send$date, decreasing = TRUE),]
@@ -125,10 +147,6 @@ if(file.exists(from_sas_file)){
   # write outputs -----------------------------------------------------------
   
   if(plot_sas){
-    
-    # subset to only opportunistic
-    to_keep = to_keep[to_keep$platform == 'opportunistic',]
-    
     # whalemap
     saveRDS(object = to_keep, file = keep_sas_file)
   }
