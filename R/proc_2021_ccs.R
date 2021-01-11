@@ -28,7 +28,7 @@ spp_key = data.frame(
 if(file.exists(ifile)){
   
   # read in data
-  opp = read.csv(ifile)
+  opp = read.csv(opp_ifile)
   
   # wrangle time
   time = paste0(opp$year,'-', sprintf("%02d", opp$month), '-', sprintf("%02d", opp$day), ' ', opp$time)
