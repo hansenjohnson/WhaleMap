@@ -25,7 +25,7 @@ spp_key = data.frame(
 
 # opportunistic data ------------------------------------------------------
 
-if(file.exists(ifile)){
+if(file.exists(opp_ifile)){
   
   # read in data
   opp = read.csv(opp_ifile)
