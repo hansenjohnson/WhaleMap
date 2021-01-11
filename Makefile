@@ -40,7 +40,6 @@ data/processed/tracks.rds : R/proc_tracks.R \
 														data/interim/2020_dfo_cessna2_tracks.rds \
 														data/interim/2020_tc_dash8_tracks.rds \
 														data/interim/2020_dfo_twin_otter_tracks.rds \
-														data/interim/2020_dfo_viking_tracks.rds \
 														data/interim/2020_niha_tracks.rds \
 														data/interim/2020_tc_dash7_tracks.rds \
 														data/interim/2020_neaq_tracks.rds \
@@ -224,10 +223,10 @@ data/interim/2020_dfo_twin_otter_tracks.rds : R/proc_2020_dfo_twin_otter_tracks.
 	$(remove_error)
 
 # DFO viking tracks
-data/interim/2020_dfo_viking_tracks.rds : R/proc_2020_dfo_viking.R
-	$(report_error)
-	Rscript $<
-	$(remove_error)
+#data/interim/2020_dfo_viking_tracks.rds : R/proc_2020_dfo_viking.R
+#	$(report_error)
+#	Rscript $<
+#	$(remove_error)
 
 # 2020 Hawkins tracks
 data/interim/2020_niha_tracks.rds : R/proc_2020_niha_tracks.R data/raw/2020_niha/Tracks/*
@@ -323,7 +322,6 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2020_dfo_cp_sightings.rds \
 																	data/interim/2020_opportunistic_sightings.rds \
 																	data/interim/2020_dfo_twin_otter_sightings.rds \
-																	data/interim/2020_dfo_viking_detections.rds \
 																	data/interim/2020_ccgs_sightings.rds \
 																	data/interim/2020_niha_sightings.rds \
 																	data/interim/2020_tc_dash7_sightings.rds \
@@ -510,10 +508,10 @@ data/interim/2020_dfo_twin_otter_sightings.rds : R/proc_2020_dfo_twin_otter_sigh
 	$(remove_error)
 
 # DFO viking detections
-data/interim/2020_dfo_viking_detections.rds : R/proc_2020_dfo_viking.R
-	$(report_error)
-	Rscript $<
-	$(remove_error)
+#data/interim/2020_dfo_viking_detections.rds : R/proc_2020_dfo_viking.R
+#	$(report_error)
+#	Rscript $<
+#	$(remove_error)
 
 # 2020 coast guard opportunistic sightings
 data/interim/2020_ccgs_sightings.rds : R/proc_2020_ccgs_sightings.R data/raw/2020_whalemapdata/2020-CCGS/*
@@ -593,8 +591,7 @@ latest : data/processed/dcs_live_latest_position.rds
 
 # Process dcs positions
 data/processed/dcs_live_latest_position.rds : R/proc_dcs_latest_position.R \
-																							data/interim/dcs_live_tracks.rds \
-																							data/interim/2020_dfo_viking_tracks.rds
+																							data/interim/dcs_live_tracks.rds
 	$(report_error)
 	Rscript $<
 	$(remove_error)
