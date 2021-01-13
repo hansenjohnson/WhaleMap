@@ -109,6 +109,9 @@ if(file.exists(from_sas_file)){
   # clean lat/lons
   sas = clean_latlon(sas)
   
+  # add orgs to df (for testing only)
+  # sas$org = sas_org
+  
   # compare sas whalemap ----------------------------------------------------
   
   # read in whalemap observations
