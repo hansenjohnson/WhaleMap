@@ -13,11 +13,11 @@ to_sas_dir = 'shared/sas/'
 # list WhaleMap platform names to not send from WhaleMap to RWSAS
 no_send_list = c('noaa_twin_otter')
 
-# # list organizations to not plot on WhaleMap from SAS
-# no_plot_list = c("NOAA|Southeast Fisheries Science Center (SEFSC) | Miami")
-
 # define latitude below which dedicated surveys are excluded from WhaleMap
 sas_lat = 36.5
+
+# list dedicated organizations from SEUS to plot on WhaleMap from SAS
+seus_plot_list = c("Sea to Shore Alliance (S2S)(WildLifeTrust/EcoHealthAlliance)")
 
 # switch to include sas on WhaleMap
 plot_sas = TRUE
@@ -130,6 +130,9 @@ if(file.exists(from_sas_file)){
   # determine records to add to WhaleMap
   to_keep = sas %>%
     filter(!(m_sas %in% m_obs) & !(lat <= sas_lat & platform != 'opportunistic'))
+  
+  # add back records for approved SEUS platforms
+  to_keep = rbind(to_keep,sas[which(sas_org %in% seus_plot_list),])
   
   # determine records to send to SAS
   to_send = obs %>%
