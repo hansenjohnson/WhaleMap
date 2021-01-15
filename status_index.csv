@@ -1,5 +1,5 @@
 script,name,url,email_list
-proc_2020_noaa_twin_otter.R,NOAA NEFSC aerial survey sightings/tracks,https://www.nefsc.noaa.gov/psb/surveys/NARWSS.html,data/raw/2020_noaa_twin_otter/WhaleMap_email_list.csv
+proc_2021_noaa_twin_otter.R,NOAA NEFSC aerial survey sightings/tracks,https://www.nefsc.noaa.gov/psb/surveys/NARWSS.html,data/raw/2021_noaa_twin_otter/WhaleMap_email_list.csv
 proc_live_dcs.R,Dal/WHOI acoustic detections,http://dcs.whoi.edu/,data/email/default.csv
 proc_2020_opportunistic.R,DFO opportunistic sightings reports,https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
 proc_2020_dfo_cessna_sightings.R,DFO Cessna aerial survey sightings,https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
@@ -9,19 +9,10 @@ proc_2020_dfo_cessna_tracks.R,DFO Cessna aerial survey tracks,https://www.dfo-mp
 proc_2020_dfo_cp_sightings.R,DFO Conservation & Protection aerial sightings,https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
 proc_2020_tc_dash8_sightings.R,TC Dash 8 aerial survey sightings,http://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html,data/email/default.csv
 proc_2020_tc_dash8_tracks.R,TC Dash 8 aerial survey tracks,http://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html,data/email/default.csv
-proc_2020_dfo_viking.R,DFO viking buoy acoustic detections,https://ogsl.ca/viking/?lg=en,data/email/default.csv
 proc_2020_ccgs_sightings.R,Canadian Coast Guard sightings ,https://www.ccg-gcc.gc.ca/index-eng.html,data/email/default.csv
-proc_2020_niha_sightings.R,Hawkins survey sightings,http://nickhawkinsphotography.com/,data/email/default.csv
-proc_2020_niha_tracks.R,Hawkins survey tracks,http://nickhawkinsphotography.com/,data/email/default.csv
 proc_2020_tc_dash7_sightings.R,TC Dash 7 aerial survey sightings,http://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html,data/email/default.csv
 proc_2020_tc_dash7_tracks.R,TC Dash 7 aerial survey tracks,http://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html,data/email/default.csv
 proc_2020_dfo_cessna2_tracks.R,DFO Cessna2 aerial survey tracks,https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
 proc_2020_neaq.R,New England Aquarium survey sightings/tracks,https://www.andersoncabotcenterforoceanlife.org/rightwhales/right-whales/,data/email/default.csv
 proc_2021_neaq_aerial.R,New England Aquarium aerial survey sightings/tracks,https://www.andersoncabotcenterforoceanlife.org/rightwhales/right-whales/,data/raw/2021_neaq_aerial/email_list.csv
-proc_2020_dfo_coriolis_sightings.R,DFO Coriolis vessel survey sightings,https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
-proc_2020_dfo_coriolis_tracks.R,DFO Coriolis vessel survey tracks,https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
-proc_2020_dfo_hudson_sightings.R,DFO Hudson vessel survey sightings,https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
-proc_2020_dfo_hudson_tracks.R,DFO Hudson vessel survey tracks,https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
-proc_2020_unb_sightings.R,University of New Brunswick sightings,https://www.unb.ca/faculty-staff/directory/science-ase-bio/davies-kimberley.html,data/email/default.csv
-proc_2020_tc_rpas_tracks.R,Transport Canada RPAS,https://tc.canada.ca/en/transport-canada-testing-innovative-drone-technology-safeguard-north-atlantic-right-whales-gulf-st-lawrence,data/email/default.csv
 proc_2021_ccs.R,Center for Coastal Studies aerial surveys,https://coastalstudies.org/,data/raw/2021_ccs/email_list.csv
