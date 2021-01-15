@@ -17,7 +17,8 @@ no_send_list = c('noaa_twin_otter')
 sas_lat = 36.5
 
 # list dedicated organizations from SEUS to plot on WhaleMap from SAS
-seus_plot_list = c("Sea to Shore Alliance (S2S)(WildLifeTrust/EcoHealthAlliance)")
+seus_plot_list = c("Sea to Shore Alliance (S2S)(WildLifeTrust/EcoHealthAlliance)",
+                   "None/Other")
 
 # switch to include sas on WhaleMap
 plot_sas = TRUE
