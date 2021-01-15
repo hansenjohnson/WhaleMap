@@ -36,8 +36,9 @@ rclone sync drive:"WhaleMap_NEAq_aerial" "2021_neaq_aerial/" --drive-formats csv
 
 # Sync NOAA aerial data Google drive
 printf "\n*** Checking NOAA Google Drive ***\n\n"
-printf "2020 Flight data \n\n"
-rclone sync drive:"WhaleMap" "2020_noaa_twin_otter/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
+printf "2021 Flight data \n\n"
+rclone sync drive:"WhaleMap_2020" "2020_noaa_twin_otter/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
+rclone sync drive:"WhaleMap" "2021_noaa_twin_otter/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
 # move to project directory
 cd ${DESTDIR}
