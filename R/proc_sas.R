@@ -111,8 +111,24 @@ if(file.exists(from_sas_file)){
   # clean lat/lons
   sas = clean_latlon(sas)
   
-  # add orgs to df (for testing only)
-  # sas$org = sas_org
+  # add orgs (temporarily)
+  sas$org = sas_org
+  
+  # split NE and SE reports
+  ne = sas %>% filter(lat > sas_lat)
+  se = sas %>% filter(lat <= sas_lat)
+  
+  # restrict SEUS to approved platforms
+  se_ok = se %>% filter(org %in% seus_plot_list | platform == 'opportunistic')
+  
+  # check rejects
+  # se_bad = se %>% filter(!(org %in% seus_plot_list | platform == 'opportunistic'))
+  
+  # redefine SAS
+  sas = rbind(ne, se_ok)
+  
+  # drop sas org name
+  sas$org = NULL
   
   # compare sas whalemap ----------------------------------------------------
   
@@ -122,7 +138,7 @@ if(file.exists(from_sas_file)){
   # add identifier
   obs$whalemap_id = seq(1, nrow(obs),1)
   
-  # filter
+  # filter whalemap data
   obs = obs %>%
     filter(date >= t0 & date <= t1 & species == 'right' & 
              score %in% c('definite visual') & !is.na(lat) & !is.na(lon) &
@@ -133,15 +149,11 @@ if(file.exists(from_sas_file)){
   m_sas = paste0(sas$date, round(sas$lat,0), round(sas$lon,0))
   
   # determine records to add to WhaleMap
-  to_keep = sas %>%
-    filter(!(m_sas %in% m_obs) & !(lat <= sas_lat & platform != 'opportunistic'))
-  
-  # add back records for approved SEUS platforms
-  to_keep = rbind(to_keep,sas[which(sas_org %in% seus_plot_list),])
+  to_keep = sas %>% filter(!(m_sas %in% m_obs))
   
   # determine records to send to SAS
   to_send = obs %>%
-    filter(!(m_obs %in% m_sas) & !(name %in% no_send_list))  
+    filter(!(m_obs %in% m_sas) & !(name %in% no_send_list)) 
   
   # reorder data by date
   to_send = to_send[order(to_send$date, decreasing = TRUE),]
