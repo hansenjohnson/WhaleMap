@@ -19,6 +19,7 @@ sas_lat = 36.5
 # list dedicated organizations from SEUS to plot on WhaleMap from SAS
 seus_plot_list = c("Sea to Shore Alliance (S2S)(WildLifeTrust/EcoHealthAlliance)",
                    "Florida Fish and Wildlife Research Institute (FWRI)",
+                   "Georgia Department of Natural Resources (GADNR)",
                    "None/Other")
 
 # switch to include sas on WhaleMap
