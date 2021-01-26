@@ -214,7 +214,7 @@ body <- dashboardBody(
                            
                            # USA management layers
                            helpText(tags$em('US management areas')),
-                           checkboxInput("sma", value = F,
+                           checkboxInput("sma", value = T,
                                          label = span("Seasonal management areas", 
                                                       tags$a(icon("info-sign", lib = "glyphicon"), 
                                                              target="_blank",

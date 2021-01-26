@@ -309,8 +309,7 @@ build_static_map = function(type = 'whalemap'){
                              graticules_grp,
                              robot_grp,
                              tc_zone_grp,
-                             dfo_zone_grp,
-                             sma_grp)) %>%
+                             dfo_zone_grp)) %>%
     
     # add legend
     addLegend(position = "bottomright",
