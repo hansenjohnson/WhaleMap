@@ -19,6 +19,7 @@ function(input, output, session){
  
   # dynamic map polygons
   load('data/processed/dma.rda')
+  load('data/processed/sma.rda')
   
   # build date UI -------------------------------------------------------
   
