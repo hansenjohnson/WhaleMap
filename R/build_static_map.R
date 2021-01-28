@@ -371,7 +371,7 @@ build_static_map = function(type = 'whalemap'){
                                sma_grp,
                                paste0(Restr_Area),
                                paste0("Active: ", active)),
-                weight = 1, color = 'brown', fillColor = 'brown') 
+                weight = 1, color = 'red', fillColor = 'red') 
   
   # plot US DMAs
   if(!('data.frame' %in% class(dma))){
@@ -383,7 +383,7 @@ build_static_map = function(type = 'whalemap'){
                                  dma_grp,
                                  paste0(name),
                                  paste0("Expires: ", expiration)),
-                  weight = 1, color = 'orange', fillColor = 'orange') 
+                  weight = 1, color = 'yellow', fillColor = 'yellow') 
   }
   
   # add tracks --------------------------------------------------------------

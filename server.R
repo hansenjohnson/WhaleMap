@@ -653,8 +653,8 @@ function(input, output, session){
                                    paste0(name),
                                    paste0("Expires: ", expiration)),
                     weight = 1, 
-                    color = 'orange', 
-                    fillColor = 'orange')
+                    color = 'yellow', 
+                    fillColor = 'yellow')
       
       # switch to show/hide
       ifelse(input$dma, showGroup(proxy, 'dma'),
@@ -685,8 +685,8 @@ function(input, output, session){
                                    paste0(Restr_Area),
                                    paste0("Active: ", active)),
                     weight = 1, 
-                    color = 'brown', 
-                    fillColor = 'brown')
+                    color = 'red', 
+                    fillColor = 'red')
       
       # switch to show/hide
       ifelse(input$sma, showGroup(proxy, 'sma'),
