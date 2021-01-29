@@ -644,7 +644,7 @@ function(input, output, session){
       proxy %>%
         addPolygons(data=dma, group = 'dma',
                     fill = T, 
-                    fillOpacity = 0.25, 
+                    fillOpacity = 0.3, 
                     stroke = T, 
                     dashArray = c(5,5), 
                     options = pathOptions(clickable = T),
@@ -677,7 +677,7 @@ function(input, output, session){
       proxy %>%
         addPolygons(data=sma, group = 'sma',
                     fill = T, 
-                    fillOpacity = 0.25, 
+                    fillOpacity = 0.3, 
                     stroke = T, 
                     options = pathOptions(clickable = T),
                     popup = ~paste(sep = "<br/>" ,

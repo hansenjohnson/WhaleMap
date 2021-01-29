@@ -366,7 +366,7 @@ build_static_map = function(type = 'whalemap'){
   # plot US SMAs
   map <- map %>%
     addPolygons(data=sma, group = sma_grp,
-                fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
+                fill = T, fillOpacity = 0.3, stroke = T, smoothFactor = 0,
                 popup = ~paste(sep = "<br/>" ,
                                sma_grp,
                                paste0(Restr_Area),
@@ -377,7 +377,7 @@ build_static_map = function(type = 'whalemap'){
   if(!('data.frame' %in% class(dma))){
     map <- map %>%
       addPolygons(data=dma, group = dma_grp,
-                  fill = T, fillOpacity = 0.25, stroke = T, smoothFactor = 0,
+                  fill = T, fillOpacity = 0.3, stroke = T, smoothFactor = 0,
                   dashArray = c(2,2), 
                   popup = ~paste(sep = "<br/>" ,
                                  dma_grp,
