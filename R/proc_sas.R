@@ -146,8 +146,8 @@ if(file.exists(from_sas_file)){
              !grepl('SAS-', name))
   
   # define columns to compare
-  m_obs = paste0(obs$date, round(obs$lat,0), round(obs$lon,0))
-  m_sas = paste0(sas$date, round(sas$lat,0), round(sas$lon,0))
+  m_obs = paste(obs$date, round(obs$lat,1), round(obs$lon,1), obs$platform, sep = '_')
+  m_sas = paste(sas$date, round(sas$lat,1), round(sas$lon,1), sas$platform, sep = '_')
   
   # determine records to add to WhaleMap
   to_keep = sas %>% filter(!(m_sas %in% m_obs))
