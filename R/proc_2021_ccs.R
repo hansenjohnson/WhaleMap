@@ -167,9 +167,6 @@ if(length(flist)>0){
     sig$number = as.numeric(as.character(sig$NUMBER))
     sig$calves = as.numeric(as.character(sig$NUMCALF))
     
-    # get score
-    sig$score[which(sig$number>0)] = 'sighted'
-    
     # find indecies of matching
     mind = match(table = spp_key$code, x = sig$SPECCODE)
     
@@ -178,6 +175,9 @@ if(length(flist)>0){
     
     # drop unknown codes
     sig = sig[which(!is.na(sig$species)),]
+    
+    # get score
+    sig$score[which(sig$number>0)] = 'sighted'
     
     # keep important columns
     sig = sig[,c('time','lat','lon','date', 'yday','species','score','number','calves','year','platform','name','id')]
