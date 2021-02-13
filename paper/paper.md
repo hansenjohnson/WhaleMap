@@ -1,5 +1,5 @@
 ---
-title: 'WhaleMap: a tool for collating and disseminating whale survey data in near real-time'
+title: 'WhaleMap: a tool to collate and display whale survey results in near real-time'
 tags:
   - R
   - oceanography
