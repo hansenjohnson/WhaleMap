@@ -28,6 +28,78 @@ server.R        Shiny app
 ui.R            Shiny app
 ```
 
+## Data processing
+
+### Workflow
+
+1. Sync
+
+The majority of the remoate data are synced using the script `src/get_get_remote_data.sh`. This uses Rclone to sync data from remote repositories (Google Drive, Dropbox, etc.), and also calls `src/get_live_dcs.sh` to download acoustic detection data. All the data are stored in `data/raw/`
+
+2. Process 
+
+Data from each contributor are processed to a common WhaleMap format (see below) using a custom R script (`R/proc_*.R`). Once formatted, observations and effort data from each platform are saved in `data/interim/`.
+
+3. Combine 
+
+All track data files in `data/interim/` are combined by (`R/proc_tracks.R`) and saved as `data/processed/tracks.rds`. All observation data files in `data/interim/` are combined by (`R/proc_observations.R`) and saved as `data/processed/observations.rds`.
+
+4. Repeat
+
+A makefile maps the dependency structure and orchestrates the efficient processing of the entire dataset. The `make` command is executed at the final step of `src/get_remote_data.sh` to update the dataset after synchronization. A cron job runs `src/get_remote_data.sh` every 15 minutes to keep the system up to date.
+
+### WhaleMap data formats
+
+#### Observations
+
+`time` - UTC time (YYYY-MM-DD HH:MM:SS)  
+`lat` - latitude in decimal degrees  
+`lon` - longitude in decimal degrees  
+`date` - UTC date (YYYY-MM-DD)  
+`yday` - day of year  
+`year` - year (YYYY)  
+`platform` - type of survey platform (`vessel`, `plane`, `slocum`, `buoy`, `rpas`, `opportunistic`)  
+`name` - name of platform (e.g., `noaa_twin_otter`, `dfo_coriolis`)  
+`id` - unique survey identifier comprised of survey start date, platform, and name (e.g., `2020-02-21_plane_noaa_twin_otter`)  
+`species` - species name (`right`, `fin`, `sei`, `humpback`, `blue`)  
+`score` - detection type and score (`Definite acoustic`, `Possible acoustic`, `Definite visual`, `Possible visual`)  
+`number` - number of whales (`NA` for acoustic detections)  
+`calves` - number of calves (`NA` for acoustic detections)  
+
+#### Tracks
+
+`time` - UTC time (YYYY-MM-DD HH:MM:SS)  
+`lat` - latitude in decimal degrees  
+`lon` - longitude in decimal degrees  
+`date` - UTC date (YYYY-MM-DD)  
+`yday` - day of year  
+`year` - year (YYYY)  
+`platform` - type of survey platform (`vessel`, `plane`, `slocum`, `buoy`, `rpas`, `opportunistic`)  
+`name` - name of platform (e.g., `noaa_twin_otter`, `dfo_coriolis`)  
+`id` - unique survey identifier comprised of survey start date, platform, and name (e.g., `2020-02-21_plane_noaa_twin_otter`)  
+`speed` - platform speed (m/s)  
+`altitude` - platform altitude (m)  
+
+#### Status table
+
+`script` - name of the platform processing script (e.g., `proc_2021_noaa_twin_otter.R`)  
+`name` - name of the platform to be displayed in the status table (e.g., `NOAA NEFSC survey sightings/tracks`)  
+`url` - link url to be displayed in status table  
+`email_list` - path to csv file with list of emails to be notified if there is an error processing platform data  
+ 
+### Reporting
+
+Error catching is performed in the `Makefile` using the scripts `src/report_error.sh` and `src/remove_error.sh`. These are run each time a platform-specific processing script is run. The results of the processing are recorded in the status table (`status.txt`). If processing is successful, a timestamp is added in the status table. If processing is unsuccessful, an error message is printed in the status table and an auto-generated email is sent to a designated email list associated with that platform (using `src/send_email_alert.sh`). The status table is displayed in the Shiny app.
+
+### Adding a new platform
+
+1. Update `src/get_remote_data.sh` to sync raw data  
+2. Write R script to convert to WhaleMap format and save observations and tracks in `data/interim.`  
+3. Update `Makefile`  
+4. Update `status.txt`  
+5. Test (run `make` and view results in Shiny app)  
+6. Push changes to WhaleMap server via GitHub  
+
 ## Setup
 
 ### R
