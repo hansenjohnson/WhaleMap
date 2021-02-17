@@ -12,7 +12,7 @@ source('R/functions.R')
 if(!dir.exists(outdir)){dir.create(outdir, recursive = TRUE)}
 
 # determine current year
-yr = year(Sys.Date())
+yr = 2020
 
 # proc observations -------------------------------------------------------
 
