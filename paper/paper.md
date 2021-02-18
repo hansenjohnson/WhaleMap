@@ -17,6 +17,7 @@ affiliations:
  - name: Oceanography Department, Dalhousie University, 1355 Oxford Street, Halifax, Nova Scotia, Canada B3H 4R2
    index: 1
 date: 18 February 2021
+bibliography: paper.bib
 ---
 
 # Background
