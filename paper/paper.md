@@ -20,7 +20,7 @@ date: 18 February 2021
 bibliography: paper.bib
 ---
 
-# Background
+# Statement of Need
 
 Baleen whales of the Northwest Atlantic live in a highly urbanized ocean. They attempt a slow recovery from commercial whaling amid risks from the infrastructure, pollution, and shifting environmental baseline associated with human exploitation of the natural world. These anthropogenic risks pose the greatest barriers to their recovery. Effective conservation and risk-reduction action requires near real-time knowledge of whale distribution measured using various methods including visual surveys from vessels or planes or acoustic surveys from autonomous platforms. The rapid collation and dissemination of whale detections and survey effort is critical but challenging given the number and variety of survey organizations and methodologies at work along the east coast of the US and Canada. There are long term databases for whale survey data, such as that maintained by the North Atlantic Right Whale Consortium ([narwc.org](https://narwc.org)), and crowd-source reporting tools (e.g., [Whale Alert](http://www.whalealert.org/)) but `WhaleMap` is the only dedicated system specifically designed to collate and display all available near real-time whale detections and survey effort.
 
