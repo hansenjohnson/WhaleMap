@@ -17,7 +17,7 @@ source('R/functions.R')
 # read and format data ----------------------------------------------------
 
 # list files to process
-flist = list.files(data_dir, pattern = 'effort_*.*.csv$', full.names = T, recursive = T, ignore.case = T)
+flist = list.files(data_dir, pattern = '^effort_*.*.csv$', full.names = T, recursive = T, ignore.case = T)
 
 # list to hold loop output
 TRK = vector('list', length = length(flist))

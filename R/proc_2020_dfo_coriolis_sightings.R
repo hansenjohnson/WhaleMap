@@ -17,7 +17,7 @@ source('R/functions.R')
 # process -----------------------------------------------------------------
 
 # list files to process
-flist = list.files(data_dir, pattern = 'DailySightings_*.*.xlsx$', full.names = T, recursive = T)
+flist = list.files(data_dir, pattern = '^DailySightings_*.*.xlsx$', full.names = T, recursive = T)
 
 flist_mdy = c('DailySightings_20200813.xlsx', 'DailySightings_20200814.xlsx')
 
