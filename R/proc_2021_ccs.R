@@ -167,7 +167,7 @@ if(length(flist)>0){
     sig$number = as.numeric(as.character(sig$NUMBER))
     sig$calves = as.numeric(as.character(sig$NUMCALF))
     
-    # find indecies of matching
+    # find indicies of matching
     mind = match(table = spp_key$code, x = sig$SPECCODE)
     
     # replace codes with species names
@@ -176,8 +176,10 @@ if(length(flist)>0){
     # drop unknown codes
     sig = sig[which(!is.na(sig$species)),]
     
-    # get score
-    sig$score[which(sig$number>0)] = 'sighted'
+    # get scores
+    sig$score[sig$IDREL %in% c(3)] = 'sighted'
+    sig$score[sig$IDREL %in% c(1,2)] = 'possibly sighted'
+    sig = sig[which(!is.na(sig$score)),]
     
     # keep important columns
     sig = sig[,c('time','lat','lon','date', 'yday','species','score','number','calves','year','platform','name','id')]
