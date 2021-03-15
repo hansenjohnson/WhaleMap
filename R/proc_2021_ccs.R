@@ -176,6 +176,10 @@ if(length(flist)>0){
     # drop unknown codes
     sig = sig[which(!is.na(sig$species)),]
     
+    # drop zero numbers (used by ccs to relocate dups)
+    sig = sig[!is.na(sig$number),]
+    sig = sig[sig$number>0,]
+    
     # get scores
     sig$score[sig$IDREL %in% c(3)] = 'sighted'
     sig$score[sig$IDREL %in% c(1,2)] = 'possibly sighted'
