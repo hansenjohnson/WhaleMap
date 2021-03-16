@@ -10,7 +10,7 @@ data_dir = 'data/raw/2021_neaq_aerial/'
 trk_ofile = 'data/interim/2021_neaq_aerial_tracks.rds'
 obs_ofile = 'data/interim/2021_neaq_aerial_sightings.rds'
 
-# setup -------------------------------------------------------------------
+# process -----------------------------------------------------------------
 
 source('R/functions.R')
 
@@ -150,10 +150,42 @@ for(ii in seq_along(dates)){
   
 }
 
+# process raw gps ---------------------------------------------------------
+
+glist = grep(pattern = '_GPS.csv$', x = flist)
+TRK2 = vector('list', length = length(glist))
+for(ii in glist){
+  
+  # read in data
+  tmp = read.csv(flist[ii], as.is = TRUE)
+  
+  # add required columns
+  tmp$time = as.POSIXct(paste0(substr(basename(flist[ii]),1,8), ' ', trimws(tmp$Time)), format = '%Y%m%d %H:%M:%S ', tz = 'America/New_York')
+  tmp$date = as.Date(tmp$time)
+  tmp$yday = yday(tmp$time)
+  tmp$year = year(tmp$time)
+  tmp$lat = as.numeric(tmp$Lat)
+  tmp$lon = as.numeric(tmp$Long)
+  tmp$speed = as.numeric(tmp$Speed)
+  tmp$altitude = as.numeric(tmp$Alt)
+  tmp$platform = 'plane'
+  tmp$name = 'neaq'
+  tmp$id = paste(tmp$date, tmp$platform, tmp$name, sep = '_')
+  
+  # remove unused columns
+  itrk = tmp[,c('time','lat','lon', 'altitude','speed','date','yday', 'year',  'platform', 'name', 'id')]
+  
+  # simplify
+  itrk = subsample_gps(gps = itrk)
+  
+  # store
+  TRK2[[ii]] = itrk
+}
+
 # prep track output -------------------------------------------------------
 
 # combine all tracks
-tracks = bind_rows(TRK)
+tracks = bind_rows(TRK,TRK2)
 
 # config data types
 tracks = config_tracks(tracks)
