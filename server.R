@@ -654,7 +654,7 @@ function(input, output, session){
                     dashArray = c(5,5), 
                     options = pathOptions(clickable = T),
                     popup = ~paste(sep = "<br/>" ,
-                                   "US Dynamic Management Area",
+                                   "US Slow Zone",
                                    paste0(name),
                                    paste0("Expires: ", expiration)),
                     weight = 1, 

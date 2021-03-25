@@ -220,7 +220,7 @@ body <- dashboardBody(
                                                              target="_blank",
                                                              href = "https://www.fisheries.noaa.gov/national/endangered-species-conservation/reducing-vessel-strikes-north-atlantic-right-whales#seasonal-management-areas---northeast"))),
                            checkboxInput("dma", value = T,
-                                         label = span("Dynamic management areas", 
+                                         label = span("Slow Zones", 
                                                       tags$a(icon("info-sign", lib = "glyphicon"), 
                                                              target="_blank",
                                                              href = "https://www.fisheries.noaa.gov/national/endangered-species-conservation/reducing-vessel-strikes-north-atlantic-right-whales#dynamic-management-areas")))
