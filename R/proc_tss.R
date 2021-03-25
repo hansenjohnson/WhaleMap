@@ -160,11 +160,11 @@ tss_usa = tss_usa[!tss_usa$THEMELAYER %in% c('Speed Restrictions/Right Whales', 
 # test --------------------------------------------------------------------
 
 # # test with leaflet
-leaflet() %>%
-  addTiles() %>%
-  addPolylines(tss_lines$lon, tss_lines$lat, weight = .5) %>%
-  addPolygons(tss_polygons$lon, tss_polygons$lat, weight = .5) %>%
-  addPolygons(data = tss_usa, weight = .5)
+# leaflet() %>%
+#   addTiles() %>%
+#   addPolylines(tss_lines$lon, tss_lines$lat, weight = .5) %>%
+#   addPolygons(tss_polygons$lon, tss_polygons$lat, weight = .5) %>%
+#   addPolygons(data = tss_usa, weight = .5)
 
 # save --------------------------------------------------------------------
 
