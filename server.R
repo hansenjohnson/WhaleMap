@@ -620,12 +620,17 @@ function(input, output, session){
                     weight = .5,
                     color = 'grey',
                     fillColor = 'grey',
-                    # smoothFactor = 3,
+                    options = pathOptions(clickable = F),
+                    group = 'tss') %>%
+        addPolygons(data = tss_usa,
+                    weight = .5,
+                    color = 'grey',
+                    fillColor = 'grey',
                     options = pathOptions(clickable = F),
                     group = 'tss')
       
       # switch to show/hide
-      ifelse(input$tss, showGroup(proxy, 'tss'),hideGroup(proxy, 'tss'))
+      ifelse(input$tss, showGroup(proxy, 'tss'), hideGroup(proxy, 'tss'))
     }
   
   })

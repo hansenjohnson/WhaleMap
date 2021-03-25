@@ -347,6 +347,13 @@ build_static_map = function(type = 'whalemap'){
                 fillColor = 'grey',
                 smoothFactor = 0,
                 options = pathOptions(clickable = F),
+                group = tss_grp) %>%
+    addPolygons(data = tss_usa,
+                weight = .5,
+                color = 'grey',
+                fillColor = 'grey',
+                smoothFactor = 0,
+                options = pathOptions(clickable = F),
                 group = tss_grp)
   
   # plot tc zone
