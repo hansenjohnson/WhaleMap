@@ -14,6 +14,7 @@ output_dir = 'data/processed/'
 # libraries
 suppressPackageStartupMessages(library(rgdal))
 suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(rgeos))
 
 # common projection
 ref = "+proj=longlat +init=epsg:3857"
