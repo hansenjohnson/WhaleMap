@@ -214,6 +214,13 @@ body <- dashboardBody(
                            
                            # USA management layers
                            helpText(tags$em('US management areas')),
+                           
+                           checkboxInput("us_lobster", value = F,
+                                         label = span("Lobster management areas", 
+                                                      tags$a(icon("info-sign", lib = "glyphicon"), 
+                                                             target="_blank",
+                                                             href = "https://www.fisheries.noaa.gov/resource/map/lobster-management-areas"))),
+                           
                            checkboxInput("sma", value = T,
                                          label = span("Seasonal management areas", 
                                                       tags$a(icon("info-sign", lib = "glyphicon"), 

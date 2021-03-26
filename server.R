@@ -635,6 +635,34 @@ function(input, output, session){
   
   })
   
+  # US lobster observer ------------------------------------------------------  
+  
+  observe(priority = 4, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('us_lobster')
+    
+    if(input$us_lobster){
+      
+      # add polygons
+      proxy %>%
+        addPolygons(data=us_lobster, group = 'us_lobster',
+                    fill = T, 
+                    fillOpacity = 0.25, 
+                    stroke = T, 
+                    popup = ~paste0(COMMNAME),
+                    weight = 1, 
+                    color = 'blue', 
+                    fillColor = 'blue')
+      
+      # switch to show/hide
+      ifelse(input$us_lobster, showGroup(proxy, 'us_lobster'),
+             hideGroup(proxy, 'us_lobster'))
+    }
+    
+  })
+  
   # dma observer ------------------------------------------------------  
   
   observe(priority = 4, {

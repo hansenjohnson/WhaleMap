@@ -40,7 +40,15 @@ full_grid = readOGR(paste0(gis_dir, '/Full_ATL_grids/')) %>%
 tc_ra = readOGR(paste0(gis_dir, '/NARW_RA_2020/')) %>%
   spTransform(ref)
 
-# # test with leaflet
+# read US lobster zones
+us_lobster0 = readOGR('data/raw/gis/Lobster_Management_Areas/') %>%
+  spTransform(ref)
+
+# simplify
+us_lobster = gSimplify(us_lobster0, tol=0.01, topologyPreserve=TRUE)
+us_lobster = SpatialPolygonsDataFrame(us_lobster, data=us_lobster0@data)
+
+# test with leaflet
 # library(leaflet)
 # leaflet() %>%
 #   addTiles() %>%
@@ -48,7 +56,8 @@ tc_ra = readOGR(paste0(gis_dir, '/NARW_RA_2020/')) %>%
 #     overlayGroups = c('tc_zone',
 #                       'dfo_zone',
 #                       'tc_ra',
-#                       'critical_habitat_zone')
+#                       'critical_habitat_zone',
+#                       'us_lobster')
 #     ) %>%
 #   addPolygons(data = tc_zone, color = 'blue', popup = ~paste0(ID),
 #                group = 'tc_zone',weight = 2) %>%
@@ -56,6 +65,8 @@ tc_ra = readOGR(paste0(gis_dir, '/NARW_RA_2020/')) %>%
 #               group = 'dfo_zone',weight = 2) %>%
 #   addPolygons(data = tc_ra, color = 'grey',
 #               group = 'tc_ra',weight = 2) %>%
+#   addPolygons(data = us_lobster, color = 'red', popup = ~paste0(COMMNAME),
+#               group = 'us_lobster',weight = 2) %>%
 #   addPolygons(data = critical_habitat_zone, color = 'darkgreen',
 #               group = 'critical_habitat_zone', weight = 2)
 
@@ -65,4 +76,5 @@ save(tc_zone,
      critical_habitat_zone,
      full_grid,
      tc_ra,
+     us_lobster,
      file = paste0(output_dir, 'gis.rda'))
