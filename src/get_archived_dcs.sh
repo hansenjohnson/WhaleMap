@@ -18,15 +18,16 @@ declare -A URL
 
 # assign paths to detection data for each deployment
 URL=(
-  [2021-02-08_slocum_ru34]=http://dcs.whoi.edu/rutgers0221/rutgers0221_ru34_html/ptracks/manual_analysis.csv
-  [2020-12-22_slocum_we14]=http://dcs.whoi.edu/sbnms1220/sbnms1220_we14_html/ptracks/manual_analysis.csv
-  [2020-12-20_slocum_we03]=http://dcs.whoi.edu/gom1220/gom1220_we03_html/ptracks/manual_analysis.csv
-  [2020-11-15_slocum_we16]=http://dcs.whoi.edu/cox1120/cox1120_we16_html/ptracks/manual_analysis.csv
-  [2020-01-15_buoy_nybse]=http://dcs.whoi.edu/nybse0120/nybse0120_buoy_html/ptracks/manual_analysis.csv
-  [2020-11-19_slocum_ru34]=http://dcs.whoi.edu/rutgers1120/rutgers1120_ru34_html/ptracks/manual_analysis.csv
+	[2020-07-31_buoy_mamv]=http://dcs.whoi.edu/mamv0720/mamv0720_mamv_html/ptracks/manual_analysis.csv
+	[2020-07-30_buoy_njatl]=http://dcs.whoi.edu/njatl0720/njatl0720_njatl_html/ptracks/manual_analysis.csv
+  	[2021-02-08_slocum_ru34]=http://dcs.whoi.edu/rutgers0221/rutgers0221_ru34_html/ptracks/manual_analysis.csv
+  	[2020-12-22_slocum_we14]=http://dcs.whoi.edu/sbnms1220/sbnms1220_we14_html/ptracks/manual_analysis.csv
+  	[2020-11-15_slocum_we16]=http://dcs.whoi.edu/cox1120/cox1120_we16_html/ptracks/manual_analysis.csv
+  	[2020-01-15_buoy_nybse]=http://dcs.whoi.edu/nybse0120/nybse0120_buoy_html/ptracks/manual_analysis.csv
+  	[2020-11-19_slocum_ru34]=http://dcs.whoi.edu/rutgers1120/rutgers1120_ru34_html/ptracks/manual_analysis.csv
 	[2020-12-04_slocum_we14]=http://dcs.whoi.edu/sbnms1220/sbnms1220_we14_html/ptracks/manual_analysis.csv
-  [2020-10-15_slocum_fundy]=http://dcs.whoi.edu/dal1020/dal1020_fundy_html/ptracks/manual_analysis.csv
-  [2020-10-03_slocum_ru34]=http://dcs.whoi.edu/rutgers1020/rutgers1020_ru34_html/ptracks/manual_analysis.csv	
+  	[2020-10-15_slocum_fundy]=http://dcs.whoi.edu/dal1020/dal1020_fundy_html/ptracks/manual_analysis.csv
+  	[2020-10-03_slocum_ru34]=http://dcs.whoi.edu/rutgers1020/rutgers1020_ru34_html/ptracks/manual_analysis.csv	
 	[2020-08-16_slocum_capx638]=http://dcs.whoi.edu/twr0820/twr0820_capx638_html/ptracks/manual_analysis.csv
 	[2020-09-05_slocum_fundy]=http://dcs.whoi.edu/dal0920/dal0920_fundy_html/ptracks/manual_analysis.csv
 	[2020-06-02_slocum_we16]=http://dcs.whoi.edu/neocs0620/neocs0620_we16_html/ptracks/manual_analysis.csv
