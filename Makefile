@@ -339,6 +339,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2021_ccs_sightings.rds \
 																	data/interim/2021_neaq_aerial_sightings.rds \
 																	data/interim/2021_noaa_twin_otter_sightings.rds \
+																	data/interim/2021_dfo_opportunistic_sightings.rds \
 																	data/interim/sas_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
@@ -577,6 +578,12 @@ data/interim/2021_neaq_aerial_sightings.rds : R/proc_2021_neaq_aerial.R data/raw
 
 # 2021 noaa twin otter sightings
 data/interim/2021_noaa_twin_otter_sightings.rds : R/proc_2021_noaa_twin_otter.R data/raw/2021_noaa_twin_otter/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2021 dfo opportunistic sightings
+data/interim/2021_dfo_opportunistic_sightings.rds : R/proc_2021_dfo_opportunistic.R data/raw/2021_whalemapdata/2021_General_Opportunistic_Sightings/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
