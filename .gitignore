@@ -38,6 +38,7 @@ summary_report.pdf
 *.rds
 *.rda
 *.pptx
+restart.txt
 status.txt
 error_email.txt
 .Rproj.user
