@@ -26,7 +26,7 @@ rclone sync drive:"BOEM shapefiles" "boem/" --drive-shared-with-me --drive-forma
 cd ${DESTDIR}
 
 # process BOEM data
-rscript R/proc_boem.R
+Rscript R/proc_boem.R
 
 # restart app
 touch restart.txt
