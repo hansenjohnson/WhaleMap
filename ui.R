@@ -230,7 +230,12 @@ body <- dashboardBody(
                                          label = span("Slow Zones", 
                                                       tags$a(icon("info-sign", lib = "glyphicon"), 
                                                              target="_blank",
-                                                             href = "https://www.fisheries.noaa.gov/national/endangered-species-conservation/reducing-vessel-strikes-north-atlantic-right-whales#dynamic-management-areas")))
+                                                             href = "https://www.fisheries.noaa.gov/national/endangered-species-conservation/reducing-vessel-strikes-north-atlantic-right-whales#dynamic-management-areas"))),
+                           checkboxInput("boem", value = F,
+                                         label = span("Wind development areas", 
+                                                      tags$a(icon("info-sign", lib = "glyphicon"), 
+                                                             target="_blank",
+                                                             href = "https://www.boem.gov/renewable-energy/renewable-energy-program-overview")))
                   )
            )
     ),

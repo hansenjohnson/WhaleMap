@@ -663,6 +663,34 @@ function(input, output, session){
     
   })
   
+  # US BOEM observer ------------------------------------------------------  
+  
+  observe(priority = 4, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('boem')
+    
+    if(input$boem){
+      
+      # add polygons
+      proxy %>%
+        addPolygons(data=boem, group = 'boem',
+                    fill = T, 
+                    fillOpacity = 0.25, 
+                    stroke = T, 
+                    popup = ~paste0(ID),
+                    weight = 1, 
+                    color = 'green', 
+                    fillColor = 'green')
+      
+      # switch to show/hide
+      ifelse(input$boem, showGroup(proxy, 'boem'),
+             hideGroup(proxy, 'boem'))
+    }
+    
+  })
+  
   # dma observer ------------------------------------------------------  
   
   observe(priority = 4, {
