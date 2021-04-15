@@ -14,6 +14,13 @@ sendmail = '/usr/sbin/sendmail'
 # email details
 email_file = 'error_email.txt'
 
+# user email
+myemail = 'hansen.johnson@dal.ca'
+
+# setup -------------------------------------------------------------------
+
+library(readxl)
+
 # process -----------------------------------------------------------------
 
 # read in status file
@@ -51,10 +58,21 @@ if(length(er)!=0){
     # read email list for bad script
     if(file.exists(efile)){
       message('Sending to recipients listed in: ', efile)
-      emails = read.csv(efile, header = TRUE, stringsAsFactors = FALSE)$email
+      if(grepl(pattern = '.xlsx$', x = efile)){
+        tmp = read_excel(efile)
+        colnames(tmp) = tolower(colnames(tmp))
+        emails = tmp$email
+      } else {
+        emails = read.csv(efile, header = TRUE, stringsAsFactors = FALSE)$email  
+      }
     } else {
       message('Could not find ', efile, ', so deferring to the default email list here: ', default_email_list)
       emails = read.csv(default_email_list, header = TRUE, stringsAsFactors = FALSE)$email
+    }
+    
+    # add my email to the list
+    if(!myemail %in% emails){
+      emails = c(emails,myemail)
     }
 
     # email pieces
