@@ -2,10 +2,10 @@ script,name,url,email_list
 proc_2021_noaa_twin_otter.R,NOAA NEFSC aerial survey sightings/tracks,https://www.nefsc.noaa.gov/psb/surveys/NARWSS.html,data/raw/2021_noaa_twin_otter/WhaleMap_email_list.csv
 proc_live_dcs.R,Dal/WHOI acoustic detections,http://dcs.whoi.edu/,data/email/default.csv
 proc_2021_dfo_opportunistic.R,DFO opportunistic sightings reports,https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
-proc_2020_dfo_cessna_sightings.R,DFO Cessna aerial survey sightings,https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
+proc_2021_dfo_cessna_yob_sightings.R,DFO Cessna aerial survey sightings (YOB),https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
 proc_2020_dfo_twin_otter_sightings.R,DFO Twin Otter aerial survey sightings,https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
 proc_2020_dfo_twin_otter_tracks.R,DFO Twin Otter aerial survey tracks,https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
-proc_2020_dfo_cessna_tracks.R,DFO Cessna aerial survey tracks,https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
+proc_2021_dfo_cessna_yob_tracks.R,DFO Cessna aerial survey tracks (YOB),https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
 proc_2020_dfo_cp_sightings.R,DFO Conservation & Protection aerial sightings,https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
 proc_2020_tc_dash8_sightings.R,TC Dash 8 aerial survey sightings,http://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html,data/email/default.csv
 proc_2020_tc_dash8_tracks.R,TC Dash 8 aerial survey tracks,http://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html,data/email/default.csv
