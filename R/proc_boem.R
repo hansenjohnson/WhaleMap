@@ -9,7 +9,7 @@ ofile = 'data/processed/boem.rda'
 # setup -------------------------------------------------------------------
 
 # libraries
-suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(sf))
 
 ## Query steps ##
@@ -33,25 +33,33 @@ query3 = 'https://services1.arcgis.com/Hp6G80Pky0om7QvQ/ArcGIS/rest/services/BOE
 # process -----------------------------------------------------------------
 
 # read
-q1 = st_read(query1) %>%
-  dplyr::select(INFO, geometry)
-q2 = st_read(query2) %>%
-  dplyr::select(INFO, geometry)
-q3 = st_read(query3) %>%
-  dplyr::select(INFO, geometry)
+q1 = st_read(query1, quiet = TRUE) 
+q2 = st_read(query2, quiet = TRUE) 
+q3 = st_read(query3, quiet = TRUE) 
 
 # combine
-df = rbind(q1,q2,q3)
+df = rbind(q1[,c('INFO', 'geometry')], 
+           q2[,c('INFO', 'geometry')], 
+           q3[,c('INFO', 'geometry')])
 
 # crop to east coast
-df = st_crop(x = df, y = c(xmin = -82, xmax = -67, ymin = 26, ymax = 60))
+df = suppressMessages(
+  suppressWarnings(
+    st_crop(x = df, y = c(xmin = -82, xmax = -67, ymin = 26, ymax = 60))
+  )
+)
 
 # calculate common border
 zones = unique(df$INFO)
 BOEM = vector('list', length = length(zones))
 for(ii in seq_along(zones)){
-  BOEM[[ii]] = st_as_sf(st_union(st_buffer(df[df$INFO == zones[ii],], dist = 0.0001))) %>%
-    mutate(ID = zones[ii])
+  tmp = suppressMessages(
+    suppressWarnings(
+      st_as_sf(st_union(st_buffer(df[df$INFO == zones[ii],], dist = 0.0001)))
+    )
+  )
+  tmp$ID = zones[ii]
+  BOEM[[ii]] = tmp
 }
 
 # flatten list
