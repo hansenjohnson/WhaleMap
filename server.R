@@ -504,7 +504,8 @@ function(input, output, session){
                     fillOpacity = 0.25, 
                     stroke = T, 
                     dashArray = c(5,5), 
-                    options = pathOptions(clickable = F),
+                    options = pathOptions(clickable = T),
+                    popup = ~paste0(ID),
                     weight = 1, 
                     color = 'darkblue', 
                     fillColor = 'darkblue')

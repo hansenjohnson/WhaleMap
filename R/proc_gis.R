@@ -3,11 +3,8 @@
 
 # input -------------------------------------------------------------------
 
-# input directory
-gis_dir = 'data/raw/2020_whalemapdata/GIS_data/'
-
-# output directory
-output_dir = 'data/processed/'
+# output file
+ofile = 'data/processed/gis.rda'
 
 # setup -------------------------------------------------------------------
 
@@ -21,24 +18,28 @@ ref = "+proj=longlat +init=epsg:3857"
 
 # process -----------------------------------------------------------------
 
-# read shipping data from TC
-tc_zone = readOGR(paste0(gis_dir, '/TC 2020/')) %>%
+# read TC shipping zone
+tc_zone = readOGR('data/raw/2021_whalemapdata/GIS_data/2021_TC_Management Measures/') %>%
   spTransform(ref)
+
+# read TC restricted area
+tc_ra = readOGR('data/raw/2021_whalemapdata/GIS_data/2021_TC_NARW_Restricted Area/') %>%
+  spTransform(ref)
+tc_ra = tc_ra[tc_ra@data$ID == 'SHEDIAC_RA',]
 
 # read fishing data from DFO
-dfo_zone = readOGR(paste0(gis_dir, '/2020 DFO management measures/')) %>%
+dfo_zone = readOGR(paste0(gis_dir, '/2021_DFO_Management Measures/')) %>%
   spTransform(ref)
+dfo_zone@data$ID = c(
+  '<b>DFO fisheries management area</b><br>Bay of Fundy<br>Active year round',
+  '<b>DFO fisheries management area</b><br>Gulf of St Lawrence<br>Active until 15 Nov')
 
 # read critical habitat zone
-critical_habitat_zone = readOGR(paste0(gis_dir, '/critical_habitat_zone/')) %>%
+critical_habitat_zone = readOGR(paste0(gis_dir, '/critical_habitat_areas/')) %>%
   spTransform(ref)
 
 # read management grid
-full_grid = readOGR(paste0(gis_dir, '/Full_ATL_grids/')) %>%
-  spTransform(ref)
-
-# read management grid
-tc_ra = readOGR(paste0(gis_dir, '/NARW_RA_2020/')) %>%
+full_grid = readOGR(paste0(gis_dir, '/Full_ATL_grids-2021/')) %>%
   spTransform(ref)
 
 # read US lobster zones
@@ -62,7 +63,7 @@ us_lobster = SpatialPolygonsDataFrame(us_lobster, data=us_lobster0@data)
 #     ) %>%
 #   addPolygons(data = tc_zone, color = 'blue', popup = ~paste0(ID),
 #                group = 'tc_zone',weight = 2) %>%
-#   addPolygons(data = dfo_zone, color = 'orange',
+#   addPolygons(data = dfo_zone, color = 'orange', popup = ~paste0(ID),
 #               group = 'dfo_zone',weight = 2) %>%
 #   addPolygons(data = tc_ra, color = 'grey',
 #               group = 'tc_ra',weight = 2) %>%
@@ -78,4 +79,4 @@ save(tc_zone,
      full_grid,
      tc_ra,
      us_lobster,
-     file = paste0(output_dir, 'gis.rda'))
+     file = ofile)
