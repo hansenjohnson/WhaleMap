@@ -28,18 +28,18 @@ tc_ra = readOGR('data/raw/2021_whalemapdata/GIS_data/2021_TC_NARW_Restricted Are
 tc_ra = tc_ra[tc_ra@data$ID == 'SHEDIAC_RA',]
 
 # read fishing data from DFO
-dfo_zone = readOGR(paste0(gis_dir, '/2021_DFO_Management Measures/')) %>%
+dfo_zone = readOGR('data/raw/2021_whalemapdata/GIS_data/2021_DFO_Management Measures/') %>%
   spTransform(ref)
 dfo_zone@data$ID = c(
   '<b>DFO fisheries management area</b><br>Bay of Fundy<br>Active year round',
   '<b>DFO fisheries management area</b><br>Gulf of St Lawrence<br>Active until 15 Nov')
 
 # read critical habitat zone
-critical_habitat_zone = readOGR(paste0(gis_dir, '/critical_habitat_areas/')) %>%
+critical_habitat_zone = readOGR('data/raw/2021_whalemapdata/GIS_data/critical_habitat_areas/') %>%
   spTransform(ref)
 
 # read management grid
-full_grid = readOGR(paste0(gis_dir, '/Full_ATL_grids-2021/')) %>%
+full_grid = readOGR('data/raw/2021_whalemapdata/GIS_data/Full_ATL_grids-2021/') %>%
   spTransform(ref)
 
 # read US lobster zones
