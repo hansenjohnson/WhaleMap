@@ -9,7 +9,6 @@ ofile = 'data/processed/boem.rda'
 # setup -------------------------------------------------------------------
 
 # libraries
-suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(sf))
 
 ## Query steps ##
@@ -63,7 +62,7 @@ for(ii in seq_along(zones)){
 }
 
 # flatten list
-boem = bind_rows(BOEM)
+boem = do.call('rbind', BOEM)
 
 # # plot to test
 # library(leaflet)
