@@ -186,7 +186,7 @@ body <- dashboardBody(
                            checkboxInput("legend", label = 'Legends', value = T),
                            
                            # Canadian management layers
-                           helpText(tags$em('Canadian management areas (2020)')),
+                           helpText(tags$em('Canadian management areas (2021)')),
                            
                            checkboxInput("critical_habitat_zone", 
                                          label = 'Critical habitat areas', value = T),
