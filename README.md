@@ -34,7 +34,7 @@ ui.R            Shiny app
 
 1. Sync
 
-The majority of the remoate data are synced using the script `src/get_get_remote_data.sh`. This uses Rclone to sync data from remote repositories (Google Drive, Dropbox, etc.), and also calls `src/get_live_dcs.sh` to download acoustic detection data. All the data are stored in `data/raw/`
+The majority of the remoate data are synced using the script `src/get_remote_data.sh`. This uses Rclone to sync data from remote repositories (Google Drive, Dropbox, etc.), and also calls `src/get_live_dcs.sh` to download acoustic detection data. All the data are stored in `data/raw/`
 
 2. Process 
 
