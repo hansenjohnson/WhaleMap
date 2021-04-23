@@ -646,7 +646,7 @@ data/processed/tss.rda : R/proc_tss.R data/raw/tss/*
 gis : data/processed/gis.rda R/proc_gis.R
 
 # Process management layers
-data/processed/gis.rda : R/proc_gis.R data/raw/2020_whalemapdata/GIS_data/*
+data/processed/gis.rda : R/proc_gis.R data/raw/2021_whalemapdata/GIS_data/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)

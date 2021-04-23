@@ -30,6 +30,7 @@ tc_ra = tc_ra[tc_ra@data$ID == 'SHEDIAC_RA',]
 # read fishing data from DFO
 dfo_zone = readOGR('data/raw/2021_whalemapdata/GIS_data/2021_DFO_Management Measures/') %>%
   spTransform(ref)
+dfo_zone = dfo_zone[dfo_zone@data$AreaName != 'Critical Habitat',]
 dfo_zone@data$ID = c(
   '<b>DFO fisheries management area</b><br>Bay of Fundy<br>Active year round',
   '<b>DFO fisheries management area</b><br>Gulf of St Lawrence<br>Active until 15 Nov')
