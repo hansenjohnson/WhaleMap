@@ -42,6 +42,7 @@ critical_habitat_zone = readOGR('data/raw/2021_whalemapdata/GIS_data/critical_ha
 # read management grid
 full_grid = readOGR('data/raw/2021_whalemapdata/GIS_data/Full_ATL_grids-2021/') %>%
   spTransform(ref)
+full_grid@data$Grid_Index = full_grid@data$GridName
 
 # read US lobster zones
 us_lobster0 = readOGR('data/raw/gis/Lobster_Management_Areas/') %>%
