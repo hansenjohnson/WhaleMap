@@ -529,8 +529,11 @@ function(input, output, session){
       
       # add polygons
       proxy %>%
-          addPolygons(data = full_grid, color = 'grey',
-                      group = 'full_grid',weight = 2, 
+          addPolygons(data = full_grid, 
+                      color = 'grey',
+                      group = 'full_grid',
+                      weight = 2,
+                      smoothFactor = 3, 
                       popup = ~paste0(Grid_Index))
       
       # switch to show/hide

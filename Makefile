@@ -347,6 +347,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2021_neaq_aerial_sightings.rds \
 																	data/interim/2021_noaa_twin_otter_sightings.rds \
 																	data/interim/2021_dfo_cessna_yob_sightings.rds \
+																	data/interim/2021_tc_dash8_sightings.rds \
 																	data/interim/2021_dfo_opportunistic_sightings.rds \
 																	data/interim/sas_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
@@ -592,6 +593,12 @@ data/interim/2021_noaa_twin_otter_sightings.rds : R/proc_2021_noaa_twin_otter.R 
 
 # 2021 DFO cessna YOB sightings
 data/interim/2021_dfo_cessna_yob_sightings.rds : R/proc_2021_dfo_cessna_yob_sightings.R data/raw/2021_whalemapdata/DFO_Cessna_YOB/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2021 tc dash8 sightings
+data/interim/2021_tc_dash8_sightings.rds : R/proc_2021_tc_dash8_sightings.R data/raw/2021_whalemapdata/TC_Dash8/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
