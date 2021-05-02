@@ -45,7 +45,8 @@ platform_cols = c(
   'plane' = '#8B6914',
   'vessel' = 'black',
   'slocum' = 'blue',
-  'rpas' = 'purple'
+  'rpas' = 'purple',
+  'buoy' = 'green4'
 )
 
 # observation colorby choices

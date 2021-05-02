@@ -814,7 +814,7 @@ function(input, output, session){
                              stroke = T, 
                              fill = T,
                              fillOpacity = 0,
-                             weight = 1.5,
+                             weight = 2.5,
                              group = 'tracks', 
                              lng=~lon, 
                              lat=~lat, 
