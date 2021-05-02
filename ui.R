@@ -290,6 +290,8 @@ body <- dashboardBody(
   fixedPanel(
     add_busy_spinner(color = "#FF0000", timeout = 300, spin = 'rotating-plane', height = '25px', width = '25px'),
     actionButton("go", "Go!",
+                 width = '200%',
+                 class = "btn-primary btn-lg",
                  style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
     left = 10,
     bottom = 10,
