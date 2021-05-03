@@ -293,7 +293,7 @@ body <- dashboardBody(
                  width = '200%',
                  class = "btn-primary btn-lg",
                  style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
-    left = 10,
+    left = 20,
     bottom = 10,
     style="z-index:1000;"
   )
