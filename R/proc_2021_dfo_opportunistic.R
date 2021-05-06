@@ -4,7 +4,8 @@
 # input -------------------------------------------------------------------
 
 # input file
-ifile = 'data/raw/2021_whalemapdata/2021_General_Opportunistic_Sightings/2021-NARW-General_opportunistic-sightings.xlsx'
+dfo_ifile = 'data/raw/2021_whalemapdata/2021_General_Opportunistic_Sightings/2021-NARW-General_opportunistic-sightings.xlsx'
+ccgs_ifile = 'data/raw/2021_whalemapdata/2021-CCGS_Opportunistic_Sightings/2021-NARW-CCGS_opportunistic-sightings.xlsx'
 
 # directory for output
 ofile = 'data/interim/2021_dfo_opportunistic_sightings.rds'
@@ -20,7 +21,9 @@ source('R/functions.R')
 # process data ------------------------------------------------------------
 
 # read in spp and obs keys
-sig = read_excel(ifile)
+sig_dfo = read_excel(dfo_ifile)
+sig_ccgs = read_excel(ccgs_ifile)
+sig = bind_rows(sig_dfo, sig_ccgs)
 colnames(sig) = cnames
 
 if(nrow(sig)>0){
