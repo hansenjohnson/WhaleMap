@@ -200,6 +200,12 @@ body <- dashboardBody(
                                                              target="_blank",
                                                              href = "http://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html"))),
                            
+                           checkboxInput("dfo_lines", value = F,
+                                         label = span("Fishing depth contours (10 and 20 fathom)", 
+                                                      tags$a(icon("info-sign", lib = "glyphicon"), 
+                                                             target="_blank",
+                                                             href = "http://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html"))),
+                           
                            checkboxInput("tc_zone", value = F,
                                          label = span("Shipping management areas", 
                                                       tags$a(icon("info-sign", lib = "glyphicon"), 

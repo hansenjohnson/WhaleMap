@@ -517,6 +517,36 @@ function(input, output, session){
     
   })
   
+  # dfo lines observer ------------------------------------------------------  
+  
+  observe(priority = 4, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('dfo_lines')
+    
+    if(input$dfo_lines){
+      
+      # add polygons
+      proxy %>%
+        addPolylines(data=dfo_10f, group = 'dfo_lines',
+                     options = pathOptions(clickable = F),
+                     weight = 1, 
+                     dashArray = c(1,1), 
+                     color = 'darkblue') %>%
+        addPolylines(data=dfo_20f, group = 'dfo_lines',
+                     options = pathOptions(clickable = F),
+                     dashArray = c(5,5), 
+                     weight = 1, 
+                     color = 'darkblue')
+      
+      # switch to show/hide
+      ifelse(input$dfo_lines, showGroup(proxy, 'dfo_lines'),
+             hideGroup(proxy, 'dfo_lines'))
+    }
+    
+  })
+  
   # full grid observer ------------------------------------------------------  
   
   observe(priority = 4, {
