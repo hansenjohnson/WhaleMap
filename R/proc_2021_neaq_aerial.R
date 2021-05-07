@@ -190,6 +190,9 @@ tracks = bind_rows(TRK,TRK2)
 # config data types
 tracks = config_tracks(tracks)
 
+# remove bad points
+tracks = subset(tracks, lon < -50)
+
 # save
 saveRDS(tracks, trk_ofile)
 
