@@ -97,7 +97,8 @@ if(length(flist)>0){
     
     # add deployment metadata
     tmp$platform = 'plane'
-    tmp$name = tolower(strsplit(basename(flist[ii]),'_')[[1]][2])
+    # tmp$name = tolower(strsplit(basename(flist[ii]),'_')[[1]][2])
+    tmp$name = 'ccs'
     tmp$id = paste(tmp$date, tmp$platform, tmp$name, sep = '_')
     
     # tracklines --------------------------------------------------------------
@@ -164,8 +165,8 @@ if(length(flist)>0){
     # extract data
     sig$lat = sig$LATITUDE
     sig$lon = sig$LONGITUDE
-    sig$number = as.numeric(as.character(sig$NUMBER))
-    sig$calves = as.numeric(as.character(sig$NUMCALF))
+    sig$number = suppressWarnings(as.numeric(as.character(sig$NUMBER)))
+    sig$calves = suppressWarnings(as.numeric(as.character(sig$NUMCALF)))
     
     # find indicies of matching
     mind = match(table = spp_key$code, x = sig$SPECCODE)
