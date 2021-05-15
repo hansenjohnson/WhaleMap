@@ -53,6 +53,7 @@ data/processed/tracks.rds : R/proc_tracks.R \
 														data/interim/2021_tc_dash8_tracks.rds \
 														data/interim/2021_dfo_twin_otter_tracks.rds \
 														data/interim/2021_dfo_cessna_zwf_tracks.rds \
+														data/interim/2021_tc_dash7_tracks.rds \
 														data/interim/dcs_archived_tracks.rds \
 														data/interim/dcs_live_tracks.rds
 	$(report_error)
@@ -311,6 +312,12 @@ data/interim/2021_dfo_cessna_zwf_tracks.rds : R/proc_2021_dfo_cessna_zwf_tracks.
 	Rscript $<
 	$(remove_error)
 
+# 2021 TC dash7 tracks
+data/interim/2021_tc_dash7_tracks.rds : R/proc_2021_tc_dash7_tracks.R data/raw/2021_whalemapdata/TC_Dash7/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
 # DCS archived tracks
 data/interim/dcs_archived_tracks.rds : R/proc_archived_dcs.R data/raw/dcs/archived/*/*
 	$(report_error)
@@ -373,6 +380,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2021_dfo_opportunistic_sightings.rds \
 																	data/interim/2021_dfo_cessna_zwf_sightings.rds \
 																	data/interim/2021_dfo_cp_sightings.rds \
+																	data/interim/2021_tc_dash7_sightings.rds \
 																	data/interim/sas_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
@@ -647,6 +655,12 @@ data/interim/2021_dfo_opportunistic_sightings.rds : R/proc_2021_dfo_opportunisti
 
 # 2021 dfo cp sightings
 data/interim/2021_dfo_cp_sightings.rds : R/proc_2021_dfo_cp_sightings.R data/raw/2021_whalemapdata/2021-DFO\ C&P_Opportunistic_Sightings/*/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2021 tc dash7 sightings
+data/interim/2021_tc_dash7_sightings.rds : R/proc_2021_tc_dash7_sightings.R data/raw/2021_whalemapdata/TC_Dash7/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
