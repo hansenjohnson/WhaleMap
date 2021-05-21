@@ -295,22 +295,21 @@ function(input, output, session){
     # track warning
     if(nrow(trk())>npts){
       showNotification(h4(paste0('Warning! Tracklines have been turned off because 
-                              you have chosen to plot more data than this application 
-                              can currently handle (i.e. more than ', as.character(npts), ' points). 
+                              you have attemped to plot too many points (i.e. more than ', as.character(npts), '). 
                               Please select less data to view tracks.')), 
                        duration = 15, closeButton = T, type = 'error')
     }
     
     # species warning
     if(paste(species(),collapse=',')!='right'){
-      showNotification(h4('Note: WhaleMap focuses on right whales. Other species
-                              information is incomplete.'), 
+      showNotification(h4('Note: Most real-time reports focus on right whales, 
+                          so data on other species may be incomplete.'), 
                        duration = 15, closeButton = T, type = 'error')
     }
     
     # year warning
     if(min(year(dates()))<2017){
-      showNotification(h4('Note: Data before 2017 are incomplete.'), 
+      showNotification(h4('Note: Effort data before 2017 are incomplete.'), 
                        duration = 15, closeButton = T, type = 'error')
     }
     
