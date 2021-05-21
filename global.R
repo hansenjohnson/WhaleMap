@@ -61,7 +61,8 @@ colorby_obs_choices =
   'Number' = 'number',
   'Latitude' = 'lat',
   'Longitude' = 'lon',
-  'Deployment' = 'id')
+  'Deployment' = 'id',
+  'Data source' = 'source')
 
 # track colorby choices
 colorby_trk_choices = 
