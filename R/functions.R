@@ -145,7 +145,8 @@ config_observations = function(obs){
               'year',
               'platform',
               'name',
-              'id')
+              'id',
+              'source')
   
   # return blank table if input is empty
   if(nrow(obs)==0){
@@ -166,7 +167,8 @@ config_observations = function(obs){
         year = as.numeric(year),
         platform = as.character(platform),
         name = as.character(name),
-        id = as.character(id)
+        id = as.character(id),
+        source = as.character(source)
       )
     
     return(obs)
@@ -211,6 +213,9 @@ config_observations = function(obs){
   
   if(is.null(obs$calves)){obs$calves = NA}
   obs$calves = as.numeric(obs$calves)
+  
+  if(is.null(obs$source)){obs$source = NA}
+  obs$source = as.character(obs$source)
   
   # qc latlon
   obs = qc_latlon(obs)

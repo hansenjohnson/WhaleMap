@@ -35,5 +35,8 @@ obs = config_observations(obs)
 obs$score = factor(obs$score, levels = c('detected', 'possibly detected', 'possibly sighted', 'sighted'), 
        labels = c('definite acoustic', 'possible acoustic', 'possible visual', 'definite visual'))
 
+# fix source
+obs$source[is.na(obs$source)] = 'WhaleMap'
+
 # save
 saveRDS(obs, 'data/processed/observations.rds')

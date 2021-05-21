@@ -914,11 +914,11 @@ function(input, output, session){
                                       paste0("Calves: ", calves),
                                       paste0("Platform: ", platform),
                                       paste0("Name: ", name),
-                                      paste0('Date: ', as.character(date)),
-                                      paste0('Time: ', as.character(format(time, '%H:%M:%S'))),
-                                      paste0('Position: ',
-                                             as.character(lat), ', ', as.character(lon)))
-                       )
+                                      paste0("Date: ", as.character(date)),
+                                      paste0("Time: ", as.character(format(time, '%H:%M:%S'))),
+                                      paste0("Position: ", as.character(lat), ', ', as.character(lon)),
+                                      paste0("Source: ", source)),
+                       options = markerOptions(removeOutsideVisibleBounds=T))
     }
   })
   
@@ -946,10 +946,10 @@ function(input, output, session){
                                       paste0("Calves: ", calves),
                                       paste0("Platform: ", platform),
                                       paste0("Name: ", name),
-                                      paste0('Date: ', as.character(date)),
-                                      paste0('Time: ', as.character(format(time, '%H:%M:%S'))),
-                                      paste0('Position: ', 
-                                             as.character(lat), ', ', as.character(lon))),
+                                      paste0("Date: ", as.character(date)),
+                                      paste0("Time: ", as.character(format(time, '%H:%M:%S'))),
+                                      paste0("Position: ", as.character(lat), ', ', as.character(lon)),
+                                      paste0("Source: ", source)),
                        options = markerOptions(removeOutsideVisibleBounds=T))
     }
   })
