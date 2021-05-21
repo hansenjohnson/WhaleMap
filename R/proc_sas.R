@@ -137,13 +137,17 @@ if(file.exists(from_sas_file)){
   # read in whalemap observations
   obs = readRDS(obs_file) 
   
+  # temporary reformat
+  obs = config_observations(obs)
+  
   # add identifier
   obs$whalemap_id = seq(1, nrow(obs),1)
   
   # filter whalemap data
   obs = obs %>%
     filter(date >= t0 & date <= t1 & species == 'right' & 
-             score %in% c('definite visual') & !is.na(lat) & !is.na(lon) & !grepl('RWSAS', source))
+             score %in% c('definite visual') & !is.na(lat) & !is.na(lon) & 
+             !grepl('RWSAS', source) & !grepl('SAS-', name))
   
   # define columns to compare
   m_obs = paste(obs$date, round(obs$lat,1), round(obs$lon,1), obs$platform, sep = '_')

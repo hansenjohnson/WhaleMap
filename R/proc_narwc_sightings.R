@@ -90,6 +90,9 @@ rwc$source = 'NARWC'
 # read in existing data
 obs = readRDS('data/processed/observations.rds')
 
+# temporary reformat
+obs = config_observations(obs)
+
 # filter whalemap data (not from NARWC)
 obs = obs %>%
   filter(year >= yr & !is.na(lat) & !is.na(lon) & !grepl('NARWC', source))
