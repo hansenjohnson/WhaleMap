@@ -382,6 +382,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2021_dfo_cp_sightings.rds \
 																	data/interim/2021_tc_dash7_sightings.rds \
 																	data/interim/sas_sightings.rds \
+																	data/interim/narwc_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
 
@@ -665,14 +666,20 @@ data/interim/2021_tc_dash7_sightings.rds : R/proc_2021_tc_dash7_sightings.R data
 	Rscript $<
 	$(remove_error)
 
-# DCS archived detections
-data/interim/dcs_archived_detections.rds : R/proc_archived_dcs.R data/raw/dcs/archived/*
+# RWSAS sightings
+data/interim/sas_sightings.rds : R/proc_sas.R
 	$(report_error)
 	Rscript $<
 	$(remove_error)
 
-# RWSAS sightings
-data/interim/sas_sightings.rds : R/proc_sas.R
+# NARWC sightings
+data/interim/narwc_sightings.rds : R/proc_narwc_sightings.R data/raw/narwc/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# DCS archived detections
+data/interim/dcs_archived_detections.rds : R/proc_archived_dcs.R data/raw/dcs/archived/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
