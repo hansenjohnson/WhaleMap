@@ -102,8 +102,9 @@ if(file.exists(from_sas_file)){
       yday = yday(time),
       year = year(time),
       species = 'right',
-      name = paste0('SAS-', id),
-      id = paste0(date, '_', platform, '_', name)
+      name = 'RWSAS',
+      id = id,
+      source = 'RWSAS'
     )
   
   # configure
@@ -142,8 +143,7 @@ if(file.exists(from_sas_file)){
   # filter whalemap data
   obs = obs %>%
     filter(date >= t0 & date <= t1 & species == 'right' & 
-             score %in% c('definite visual') & !is.na(lat) & !is.na(lon) &
-             !grepl('SAS-', name))
+             score %in% c('definite visual') & !is.na(lat) & !is.na(lon) & !grepl('RWSAS', source))
   
   # define columns to compare
   m_obs = paste(obs$date, round(obs$lat,1), round(obs$lon,1), obs$platform, sep = '_')
