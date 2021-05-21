@@ -40,7 +40,7 @@ function(input, output, session){
                          step = 1,
                          timeFormat = '%b-%d',
                          animate = F),
-             selectInput('years', label = NULL, choices = seq(2014,2021,1), 
+             selectInput('years', label = NULL, choices = seq(2010,2021,1), 
                          selected = 2021, multiple = TRUE, selectize = TRUE)
            )
     )
