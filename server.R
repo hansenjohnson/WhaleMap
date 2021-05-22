@@ -1204,7 +1204,7 @@ function(input, output, session){
       
       # build plot
       g = ggplot(obs, aes(x = yday, y = counter))+
-        geom_bar(stat = "identity", na.rm = T, aes_string(fill = paste0(colorby_obs())))+
+        geom_col(na.rm = T, aes_string(fill = paste0(colorby_obs())))+
         labs(x = '', y = '')+
         fillcols+
         facet_wrap(~cat, scales="free_y", nrow = 2)+
@@ -1235,9 +1235,13 @@ function(input, output, session){
         fillcols = scale_fill_manual(values = cols, name = colorby_obs())
       }
       
+      # count score by day, variable and category
+      cnt = obs %>% group_by(cat, (!!as.name(colorby_obs())), yday) %>%
+        count()
+      
       # build plot
-      g = ggplot(obs, aes(x = yday))+
-        geom_bar(stat = "count", na.rm = T, aes_string(fill = paste0(colorby_obs())))+
+      g = ggplot(cnt, aes(x = yday))+
+        geom_col(na.rm = T, aes_string(fill = paste0(colorby_obs()), y = 'n'))+
         labs(x = '', y = '')+
         fillcols+
         facet_wrap(~cat, scales="free_y", nrow = 2)+
