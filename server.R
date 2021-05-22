@@ -1167,10 +1167,18 @@ function(input, output, session){
     # determine days with trackline effort
     vis_effort = unique(tracks$yday[tracks$platform %in% visual_platforms])
     aco_effort = unique(tracks$yday[tracks$platform %in% acoustic_platforms])
-    eff = data.frame('yday' = c(vis_effort, aco_effort),
-                     'cat' = c(rep('Sighting events per day',length(vis_effort)), 
-                               rep('Acoustic detection events per day',length(aco_effort))),
-                     'y' = -1)
+    tot_effort = c(vis_effort, aco_effort)
+ 
+    # configure effort geometry for plotting
+    if(length(tot_effort)!=0){
+      eff = data.frame('yday' = tot_effort,
+                       'cat' = c(rep('Sighting events per day',length(vis_effort)), 
+                                 rep('Acoustic detection events per day',length(aco_effort))),
+                       'y' = -1)
+      geom_effort = geom_point(data = eff, aes(x = yday, y=y), pch=45, cex = 3, col = 'blue')
+    } else {
+      geom_effort = NULL
+    }
     
     # determine number of factor levels to color
     ncol = length(unique(obs[,which(colnames(obs)==colorby_obs())]))
@@ -1190,11 +1198,6 @@ function(input, output, session){
       # convert to factor for discrete colouring
       obs[,colorby_obs()] = as.factor(obs[,colorby_obs()])
       
-      # if(colorby_obs() == 'year'){
-      #   # convert year to factor
-      #   obs$year = as.factor(obs$year)
-      # }
-      
       # define palette for discrete scale
       fillcols = scale_fill_manual(values = cols, name = colorby_obs(), 
                                    na.value = 'darkslategrey')
@@ -1207,8 +1210,8 @@ function(input, output, session){
         facet_wrap(~cat, scales="free_y", nrow = 2)+
         scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"), 
                            breaks = seq(from = min_yday, to = max_yday, length.out = 6))+
-        geom_point(data = eff, aes(x = yday, y=y), pch=45, cex = 3, col = 'blue')+
         aes(text = paste('date: ', format(as.Date(as.character(yday), "%j"), "%d-%b")))+
+        geom_effort+
         expand_limits(x = c(min_yday, max_yday))
       
     } else {
@@ -1240,9 +1243,10 @@ function(input, output, session){
         facet_wrap(~cat, scales="free_y", nrow = 2)+
         scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"), 
                            breaks = seq(from = min_yday, to = max_yday, length.out = 6))+
-        geom_point(data = eff, aes(x = yday, y=y), pch=45, cex = 3, col = 'blue')+
         aes(text = paste('date: ', format(as.Date(as.character(yday), "%j"), "%d-%b")))+
+        geom_effort+
         expand_limits(x = c(min_yday, max_yday))
+      
     }
     
     # build interactive plot
