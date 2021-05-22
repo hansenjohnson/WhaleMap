@@ -1068,7 +1068,7 @@ function(input, output, session){
   
   # create text summary
   output$summary <- renderUI({
-    if(nrow(obs())==0){
+    if(nrow(dInBounds())==0){
       HTML('No data available...')
     } else {
       
