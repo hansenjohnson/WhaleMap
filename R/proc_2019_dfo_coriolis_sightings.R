@@ -37,9 +37,11 @@ tmp = read_excel(ifile) %>%
   )
 
 # update score
-tmp$score[tmp$score=='Definite'] = 'sighted'
-tmp$score[tmp$score=='Possible'] = 'possibly sighted'
-tmp$score[tmp$score=='Probable'] = 'possibly sighted'
+score = tolower(tmp$score)
+tmp$score = NA
+tmp$score[score=='definite'] = 'sighted'
+tmp$score[score=='possible'] = 'possibly sighted'
+tmp$score[score=='probable'] = 'possibly sighted'
 
 # update species
 species = tolower(tmp$species)
