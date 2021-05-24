@@ -1,13 +1,13 @@
-## proc_2020_dfo_coriolis_tracks ##
+## proc_2019_dfo_coriolis_tracks ##
 # Process gps data from dfo coriolis surveys
 
 # user input --------------------------------------------------------------
 
 # data directory
-ifile = 'data/raw/2020_whalemapdata/DFO_Coriolis/2020_DFO_Cor_Track.csv'
+ifile = 'data/raw/2019_whalemapdata/DFO_Coriolis/2019_DFO_Cor_Track.csv'
 
 # output file name
-ofile = 'data/interim/2020_dfo_coriolis_tracks.rds'
+ofile = 'data/interim/2019_dfo_coriolis_tracks.rds'
 
 # setup -------------------------------------------------------------------
 
@@ -19,7 +19,7 @@ source('R/functions.R')
 # read in data
 tmp = read_csv(ifile, col_types = cols()) %>%
   transmute(
-    time = as.POSIXct(`DateTime(UTC)`, format = '%d/%m/%Y %H:%M', tz = 'UTC'),
+    time = as.POSIXct(`DateTime(UTC)`, format = '%d/%m/%Y %H:%M:%S', tz = 'UTC'),
     date = as.Date(time),
     speed = NA,
     altitude = NA,
@@ -32,7 +32,7 @@ tmp = read_csv(ifile, col_types = cols()) %>%
     id = paste(date, platform, name, sep = '_'),
     source = 'WhaleMap'
   )
-  
+
 # simplify tracks for each day
 dates = unique(tmp$date)
 TRK = vector('list', length = length(dates))

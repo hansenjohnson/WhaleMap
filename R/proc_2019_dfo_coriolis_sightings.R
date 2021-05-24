@@ -1,13 +1,13 @@
-## proc_2020_dfo_coriolis_sightings ##
-# process 2020 coriolis sightings
+## proc_2019_dfo_coriolis_sightings ##
+# process 2019 coriolis sightings
 
 # input -------------------------------------------------------------------
 
 # sightings data file
-ifile = 'data/raw/2020_whalemapdata/DFO_Coriolis/2020_DFO_Cor_SightEffortEnviro.xlsx'
+ifile = 'data/raw/2019_whalemapdata/DFO_Coriolis/2019_DFO_Cor_SightEnviroEffortClean.xlsx'
 
 # output file name
-ofile = 'data/interim/2020_dfo_coriolis_sightings.rds'
+ofile = 'data/interim/2019_dfo_coriolis_sightings.rds'
 
 # setup -------------------------------------------------------------------
 
@@ -20,14 +20,14 @@ source('R/functions.R')
 # read in data
 tmp = read_excel(ifile) %>%
   transmute(
-    time = as.POSIXct(`Date/Time (UTC)`, tz = 'UTC'),
+    time = as.POSIXct(`DateTime (UTC)`, tz = 'UTC'),
     date = as.Date(time),
-    lat = `Lat (DD)`,
-    lon = `Long (DD)`,
-    species = Species,
-    score = ID_cert,
-    number = Best,
-    calves = Calves,
+    lat = `LatDD`,
+    lon = `LongDD`,
+    species = SPECIES,
+    score = SPP.Certainty,
+    number = NUMB,
+    calves = NA,
     year = year(date),
     yday = yday(date),
     platform = 'vessel',
@@ -42,14 +42,15 @@ tmp$score[tmp$score=='Possible'] = 'possibly sighted'
 tmp$score[tmp$score=='Probable'] = 'possibly sighted'
 
 # update species
-tmp$species[tmp$species == 'Harbour porpoise'] = 'porpoise'
-tmp$species[tmp$species == 'Humpback whale'] = 'humpback'
-tmp$species[tmp$species == 'Sei whale'] = 'sei'
-tmp$species[tmp$species == 'North Atlantic right whale'] = 'right'
-tmp$species[tmp$species == 'Fin whale'] = 'fin'
-tmp$species[tmp$species == 'Minke whale'] = 'minke'
-tmp$species[tmp$species == 'Blue whale'] = 'blue'
-tmp$species[tmp$species == 'Unknown whale'] = 'unknown whale'
+species = tolower(tmp$species)
+tmp$species = NA
+tmp$species[species == 'humpback whale'] = 'humpback'
+tmp$species[species == 'sei whale'] = 'sei'
+tmp$species[species == 'right whale'] = 'right'
+tmp$species[species == 'fin'] = 'fin'
+tmp$species[species == 'fin whale whale'] = 'fin'
+tmp$species[species == 'minke whale'] = 'minke'
+tmp$species[species == 'blue whale'] = 'blue'
 
 # config data types
 sig = config_observations(tmp)
