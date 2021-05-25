@@ -17,6 +17,7 @@ tests/
 manager_maps/
 tmp/
 requests/
+etc/
 
 # sensitive
 password.rda
