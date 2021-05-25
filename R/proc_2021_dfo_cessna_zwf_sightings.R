@@ -43,8 +43,14 @@ if(length(flist!=0)){
     # find date column
     date_ind = grep(pattern = 'date_UTC', x = colnames(tmp), ignore.case = TRUE)
     
-    # fix date/time
-    tmp$date = as.Date(tmp[,date_ind], format = '%Y-%m-%d UTC')
+    # # fix date/time
+    if(grepl('-', tmp[1,date_ind])){
+      tmp$date = as.Date(tmp[,date_ind], format = '%Y-%m-%d')
+    } else {
+      tmp$date = as.Date(tmp[,date_ind], format = '%Y/%m/%d')
+    }
+    
+    # fix time
     tmp$time = as.POSIXct(paste0(tmp$date, ' ', substr(tmp$time_UTC, start = 12, stop = 20)), tz = 'UTC')
     
     # add data
