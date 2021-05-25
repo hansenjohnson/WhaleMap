@@ -17,4 +17,4 @@ fi
 cd $DESTDIR
 
 # process viking data
-Rscript R/proc_2020_dfo_viking.R
+Rscript R/proc_2021_dfo_viking.R

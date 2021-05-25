@@ -389,6 +389,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2021_dfo_cessna_zwf_sightings.rds \
 																	data/interim/2021_dfo_cp_sightings.rds \
 																	data/interim/2021_tc_dash7_sightings.rds \
+																	data/interim/2021_dfo_viking_detections.rds \
 																	data/interim/sas_sightings.rds \
 																	data/interim/narwc_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
@@ -573,10 +574,10 @@ data/interim/2020_dfo_twin_otter_sightings.rds : R/proc_2020_dfo_twin_otter_sigh
 	$(remove_error)
 
 # DFO viking detections
-#data/interim/2020_dfo_viking_detections.rds : R/proc_2020_dfo_viking.R
-#	$(report_error)
-#	Rscript $<
-#	$(remove_error)
+data/interim/2021_dfo_viking_detections.rds : R/proc_2021_dfo_viking.R
+	$(report_error)
+	Rscript $<
+	$(remove_error)
 
 # 2020 coast guard opportunistic sightings
 data/interim/2020_ccgs_sightings.rds : R/proc_2020_ccgs_sightings.R data/raw/2020_whalemapdata/2020-CCGS/*
