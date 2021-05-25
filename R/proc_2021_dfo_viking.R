@@ -13,6 +13,10 @@ raw_dir = 'data/raw/2021_viking/'
 trk_file = 'data/interim/2021_dfo_viking_tracks.rds'
 det_file = 'data/interim/2021_dfo_viking_detections.rds'
 
+# start and end date
+start_date = '2021-05-01'
+end_date = Sys.Date()+1
+
 # setup -------------------------------------------------------------------
 
 source('R/functions.R')
@@ -40,10 +44,6 @@ get_jsn = function(jsn_url){
 
 # tracks ------------------------------------------------------------------
 
-# # start and end date
-# start_date = '2021-05-01'
-# end_date = Sys.Date()+1
-# 
 # # read in buoy table
 # pos = read_csv(pos_file, col_types = cols())
 # 
