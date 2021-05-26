@@ -29,11 +29,11 @@ colnames(sig) = cnames
 if(nrow(sig)>0){
   
   # wrangle time
-  time = paste0(sig$date, ' ', sig$time)
-  sig$time = as.POSIXct(time, format = '%m/%d/%Y %H:%M:%S', tz = 'UTC', usetz=TRUE)
+  time = paste0(sig$date, ' ', format(sig$time, '%H:%M:%S'))
+  sig$time = as.POSIXct(time, format = '%Y-%m-%d %H:%M:%S', tz = 'UTC', usetz=TRUE)
   
   # wrangle date
-  sig$date = as.Date(sig$date, format = '%m/%d/%Y')
+  sig$date = as.Date(sig$date)
   sig$yday = yday(sig$date)
   sig$year = year(sig$date)
   
@@ -68,6 +68,7 @@ if(nrow(sig)>0){
   sig$name = sig$platform
   sig$platform = 'opportunistic'
   sig$id = paste0(sig$date, '_', sig$platform, '_', sig$name)
+  sig$source = 'WhaleMap'
 }
 
 # config data types
