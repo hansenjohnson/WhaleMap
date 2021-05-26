@@ -44,57 +44,57 @@ get_jsn = function(jsn_url){
 
 # tracks ------------------------------------------------------------------
 
-# # read in buoy table
-# pos = read_csv(pos_file, col_types = cols())
-# 
-# # get status info
-# TRK = vector('list', length = length(pos$name))
-# for(ii in seq_along(pos$name)){
-#   
-#   # define buoy
-#   ibuoy = pos$name[ii]
-#   ilat = pos$lat[ii]
-#   ilon = pos$lon[ii]
-#   
-#   # define status URL
-#   status_url = paste0('https://harverstervikingbaleine.prod.ogsl.ca/api/buoy_status/', ibuoy ,'?date_range_min=', start_date, '&date_range_max=', end_date)
-#   
-#   # get jsn data
-#   tmp = get_jsn(status_url)
-#   
-#   # convert to table
-#   TRK[[ii]] = tibble(
-#     date = as.Date(names(tmp)),
-#     name = ibuoy,
-#     lat = ilat,
-#     lon = ilon,
-#     status = as.character(sapply(X = tmp, FUN = function(x)x[1]))  
-#   )
-# }
-# 
-# # flatten and remove offline instruments
-# trk = bind_rows(TRK) %>% filter(status == TRUE)
-# 
-# # add metadata
-# tracks = tibble(
-#   time = as.POSIXct(paste0(trk$date, 00:00:00), tz = 'UTC'),
-#   date = trk$date,
-#   yday = yday(date),
-#   year = year(date),
-#   lat = trk$lat,
-#   lon = trk$lon,
-#   name = paste0('dfo_viking_', trk$name),
-#   speed = NA,
-#   altitude = NA,
-#   platform = 'buoy',
-#   id = paste(start_date, platform, name, sep = '_')
-# )
-# 
-# # format
-# tracks = config_tracks(as.data.frame(tracks))
-# 
-# # save
-# saveRDS(object = tracks, file = trk_file)
+# read in buoy table
+pos = read_csv(pos_file, col_types = cols())
+
+# get status info
+TRK = vector('list', length = length(pos$name))
+for(ii in seq_along(pos$name)){
+
+  # define buoy
+  ibuoy = pos$name[ii]
+  ilat = pos$lat[ii]
+  ilon = pos$lon[ii]
+
+  # define status URL
+  status_url = paste0('https://harvestervikingbaleine.prod.ogsl.ca/api/buoy_status/', ibuoy ,'?date_range_min=', start_date, '&date_range_max=', end_date)
+  
+  # get jsn data
+  tmp = get_jsn(status_url)
+
+  # convert to table
+  TRK[[ii]] = tibble(
+    date = as.Date(names(tmp)),
+    name = ibuoy,
+    lat = ilat,
+    lon = ilon,
+    status = as.character(sapply(X = tmp, FUN = function(x)x[1]))
+  )
+}
+
+# flatten and remove offline instruments
+trk = bind_rows(TRK) %>% filter(status == TRUE)
+
+# add metadata
+tracks = tibble(
+  time = as.POSIXct(paste0(trk$date, 00:00:00), tz = 'UTC'),
+  date = trk$date,
+  yday = yday(date),
+  year = year(date),
+  lat = trk$lat,
+  lon = trk$lon,
+  name = paste0('dfo_viking_', trk$name),
+  speed = NA,
+  altitude = NA,
+  platform = 'buoy',
+  id = paste(start_date, platform, name, sep = '_')
+)
+
+# format
+tracks = config_tracks(as.data.frame(tracks))
+
+# save
+saveRDS(object = tracks, file = trk_file)
 
 # detections --------------------------------------------------------------
 

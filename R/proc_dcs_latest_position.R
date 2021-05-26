@@ -4,11 +4,11 @@
 # input -------------------------------------------------------------------
 
 dcs_file = 'data/interim/dcs_live_tracks.rds'
-vik_file = 'data/interim/2020_dfo_viking_tracks.rds'
+vik_file = 'data/interim/2021_dfo_viking_tracks.rds'
 outfile = 'data/processed/dcs_live_latest_position.rds'
 
 # process viking
-proc_viking = FALSE
+proc_viking = TRUE
 
 # setup -------------------------------------------------------------------
 
