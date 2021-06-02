@@ -1,6 +1,7 @@
 script,name,url,email_list
 proc_2021_noaa_twin_otter.R,NOAA NEFSC aerial survey sightings/tracks,https://www.nefsc.noaa.gov/psb/surveys/NARWSS.html,data/raw/2021_noaa_twin_otter/WhaleMap_email_list.csv
 proc_live_dcs.R,Dal/WHOI acoustic detections,http://dcs.whoi.edu/,data/email/default.csv
+proc_2021_dfo_viking.R,DFO Viking acoustic detections,https://ogsl.ca/viking/?lg=en,data/email/default.csv
 proc_2021_dfo_opportunistic.R,DFO opportunistic sightings reports,https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/email/default.csv
 proc_2021_dfo_cessna_yob_sightings.R,DFO Cessna aerial survey sightings (YOB),https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/raw/2021_whalemapdata/DFO_Cessna_YOB/email.list.xlsx
 proc_2021_dfo_cessna_zwf_sightings.R,DFO Cessna aerial survey sightings (ZWF),https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html,data/raw/2021_whalemapdata/DFO_Cessna_ZWF/email.list.xlsx
