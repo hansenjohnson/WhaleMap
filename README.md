@@ -1,6 +1,8 @@
 # WhaleMap
 Collate and display whale survey results
 
+[![DOI](https://zenodo.org/badge/105266456.svg)](https://zenodo.org/badge/latestdoi/105266456)
+
 ## Overview
 The goal of this software is to rapidly and effectively collect and share whale survey information within and between research, government, industry, and public sectors. Our hope is that it will improve survey efficiency, increase public awareness, and inform impactful, transparent management decisions. It is in active development, so please report any problems or suggestions via this site's issue page. Follow the links below for more information and a live demonstration.
 
