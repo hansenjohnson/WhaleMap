@@ -6,7 +6,7 @@ tags:
   - marine mammals
   - conservation
 authors:
-  - name: Hansen Johnson^[*]
+  - name: Hansen Johnson
     orcid: 0000-0002-3086-6759
     affiliation: 1
   - name: Daniel Morrison
