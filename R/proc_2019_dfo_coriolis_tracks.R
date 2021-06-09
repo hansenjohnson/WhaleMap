@@ -4,7 +4,7 @@
 # user input --------------------------------------------------------------
 
 # data directory
-ifile = 'data/raw/2019_whalemapdata/DFO_Coriolis/2019_DFO_Cor_Track.csv'
+ifile = 'data/raw/2019_whalemapdata/DFO_Coriolis/2019_DFO_Cor_SightEnviroEffortClean.xlsx'
 
 # output file name
 ofile = 'data/interim/2019_dfo_coriolis_tracks.rds'
@@ -13,18 +13,19 @@ ofile = 'data/interim/2019_dfo_coriolis_tracks.rds'
 
 # functions
 source('R/functions.R')
+library(readxl)
 
 # read and format data ----------------------------------------------------
 
 # read in data
-tmp = read_csv(ifile, col_types = cols()) %>%
+tmp = read_excel(ifile, sheet = 2) %>%
   transmute(
-    time = as.POSIXct(`DateTime(UTC)`, format = '%d/%m/%Y %H:%M:%S', tz = 'UTC'),
+    time = as.POSIXct(`DateTimeUTC`, format = '%d-%m-%Y %H:%M', tz = 'UTC'),
     date = as.Date(time),
-    speed = NA,
-    altitude = NA,
     lat = `LatDD`,
     lon = `LongDD`,
+    speed = NA,
+    altitude = NA,
     year = year(date),
     yday = yday(date),
     platform = 'vessel',
