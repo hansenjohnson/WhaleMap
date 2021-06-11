@@ -4,15 +4,8 @@ Collate and display whale survey results
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.03094/status.svg)](https://doi.org/10.21105/joss.03094)
 
 ## Overview
-The goal of this software is to rapidly and effectively collect and share whale survey information within and between research, government, industry, and public sectors. Our hope is that it will improve survey efficiency, increase public awareness, and inform impactful, transparent management decisions. It is in active development, so please report any problems or suggestions via this site's issue page. Follow the links below for more information and a live demonstration.
 
-## Demonstration
-
-See the homepage with summary map here:
-https://whalemap.org/  
-
-And see the Shiny App interactive map page here:
-https://whalemap.org/WhaleMap/
+The goal of this software is to rapidly and effectively collect and share whale survey information within and between research, government, industry, and public sectors. Our hope is that it will improve survey efficiency, increase public awareness, and inform impactful, transparent management decisions. The system is live at [whalemap.org](https://whalemap.org/), and the interactive map is available [here](https://whalemap.org/WhaleMap). Check out the [WhaleMap publication in JOSS](https://doi.org/10.21105/joss.03094) for a general description of the system, or continue reading for more detailed information. Please report any problems or suggestions via this site's issue page. 
 
 ## Project structure
 
