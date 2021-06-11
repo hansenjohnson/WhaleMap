@@ -299,7 +299,7 @@ body <- dashboardBody(
       timeout = 300,
       spin = 'rotating-plane',
       height = '25px',
-      width = '25px',
+      width = '30px',
       position = 'bottom-left',
       margins = c(10, 45)
     ),
