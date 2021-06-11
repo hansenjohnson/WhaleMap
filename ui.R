@@ -301,7 +301,7 @@ body <- dashboardBody(
       height = '25px',
       width = '25px',
       position = 'bottom-left',
-      margins = c(10, 50)
+      margins = c(10, 45)
     ),
     actionButton(
       "go",
