@@ -294,14 +294,25 @@ body <- dashboardBody(
   
   # floating go button
   fixedPanel(
-    add_busy_spinner(color = "#FF0000", timeout = 300, spin = 'rotating-plane', height = '25px', width = '25px', margins = c(0,30)),
-    actionButton("go", "Go!",
-                 width = '200%',
-                 class = "btn-primary btn-lg",
-                 style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
+    add_busy_spinner(
+      color = "#FF0000",
+      timeout = 300,
+      spin = 'rotating-plane',
+      height = '25px',
+      width = '25px',
+      position = 'bottom-left',
+      margins = c(20, 100)
+    ),
+    actionButton(
+      "go",
+      "Go!",
+      width = '200%',
+      class = "btn-primary btn-lg",
+      style = "color: #fff; background-color: #337ab7; border-color: #2e6da4"
+    ),
     left = 20,
     bottom = 10,
-    style="z-index:1000;"
+    style = "z-index:1000;"
   )
 )
 
