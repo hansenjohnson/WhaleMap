@@ -67,7 +67,7 @@ if(nrow(sig)>0){
   # add metadata
   sig$name = sig$platform
   sig$platform = 'opportunistic'
-  sig$id = paste0(sig$date, '_', sig$platform, '_', sig$name)
+  sig$id = paste0(sig$date, '_', sig$platform, '_dfo-report-', sig$name)
   sig$source = 'WhaleMap'
 }
 

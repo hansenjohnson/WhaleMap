@@ -67,7 +67,7 @@ for(i in seq_along(flist)){
   tmp$year = year(tmp$date)
   tmp$yday = yday(tmp$date)
   tmp$platform = 'vessel'
-  tmp$name = 'hudson'
+  tmp$name = 'dfo_hudson'
   tmp$id = paste(tmp$date, tmp$platform, tmp$name, sep = '_')
   
   # update score

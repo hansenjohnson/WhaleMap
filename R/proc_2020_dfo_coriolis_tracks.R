@@ -28,7 +28,7 @@ tmp = read_csv(ifile, col_types = cols()) %>%
     year = year(date),
     yday = yday(date),
     platform = 'vessel',
-    name = 'coriolis',
+    name = 'dfo_coriolis',
     id = paste(date, platform, name, sep = '_'),
     source = 'WhaleMap'
   )

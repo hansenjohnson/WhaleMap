@@ -60,7 +60,7 @@ sig = clean_latlon(sig)
 # add metadata
 sig$name = sig$platform
 sig$platform = 'opportunistic'
-sig$id = paste0(sig$date, '_', sig$platform, '_', sig$name)
+sig$id = paste0(sig$date, '_', sig$platform, '_dfo-report-', sig$name)
 
 # config data types
 sig = config_observations(sig)
