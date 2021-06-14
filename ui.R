@@ -255,8 +255,7 @@ body <- dashboardBody(
                
                leafletOutput("map", height = 550),
                
-               helpText("Please note that much of these data are preliminary and subject to change, and
-                        that few or no observations may reflect a lack of effort rather than a lack of whales")
+               helpText("These data are preliminary data, subject to change, and not to be used without permission from the contributor(s)")
            ),
            
            # Plot
