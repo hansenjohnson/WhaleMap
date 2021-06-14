@@ -55,6 +55,7 @@ if(length(flist)!=0){
                      lon = tmp$Pos_long,
                      time = tmp$Time_UTC,
                      species = tmp$Sp_code,
+                     calves = tmp$calves,
                      number = tmp$Nb_total
     )
     
@@ -100,6 +101,8 @@ if(length(flist)!=0){
     tmp$platform = 'plane'
     tmp$name = 'tc_dash7'
     tmp$id = paste(tmp$date, tmp$platform, tmp$name, sep = '_')
+    tmp$source = 'WhaleMap'
+    tmp$calves[which(is.na(tmp$calves))] = 0
     
     # add to list
     SIG[[i]] = tmp
