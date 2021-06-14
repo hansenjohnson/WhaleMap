@@ -4,7 +4,7 @@ remove_error = @bash src/remove_error.sh $<
 
 ## ALL ##
 .PHONY : all
-all : tracks obs latest tss gis map
+all : tracks obs latest tss gis dfo map
 
 ## TRACKS ##
 .PHONY : tracks
@@ -736,6 +736,14 @@ data/processed/gis.rda : R/proc_gis.R data/raw/2021_whalemapdata/GIS_data/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
+
+## DFO ##
+.PHONY : dfo
+dfo : shared/dfo-whalemap/*.csv
+
+# Share data with DFO
+shared/dfo-whalemap/*.csv : src/push_dfo-whalemap.sh R/write_dfo-whalemap_data.R data/processed/tracks.rds data/processed/observations.rds
+	src/push_dfo-whalemap.sh
 
 ## MAP ##
 .PHONY : map
