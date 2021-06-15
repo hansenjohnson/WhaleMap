@@ -22,6 +22,8 @@ URL=(
   [2021-05-25_buoy_nybnw]=http://dcs.whoi.edu/nybnw0521/nybnw0521_nybnw_html/ptracks/manual_analysis.csv
 	[2021-03-25_slocum_we15]=http://dcs.whoi.edu/cox0321/cox0321_we15_html/ptracks/manual_analysis.csv
 	[2021-03-17_slocum_we16]=http://dcs.whoi.edu/sbnms0321/sbnms0321_we16_html/ptracks/manual_analysis.csv
+	[2020-07-31_buoy_mamv]=http://dcs.whoi.edu/mamv0720/mamv0720_mamv_html/ptracks/manual_analysis.csv	
+	[2020-07-30_buoy_njatl]=http://dcs.whoi.edu/njatl0720/njatl0720_njatl_html/ptracks/manual_analysis.csv	
 )
 
 # download data
