@@ -21,13 +21,6 @@ function(input, output, session){
   load('data/processed/dma.rda')
   load('data/processed/sma.rda')
   
-  # article notification --------------------------------------------------------------
-  
-  showNotification(
-    ui = 'New WhaleMap publication!',
-    action = a(target="_blank", href = "https://joss.theoj.org/papers/10.21105/joss.03094", "Check it out here"),
-    duration = NULL, closeButton = T, type = 'message')
-  
   # build date UI -------------------------------------------------------
   
   output$dateChoice <- renderUI({
