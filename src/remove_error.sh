@@ -14,4 +14,4 @@ fname=${fpath##*/}
 DATE=`date '+%Y-%m-%d %H:%M:%S'`
 
 # add completion timestamp
-sed -i "s/.*$fname.*/$fname, $DATE/" $sfile
+sed -i '' 's/.*$fname.*/$fname, $DATE/' $sfile

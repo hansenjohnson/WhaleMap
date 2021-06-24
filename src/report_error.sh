@@ -17,4 +17,4 @@ DATE=`date '+%Y-%m-%d %H:%M:%S'`
 grep -q -F "$fname" $sfile || echo $fname >> $sfile
 
 # add error message
-sed -i "s/.*$fname.*/$fname, ERROR ($DATE)/" $sfile
+sed -i '' 's/.*$fname.*/$fname, ERROR ($DATE)/' $sfile
