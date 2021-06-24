@@ -16,5 +16,12 @@ DATE=`date '+%Y-%m-%d %H:%M:%S'`
 # add filename to file (if doesn't exist already)
 grep -q -F "$fname" $sfile || echo $fname >> $sfile
 
-# add error message
-sed -i '' 's/.*$fname.*/$fname, ERROR ($DATE)/' $sfile
+# Extract OS name
+unamestr=`uname`
+
+# add error message (`sed` is OS specific)
+if [[ "$unamestr" == 'Linux' ]]; then
+	sed -i 's/.*$fname.*/$fname, ERROR ($DATE)/' $sfile
+elif [[ "$unamestr" == 'Darwin' ]]; then
+	sed -i '' 's/.*$fname.*/$fname, ERROR ($DATE)/' $sfile
+fi
