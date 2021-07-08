@@ -20,7 +20,7 @@ remove_dfo_ids = function(obs){
 # process -----------------------------------------------------------------
 
 # define start time
-t0 = as.Date('2020-01-01')
+t0 = as.Date('2021-01-01')
 
 # read and subset tracks
 trk = readRDS('data/processed/tracks.rds') %>%
