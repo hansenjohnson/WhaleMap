@@ -55,6 +55,7 @@ data/processed/tracks.rds : R/proc_tracks.R \
 														data/interim/2021_dfo_twin_otter_tracks.rds \
 														data/interim/2021_dfo_cessna_zwf_tracks.rds \
 														data/interim/2021_tc_dash7_tracks.rds \
+														data/interim/2021_dfo_rhib_tracks.rds \
 														data/interim/2021_dfo_viking_tracks.rds \
 														data/interim/dcs_archived_tracks.rds \
 														data/interim/dcs_live_tracks.rds
@@ -316,6 +317,12 @@ data/interim/2021_dfo_cessna_zwf_tracks.rds : R/proc_2021_dfo_cessna_zwf_tracks.
 
 # 2021 TC dash7 tracks
 data/interim/2021_tc_dash7_tracks.rds : R/proc_2021_tc_dash7_tracks.R data/raw/2021_whalemapdata/TC_Dash7/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2021 DFO RHIB tracks
+data/interim/2021_dfo_rhib_tracks.rds : R/proc_2021_dfo_rhib_tracks.R data/raw/2021_whalemapdata/DFO_RHIB/*/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
