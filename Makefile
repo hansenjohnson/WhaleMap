@@ -54,6 +54,7 @@ data/processed/tracks.rds : R/proc_tracks.R \
 														data/interim/2021_tc_dash8_tracks.rds \
 														data/interim/2021_dfo_twin_otter_tracks.rds \
 														data/interim/2021_dfo_cessna_zwf_tracks.rds \
+														data/interim/2021_dfo_cessna_igb_tracks.rds \
 														data/interim/2021_tc_dash7_tracks.rds \
 														data/interim/2021_dfo_rhib_tracks.rds \
 														data/interim/2021_neaq_vessel_tracks.rds \
@@ -316,6 +317,12 @@ data/interim/2021_dfo_cessna_zwf_tracks.rds : R/proc_2021_dfo_cessna_zwf_tracks.
 	Rscript $<
 	$(remove_error)
 
+# 2021 DFO Cessna IGB tracks
+data/interim/2021_dfo_cessna_igb_tracks.rds : R/proc_2021_dfo_cessna_igb_tracks.R data/raw/2021_whalemapdata/DFO_Cessna_IGB/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)	
+
 # 2021 TC dash7 tracks
 data/interim/2021_tc_dash7_tracks.rds : R/proc_2021_tc_dash7_tracks.R data/raw/2021_whalemapdata/TC_Dash7/*
 	$(report_error)
@@ -402,6 +409,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2021_dfo_twin_otter_sightings.rds \
 																	data/interim/2021_dfo_opportunistic_sightings.rds \
 																	data/interim/2021_dfo_cessna_zwf_sightings.rds \
+																	data/interim/2021_dfo_cessna_igb_sightings.rds \
 																	data/interim/2021_dfo_cp_sightings.rds \
 																	data/interim/2021_tc_dash7_sightings.rds \
 																	data/interim/2021_dfo_rhib_sightings.rds \
@@ -670,6 +678,12 @@ data/interim/2021_dfo_twin_otter_sightings.rds : R/proc_2021_dfo_twin_otter_sigh
 
 # 2021 DFO cessna ZWF sightings
 data/interim/2021_dfo_cessna_zwf_sightings.rds : R/proc_2021_dfo_cessna_zwf_sightings.R data/raw/2021_whalemapdata/DFO_Cessna_ZWF/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2021 DFO cessna IGB sightings
+data/interim/2021_dfo_cessna_igb_sightings.rds : R/proc_2021_dfo_cessna_igb_sightings.R data/raw/2021_whalemapdata/DFO_Cessna_IGB/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
