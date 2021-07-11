@@ -40,16 +40,19 @@ if(length(flist!=0)){
     # read in data from excel
     tmp = as.data.frame(read_xlsx(flist[i]))
     
-    # find date column
-    date_ind = grep(pattern = 'date_UTC', x = colnames(tmp), ignore.case = TRUE)
+    # read date from filename
+    tmp$date = as.Date(basename(flist[i]), format = '%Y%m%d.xlsx')
     
     # fix date/time
-    tmp$date = as.Date(tmp[,date_ind], format = '%Y-%m-%d UTC')
     tmp$time = as.POSIXct(paste0(tmp$date, ' ', substr(tmp$time_UTC, start = 12, stop = 20)), tz = 'UTC')
+    
+    # fix lat/lon
+    tmp$lat = gsub(pattern = ',', replacement = '.', x = tmp$lat)
+    tmp$lon = gsub(pattern = ',', replacement = '.', x = tmp$long)
     
     # add data
     tmp$lat = as.numeric(tmp$lat)
-    tmp$lon = abs(as.numeric(tmp$long))*-1
+    tmp$lon = abs(as.numeric(tmp$lon))*-1
     tmp$number = as.numeric(tmp$nb_tot)
     
     # add calves if column exists
