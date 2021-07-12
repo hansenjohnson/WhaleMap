@@ -80,7 +80,7 @@ for(i in seq_along(flist)){
     itrk$speed = as.numeric(gsub(pattern = ' kts', replacement = '', x = itrk$PlatformSpeed))
     
     # remove unused columns
-    itrk = itrk[,c('time','lat','lon', 'altitude','speed','date','yday', 'year',  'platform', 'name', 'id')]
+    itrk = itrk[,c('time','lat','lon', 'altitude','speed','date','yday', 'year', 'platform', 'name', 'id')]
     
     # simplify
     itrk = subsample_gps(gps = itrk, tol = 0.00025)
@@ -106,7 +106,10 @@ for(i in seq_along(flist)){
   sig$lat = sig$LATITUDE
   sig$lon = sig$LONGITUDE
   sig$number = sig$NUMBER
-  sig$calves = as.numeric(sig$NUMCALF)
+  sig$calves = as.numeric(as.character(sig$NUMCALF))
+  
+  # assume zero calves if na
+  sig$calves = ifelse(is.na(sig$calves), 0, 1)
   
   # get score
   sig$score = NA
