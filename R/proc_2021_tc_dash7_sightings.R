@@ -64,7 +64,14 @@ if(length(flist)!=0){
     tmp = tmp[!is.na(tmp$species)&
                 !is.na(tmp$lat)&
                 !is.na(tmp$lon)&
+                !is.na(tmp$date)&
                 !is.na(tmp$time),]
+    
+    # check for good sightings data after cleanup
+    if(nrow(tmp) == 0){
+      message('Skipping file without sightings data: ', flist[i])
+      next
+    }
     
     # fix date
     tmp$date = as.Date(tmp$date[1]) # only use first date
