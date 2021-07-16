@@ -19,17 +19,19 @@ spp_key = data.frame(
   code = c('FIWH', 'RIWH', 'MIWH', 'SEWH', 'HUWH', 'HAPO', 'GRSE', 'PIWH'),
   species = c('fin', 'right', 'minke', 'sei', 'humpback', 'harbor porpoise', 'grey seal','pilot whale'))
 
-# list data files
-flist = list.files(data_dir, pattern = '\\d{4}-\\d{2}-\\d{2}-*.*.csv$', full.names = T, include.dirs = F)
+# list sightings files
+sig_list = list.files(data_dir, pattern = '\\SIGHTINGS*.*.csv$', full.names = T, include.dirs = F)
+trk_list = list.files(data_dir, pattern = '\\Track-*.*.csv$', full.names = T, include.dirs = F)
 
-TRK = SIG = vector('list', length = length(flist))
-for(i in seq_along(flist)){
-  
-  # read in data
-  tmp = read.csv(flist[i])
+## sightings
+SIG = vector('list', length = length(sig_list))
+for(isig in seq_along(sig_list)){
+
+  # read in sightings file
+  tmp = read.csv(sig_list[isig])
   
   # assign vessel and timezone
-  tmp$time = as.POSIXct(tmp$Time..ADT., format = '%Y-%m-%dT%H:%M:%S', tz = 'America/Halifax')
+  tmp$time = as.POSIXct(tmp$date.time..ADT., format = '%Y-%m-%dT%H:%M:%S', tz = 'America/Halifax')
   
   # wrangle time
   tmp$date = as.Date(tmp$time)
@@ -41,96 +43,73 @@ for(i in seq_along(flist)){
   tmp$name = 'jdmartin'
   tmp$id = paste(tmp$date, tmp$platform, tmp$name, sep = '_')
   
-  # tracklines --------------------------------------------------------------
-  
-  # determine start/stop of effort segments
-  i0 = which(tmp$LEGSTAGE==1)
-  i1 = which(tmp$LEGSTAGE==5)
-  
-  # enter off-effort automatically
-  if(length(i1)==0){
-    i1 = nrow(tmp)
-  }
-  
-  # enter off-effort automatically
-  if(length(i0)!=length(i1)){
-    i1 = c(i1,nrow(tmp))
-  }
-  
-  if(length(i0) < length(i1)){
-    i0 = 1
-    i1 = nrow(tmp)
-    message('Could not match on/off effort lines in: ', flist[i])
-    message('Plotting uncorrected effort data...')
-  }
-  
-  # fill in leg stage info for each effort segment
-  EFF = list()
-  for(j in 1:length(i0)){
-    
-    # effort segment
-    itrk = tmp[i0[j]:i1[j],]
-    
-    # fix lat lons
-    itrk$lat = itrk$TrkLatitude
-    itrk$lon = itrk$TrkLongitude
-    
-    # get speed and altitude
-    itrk$altitude = as.numeric(gsub(pattern = ' m', replacement = '', x = itrk$TrkAltitude))
-    itrk$speed = as.numeric(gsub(pattern = ' kts', replacement = '', x = itrk$PlatformSpeed))
-    
-    # remove unused columns
-    itrk = itrk[,c('time','lat','lon', 'altitude','speed','date','yday', 'year', 'platform', 'name', 'id')]
-    
-    # simplify
-    itrk = subsample_gps(gps = itrk, tol = 0.00025)
-    
-    # duplicate last row, and replace pos with NA's for plotting
-    itrk = rbind(itrk, itrk[nrow(itrk),])
-    itrk$lat[nrow(itrk)] = NA
-    itrk$lon[nrow(itrk)] = NA
-    
-    # add to list
-    EFF[[j]] = itrk
-  }
-  
-  # combine all effort segments
-  TRK[[i]] = bind_rows(EFF)
-  
-  # sightings ---------------------------------------------------------------
-  
   # take only sightings
   sig = droplevels(tmp[which(as.character(tmp$SPECCODE)!=""),])
-  
+
   # extract data
   sig$lat = sig$LATITUDE
   sig$lon = sig$LONGITUDE
   sig$number = sig$NUMBER
   sig$calves = as.numeric(as.character(sig$NUMCALF))
-  
+
   # assume zero calves if na
   sig$calves = ifelse(is.na(sig$calves), 0, 1)
-  
+
   # get score
   sig$score = NA
   sig$score[sig$IDREL %in% c(1,2)] = 'possibly sighted'
   sig$score[sig$IDREL == 3] = 'sighted'
-  
+
   # find indecies of matching
   mind = match(table = spp_key$code, x = sig$SPECCODE)
-  
+
   # replace codes with species names
   sig$species = spp_key$species[mind]
-  
+
   # drop unknown codes
   sig = sig[which(!is.na(sig$species)),]
-  
+
   # keep important columns
   sig = sig[,c('time','lat','lon','date', 'yday','species','score','number','calves','year','platform','name','id')]
-  
+
   # add to the list
-  SIG[[i]] = sig
+  SIG[[isig]] = sig
+}
+
+## tracks
+TRK = vector('list', length = length(trk_list))
+for(itrk in seq_along(trk_list)){
   
+  # read in sightings file
+  tmp = read.csv(trk_list[itrk])
+  
+  # assign vessel and timezone
+  tmp$time = as.POSIXct(tmp$Time.Created..ADT., format = '%Y-%m-%dT%H:%M:%S', tz = 'America/Halifax')
+  
+  # wrangle time
+  tmp$date = as.Date(tmp$time)
+  tmp$yday = yday(tmp$time)
+  tmp$year = year(tmp$time)
+  
+  # add deployment metadata
+  tmp$platform = 'vessel'
+  tmp$name = 'jdmartin'
+  tmp$id = paste(tmp$date, tmp$platform, tmp$name, sep = '_')
+
+  # add lat/lon/speed/alt
+  tmp$lat = tmp$Latitude
+  tmp$lon = tmp$Longitude
+  tmp$speed = tmp$Speed.Over.Ground..kts.
+  tmp$altitude = tmp$Altitude..m.
+  
+  # select columns
+  trk = tmp[,c('time','lat','lon', 'altitude','speed','date','yday', 'year', 'platform', 'name', 'id')]
+  
+  # simplify
+  trk = subsample_gps(gps = trk, tol = 0.00025)
+
+  # add to list
+  TRK[[itrk]] = trk
 }
 
 # prep track output -------------------------------------------------------
