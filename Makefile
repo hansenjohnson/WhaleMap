@@ -58,6 +58,7 @@ data/processed/tracks.rds : R/proc_tracks.R \
 														data/interim/2021_tc_dash7_tracks.rds \
 														data/interim/2021_dfo_rhib_tracks.rds \
 														data/interim/2021_neaq_vessel_tracks.rds \
+														data/interim/2021_tc_rpas_tracks.rds \
 														data/interim/2021_dfo_viking_tracks.rds \
 														data/interim/dcs_archived_tracks.rds \
 														data/interim/dcs_live_tracks.rds
@@ -337,6 +338,12 @@ data/interim/2021_dfo_rhib_tracks.rds : R/proc_2021_dfo_rhib_tracks.R data/raw/2
 
 # 2021 NEAq vessel tracks
 data/interim/2021_neaq_vessel_tracks.rds : R/proc_2021_neaq_cwi.R data/raw/2021_neaq_cwi/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2021 TC RPAS
+data/interim/2021_tc_rpas_tracks.rds : R/proc_2021_tc_rpas_tracks.R data/raw/2021_whalemapdata/TC_RPAS/*/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
