@@ -75,7 +75,13 @@ proc_dcs = function(data_dir, output_dir, det_fname, track_fname, ext = ""){
     dir = flist[[i]]
     
     # read in detection data
-    tmp = read.csv(paste0(dir,'/manual_analysis.csv'))
+    ifile = paste0(dir,'/manual_analysis.csv')
+    if(file.exists(ifile)){
+      tmp = read.csv(ifile)  
+    } else {
+      message('Cannot find ', ifile, '! Skipping...') 
+      next
+    }
     
     # remove unneeded columns
     tmp$analyst = NULL
