@@ -15,6 +15,13 @@ read_GPX = function(ifile){
   return(out)
 }
 
+read_KML = function(ifile){
+  tmp = sf::st_read(ifile, quiet = TRUE)
+  out = data.frame(sf::st_coordinates(tmp))[,1:3]
+  colnames(out) = c('lon', 'lat', 'altitude')
+  return(out)
+}
+
 clean_latlon = function(d){
   d$lat = as.character(d$lat)
   d$lat = gsub(",","",d$lat)

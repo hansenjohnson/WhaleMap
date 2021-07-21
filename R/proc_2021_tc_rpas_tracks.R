@@ -30,23 +30,21 @@ for(ii in seq_along(flist)){
   ftime = as.POSIXct(paste0(fdate, ' 12:00:00 UTC'), tz = 'UTC')
   
   # read in file
-  tmp = suppressWarnings(rgdal::readOGR(dsn = flist[ii],verbose = F)) %>%
-    coordinates() %>%
-    as.data.frame()
+  tmp = read_KML(flist[ii])
   
   # format
   tmp = tmp %>% transmute(
     date = fdate,
     time = ftime+seq(1,nrow(tmp),1),
-    lat = X2,
-    lon = X1,
+    lat,
+    lon,
     yday = yday(date),
     year = year(date),
     platform = 'rpas',
     name = 'tc_rpas',
     id = paste(date, platform, name, sep = '_'),
     speed = NA,
-    altitude = NA
+    altitude
   )
   
   # add to list
