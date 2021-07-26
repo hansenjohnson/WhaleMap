@@ -420,6 +420,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2021_dfo_cp_sightings.rds \
 																	data/interim/2021_tc_dash7_sightings.rds \
 																	data/interim/2021_dfo_rhib_sightings.rds \
+																	data/interim/2021_tc_rpas_sightings.rds \
 																	data/interim/2021_neaq_vessel_sightings.rds \
 																	data/interim/sas_sightings.rds \
 																	data/interim/narwc_sightings.rds \
@@ -721,6 +722,12 @@ data/interim/2021_dfo_rhib_sightings.rds : R/proc_2021_dfo_rhib_sightings.R data
 
 # 2021 NEAq/CWI sightings
 data/interim/2021_neaq_vessel_sightings.rds : R/proc_2021_neaq_cwi.R data/raw/2021_neaq_cwi/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2021 tc rpas sightings
+data/interim/2021_tc_rpas_sightings.rds : R/proc_2021_tc_rpas_sightings.R data/raw/2021_whalemapdata/TC_RPAS/*/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
