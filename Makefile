@@ -673,7 +673,7 @@ data/interim/2021_dfo_cessna_yob_sightings.rds : R/proc_2021_dfo_cessna_yob_sigh
 	$(remove_error)
 
 # 2021 tc dash8 sightings
-data/interim/2021_tc_dash8_sightings.rds : R/proc_2021_tc_dash8_sightings.R data/raw/2021_whalemapdata/TC_Dash8/*
+data/interim/2021_tc_dash8_sightings.rds : R/proc_2021_tc_dash8_sightings.R data/raw/2021_whalemapdata/TC_Dash8/*/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
@@ -709,7 +709,7 @@ data/interim/2021_dfo_cp_sightings.rds : R/proc_2021_dfo_cp_sightings.R data/raw
 	$(remove_error)
 
 # 2021 tc dash7 sightings
-data/interim/2021_tc_dash7_sightings.rds : R/proc_2021_tc_dash7_sightings.R data/raw/2021_whalemapdata/TC_Dash7/*
+data/interim/2021_tc_dash7_sightings.rds : R/proc_2021_tc_dash7_sightings.R data/raw/2021_whalemapdata/TC_Dash7/*/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
