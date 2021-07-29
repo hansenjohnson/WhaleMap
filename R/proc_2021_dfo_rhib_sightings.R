@@ -18,7 +18,7 @@ suppressPackageStartupMessages(library(readxl))
 source('R/functions.R')
 
 # list files to process
-flist = list.files(data_dir, pattern = '*.*_Sightings.xlsx$', full.names = T, recursive = T)
+flist = list.files(data_dir, pattern = '^2021_*.*_Sightings.xlsx$', full.names = T, recursive = T)
 
 # only proceed if sightings files exist
 if(length(flist)!=0){
