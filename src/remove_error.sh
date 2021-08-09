@@ -14,7 +14,7 @@ fname=${fpath##*/}
 DATE=`date '+%Y-%m-%d %H:%M:%S'`
 
 # create output text
-otext="$fname $DATE"
+otext="$fname, $DATE"
 
 # add completion timestamp (using perl vs sed for cross-platform compatibility)
 perl -pi -e "s/.*$fname.*/$otext/" $sfile
