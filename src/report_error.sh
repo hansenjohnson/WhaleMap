@@ -16,12 +16,8 @@ DATE=`date '+%Y-%m-%d %H:%M:%S'`
 # add filename to file (if doesn't exist already)
 grep -q -F "$fname" $sfile || echo $fname >> $sfile
 
-# Extract OS name
-unamestr=`uname`
+# create output text
+otext="$fname ERROR $DATE"
 
-# add error message (`sed` is OS specific)
-if [[ "$unamestr" == 'Linux' ]]; then
-	sed -i 's/.*$fname.*/$fname, ERROR ($DATE)/' $sfile
-elif [[ "$unamestr" == 'Darwin' ]]; then
-	sed -i '' 's/.*$fname.*/$fname, ERROR ($DATE)/' $sfile
-fi
+# add completion timestamp (using perl vs sed for cross-platform compatibility)
+perl -pi -e "s/.*$fname.*/$otext/" $sfile
