@@ -30,8 +30,17 @@ for(isig in seq_along(sig_list)){
   # read in sightings file
   tmp = read.csv(sig_list[isig])
   
-  # assign vessel and timezone
-  tmp$time = as.POSIXct(tmp$date.time..ADT., format = '%Y-%m-%dT%H:%M:%S', tz = 'America/Halifax')
+  # extract time
+  time = tmp$date.time..ADT.
+  
+  # determine timestamp
+  time_format = ifelse(grepl(pattern = "T", x = time[1]), '%Y-%m-%dT%H:%M:%S', '%Y-%m-%d %H:%M:%S')
+  
+  # convert
+  tmp$time = as.POSIXct(time, format = time_format, tz = 'America/Halifax')
+  
+  # catch error
+  if(is.na(tmp$time[1])){message('Bad timestamp found in: ', sig_list[isig])}
   
   # wrangle time
   tmp$date = as.Date(tmp$time)
