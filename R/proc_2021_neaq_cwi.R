@@ -92,8 +92,17 @@ for(itrk in seq_along(trk_list)){
   # read in sightings file
   tmp = read.csv(trk_list[itrk])
   
-  # assign vessel and timezone
-  tmp$time = as.POSIXct(tmp$Time.Created..ADT., format = '%Y-%m-%dT%H:%M:%S', tz = 'America/Halifax')
+  # extract time
+  time = tmp$Time.Created..ADT.
+  
+  # determine timestamp
+  time_format = ifelse(grepl(pattern = "T", x = time[1]), '%Y-%m-%dT%H:%M:%S', '%Y-%m-%d %H:%M:%S')
+  
+  # convert
+  tmp$time = as.POSIXct(time, format = time_format, tz = 'America/Halifax')
+  
+  # catch error
+  if(is.na(tmp$time[1])){message('Bad timestamp found in: ', trk_list[itrk])}
   
   # wrangle time
   tmp$date = as.Date(tmp$time)
