@@ -46,9 +46,15 @@ if(length(dmas)>0){
   # extract polygon metadata and name rows by id
   md = data.frame(
     name = xml_attr(dmas,attr = 'name'),
+    triggertype = xml_attr(dmas,attr = 'triggertype'),
     expiration = paste0(xml_attr(dmas,attr = 'expdate'), ' UTC')
   ) 
   rownames(md) = xml_attr(dmas, attr = 'id')
+  
+  # fix trigger type
+  md$triggertype = as.character(md$triggertype)
+  md$triggertype[md$triggertype == 'v'] = 'Visual'
+  md$triggertype[md$triggertype == 'a'] = 'Acoustic'
   
   # check expiration times
   e_dates = as.Date(as.POSIXct(md$expiration, tz = 'UTC'))

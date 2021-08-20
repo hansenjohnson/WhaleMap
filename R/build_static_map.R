@@ -389,6 +389,7 @@ build_static_map = function(type = 'whalemap'){
                   popup = ~paste(sep = "<br/>" ,
                                  dma_grp,
                                  paste0(name),
+                                 paste0("Type: ", triggertype),
                                  paste0("Expires: ", expiration)),
                   weight = 1, color = 'yellow', fillColor = 'yellow') 
   }
