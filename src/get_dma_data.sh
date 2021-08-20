@@ -20,7 +20,8 @@ cd ${DESTDIR}
 DATADIR=${DESTDIR}/data/raw/dma/
 
 # define url
-URL=https://fish.nefsc.noaa.gov/cgi-bin/mammalmaps/xmlgenDMA.pl
+# URL=https://fish.nefsc.noaa.gov/cgi-bin/mammalmaps/xmlgenDMA.pl
+URL=https://apps-nefsc.fisheries.noaa.gov/cgi-bin/mammalmaps/xmlgenDMA.pl
 
 # make data directory
 mkdir -p ${DATADIR}
