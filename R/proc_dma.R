@@ -53,7 +53,7 @@ if(length(dmas)>0){
   
   # fix trigger type
   md$triggertype = as.character(md$triggertype)
-  md$triggertype[md$triggertype == 'v'] = 'Visual'
+  md$triggertype[md$triggertype == 'v'] = 'Visual/DMA'
   md$triggertype[md$triggertype == 'a'] = 'Acoustic'
   
   # check expiration times
