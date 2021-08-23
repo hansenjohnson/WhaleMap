@@ -43,6 +43,10 @@ rclone sync drive:"WhaleMap" "2021_noaa_twin_otter/" --drive-shared-with-me --dr
 printf "\n*** Checking NEAq/CWI Google Drive ***\n\n"
 rclone sync drive:"WhaleMap_2021_NEAq_CWI" "2021_neaq_cwi/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
+# Sync CWI/NEAq vessel data Google drive
+printf "\n*** Checking MICS Google Drive ***\n\n"
+rclone sync drive:"WhaleMap_MICS" "2021_mics/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
+
 # move to project directory
 cd ${DESTDIR}
 
