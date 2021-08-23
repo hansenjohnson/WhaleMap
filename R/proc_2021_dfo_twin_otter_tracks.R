@@ -45,6 +45,12 @@ if(length(flist!=0)){
     # subsample (use default subsample rate)
     tracks = subsample_gps(gps = tmp)
     
+    # overwrite times in bad gps
+    if(basename(flist[i]) == "20210822.gpx"){
+      message('Fixing timestamp in: ', flist[i])
+      tracks$time = tracks$time + 5*60*60*24 # add 5 days
+    }
+    
     # add metadata
     tracks$date = as.Date(tracks$time)
     tracks$yday = yday(tracks$date)
