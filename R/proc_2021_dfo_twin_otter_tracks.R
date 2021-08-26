@@ -40,16 +40,10 @@ if(length(flist!=0)){
     tmp = tmp[which(!is.na(tmp$time)),]
     
     # add timestamp
-    tmp$time = with_tz(as.POSIXct(tmp$time, tz = 'America/Halifax'), tzone = 'UTC')
-    
+    tmp$time = as.POSIXlt(tmp$time, tz = 'UTC')
+      
     # subsample (use default subsample rate)
     tracks = subsample_gps(gps = tmp)
-    
-    # overwrite times in bad gps
-    if(basename(flist[i]) == "20210822.gpx"){
-      message('Fixing timestamp in: ', flist[i])
-      tracks$time = tracks$time + 5*60*60*24 # add 5 days
-    }
     
     # add metadata
     tracks$date = as.Date(tracks$time)
@@ -58,6 +52,13 @@ if(length(flist!=0)){
     tracks$platform = 'plane'
     tracks$name = 'dfo_twin_otter'
     tracks$id = paste(tracks$date, tracks$platform, tracks$name, sep = '_')
+    
+    # remove other date(s)
+    if(length(unique(tracks$date))>1){
+      tb = as.data.frame(table(tracks$date))
+      good_date = as.Date(tb$Var1[which.max(tb$Freq)])
+      tracks = tracks[tracks$date == good_date,]
+    }
     
     # add to list
     TRK[[i]] = tracks
