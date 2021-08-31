@@ -24,3 +24,4 @@ proc_2021_ccs.R,Center for Coastal Studies aerial surveys,https://coastalstudies
 proc_2021_tc_rpas_tracks.R,TC RPAS aerial survey tracks,http://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html,data/raw/2021_whalemapdata/TC_RPAS/email.list.xlsx
 proc_2021_tc_rpas_sightings.R,TC RPAS aerial survey detections,http://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html,data/raw/2021_whalemapdata/TC_RPAS/email.list.xlsx
 proc_2021_mics_tracks.R,Mignan Island Cetacean Study tracks,https://www.rorqual.com/english/home,data/email/default.csv
+proc_2021_mics_sightings.R,Mignan Island Cetacean Study sightings,https://www.rorqual.com/english/home,data/email/default.csv
