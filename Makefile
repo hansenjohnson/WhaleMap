@@ -413,7 +413,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/2020_tc_dash7_sightings.rds \
 																	data/interim/2020_neaq_sightings.rds \
 																	data/interim/2020_dfo_coriolis_sightings.rds \
-																	data/interim/2020_unb_sightings.rds \
+																	data/interim/unb_sightings.rds \
 																	data/interim/2020_dfo_hudson_sightings.rds \
 																	data/interim/2021_ccs_sightings.rds \
 																	data/interim/2021_neaq_aerial_sightings.rds \
@@ -644,7 +644,7 @@ data/interim/2020_dfo_coriolis_sightings.rds : R/proc_2020_dfo_coriolis_sighting
 	$(remove_error)
 
 # 2020 UNB sightings
-data/interim/2020_unb_sightings.rds : R/proc_2020_unb_sightings.R data/raw/2020_unb/*
+data/interim/unb_sightings.rds : R/proc_unb_sightings.R data/raw/unb/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)

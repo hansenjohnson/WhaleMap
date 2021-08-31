@@ -1,13 +1,13 @@
-## proc_2020_unb_sightings ##
-# process 2020 dfo opportunistic sightings from UNB surveys
+## proc_unb_sightings ##
+# process opportunistic sightings from UNB surveys
 
 # input -------------------------------------------------------------------
 
 # input file
-data_dir = 'data/raw/2020_unb/'
+data_dir = 'data/raw/unb/'
 
 # directory for output
-ofile = 'data/interim/2020_unb_sightings.rds'
+ofile = 'data/interim/unb_sightings.rds'
 
 # setup -------------------------------------------------------------------
 
