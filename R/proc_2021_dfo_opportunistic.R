@@ -11,7 +11,8 @@ ccgs_ifile = 'data/raw/2021_whalemapdata/2021-CCGS_Opportunistic_Sightings/2021-
 ofile = 'data/interim/2021_dfo_opportunistic_sightings.rds'
 
 # column names (in order of sheet)
-cnames = c('date', 'time', 'lat', 'lon', 'number', 'calves', 'platform', 'photos', 'verified', 'notes')
+cnames = c('date','time', 'lat', 'lon', 'number', 'calves', 'platform', 'photos', 'verified', 'notes')
+ctypes = c('date', 'date', 'numeric', 'numeric', 'numeric', 'numeric', 'text', 'text', 'text', 'text')
 
 # setup -------------------------------------------------------------------
 
@@ -21,8 +22,8 @@ source('R/functions.R')
 # process data ------------------------------------------------------------
 
 # read in spp and obs keys
-sig_dfo = read_excel(dfo_ifile)
-sig_ccgs = read_excel(ccgs_ifile)
+sig_dfo = read_excel(dfo_ifile, col_types = ctypes)
+sig_ccgs = read_excel(ccgs_ifile, col_types = ctypes)
 sig = bind_rows(sig_dfo, sig_ccgs)
 colnames(sig) = cnames
 
