@@ -43,7 +43,8 @@ for(ii in seq_along(flist)){
       score = Score,
       platform = 'opportunistic',
       name = 'UNB',
-      id = paste0(date, '_', platform, '_', name)
+      id = paste0(date, '_', platform, '_', name),
+      source = 'WhaleMap'
     )
   
   # determine ll type
@@ -52,7 +53,7 @@ for(ii in seq_along(flist)){
   # convert if necessary
   if(length(ll_ddm)>0){
     tmp$lat = ddm2dd_col(tmp$lat)  
-    tmp$lon = ddm2dd_col(tmp$lon)  
+    tmp$lon = abs(ddm2dd_col(tmp$lon))*-1
   }
   
   # check for errors
