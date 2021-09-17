@@ -26,6 +26,7 @@ for(ii in seq_along(flist)){
   
   # read in spp and obs keys
   tmp = read_csv(flist[ii], col_types = cols()) %>%
+    drop_na(`Time (UTC)`) %>%
     rename(
       lat = contains('Latitude', ignore.case = TRUE),
       lon = contains('Longitude', ignore.case = TRUE)
