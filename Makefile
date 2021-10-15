@@ -345,7 +345,7 @@ data/interim/2021_neaq_vessel_tracks.rds : R/proc_2021_neaq_cwi.R data/raw/2021_
 	$(remove_error)
 
 # 2021 DFO Hudson vessel tracks
-data/interim/2021_dfo_hudson_tracks.rds : R/proc_2021_dfo_hudson.R data/raw/2021_whalemapdata/DFO_CGGHudson/*/*
+data/interim/2021_dfo_hudson_tracks.rds : R/proc_2021_dfo_hudson.R data/raw/2021_whalemapdata/DFO_CCGHudson/*/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
