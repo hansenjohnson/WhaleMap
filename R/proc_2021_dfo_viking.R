@@ -7,7 +7,7 @@
 pos_file = 'data/raw/2021_viking/buoy_positions.csv'
 
 # raw file directory (store downloaded json)
-raw_dir = 'data/raw/2021_viking/'
+raw_file = 'data/raw/2021_viking/detections.json'
 
 # output files
 trk_file = 'data/interim/2021_dfo_viking_tracks.rds'
@@ -103,6 +103,9 @@ detection_url = paste0('https://www.ogsl.ca/beluga/biodiversity/occurrenceMeasur
 
 # get jsn data
 jsn = get_jsn(detection_url)
+
+# save to file
+
 
 det = tibble(
   time = as.POSIXct(jsn$event$dateText, tz = 'UTC'),
