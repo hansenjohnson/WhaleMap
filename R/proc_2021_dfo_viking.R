@@ -105,7 +105,7 @@ detection_url = paste0('https://www.ogsl.ca/beluga/biodiversity/occurrenceMeasur
 jsn = get_jsn(detection_url)
 
 # save to file
-
+jsonlite::write_json(x = jsn, path = raw_file)
 
 det = tibble(
   time = as.POSIXct(jsn$event$dateText, tz = 'UTC'),
