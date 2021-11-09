@@ -42,6 +42,7 @@ build_static_map = function(type = 'whalemap'){
     dfo_zone_grp = 'Areas subject to Canadian fishery closure protocol'
     sma_grp = 'US Seasonal Management Areas'
     dma_grp = 'US Right Whale Slow Zones'
+    alwtrp_grp = 'US ALWTRP Fisheries Closures'
     
     # output path
     fout = './static_map/whalemap.html'  
@@ -90,9 +91,9 @@ build_static_map = function(type = 'whalemap'){
     dfo_zone_grp = 'Areas subject to Canadian fishery closure protocol'
     sma_grp = 'US Seasonal Management Areas'
     dma_grp = 'US Right Whale Slow Zones'
+    alwtrp_grp = 'US ALWTRP Fisheries Closures'
     
     # output path
-    
     fout = './static_map/whale_map_en.html'
     
   } else if(type == 'dfo-fr'){
@@ -139,6 +140,7 @@ build_static_map = function(type = 'whalemap'){
     dfo_zone_grp = 'Zones soumises au protocole de fermeture temporaire'
     dma_grp = 'Zone de gestion dynamique des États-Unis'
     sma_grp = 'Zone de gestion saisonnière des États-Unis'
+    alwtrp_grp = 'Fermetures des pêcheries de l\'ALWTRP aux États-Unis'
     
     # output path
     fout = './static_map/whale_map_fr.html'
@@ -283,6 +285,7 @@ build_static_map = function(type = 'whalemap'){
                         tc_zone_grp,
                         dfo_zone_grp,
                         sma_grp,
+                        alwtrp_grp,
                         dma_grp),
       options = layersControlOptions(collapsed = TRUE), position = 'topright')
   } else {
@@ -300,6 +303,7 @@ build_static_map = function(type = 'whalemap'){
                         tc_zone_grp,
                         dfo_zone_grp,
                         sma_grp,
+                        alwtrp_grp,
                         dma_grp),
       options = layersControlOptions(collapsed = TRUE), position = 'topright')
   }
@@ -309,7 +313,8 @@ build_static_map = function(type = 'whalemap'){
                              graticules_grp,
                              robot_grp,
                              tc_zone_grp,
-                             dfo_zone_grp)) %>%
+                             dfo_zone_grp,
+                             alwtrp_grp)) %>%
     
     # add legend
     addLegend(position = "bottomright",
@@ -379,6 +384,16 @@ build_static_map = function(type = 'whalemap'){
                                paste0(Restr_Area),
                                paste0("Active: ", active)),
                 weight = 1, color = 'red', fillColor = 'red') 
+  
+  # plot US ALWTRP
+  map <- map %>%
+    addPolygons(data=alwtrp, group = alwtrp_grp,
+                fill = T, fillOpacity = 0.3, stroke = T, smoothFactor = 0,
+                popup = ~paste(sep = "<br/>" ,
+                               alwtrp_grp,
+                               paste0(ID),
+                               paste0("Active: ", ACTIVE)),
+                weight = 1, color = 'brown', fillColor = 'brown') 
   
   # plot US DMAs
   if(!('data.frame' %in% class(dma))){
