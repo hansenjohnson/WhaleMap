@@ -76,8 +76,10 @@ z_lma@data = data.frame(
   ID = 'LMA 1 Restricted Area',
   ACTIVE = '01 Oct - 01 Jan')
 
-z_mass = readOGR('data/raw/gis/alwtp/Mass_Restricted_Area_State_Expansion/') %>%
+z_mass0 = readOGR('data/raw/gis/alwtp/Mass_Restricted_Area_State_Expansion/') %>%
   spTransform(ref)
+z_mass = gSimplify(z_mass0, tol=0.01, topologyPreserve=TRUE)
+z_mass = SpatialPolygonsDataFrame(z_mass, data=z_mass0@data)
 z_mass@data = data.frame(
   ID = 'Massachusetts Restricted Area',
   ACTIVE = '01 Feb - 01 Apr')
