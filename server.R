@@ -804,7 +804,7 @@ function(input, output, session){
       proxy %>%
         addPolygons(data=alwtrp, group = 'alwtrp',
                     fill = T, 
-                    fillOpacity = 0.5, 
+                    fillOpacity = 0.3, 
                     stroke = T, 
                     options = pathOptions(clickable = T),
                     popup = ~paste(sep = "<br/>" ,
@@ -812,8 +812,8 @@ function(input, output, session){
                                    paste0(ID),
                                    paste0('Active: ', ACTIVE)),
                     weight = 1, 
-                    color = 'pink', 
-                    fillColor = 'pink')
+                    color = 'brown', 
+                    fillColor = 'brown')
       
       # switch to show/hide
       ifelse(input$alwtrp, showGroup(proxy, 'alwtrp'),
