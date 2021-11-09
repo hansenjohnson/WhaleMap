@@ -61,6 +61,36 @@ us_lobster0 = readOGR('data/raw/gis/Lobster_Management_Areas/') %>%
 us_lobster = gSimplify(us_lobster0, tol=0.01, topologyPreserve=TRUE)
 us_lobster = SpatialPolygonsDataFrame(us_lobster, data=us_lobster0@data)
 
+# process US ALWTRP
+
+# read data
+z_gsc = readOGR('data/raw/gis/alwtp/Great_South_Channel_Restricted_Trap-Pot_Area/') %>%
+  spTransform(ref)
+z_gsc@data = data.frame(
+  ID = 'Great South Channel Restricted Trap-Pot Area',
+  ACTIVE = '01 Apr - 01 Jun')
+
+z_lma = readOGR('data/raw/gis/alwtp/LMA1_Restricted_Area/') %>%
+  spTransform(ref)
+z_lma@data = data.frame(
+  ID = 'LMA 1 Restricted Area',
+  ACTIVE = '01 Oct - 01 Jan')
+
+z_mass = readOGR('data/raw/gis/alwtp/Mass_Restricted_Area_State_Expansion/') %>%
+  spTransform(ref)
+z_mass@data = data.frame(
+  ID = 'Massachusetts Restricted Area',
+  ACTIVE = '01 Feb - 01 Apr')
+
+z_soi = readOGR('data/raw/gis/alwtp/South_Island_Restricted_Area/') %>%
+  spTransform(ref)
+z_soi@data = data.frame(
+  ID = 'South Island Restricted Area',
+  ACTIVE = '01 Feb - 01 Apr')
+
+# combine
+alwtrp = rbind(z_gsc, z_lma, z_mass, z_soi)
+
 # test with leaflet
 # library(leaflet)
 # leaflet() %>%
@@ -98,4 +128,5 @@ save(tc_zone,
      full_grid,
      tc_ra,
      us_lobster,
+     alwtrp,
      file = ofile)

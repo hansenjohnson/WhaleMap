@@ -748,8 +748,8 @@ function(input, output, session){
                                    paste0("Type: ", triggertype),
                                    paste0("Expires: ", expiration)),
                     weight = 1, 
-                    color = 'yellow', 
-                    fillColor = 'yellow')
+                    color = '#ff9900', 
+                    fillColor = '#ff9900')
       
       # switch to show/hide
       ifelse(input$dma, showGroup(proxy, 'dma'),
@@ -786,6 +786,38 @@ function(input, output, session){
       # switch to show/hide
       ifelse(input$sma, showGroup(proxy, 'sma'),
              hideGroup(proxy, 'sma'))
+    }
+    
+  })
+  
+  # alwtrp observer ------------------------------------------------------  
+  
+  observe(priority = 4, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('alwtrp')
+    
+    if(input$alwtrp){
+      
+      # add polygons
+      proxy %>%
+        addPolygons(data=alwtrp, group = 'alwtrp',
+                    fill = T, 
+                    fillOpacity = 0.5, 
+                    stroke = T, 
+                    options = pathOptions(clickable = T),
+                    popup = ~paste(sep = "<br/>" ,
+                                   "Atlantic Large Whale Take Reduction Plan Changes",
+                                   paste0(ID),
+                                   paste0('Active: ', ACTIVE)),
+                    weight = 1, 
+                    color = 'pink', 
+                    fillColor = 'pink')
+      
+      # switch to show/hide
+      ifelse(input$alwtrp, showGroup(proxy, 'alwtrp'),
+             hideGroup(proxy, 'alwtrp'))
     }
     
   })

@@ -227,6 +227,12 @@ body <- dashboardBody(
                                                              target="_blank",
                                                              href = "https://www.fisheries.noaa.gov/resource/map/lobster-management-areas"))),
                            
+                           checkboxInput("alwtrp", value = F,
+                                         label = span("Atlantic Large Whale Take Reduction Plan Changes", 
+                                                      tags$a(icon("info-sign", lib = "glyphicon"), 
+                                                             target="_blank",
+                                                             href = "https://media.fisheries.noaa.gov/2021-10/ALWTP%20Summary%20of%20Changes%2010192021.pdf"))),
+                           
                            checkboxInput("sma", value = T,
                                          label = span("Seasonal management areas", 
                                                       tags$a(icon("info-sign", lib = "glyphicon"), 
