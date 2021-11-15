@@ -808,7 +808,7 @@ function(input, output, session){
                     stroke = T, 
                     options = pathOptions(clickable = T),
                     popup = ~paste(sep = "<br/>" ,
-                                   "Atlantic Large Whale Take Reduction Plan Changes",
+                                   "US fishery seasonal restricted area",
                                    paste0(ID),
                                    paste0('Active: ', ACTIVE)),
                     weight = 1, 
