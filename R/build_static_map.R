@@ -40,9 +40,9 @@ build_static_map = function(type = 'whalemap'){
     mpa_grp = 'Canadian protected areas'
     tc_zone_grp = 'Canadian speed reduction zones'
     dfo_zone_grp = 'Areas subject to Canadian fishery closure protocol'
-    sma_grp = 'US Seasonal Management Areas'
-    dma_grp = 'US Right Whale Slow Zones'
-    alwtrp_grp = 'US ALWTRP Fisheries Closures'
+    sma_grp = 'US seasonal management areas'
+    dma_grp = 'US right whale slow zones'
+    alwtrp_grp = 'US fishery seasonal restricted areas'
     
     # output path
     fout = './static_map/whalemap.html'  
@@ -89,9 +89,9 @@ build_static_map = function(type = 'whalemap'){
     mpa_grp = 'Canadian protected areas'
     tc_zone_grp = 'Canadian speed reduction zones'
     dfo_zone_grp = 'Areas subject to Canadian fishery closure protocol'
-    sma_grp = 'US Seasonal Management Areas'
-    dma_grp = 'US Right Whale Slow Zones'
-    alwtrp_grp = 'US ALWTRP Fisheries Closures'
+    sma_grp = 'US seasonal management areas'
+    dma_grp = 'US right whale slow zones'
+    alwtrp_grp = 'US fishery seasonal restricted areas'
     
     # output path
     fout = './static_map/whale_map_en.html'
@@ -140,7 +140,7 @@ build_static_map = function(type = 'whalemap'){
     dfo_zone_grp = 'Zones soumises au protocole de fermeture temporaire'
     dma_grp = 'Zone de gestion dynamique des États-Unis'
     sma_grp = 'Zone de gestion saisonnière des États-Unis'
-    alwtrp_grp = 'Fermetures des pêcheries de l\'ALWTRP aux États-Unis'
+    alwtrp_grp = 'Zones de pêche saisonnières aux États-Unis'
     
     # output path
     fout = './static_map/whale_map_fr.html'
