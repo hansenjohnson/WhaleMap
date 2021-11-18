@@ -812,8 +812,8 @@ function(input, output, session){
                                    paste0(ID),
                                    paste0('Active: ', ACTIVE)),
                     weight = 1, 
-                    color = 'brown', 
-                    fillColor = 'brown')
+                    color = 'brown2', 
+                    fillColor = 'brown2')
       
       # switch to show/hide
       ifelse(input$alwtrp, showGroup(proxy, 'alwtrp'),

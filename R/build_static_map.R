@@ -393,7 +393,7 @@ build_static_map = function(type = 'whalemap'){
                                alwtrp_grp,
                                paste0(ID),
                                paste0("Active: ", ACTIVE)),
-                weight = 1, color = 'brown', fillColor = 'brown') 
+                weight = 1, color = 'brown2', fillColor = 'brown2') 
   
   # plot US DMAs
   if(!('data.frame' %in% class(dma))){
