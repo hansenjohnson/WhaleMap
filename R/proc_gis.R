@@ -88,7 +88,7 @@ z_soi = readOGR('data/raw/gis/alwtp/South_Island_Restricted_Area/') %>%
   spTransform(ref)
 z_soi@data = data.frame(
   ID = 'South Island Restricted Area',
-  ACTIVE = '01 Feb - 01 Apr')
+  ACTIVE = '01 Feb - 30 Apr')
 
 z_ccb = readOGR('data/raw/gis/alwtp/Cape_Cod_Bay_Restricted_Area/') %>%
   spTransform(ref)
@@ -100,13 +100,13 @@ z_seraN = readOGR('data/raw/gis/alwtp/Southeast_US_Restricted_Area/north/') %>%
   spTransform(ref)
 z_seraN@data = data.frame(
   ID = 'Southeast US Restricted Area (North)',
-  ACTIVE = '15 Nov - 30 Apr')
+  ACTIVE = '15 Nov - 15 Apr')
 
 z_seraS = readOGR('data/raw/gis/alwtp/Southeast_US_Restricted_Area/south/') %>%
   spTransform(ref)
 z_seraS@data = data.frame(
   ID = 'Southeast US Restricted Area (South)',
-  ACTIVE = '01 Dec - 30 Apr')
+  ACTIVE = '01 Dec - 31 Mar')
 
 # combine
 alwtrp = rbind(z_gsc, z_lma, z_mass, z_soi, z_ccb, z_seraN, z_seraS)
