@@ -26,3 +26,4 @@ proc_2021_tc_rpas_sightings.R,TC RPAS aerial survey detections,http://www.tc.gc.
 proc_2021_mics_tracks.R,Mignan Island Cetacean Study tracks,https://www.rorqual.com/english/home,data/email/default.csv
 proc_2021_mics_sightings.R,Mignan Island Cetacean Study sightings,https://www.rorqual.com/english/home,data/email/default.csv
 proc_unb_sightings.R,UNB vessel survey sightings,https://davieslab.wixsite.com/davieslab,data/email/default.csv
+proc_seus_aerial.R,Southeast US aerial surveys,https://mission.cmaquarium.org/research-institute/right-whale-research/,data/seus/email_list.csv

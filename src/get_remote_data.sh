@@ -39,6 +39,10 @@ printf "\n*** Checking NOAA Google Drive ***\n\n"
 printf "2021 Flight data \n\n"
 rclone sync drive:"WhaleMap" "2021_noaa_twin_otter/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
+# Sync NOAA aerial data Google drive
+printf "\n*** Checking SEUS Google Drive ***\n\n"
+rclone sync drive:"4_Data for SEUS Whale Map" "seus/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
+
 # Sync CWI/NEAq vessel data Google drive
 printf "\n*** Checking NEAq/CWI Google Drive ***\n\n"
 rclone sync drive:"WhaleMap_2021_NEAq_CWI" "2021_neaq_cwi/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
