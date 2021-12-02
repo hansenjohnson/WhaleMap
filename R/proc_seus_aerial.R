@@ -32,7 +32,7 @@ for(ii in seq_along(flist)){
   ifile = flist[ii]
   
   # read in data
-  tmp = read_csv(ifile, show_col_types = FALSE)
+  tmp = read.csv(ifile, stringsAsFactors = FALSE)
   
   # wrangle time
   tmp$date = as.Date(tmp$Date, format = "%m/%d/%Y %H:%M:%S")
