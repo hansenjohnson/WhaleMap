@@ -143,7 +143,7 @@ if(length(flist)>0){
       itrk = itrk[,c('time','lat','lon', 'altitude','speed','date','yday', 'year',  'platform', 'name', 'id')]
       
       # simplify
-      itrk = subsample_gps(gps = itrk, tol = 0.00025)
+      # itrk = subsample_gps(gps = itrk, tol = 0.00025)
       
       # duplicate last row, and replace pos with NA's for plotting
       itrk = rbind(itrk, itrk[nrow(itrk),])
