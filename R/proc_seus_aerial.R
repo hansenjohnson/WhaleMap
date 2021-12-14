@@ -34,6 +34,13 @@ for(ii in seq_along(flist)){
   # read in data
   tmp = read.csv(ifile, stringsAsFactors = FALSE)
   
+  # check colnames
+  if(colnames(tmp)[1] != "Date"){
+    message('Error detected in column names in file: ', ifile)
+    message('Skipping...')
+    next
+  }
+  
   # wrangle time
   tmp$date = as.Date(tmp$Date, format = "%m/%d/%Y %H:%M:%S")
   times = sapply(strsplit(tmp$Time,split = ' '), FUN = function(x){x[2]})
