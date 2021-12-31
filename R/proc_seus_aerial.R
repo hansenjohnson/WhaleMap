@@ -23,7 +23,7 @@ sco_key = data.frame(
   score = c('sighted', 'possibly sighted', 'possibly sighted'))
 
 # list data files
-flist = list.files(data_dir, pattern = '\\d{8}_Data_Review_Table.csv$',ignore.case = T, full.names = T, recursive = T)
+flist = list.files(data_dir, pattern = '\\d{8}.*csv$',ignore.case = T, full.names = T, recursive = T)
 
 TRK = SIG = vector('list', length = length(flist))
 for(ii in seq_along(flist)){
