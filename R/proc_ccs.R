@@ -4,15 +4,16 @@
 # user input --------------------------------------------------------------
 
 # directory to look for files
-data_dir = 'data/raw/2021_ccs/aerial/'
+a_data_dir = 'data/raw/ccs/aerial/'
+v_data_dir = 'data/raw/ccs/vessel/'
 
 # directory for output
-trk_ofile = 'data/interim/2021_ccs_tracks.rds'
-obs_ofile = 'data/interim/2021_ccs_sightings.rds'
+trk_ofile = 'data/interim/ccs_tracks.rds'
+obs_ofile = 'data/interim/ccs_sightings.rds'
 
 # opportunistic input / output
-opp_ifile = 'data/raw/2021_ccs/opportunistic/CCS_opp.csv'
-opp_ofile = 'data/interim/2021_ccs_opportunistic_sightings.rds'
+opp_ifile = 'data/raw/ccs/opportunistic/CCS_opp.csv'
+opp_ofile = 'data/interim/ccs_opportunistic_sightings.rds'
 
 # setup -------------------------------------------------------------------
 
@@ -22,6 +23,10 @@ source('R/functions.R')
 spp_key = data.frame(
   code = c('FIWH', 'RIWH', 'SEWH', 'HUWH', 'BLWH'),
   species = c('fin', 'right', 'sei', 'humpback', 'blue'))
+
+v_spp_key = data.frame(
+  code = c('Right Whale, Eg'),
+  species = c('right'))
 
 # opportunistic data ------------------------------------------------------
 
@@ -79,14 +84,14 @@ if(file.exists(opp_ifile)){
 # survey data -------------------------------------------------------------
 
 # list data files
-flist = list.files(data_dir, pattern = '\\d{8}_*.*_raw.csv$', full.names = T, recursive = T)
+a_flist = list.files(a_data_dir, pattern = '\\d{8}_*.*_raw.csv$', full.names = T, recursive = T)
 
-TRK = SIG = vector('list', length = length(flist))
-if(length(flist)>0){
-  for(ii in seq_along(flist)){
+TRK = SIG = vector('list', length = length(a_flist))
+if(length(a_flist)>0){
+  for(ii in seq_along(a_flist)){
     
     # read in data
-    tmp = read.csv(flist[ii])
+    tmp = read.csv(a_flist[ii])
     
     # wrangle time
     tmp$time = as.POSIXct(tmp[,grep('time..e', tolower(colnames(tmp)))], 
@@ -163,22 +168,115 @@ if(length(flist)>0){
   }
 }
 
+# combine all tracks
+a_tracks = bind_rows(TRK)
+
+# config data types
+a_tracks = config_tracks(a_tracks)
+
+# combine all sightings
+a_sightings = bind_rows(SIG)
+
+# config data types
+a_sightings = config_observations(a_sightings)
+
+# vessel ------------------------------------------------------------------
+
+# list data files
+v_flist = list.files(v_data_dir, pattern = '\\d{8}_Integrated Export.csv$', full.names = T, recursive = T)
+
+TRK = SIG = vector('list', length = length(v_flist))
+if(length(v_flist)>0){
+  for(ii in seq_along(v_flist)){
+    
+    # read in data
+    tmp = read.csv(v_flist[ii])
+    
+    # wrangle time
+    tmp$time = as.POSIXct(tmp[,grep('time..e', tolower(colnames(tmp)))], 
+                          format = '%Y-%m-%dT%H:%M:%S', tz = 'America/New_York')
+    tmp$date = as.Date(tmp$time)
+    tmp$yday = yday(tmp$time)
+    tmp$year = year(tmp$time)
+    
+    # add deployment metadata
+    tmp$platform = 'vessel'
+    tmp$name = 'ccs'
+    tmp$id = paste(tmp$date, tmp$platform, tmp$name, sep = '_')
+    
+    # tracklines --------------------------------------------------------------
+    
+    # fill LEGSTAGE
+    trk = tmp
+    
+    # fix lat lons
+    trk$lat = trk$TrkLatitude
+    trk$lon = trk$TrkLongitude
+    
+    # get speed and altitude
+    trk$altitude = NA
+    trk$speed = NA
+    
+    # remove unused columns
+    trk = trk[,c('time','lat','lon', 'altitude','speed','date','yday', 'year',  'platform', 'name', 'id')]
+    
+    # store track
+    TRK[[ii]] = trk
+    
+    # sightings ---------------------------------------------------------------
+    
+    # take only sightings
+    sig = droplevels(tmp[which(as.character(tmp$Species)!=""),])
+    
+    # extract data
+    sig$lat = sig$Latitude
+    sig$lon = sig$Longitude
+    sig$number = as.numeric(as.character(sig$Min.Count))
+    sig$calves = ifelse(tolower(sig$Calf.present) == 'yes', 1, 0)
+    
+    # find indicies of matching
+    mind = match(table = v_spp_key$code, x = sig$Species)
+    
+    # replace codes with species names
+    sig$species = v_spp_key$species[mind]
+    
+    # drop unknown codes
+    sig = sig[which(!is.na(sig$species)),]
+    
+    # get scores
+    sig$score = 'sighted'
+    
+    # keep important columns
+    sig = sig[,c('time','lat','lon','date', 'yday','species','score','number','calves','year','platform','name','id')]
+    
+    # add to the list
+    SIG[[ii]] = sig
+    
+  }
+}
+
+# combine all tracks
+v_tracks = bind_rows(TRK)
+
+# config data types
+v_tracks = config_tracks(v_tracks)
+
+# combine all sightings
+v_sightings = bind_rows(SIG)
+
+# config data types
+v_sightings = config_observations(v_sightings)
+
 # output ------------------------------------------------------------------
 
 # combine all tracks
-tracks = bind_rows(TRK)
-
-# config data types
-tracks = config_tracks(tracks)
+tracks = bind_rows(a_tracks, v_tracks)
 
 # save
 saveRDS(tracks, trk_ofile)
 
 # combine all sightings
-sightings = bind_rows(SIG)
-
-# config data types
-sightings = config_observations(sightings)
+sightings = bind_rows(a_sightings, v_sightings)
 
 # save
 saveRDS(sightings, obs_ofile)
