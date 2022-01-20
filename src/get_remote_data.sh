@@ -23,8 +23,8 @@ cd ${DATADIR}
 mkdir -p backups
 
 # Sync Canadian aerial data Google drive
-printf "\n*** Checking DFO Google Drive ***\n\n"
-rclone sync whalemapdata:"WhaleMapData_Master/2021/" "2021_whalemapdata/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
+# printf "\n*** Checking DFO Google Drive ***\n\n"
+# rclone sync whalemapdata:"WhaleMapData_Master/2021/" "2021_whalemapdata/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
 
 # Sync CCS aerial data Google drive
 printf "\n*** Checking CCS Google Drive ***\n\n"
@@ -32,7 +32,7 @@ rclone sync drive:"WhaleMap_CCS" "ccs/" --drive-formats csv --backup-dir backups
 
 # Sync NEAq aerial data Google drive
 printf "\n*** Checking NEAq Aerial Google Drive ***\n\n"
-rclone sync drive:"WhaleMap_NEAq_aerial" "2021_neaq_aerial/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
+# rclone sync drive:"WhaleMap_NEAq_aerial" "2021_neaq_aerial/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
 
 # Sync NOAA aerial data Google drive
 printf "\n*** Checking NOAA Google Drive ***\n\n"
@@ -45,14 +45,14 @@ rclone sync drive:"4_Data for SEUS Whale Map" "seus/" --drive-shared-with-me --d
 
 # Sync CWI/NEAq vessel data Google drive
 printf "\n*** Checking NEAq/CWI Google Drive ***\n\n"
-rclone sync drive:"WhaleMap_2021_NEAq_CWI" "2021_neaq_cwi/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
+# rclone sync drive:"WhaleMap_2021_NEAq_CWI" "2021_neaq_cwi/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
 # Sync MICS vessel data Google drive
 printf "\n*** Checking MICS Google Drive ***\n\n"
-rclone sync drive:"Right Whale data 2021" "2021_mics/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
+# rclone sync drive:"Right Whale data 2021" "2021_mics/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
 printf "\n*** Checking UNB Dropbox ***\n\n"
-rclone sync drive:"WhaleMap-UNB" "unb/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf --exclude *.HEIC --exclude *.png --exclude *.PNG
+# rclone sync drive:"WhaleMap-UNB" "unb/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf --exclude *.HEIC --exclude *.png --exclude *.PNG
 
 # move to project directory
 cd ${DESTDIR}
