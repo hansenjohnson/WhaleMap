@@ -28,8 +28,9 @@ for(ii in seq_along(flist)){
   # read in file
   tmp = read_csv(flist[ii], col_types = cols()) %>%
     transmute(
-      date = Date_UTC,
-      time = Time_UTC,
+      date = as.Date(Date_UTC, origin = '1900-01-01'),
+      time = NA,
+      # time = as.POSIXct(Time_UTC, origin = '1900-01-01 00:00:00'),
       lat = ddm2dd_col(Pos_lat),
       lon = -ddm2dd_col(Pos_long),
       species = NA,
