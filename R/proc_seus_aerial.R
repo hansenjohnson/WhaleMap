@@ -126,11 +126,6 @@ for(ii in seq_along(flist)){
   sig$number = as.numeric(as.character(sig$NUMBER))
   sig$calves = as.numeric(as.character(sig$NUMCALF))
   
-  # get score
-  sig$IDREL
-  sig$score = 'possibly sighted'
-  sig$score[which(sig$number>0)] = 'sighted'
-  
   # find indicies of matching species and replace
   spp_ind = match(table = spp_key$code, x = sig$SPECCODE)
   sig$species = spp_key$species[spp_ind]
