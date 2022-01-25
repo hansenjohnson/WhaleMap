@@ -456,7 +456,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/sas_sightings.rds \
 																	data/interim/narwc_sightings.rds \
 																	data/interim/2021_dfo_viking_detections.rds \
-																	data/interim/2022_neaq_sne_narwc_sightings.rds \
+																	data/interim/2022_neaq_sne_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
 
