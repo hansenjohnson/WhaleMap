@@ -62,6 +62,7 @@ data/processed/tracks.rds : R/proc_tracks.R \
 														data/interim/2021_mics_tracks.rds \
 														data/interim/2021_tc_rpas_tracks.rds \
 														data/interim/2021_dfo_viking_tracks.rds \
+														data/interim/2022_neaq_sne_tracks.rds \
 														data/interim/seus_aerial_tracks.rds \
 														data/interim/dcs_archived_tracks.rds \
 														data/interim/dcs_live_tracks.rds
@@ -363,6 +364,12 @@ data/interim/2021_tc_rpas_tracks.rds : R/proc_2021_tc_rpas_tracks.R data/raw/202
 	Rscript $<
 	$(remove_error)
 
+# 2022 NEAq SNE
+data/interim/2022_neaq_sne_tracks.rds : R/proc_2022_neaq_sne.R data/raw/2022_neaq_sne/*.csv
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
 # DFO viking tracks
 data/interim/2021_dfo_viking_tracks.rds : R/proc_2021_dfo_viking.R
 	$(report_error)
@@ -449,6 +456,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/sas_sightings.rds \
 																	data/interim/narwc_sightings.rds \
 																	data/interim/2021_dfo_viking_detections.rds \
+																	data/interim/2022_neaq_sne_narwc_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
 
@@ -764,6 +772,12 @@ data/interim/2021_tc_rpas_sightings.rds : R/proc_2021_tc_rpas_sightings.R data/r
 
 # 2021 MICS sightings
 data/interim/2021_mics_sightings.rds : R/proc_2021_mics_sightings.R data/raw/2021_mics/*.xlsx
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# 2022 NEAq SNE sightings
+data/interim/2022_neaq_sne_sightings.rds : R/proc_2022_neaq_sne.R data/raw/2022_neaq_sne/*.csv
 	$(report_error)
 	Rscript $<
 	$(remove_error)

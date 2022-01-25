@@ -43,15 +43,19 @@ rclone sync drive:"WhaleMap" "2021_noaa_twin_otter/" --drive-shared-with-me --dr
 printf "\n*** Checking SEUS Google Drive ***\n\n"
 rclone sync drive:"4_Data for SEUS Whale Map" "seus/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
+# Sync NEAq vessel data
+printf "\n*** Checking NEAq SNE Google Drive ***\n\n"
+rclone sync drive:"WhaleMap-2022 NEAq SNE Surveys" "2022_neaq_sne/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
+
 # Sync CWI/NEAq vessel data Google drive
-printf "\n*** Checking NEAq/CWI Google Drive ***\n\n"
+# printf "\n*** Checking NEAq/CWI Google Drive ***\n\n"
 # rclone sync drive:"WhaleMap_2021_NEAq_CWI" "2021_neaq_cwi/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
 # Sync MICS vessel data Google drive
-printf "\n*** Checking MICS Google Drive ***\n\n"
+# printf "\n*** Checking MICS Google Drive ***\n\n"
 # rclone sync drive:"Right Whale data 2021" "2021_mics/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
-printf "\n*** Checking UNB Dropbox ***\n\n"
+# printf "\n*** Checking UNB Dropbox ***\n\n"
 # rclone sync drive:"WhaleMap-UNB" "unb/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf --exclude *.HEIC --exclude *.png --exclude *.PNG
 
 # move to project directory
