@@ -40,14 +40,14 @@ clean_latlon = function(d){
 
 qc_latlon = function(df){
   # longitude
-  bad_lon = which(df$lon < -95 | df$lon > 25)
+  bad_lon = which(df$lon < -95 | df$lon > 25 | df$lon == 0)
   if(length(bad_lon)>0){
     df$lon[bad_lon] = NA
     message(length(bad_lon), ' points exceeded longitude boundaries! Setting to NA...')  
   }
   
   # latitude
-  bad_lat = which(df$lat < 0 | df$lat > 80)
+  bad_lat = which(df$lat < 0 | df$lat > 80 | df$lat == 0)
   if(length(bad_lat)>0){
     df$lat[bad_lat] = NA
     message(length(bad_lat), ' points exceeded latitude boundaries! Setting to NA...')
