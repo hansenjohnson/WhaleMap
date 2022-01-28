@@ -29,7 +29,7 @@ for(i in seq_along(flist)){
   tmp = read.csv(flist[i])
   
   # wrangle time
-  tmp$time = as.POSIXct(tmp$TrkTime..EST., tz = 'America/New_York')
+  tmp$time = as.POSIXct(tmp$TrkTime..EST., format = '%Y-%m-%dT%H:%M:%S', tz = 'America/New_York')
   tmp$date = as.Date(tmp$time)
   tmp$yday = yday(tmp$time)
   tmp$year = year(tmp$time)
