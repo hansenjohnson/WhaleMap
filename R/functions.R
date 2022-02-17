@@ -548,8 +548,7 @@ subsample_gps = function(gps, n=60, tol = 0.001, plot_comparison=FALSE, full_res
   
 }
 
-subset_canadian = function(df, 
-                           crs_string = "+init=epsg:3857"){
+subset_canadian = function(df, inside = TRUE, crs_string = "+init=epsg:3857"){
   
   # catch and return empty input data
   if(nrow(df)==0){
@@ -573,7 +572,12 @@ subset_canadian = function(df,
   
   # spatial subsets
   df_in = st_within(x = df_sf, y = can, sparse = FALSE, prepared = FALSE)[,1]
-  df_can = df_sf[df_in,]
+  
+  if(inside){
+    df_can = df_sf[df_in,]  
+  } else {
+    df_can = df_sf[!df_in,]  
+  }
   
   # convert back to data.frame
   out = as.data.frame(df_can)

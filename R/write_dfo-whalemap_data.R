@@ -25,13 +25,13 @@ t0 = as.Date('2021-01-01')
 # read and subset tracks
 trk = readRDS('data/processed/tracks.rds') %>%
   dplyr::filter(date >= t0 & !is.na(lat) & !is.na(lon)) %>%
-  subset_canadian() %>%
+  # subset_canadian() %>%
   remove_dfo_ids()
 
 # read and subset observations
 obs = readRDS('data/processed/observations.rds') %>%
   dplyr::filter(date >= t0 & !is.na(lat) & !is.na(lon)) %>%
-  subset_canadian() %>%
+  # subset_canadian() %>%
   remove_dfo_ids()
 
 # save
