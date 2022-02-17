@@ -19,7 +19,7 @@ obs = readRDS('data/processed/observations.rds')
 
 # subset to year
 obs = filter(obs, year == yr & !is.na(lat) & !is.na(lon))
-obs = subset_canadian(obs)
+# obs = subset_canadian(obs)
 
 # subset right whale sightings
 rw_sig = filter(obs, species == 'right' & score == 'definite visual')
@@ -38,7 +38,7 @@ trk = readRDS('data/processed/tracks.rds')
 
 # subset
 trk = filter(trk, year == yr & !is.na(lat) & !is.na(lon))
-trk = subset_canadian(trk)
+# trk = subset_canadian(trk)
 
 # write to csv
 write.csv(trk, file = paste0(outdir, 'tracks.csv'), row.names = F)
