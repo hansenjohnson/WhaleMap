@@ -101,7 +101,7 @@ for(ii in seq_along(flist)){
     itrk = itrk[,c('time','lat','lon','altitude','speed','date','yday','year','platform','name','id','source')]
     
     # simplify
-    itrk = subsample_gps(gps = itrk)
+    itrk = subsample_gps(gps = itrk, tol = 0.0001)
     
     # duplicate last row, and replace pos with NA's for plotting
     itrk = rbind(itrk, itrk[nrow(itrk),])
