@@ -5,3 +5,6 @@ proc_2021_neaq_aerial.R,New England Aquarium aerial survey sightings/tracks,http
 proc_2021_ccs.R,Center for Coastal Studies aerial surveys,https://coastalstudies.org/,data/raw/2021_ccs/email_list.csv
 proc_seus_aerial.R,Southeast US aerial surveys,https://mission.cmaquarium.org/research-institute/right-whale-research/,data/seus/email_list.csv
 proc_2022_neaq_sne.R,New England Aquarium SNE vessel survey sightings/tracks,https://www.andersoncabotcenterforoceanlife.org/rightwhales/right-whales/,data/email/default.csv
+proc_nerw.R,NOAA NEFSC aerial survey sightings/tracks,https://www.nefsc.noaa.gov/psb/surveys/NARWSS.html,data/email/default.csv
+proc_seus_aerial.R,Southeast US aerial surveys,https://mission.cmaquarium.org/research-institute/right-whale-research/,data/seus/email_list.csv
+proc_2021_ccs.R,Center for Coastal Studies aerial surveys,https://coastalstudies.org/,data/raw/2021_ccs/email_list.csv

@@ -64,6 +64,7 @@ data/processed/tracks.rds : R/proc_tracks.R \
 														data/interim/2021_dfo_viking_tracks.rds \
 														data/interim/2022_neaq_sne_tracks.rds \
 														data/interim/seus_aerial_tracks.rds \
+														data/interim/nerw_tracks.rds \
 														data/interim/dcs_archived_tracks.rds \
 														data/interim/dcs_live_tracks.rds
 	$(report_error)
@@ -382,6 +383,12 @@ data/interim/seus_aerial_tracks.rds : R/proc_seus_aerial.R data/raw/seus/*/*
 	Rscript $<
 	$(remove_error)	
 
+# NERW tracks
+data/interim/nerw_tracks.rds : R/proc_nerw.R data/raw/nerw/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
 # DCS archived tracks
 data/interim/dcs_archived_tracks.rds : R/proc_archived_dcs.R data/raw/dcs/archived/*/*
 	$(report_error)
@@ -457,6 +464,7 @@ data/processed/observations.rds : R/proc_observations.R \
 																	data/interim/narwc_sightings.rds \
 																	data/interim/2021_dfo_viking_detections.rds \
 																	data/interim/2022_neaq_sne_sightings.rds \
+																	data/interim/nerw_sightings.rds \
 																	data/interim/dcs_archived_detections.rds \
 																	data/interim/dcs_live_detections.rds
 
@@ -802,6 +810,12 @@ data/interim/2021_dfo_viking_detections.rds : R/proc_2021_dfo_viking.R
 
 # SEUS aerial sightings
 data/interim/seus_aerial_sightings.rds : R/proc_seus_aerial.R data/raw/seus/*/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# NERW sightings
+data/interim/nerw_sightings.rds : R/proc_nerw.R data/raw/nerw/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
