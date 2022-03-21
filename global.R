@@ -80,6 +80,7 @@ npts = 250000
 
 # define time lag for startup plotting
 tlag = 14 # days
+cyear = year(Sys.Date()) # current year
 
 # make dcs icons
 dcsIcons = iconList(
