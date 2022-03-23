@@ -70,7 +70,7 @@ z_gsc@data = data.frame(
   ID = 'Great South Channel Restricted Trap-Pot Area',
   ACTIVE = '01 Apr - 30 Jun')
 
-z_lma = readOGR('data/raw/gis/alwtp/LMA1_Restricted_Area/') %>%
+z_lma = readOGR('data/raw/gis/alwtp/LMA 1 RA ed/') %>%
   spTransform(ref)
 z_lma@data = data.frame(
   ID = 'LMA 1 Restricted Area',
