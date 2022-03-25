@@ -447,6 +447,12 @@ subsample_gps = function(gps, n=60, tol = 0.001, plot_comparison=FALSE, full_res
   # 'full_res' is a switch to skip subsampling and maintain full gps resolution
   # 'simplify' is a switch to choose the method for simplifying the tracks. TRUE simplifies with the Douglas-Peuker algorithm (rgeos::gSimplify), and FALSE subsamples the gps to a given time interval
   
+  # catch few samples
+  if(nrow(gps) < 25){
+    message('Cannot simplify track with less than 25 points...')
+    return(gps)
+  }
+  
   rn = 10 # row subset (take row every n rows)
   
   if(simplify){
