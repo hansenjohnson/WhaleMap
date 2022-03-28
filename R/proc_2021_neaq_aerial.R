@@ -65,59 +65,27 @@ for(ii in seq_along(dates)){
   
   # tracklines --------------------------------------------------------------
   
-  # determine start/stop of effort segments
-  i0 = which(tmp$legstage==1)
-  i1 = which(tmp$legstage==5)
+  # restrict to on effort segments
+  # itrk = tmp[tmp$legtype == 2,]
+  itrk = tmp
   
-  # enter off-effort automatically
-  if(length(i1)==0){
-    i1 = nrow(tmp)
-  }
+  # fix lat lons
+  itrk$lat = itrk$lat
+  itrk$lon = itrk$long
   
-  # enter off-effort automatically
-  if(length(i0)!=length(i1)){
-    i1 = c(i1,nrow(tmp))
-  }
+  # get speed and altitude
+  itrk$altitude = as.numeric(itrk$alt)
+  itrk$speed = as.numeric(itrk$gpsspeed)
   
-  if(length(i0) != length(i1)){
-    i0 = 1
-    i1 = nrow(tmp)
-    message('Could not match on/off effort lines in: ', ifile)
-    message('Plotting uncorrected effort data...')
-  }
+  # remove unused columns
+  itrk = itrk[,c('time','lat','lon', 'altitude','speed','date','yday', 'year',  'platform', 'name', 'id')]
   
-  # fill in leg stage info for each effort segment
-  EFF = vector('list', length = length(i0))
-  for(j in 1:length(i0)){
-    
-    # effort segment
-    itrk = tmp[i0[j]:i1[j],]
-    
-    # fix lat lons
-    itrk$lat = itrk$lat
-    itrk$lon = itrk$long
-    
-    # get speed and altitude
-    itrk$altitude = as.numeric(itrk$alt)
-    itrk$speed = as.numeric(itrk$gpsspeed)
-    
-    # remove unused columns
-    itrk = itrk[,c('time','lat','lon', 'altitude','speed','date','yday', 'year',  'platform', 'name', 'id')]
-    
-    # simplify
-    itrk = subsample_gps(gps = itrk)
-    
-    # duplicate last row, and replace pos with NA's for plotting
-    itrk = rbind(itrk, itrk[nrow(itrk),])
-    itrk$lat[nrow(itrk)] = NA
-    itrk$lon[nrow(itrk)] = NA
-    
-    # add to list
-    EFF[[j]] = itrk
-  }
+  # subsample gos
+  TRK[[ii]] = subsample_gps(gps = itrk)
   
-  # combine all effort segments
-  TRK[[ii]] = bind_rows(EFF)
+  # plot to check
+  # trk = TRK[ii]
+  # plot(trk$lon, trk$lat, type = 'l')
   
   # sightings ---------------------------------------------------------------
   
@@ -176,7 +144,7 @@ for(ii in glist){
   itrk = tmp[,c('time','lat','lon', 'altitude','speed','date','yday', 'year',  'platform', 'name', 'id')]
   
   # simplify
-  itrk = subsample_gps(gps = itrk)
+  itrk = subsample_gps(gps = itrk, tol = 0.0001)
   
   # store
   TRK2[[ii]] = itrk
