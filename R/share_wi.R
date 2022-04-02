@@ -23,15 +23,13 @@ remove_dfo_ids = function(obs){
 t0 = as.Date('2022-01-01')
 
 # read and subset tracks
-trk = readRDS('data/processed/tracks.rds') %>%
+trk = readRDS('data/processed/effort.rds') %>%
   dplyr::filter(date >= t0 & !is.na(lat) & !is.na(lon)) %>%
-  # subset_canadian() %>%
   remove_dfo_ids()
 
 # read and subset observations
 obs = readRDS('data/processed/observations.rds') %>%
   dplyr::filter(date >= t0 & !is.na(lat) & !is.na(lon)) %>%
-  # subset_canadian() %>%
   remove_dfo_ids()
 
 # save
