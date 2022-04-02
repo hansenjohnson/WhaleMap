@@ -57,7 +57,7 @@ data/interim/neaq_aerial_*.rds : R/proc_neaq_aerial.R data/raw/neaq/aerial/*
 	$(remove_error)
 
 # NEAq SNE
-data/interim/2022_neaq_sne_*.rds : R/proc_neaq_sne.R data/raw/neaq/sne/*
+data/interim/neaq_sne_*.rds : R/proc_neaq_sne.R data/raw/neaq/sne/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)

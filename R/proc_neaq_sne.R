@@ -1,5 +1,5 @@
-## proc_2022_neaq_sne ##
-# process and save all 2022 neaq sne (southern new england) sightings and tracklines
+## proc_neaq_sne ##
+# process and save all neaq sne (southern new england) sightings and tracklines
 
 # user input --------------------------------------------------------------
 
