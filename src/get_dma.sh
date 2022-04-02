@@ -17,7 +17,7 @@ fi
 cd ${DESTDIR}
 
 # define data directory
-DATADIR=${DESTDIR}/data/raw/dma/
+DATADIR=${DESTDIR}/data/raw/gis/dma/
 
 # define url
 URL=https://apps-nefsc.fisheries.noaa.gov/cgi-bin/mammalmaps/xmlgenDMA.pl

@@ -115,7 +115,7 @@ shared/dfo-whalemap/*.csv : src/share_wi.sh R/share_wi.R data/processed/effort.r
 .PHONY : dma
 dma : data/processed/dma.rda
 
-# Process dcs positions
+# Process dma
 data/processed/dma.rda : R/map_dma.R \
 						data/raw/gis/dma/*.pl
 	$(report_error)
