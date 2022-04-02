@@ -58,8 +58,11 @@ obs$lon = round(obs$lon,4)
 obs = config_observations(obs)
 
 # rename score categories
-obs$score = factor(obs$score, levels = c('detected', 'possibly detected', 'possibly sighted', 'sighted'), 
-                   labels = c('definite acoustic', 'possible acoustic', 'possible visual', 'definite visual'))
+obs$score[obs$score == 'detected'] = 'definite acoustic'
+obs$score[obs$score == 'possibly detected'] = 'possible acoustic'
+obs$score[obs$score == 'sighted'] = 'definite visual'
+obs$score[obs$score == 'possibly sighted'] = 'possible visual'
+obs$score = factor(obs$score, levels = c('definite acoustic', 'possible acoustic', 'possible visual', 'definite visual'))
 
 # fix source
 obs$source[is.na(obs$source)] = 'WhaleMap'
