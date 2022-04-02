@@ -77,7 +77,7 @@ proc_dcs = function(data_dir, output_dir, det_fname, track_fname, ext = ""){
     # read in detection data
     ifile = paste0(dir,'/manual_analysis.csv')
     if(file.exists(ifile)){
-      tmp = read.csv(ifile)  
+      tmp = read.csv(ifile, stringsAsFactors = FALSE)  
     } else {
       message('Cannot find ', ifile, '! Skipping...') 
       next

@@ -69,7 +69,8 @@ config_tracks = function(tracks){
               'year',
               'platform',
               'name',
-              'id')
+              'id',
+              'source')
   
   # return blank table if input is empty
   if(nrow(tracks)==0){
@@ -127,6 +128,9 @@ config_tracks = function(tracks){
   
   if(is.null(tracks$id)){tracks$id = NA}
   tracks$id = as.character(tracks$id)
+  
+  if(is.null(tracks$source)){tracks$source = NA}
+  tracks$source = as.character(tracks$source)
   
   # qc latlon
   tracks = qc_latlon(tracks)
@@ -449,7 +453,7 @@ subsample_gps = function(gps, n=60, tol = 0.001, plot_comparison=FALSE, full_res
   
   # catch few samples
   if(nrow(gps) < 25){
-    message('Cannot simplify track with less than 25 points...')
+    # message('Cannot simplify track with less than 25 points...')
     return(gps)
   }
   

@@ -7,8 +7,8 @@
 data_dir = 'data/raw/nerw/'
 
 # output file names
-track_file = 'data/interim/nerw_tracks.rds'
-sighting_file = 'data/interim/nerw_sightings.rds'
+track_file = 'data/interim/nerw_eff.rds'
+sighting_file = 'data/interim/nerw_obs.rds'
 
 # setup -------------------------------------------------------------------
 

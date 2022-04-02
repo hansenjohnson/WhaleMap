@@ -9,10 +9,10 @@ data_dir = 'data/raw/dcs/live/'
 output_dir = 'data/interim/'
 
 # track file
-track_fname = 'dcs_live_tracks.rds'
+track_fname = 'dcs_live_eff.rds'
 
 # detection file
-det_fname = 'dcs_live_detections.rds'
+det_fname = 'dcs_live_obs.rds'
 
 # setup -------------------------------------------------------------------
 
@@ -54,6 +54,3 @@ if(length(flist)==0){
            track_fname = track_fname,
            ext = '-live')
 }
-
-
-

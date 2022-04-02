@@ -21,6 +21,13 @@ File sync / transfer
 # transfer to WhaleMap
 rsync -rtv file.txt hansen@whalemapvm:/srv/shiny-server/WhaleMap/
 ```
+
+```
+# processed data from WhaleMap to current directory
+rsync -rtv hansen@whalemapvm:/srv/shiny-server/WhaleMap/data/processed/ .
+```
+
+
 ***
 
 ## crontab

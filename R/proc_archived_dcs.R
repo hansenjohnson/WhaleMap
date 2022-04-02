@@ -9,10 +9,10 @@ data_dir = 'data/raw/dcs/archived/'
 output_dir = 'data/interim/'
 
 # track file
-track_fname = 'dcs_archived_tracks.rds'
+track_fname = 'dcs_archived_eff.rds'
 
 # detection file
-det_fname = 'dcs_archived_detections.rds'
+det_fname = 'dcs_archived_obs.rds'
 
 # setup -------------------------------------------------------------------
 

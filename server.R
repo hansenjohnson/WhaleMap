@@ -6,7 +6,7 @@ function(input, output, session){
   # read in data -------------------------------------------------------
   
   # tracklines
-  tracks = readRDS('data/processed/tracks.rds')
+  tracks = readRDS('data/processed/effort.rds')
   
   # latest dcs positions
   lfile = 'data/processed/dcs_live_latest_position.rds'

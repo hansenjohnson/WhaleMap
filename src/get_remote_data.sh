@@ -22,8 +22,8 @@ cd ${DATADIR}
 # Make backup directory
 mkdir -p backups
 
-# Sync Canadian aerial data Google drive
-# printf "\n*** Checking DFO Google Drive ***\n\n"
+# Sync data from Whale Insight
+# printf "\n*** Checking WI Google Drive ***\n\n"
 # rclone sync whalemapdata:"WhaleMapData_Master/2021/" "2021_whalemapdata/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
 
 # Sync CCS aerial data Google drive
@@ -32,39 +32,30 @@ rclone sync drive:"WhaleMap_CCS" "ccs/" --drive-formats csv --backup-dir backups
 
 # Sync NEAq aerial data Google drive
 printf "\n*** Checking NEAq Aerial Google Drive ***\n\n"
-rclone sync drive:"WhaleMap_NEAq_aerial" "2021_neaq_aerial/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
+rclone sync drive:"WhaleMap_NEAq_aerial" "neaq/aerial/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
 
-# Sync NOAA aerial data Google drive
-printf "\n*** Checking NOAA Google Drive ***\n\n"
-printf "NERW Flight data \n\n"
-# rclone sync drive:"WhaleMap" "2021_noaa_twin_otter/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
+# Sync NERW aerial data Google drive
+printf "\n*** Checking NERW Google Drive ***\n\n"
 rclone sync drive:"WhaleMap" "nerw/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
-# Sync NOAA aerial data Google drive
-printf "\n*** Checking SEUS Google Drive ***\n\n"
-rclone sync drive:"4_Data for SEUS Whale Map" "seus/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
+# Sync SERW aerial data Google drive
+printf "\n*** Checking SERW Google Drive ***\n\n"
+rclone sync drive:"4_Data for SEUS Whale Map" "serw/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
 # Sync NEAq vessel data
 printf "\n*** Checking NEAq SNE Google Drive ***\n\n"
-rclone sync drive:"WhaleMap-2022 NEAq SNE Surveys" "2022_neaq_sne/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
-
-# Sync CWI/NEAq vessel data Google drive
-# printf "\n*** Checking NEAq/CWI Google Drive ***\n\n"
-# rclone sync drive:"WhaleMap_2021_NEAq_CWI" "2021_neaq_cwi/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
-
-# Sync MICS vessel data Google drive
-# printf "\n*** Checking MICS Google Drive ***\n\n"
-# rclone sync drive:"Right Whale data 2021" "2021_mics/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
-
-# printf "\n*** Checking UNB Dropbox ***\n\n"
-# rclone sync drive:"WhaleMap-UNB" "unb/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf --exclude *.HEIC --exclude *.png --exclude *.PNG
+rclone sync drive:"WhaleMap-2022 NEAq SNE Surveys" "neaq/sne/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
 # move to project directory
 cd ${DESTDIR}
 
 # get live WHOI/Dal acoustic detections (dcs)
 printf "\n*** Checking DAL/WHOI acoustic detections ***\n\n"
-bash src/get_live_dcs.sh
+Rscript R/get_dcs.R
+
+# get US DMA data
+printf "\n*** Checking US DMA data ***\n\n"
+bash src/get_dma.sh
 
 # update WhaleMap
 printf "\n*** Updating WhaleMap ***\n\n"

@@ -6,14 +6,11 @@
 # directory to look for files
 a_data_dir = 'data/raw/ccs/aerial/'
 v_data_dir = 'data/raw/ccs/vessel/'
+opp_ifile = 'data/raw/ccs/opportunistic/CCS_opp.csv'
 
 # directory for output
-trk_ofile = 'data/interim/ccs_tracks.rds'
-obs_ofile = 'data/interim/ccs_sightings.rds'
-
-# opportunistic input / output
-opp_ifile = 'data/raw/ccs/opportunistic/CCS_opp.csv'
-opp_ofile = 'data/interim/ccs_opportunistic_sightings.rds'
+trk_ofile = 'data/interim/ccs_eff.rds'
+obs_ofile = 'data/interim/ccs_obs.rds'
 
 # setup -------------------------------------------------------------------
 
@@ -27,59 +24,6 @@ spp_key = data.frame(
 v_spp_key = data.frame(
   code = c('Right Whale, Eg'),
   species = c('right'))
-
-# opportunistic data ------------------------------------------------------
-
-if(file.exists(opp_ifile)){
-  
-  # read in data
-  opp = read.csv(opp_ifile)
-  
-  # wrangle time
-  time = paste0(opp$year,'-', sprintf("%02d", opp$month), '-', sprintf("%02d", opp$day), ' ', opp$time)
-  opp$time = as.POSIXct(time, format = '%Y-%m-%d %H:%M:%S', tz = 'UTC', usetz=TRUE)
-  
-  # wrangle date
-  opp$date = as.Date(opp$time)
-  opp$yday = yday(opp$date)
-  opp$year = year(opp$date)
-  
-  # wrangle text
-  opp$verified = tolower(opp$verified)
-  opp$photos = tolower(opp$photos)
-  
-  # lookup species 
-  mind = match(table = spp_key$code, x = opp$species)
-  opp$species = spp_key$species[mind]
-  
-  # drop unknown codes
-  opp = opp[which(!is.na(opp$species)),]
-  
-  # score
-  opp$score = 'possibly sighted'
-  opp$score[opp$verified == 'yes'] = 'sighted'
-  
-  # convert number to numeric
-  opp$number = as.numeric(opp$number)
-  
-  # convert calves to numeric
-  opp$calves = as.numeric(opp$numcalf)
-  
-  # clean lat lons
-  opp = clean_latlon(opp)
-  
-  # add metadata
-  opp$name = 'CCS_report'
-  opp$platform = 'opportunistic'
-  opp$id = paste0(opp$date, '_', opp$platform, '_', opp$name)
-  
-  # config data types
-  opp = config_observations(opp)
-  
-  # save
-  saveRDS(opp, opp_ofile)
-  
-}
 
 # survey data -------------------------------------------------------------
 
@@ -267,6 +211,58 @@ v_sightings = bind_rows(SIG)
 # config data types
 v_sightings = config_observations(v_sightings)
 
+# opportunistic data ------------------------------------------------------
+
+if(file.exists(opp_ifile)){
+  
+  # read in data
+  opp = read.csv(opp_ifile)
+  
+  # wrangle time
+  time = paste0(opp$year,'-', sprintf("%02d", opp$month), '-', sprintf("%02d", opp$day), ' ', opp$time)
+  opp$time = as.POSIXct(time, format = '%Y-%m-%d %H:%M:%S', tz = 'UTC', usetz=TRUE)
+  
+  # wrangle date
+  opp$date = as.Date(opp$time)
+  opp$yday = yday(opp$date)
+  opp$year = year(opp$date)
+  
+  # wrangle text
+  opp$verified = tolower(opp$verified)
+  opp$photos = tolower(opp$photos)
+  
+  # lookup species 
+  mind = match(table = spp_key$code, x = opp$species)
+  opp$species = spp_key$species[mind]
+  
+  # drop unknown codes
+  opp = opp[which(!is.na(opp$species)),]
+  
+  # score
+  opp$score = 'possibly sighted'
+  opp$score[opp$verified == 'yes'] = 'sighted'
+  
+  # convert number to numeric
+  opp$number = as.numeric(opp$number)
+  
+  # convert calves to numeric
+  opp$calves = as.numeric(opp$numcalf)
+  
+  # clean lat lons
+  opp = clean_latlon(opp)
+  
+  # add metadata
+  opp$name = 'CCS_report'
+  opp$platform = 'opportunistic'
+  opp$id = paste0(opp$date, '_', opp$platform, '_', opp$name)
+  
+  # config data types
+  opp = config_observations(opp)
+  
+} else {
+  opp = config_observations(data.frame())
+}
+
 # output ------------------------------------------------------------------
 
 # combine all tracks
@@ -276,7 +272,7 @@ tracks = bind_rows(a_tracks, v_tracks)
 saveRDS(tracks, trk_ofile)
 
 # combine all sightings
-sightings = bind_rows(a_sightings, v_sightings)
+sightings = bind_rows(a_sightings, v_sightings, opp)
 
 # save
 saveRDS(sightings, obs_ofile)
