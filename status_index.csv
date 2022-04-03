@@ -5,3 +5,4 @@ proc_ccs.R,Center for Coastal Studies aerial surveys,https://coastalstudies.org/
 proc_serw.R,Southeast US aerial surveys,https://mission.cmaquarium.org/research-institute/right-whale-research/,data/seus/email_list.csv
 proc_neaq_sne.R,New England Aquarium SNE vessel survey sightings/tracks,https://www.andersoncabotcenterforoceanlife.org/rightwhales/right-whales/,data/email/default.csv
 proc_nerw.R,NOAA NEFSC aerial survey sightings/tracks,https://www.nefsc.noaa.gov/psb/surveys/NARWSS.html,data/email/default.csv
+proc_nefsc_vessel.R,NOAA NEFSC vessel survey sightings/tracks,https://www.nefsc.noaa.gov/psb/surveys/NARWSS.html,data/email/default.csv
