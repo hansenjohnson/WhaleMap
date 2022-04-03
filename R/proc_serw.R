@@ -3,6 +3,9 @@
 
 # user input --------------------------------------------------------------
 
+# warnings
+quiet = TRUE
+
 # directory to look for files
 data_dir = 'data/raw/serw/'
 
@@ -50,9 +53,9 @@ for(ii in seq_along(flist)){
   tmp$source = 'WhaleMap'
   
   # warning for time failure
-  # if(TRUE %in% is.na(tmp$time)){
-  #   message('NA detected in timestamps of file ', ifile)
-  # }
+  if(TRUE %in% is.na(tmp$time) & !quiet){
+    message('NA detected in timestamps of file ', ifile)
+  }
   
   # add deployment metadata
   tmp$name = substr(basename(ifile), start = 0, stop = 4)
@@ -78,8 +81,10 @@ for(ii in seq_along(flist)){
   if(length(i0) != length(i1)){
     i0 = 1
     i1 = nrow(tmp)
-    message('Could not match on/off effort lines in: ', ifile)
-    message('Plotting uncorrected effort data...')
+    if(!quiet){
+      message('Could not match on/off effort lines in: ', ifile)
+      message('Plotting uncorrected effort data...')  
+    }
   }
   
   # fill in leg stage info for each effort segment
