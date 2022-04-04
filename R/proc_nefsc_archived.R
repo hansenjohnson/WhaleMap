@@ -1,5 +1,5 @@
-## proc_nefsc ##
-# process old nefsc data
+## proc_nefsc_archived ##
+# process archived nefsc data
 
 source('R/functions.R')
 
@@ -15,5 +15,5 @@ trk = readRDS('data/raw/wm/tracks.rds') %>%
   filter(date >= d0 & date <= d1 & !is.na(lat) & !is.na(lon) & name == 'noaa_twin_otter')
 
 # save
-saveRDS(obs, file = 'data/interim/nefsc_obs.rds')
-saveRDS(trk, file = 'data/interim/nefsc_eff.rds')
+saveRDS(obs, file = 'data/interim/nefsc_archived_obs.rds')
+saveRDS(trk, file = 'data/interim/nefsc_archived_eff.rds')
