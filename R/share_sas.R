@@ -7,7 +7,7 @@
 obs_file = 'data/processed/observations.rds'
 from_sas_file = 'data/raw/sas/xmlgenSAS_H.pl'
 sas_key_file = 'data/raw/sas/RWSASorganizations.xlsx'
-keep_sas_file = 'data/interim/sas_sightings.rds'
+keep_sas_file = 'data/interim/sas_obs.rds'
 to_sas_dir = 'shared/sas/'
 
 # list WhaleMap platform names to not send from WhaleMap to RWSAS

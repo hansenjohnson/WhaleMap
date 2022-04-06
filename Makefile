@@ -22,6 +22,7 @@ data/processed/observations.rds : R/combine.R \
 									data/interim/nefsc_vessel_*.rds \
 									data/interim/nerw_*.rds \
 									data/interim/serw_*.rds \
+									data/interim/sas_obs.rds \
 									data/interim/wm_*.rds
 	$(report_error)
 	Rscript $<
@@ -87,11 +88,11 @@ data/interim/serw_*.rds : R/proc_serw.R data/raw/serw/*/*.csv
 	Rscript $<
 	$(remove_error)
 
-# # RWSAS sightings
-# data/interim/sas_sightings.rds : R/proc_sas.R
-# 	$(report_error)
-# 	Rscript $<
-# 	$(remove_error)
+# SAS sightings
+data/interim/sas_obs.rds : R/share_sas.R data/raw/sas/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
 
 # WM
 data/interim/wm_*.rds : R/proc_wm.R data/raw/wm/*
