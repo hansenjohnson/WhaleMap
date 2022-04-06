@@ -17,10 +17,10 @@ fi
 cd ${DESTDIR}
 
 # define data directory
-DATADIR=${DESTDIR}/data/raw/rwsas/
+DATADIR=${DESTDIR}/data/raw/sas/
 
 # define URL
-. ./src/rwsas_url.sh
+. ./src/sas_url.sh
 
 # make data directory
 mkdir -p ${DATADIR}
@@ -29,5 +29,5 @@ mkdir -p ${DATADIR}
 wget -N ${URL} -P ${DATADIR}
 
 # process
-Rscript R/share_rwsas.R
+Rscript R/share_sas.R
 make
