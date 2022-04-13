@@ -89,7 +89,8 @@ config_tracks = function(tracks){
         year = as.numeric(year),
         platform = as.character(platform),
         name = as.character(name),
-        id = as.character(id)
+        id = as.character(id),
+        source = as.character(source)
       )
     
     return(tracks)
