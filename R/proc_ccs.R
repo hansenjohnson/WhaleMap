@@ -1,5 +1,5 @@
-## proc_2021_ccs ##
-# process and save all 2020/2021 ccs sightings, tracklines, and opportunstic reports
+## proc_ccs ##
+# process and save all ccs sightings, tracklines, and opportunistic reports
 
 # user input --------------------------------------------------------------
 
