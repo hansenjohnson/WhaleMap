@@ -1,7 +1,7 @@
-## proc_2021_neaq_aerial ##
-# process and save all 2020/2021 neaq aerial sightings and tracklines
+## proc_neaq_aerial ##
+# process and save all neaq aerial sightings and tracklines
 
-# user input --------------------------------------------------------------
+# input -------------------------------------------------------------------
 
 # directory to look for files
 data_dir = 'data/raw/neaq/aerial/'
@@ -10,14 +10,17 @@ data_dir = 'data/raw/neaq/aerial/'
 trk_ofile = 'data/interim/neaq_aerial_eff.rds'
 obs_ofile = 'data/interim/neaq_aerial_obs.rds'
 
-# process -----------------------------------------------------------------
+# setup -------------------------------------------------------------------
 
+# read in helper functions
 source('R/functions.R')
 
-# read in spp and obs keys
+# define species codes
 spp_key = data.frame(
   code = c('FIWH', 'RIWH', 'SEWH', 'HUWH', 'BLWH'),
   species = c('fin', 'right', 'sei', 'humpback', 'blue'))
+
+# process -----------------------------------------------------------------
 
 # list data files
 flist = list.files(data_dir, pattern = '\\d{8}_*.*.csv$',ignore.case = T, full.names = T, recursive = T)
@@ -82,10 +85,6 @@ for(ii in seq_along(dates)){
   
   # subsample gos
   TRK[[ii]] = subsample_gps(gps = itrk)
-  
-  # plot to check
-  # trk = TRK[ii]
-  # plot(trk$lon, trk$lat, type = 'l')
   
   # sightings ---------------------------------------------------------------
   
