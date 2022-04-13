@@ -4,7 +4,7 @@
 # input -------------------------------------------------------------------
 
 # input directory
-gis_dir = 'data/raw/sma/'
+gis_dir = 'data/raw/gis/sma/'
 
 # output file
 ofile = 'data/processed/sma.rda'
@@ -12,9 +12,7 @@ ofile = 'data/processed/sma.rda'
 # setup -------------------------------------------------------------------
 
 # libraries
-suppressPackageStartupMessages(library(rgdal))
-suppressPackageStartupMessages(library(lubridate))
-suppressPackageStartupMessages(library(tidyverse))
+source('R/functions.R')
 
 # common projection
 ref = "+proj=longlat +init=epsg:3857"
@@ -69,13 +67,12 @@ sma = sma[sma$plot == TRUE,]
 # save
 save(sma, file = ofile)
 
-# test with leaflet
-# sma_active = sma[sma$active == TRUE,]
+# # test with leaflet
 # library(leaflet)
 # leaflet() %>%
 #   addTiles() %>%
 #   addLayersControl(
 #     overlayGroups = c('sma')
 #     ) %>%
-#   addPolygons(data = sma_active, color = 'brown', popup = ~paste0(ID,'<br>',Restr_Area,'<br>',active_label),
+#   addPolygons(data = sma, color = 'brown', popup = ~paste0(ID,'<br>',Restr_Area,'<br>',active),
 #                group = 'sma',weight = 2)
