@@ -29,7 +29,7 @@ ui.R            Shiny app
 
 1. Sync
 
-The majority of the remoate data are synced using the script `src/get_remote_data.sh`. This uses Rclone to sync data from remote repositories (Google Drive, Dropbox, etc.), and also calls `src/get_live_dcs.sh` to download acoustic detection data. All the data are stored in `data/raw/`
+The majority of the remote data are synced using the script `src/get_remote_data.sh`. This uses Rclone to sync data from remote repositories (Google Drive, Dropbox, etc.), and also calls `R/get_dcs.R` to download acoustic detection data. All the data are stored in `data/raw/`
 
 2. Process 
 
@@ -37,11 +37,11 @@ Data from each contributor are processed to a common WhaleMap format (see below)
 
 3. Combine 
 
-All track data files in `data/interim/` are combined by (`R/proc_tracks.R`) and saved as `data/processed/tracks.rds`. All observation data files in `data/interim/` are combined by (`R/proc_observations.R`) and saved as `data/processed/observations.rds`.
+All effort and observation data files in `data/interim/` are combined by (`R/combine.R`) and saved as `data/processed/tracks.rds` and `data/processed/observations.rds`, respectively.
 
 4. Repeat
 
-A makefile maps the dependency structure and orchestrates the efficient processing of the entire dataset. The `make` command is executed at the final step of `src/get_remote_data.sh` to update the dataset after synchronization. A cron job runs `src/get_remote_data.sh` every 15 minutes to keep the system up to date.
+A Makefile maps the dependency structure and orchestrates the efficient processing of the entire dataset. The `make` command is executed at the final step of `src/get_remote_data.sh` to update the dataset after synchronization. A cron job runs `src/get_remote_data.sh` every 15 minutes to keep the system up to date.
 
 ### WhaleMap data formats
 
@@ -60,6 +60,7 @@ A makefile maps the dependency structure and orchestrates the efficient processi
 `score` - detection type and score (`Definite acoustic`, `Possible acoustic`, `Definite visual`, `Possible visual`)  
 `number` - number of whales (`NA` for acoustic detections)  
 `calves` - number of calves (`NA` for acoustic detections)  
+`source` - data source (`WhaleMap`, `RWSAS`, `WhaleInsight`, `NARWC`)  
 
 #### Tracks
 
@@ -74,6 +75,7 @@ A makefile maps the dependency structure and orchestrates the efficient processi
 `id` - unique survey identifier comprised of survey start date, platform, and name (e.g., `2020-02-21_plane_noaa_twin_otter`)  
 `speed` - platform speed (m/s)  
 `altitude` - platform altitude (m)  
+`source` - data source (`WhaleMap`, `RWSAS`, `WhaleInsight`, `NARWC`)  
 
 #### Status table
 
