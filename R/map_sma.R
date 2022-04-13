@@ -12,6 +12,7 @@ ofile = 'data/processed/sma.rda'
 # setup -------------------------------------------------------------------
 
 # libraries
+suppressPackageStartupMessages(library(rgdal))
 source('R/functions.R')
 
 # common projection
