@@ -24,7 +24,8 @@ mkdir -p backups
 
 # Sync data from Whale Insight
 # printf "\n*** Checking WI Google Drive ***\n\n"
-# rclone sync whalemapdata:"WhaleMapData_Master/2021/" "2021_whalemapdata/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
+rclone sync whalemapdata:"WhaleMapData_Exchange/trk_from_dfo.csv" "wi/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
+rclone sync whalemapdata:"WhaleMapData_Exchange/obs_from_dfo.csv" "wi/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
 
 # Sync CCS aerial data Google drive
 printf "\n*** Checking CCS Google Drive ***\n\n"

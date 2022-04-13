@@ -14,7 +14,7 @@ source('R/functions.R')
 remove_dfo_ids = function(obs){
   ids = unique(obs$id)
   good_ids = ids[!grepl(pattern = 'dfo|tc', x = ids)]
-  subset(obs, id %in% good_ids)
+  subset(obs, id %in% good_ids & source != 'WhaleInsight')
 }
 
 # process -----------------------------------------------------------------

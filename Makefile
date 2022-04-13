@@ -23,6 +23,7 @@ data/processed/observations.rds : R/combine.R \
 									data/interim/nerw_*.rds \
 									data/interim/serw_*.rds \
 									data/interim/sas_obs.rds \
+									data/interim/wi_*.rds \
 									data/interim/wm_*.rds
 	$(report_error)
 	Rscript $<
@@ -94,7 +95,13 @@ data/interim/sas_obs.rds : R/share_sas.R data/raw/sas/*
 	Rscript $<
 	$(remove_error)
 
-# WM
+# WhaleInsight
+data/interim/wi_*.rds : R/proc_wi.R data/raw/wi/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# WhaleMap (old)
 data/interim/wm_*.rds : R/proc_wm.R data/raw/wm/*
 	$(report_error)
 	Rscript $<
