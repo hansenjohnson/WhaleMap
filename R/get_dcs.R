@@ -52,8 +52,18 @@ if(length(new_deps) > 0){
     pt = p$platform_type
     if(pt == 'slocum_glider'){pt = 'slocum'}
     
-    # read in detection header
-    d = read.csv(paste0(u,'/manual_analysis.csv'), stringsAsFactors = F)
+    # define detection file
+    ptfile = paste0(u,'/manual_analysis.csv')
+    
+    # check if file exists
+    if(!file.exists(ptfile)){
+      message('No manual analysis file found for: ', ptfile)
+      message('Skipping...\n')
+      next
+    }
+    
+    # read in data
+    d = read.csv(ptfile, stringsAsFactors = F)  
     
     # extract start date
     s = as.Date(substr(as.character(d$datetime_utc[1]), 0, 8), '%Y%m%d')
