@@ -172,26 +172,32 @@ if(length(v_flist)>0){
     # take only sightings
     sig = droplevels(tmp[which(as.character(tmp$Species)!=""),])
     
-    # extract data
-    sig$lat = sig$Latitude
-    sig$lon = sig$Longitude
-    sig$number = as.numeric(as.character(sig$Min.Count))
-    sig$calves = ifelse(tolower(sig$Calf.present) == 'yes', 1, 0)
-    
-    # find indicies of matching
-    mind = match(table = v_spp_key$code, x = sig$Species)
-    
-    # replace codes with species names
-    sig$species = v_spp_key$species[mind]
-    
-    # drop unknown codes
-    sig = sig[which(!is.na(sig$species)),]
-    
-    # get scores
-    sig$score = 'sighted'
-    
-    # keep important columns
-    sig = sig[,c('time','lat','lon','date', 'yday','species','score','number','calves','year','platform','name','id')]
+    if(nrow(sig)>0){
+      
+      # extract data
+      sig$lat = sig$Latitude
+      sig$lon = sig$Longitude
+      sig$number = as.numeric(as.character(sig$Min.Count))
+      sig$calves = ifelse(tolower(sig$Calf.present) == 'yes', 1, 0)
+      
+      # find indicies of matching
+      mind = match(table = v_spp_key$code, x = sig$Species)
+      
+      # replace codes with species names
+      sig$species = v_spp_key$species[mind]
+      
+      # drop unknown codes
+      sig = sig[which(!is.na(sig$species)),]
+      
+      # get scores
+      sig$score = 'sighted'  
+      
+      # keep important columns
+      sig = sig[,c('time','lat','lon','date', 'yday','species','score','number','calves','year','platform','name','id')]
+      
+    } else {
+      sig = config_observations(data.frame())
+    }
     
     # add to the list
     SIG[[ii]] = sig
@@ -268,11 +274,17 @@ if(file.exists(opp_ifile)){
 # combine all tracks
 tracks = bind_rows(a_tracks, v_tracks)
 
+# add source
+tracks$source = 'WhaleMap'
+
 # save
 saveRDS(tracks, trk_ofile)
 
 # combine all sightings
 sightings = bind_rows(a_sightings, v_sightings, opp)
+
+# add source
+sightings$source = 'WhaleMap'
 
 # save
 saveRDS(sightings, obs_ofile)
