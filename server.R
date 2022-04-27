@@ -281,14 +281,6 @@ function(input, output, session){
     })
   }
   
-  # position for live dcs platform
-  SONO <- eventReactive(input$go|input$go == 0, {
-    sono %>%
-      filter(
-        date %in% dates()
-      )
-  })
-  
   # release notification  ------------------------------------------
   
   # showNotification(

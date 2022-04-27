@@ -89,9 +89,6 @@ dcsIcons = iconList(
   buoy = makeIcon("icons/buoy.png", iconWidth = 44, iconHeight = 34, iconAnchorX = 22, iconAnchorY = 28)
 )
 
-# make sono icon
-sonoIcon = makeIcon("icons/sono.png", iconWidth = 10, iconHeight = 45)
-
 # status file
 status_file = 'data/processed/status.txt'
 index_file = 'status_index.csv'
