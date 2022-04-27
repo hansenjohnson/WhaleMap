@@ -112,6 +112,20 @@ body <- dashboardBody(
                            
                            hr(),
                            
+                           # add data source choice
+                           selectInput("dsource", "Choose data source(s):", 
+                                       choices = c("NARWC",
+                                                   "WhaleMap",
+                                                   "WhaleInsight",
+                                                   "RWSAS"), 
+                                       selected = c("NARWC",
+                                                    "WhaleMap",
+                                                    "WhaleInsight",
+                                                    "RWSAS"),
+                                       multiple = T),
+                           
+                           hr(),
+                           
                            # checkbox data layers
                            
                            h5(strong('Choose data layer(s):')),

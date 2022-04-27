@@ -128,6 +128,13 @@ function(input, output, session){
     }
   })
   
+  # choose data source ------------------------------------------------------
+  
+  # data source
+  dsource <- eventReactive(input$go|input$go == 0,{
+    input$dsource
+  })
+  
   # choose species -----------------------------------------------------------
   
   # species
@@ -162,6 +169,7 @@ function(input, output, session){
       tracks %>%
         filter(
           date %in% dates() & 
+            source %in% dsource() &
             name %in% name() &
             platform %in% platform() 
         )
@@ -171,6 +179,7 @@ function(input, output, session){
       tracks %>%
         filter(
           date %in% dates() & 
+            source %in% dsource() &
             platform %in% platform() & 
             name %in% name() &
             !(name %in% hidden_platforms)
@@ -186,6 +195,7 @@ function(input, output, session){
       observations %>%
         filter(
           date %in% dates() & 
+            source %in% dsource() &
             platform %in% platform() & 
             name %in% name() &
             species %in% species()
@@ -197,6 +207,7 @@ function(input, output, session){
       observations %>%
         filter(
           date %in% dates() & 
+            source %in% dsource() &
             platform %in% platform() & 
             species %in% species() &
             name %in% name() &
@@ -250,6 +261,7 @@ function(input, output, session){
         latest %>%
           filter(
             date %in% dates() & 
+              source %in% dsource() &
               name %in% name() &
               platform %in% platform()
           )
@@ -259,6 +271,7 @@ function(input, output, session){
         latest %>%
           filter(
             date %in% dates() & 
+              source %in% dsource() &
               platform %in% platform() &
               name %in% name() &
               !(name %in% hidden_platforms)
