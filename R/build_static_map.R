@@ -159,6 +159,7 @@ build_static_map = function(type = 'whalemap'){
   suppressPackageStartupMessages(library(lubridate))
   suppressPackageStartupMessages(library(oce))
   suppressPackageStartupMessages(library(leaflet.extras))
+  suppressPackageStartupMessages(library(leaflegend))
   
   # time period to show (days)
   t1 = as.Date(format(Sys.time(), "%Y-%m-%d", tz = 'UTC'))
@@ -241,6 +242,18 @@ build_static_map = function(type = 'whalemap'){
   det$score = gsub(pattern = 'definite acoustic', replacement = acoustic_lab, x = det$score)
   det$score = as.factor(det$score) 
   
+  # legend icons ------------------------------------------------------------
+  
+  sym = makeSymbolIcons(shape = 'circle', 
+                        fillColor = obs_pal,
+                        color = 'black',
+                        opacity = 1,
+                        fillOpacity = 0.9, 
+                        strokeWidth = 1,
+                        width = 10,
+                        height = 10,
+                        weight = 2)
+  
   # basemap -----------------------------------------------------------------
   
   # add basemap tiles
@@ -317,9 +330,12 @@ build_static_map = function(type = 'whalemap'){
                              alwtrp_grp)) %>%
     
     # add legend
-    addLegend(position = "bottomright",
-              pal = pal,
-              values = obs_levs) %>%
+    addLegendImage(
+      position = 'bottomright',
+      images = sym$iconUrl, 
+      height = 12, width = 12,
+      labelStyle = "font-size: 12px",
+      labels = obs_levs) %>%
     
     # add extra map features
     addScaleBar(position = 'bottomleft')%>%
