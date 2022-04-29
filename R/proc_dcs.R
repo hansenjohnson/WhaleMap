@@ -136,6 +136,9 @@ proc_dcs = function(data_dir, output_dir, det_fname, track_fname, ext = ""){
   # config data types
   tracks = config_tracks(tracks)
   
+  # add source
+  tracks$source = 'WhaleMap'
+  
   # save output
   saveRDS(tracks, paste0(output_dir, track_fname))
   
@@ -153,6 +156,9 @@ proc_dcs = function(data_dir, output_dir, det_fname, track_fname, ext = ""){
   
   # config data types
   detections = config_observations(detections)
+  
+  # add source
+  detections$source = 'WhaleMap'
   
   # drop all unused levels
   detections = droplevels(detections)
