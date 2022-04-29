@@ -145,7 +145,7 @@ if(file.exists(from_sas_file)){
   
   # filter whalemap data
   obs = obs %>%
-    filter(date >= t0 & date <= t1 & species == 'right' & source != 'NARWC' &
+    filter(date >= t0 & date <= t1 & species == 'right' &
              score %in% c('definite visual') & !is.na(lat) & !is.na(lon) & 
              !grepl('RWSAS', source) & !grepl('SAS-', name))
   
@@ -158,7 +158,7 @@ if(file.exists(from_sas_file)){
   
   # determine records to send to SAS
   to_send = obs %>%
-    filter(!(m_obs %in% m_sas) & !(name %in% no_send_list)) 
+    filter(!(m_obs %in% m_sas) & !(name %in% no_send_list) & source != 'NARWC') 
   
   # reorder data by date
   to_send = to_send[order(to_send$date, decreasing = TRUE),]
