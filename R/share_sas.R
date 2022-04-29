@@ -145,7 +145,7 @@ if(file.exists(from_sas_file)){
   
   # filter whalemap data
   obs = obs %>%
-    filter(date >= t0 & date <= t1 & species == 'right' & 
+    filter(date >= t0 & date <= t1 & species == 'right' & source != 'NARWC' &
              score %in% c('definite visual') & !is.na(lat) & !is.na(lon) & 
              !grepl('RWSAS', source) & !grepl('SAS-', name))
   
