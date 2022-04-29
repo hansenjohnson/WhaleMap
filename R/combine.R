@@ -25,6 +25,9 @@ tracks = suppressWarnings(bind_rows(TRK))
 # config tracks
 tracks = config_tracks(tracks)
 
+# fix source
+tracks$source[is.na(tracks$source)] = 'WhaleMap'
+
 # save
 saveRDS(tracks, 'data/processed/effort.rds')
 
