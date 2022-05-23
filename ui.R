@@ -193,7 +193,7 @@ body <- dashboardBody(
                            
                            checkboxInput("noaa", label = 'NOAA charts', value = F),
                            
-                           checkboxInput("latest", label = 'Latest robot positions', value = T),
+                           checkboxInput("latest", label = 'Latest robot positions', value = F),
                            
                            checkboxInput("tss", label = 'Shipping lanes', value = T),
                            
