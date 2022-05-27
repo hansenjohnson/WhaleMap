@@ -483,6 +483,6 @@ build_static_map = function(type = 'whalemap'){
 
 # build english map
 suppressWarnings(build_static_map(type = 'whalemap'))
-suppressWarnings(build_static_map(type = 'dfo-en'))
-suppressWarnings(build_static_map(type = 'dfo-fr'))
+# suppressWarnings(build_static_map(type = 'dfo-en'))
+# suppressWarnings(build_static_map(type = 'dfo-fr'))
 
