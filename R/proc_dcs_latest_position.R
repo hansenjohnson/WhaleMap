@@ -3,7 +3,7 @@
 
 # input -------------------------------------------------------------------
 
-dcs_file = 'data/interim/dcs_live_eff.rds'
+dcs_file = 'data/processed/effort.rds'
 outfile = 'data/processed/dcs_live_latest_position.rds'
 
 # setup -------------------------------------------------------------------
@@ -14,7 +14,7 @@ source('R/functions.R')
 
 if(file.exists(dcs_file)){
   
-  latest = find_latest(dcs_file)
+  latest = find_latest(dcs_file, remove_old = T)
   
   # save
   saveRDS(latest, file = outfile)

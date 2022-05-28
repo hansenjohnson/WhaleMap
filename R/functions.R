@@ -597,11 +597,12 @@ subset_canadian = function(df, inside = TRUE, crs_string = "+init=epsg:3857"){
   return(out)
 }
 
-find_latest = function(infile, remove_old = TRUE){
+find_latest = function(infile, platform_list = c('slocum', 'buoy'), remove_old = FALSE, quiet = TRUE){
 # find latest track position  
   
   # read in data
-  tracks = readRDS(infile)
+  tracks = readRDS(infile) %>%
+    filter(platform %in% platform_list)
   
   # remove NAs
   tracks = tracks[!is.na(tracks$lat),]
@@ -623,7 +624,9 @@ find_latest = function(infile, remove_old = TRUE){
     old = which(abs(as.numeric(latest$date) - as.numeric(Sys.Date())) > 14)
     if(length(old)>0){
       # print warning
-      message("Removing ", length(old), " platform(s) from live DCS list because their latest reported positions are more than 14 days old. The platform(s) ids are:\n", paste(latest$id[old], collapse = '\n'))
+      if(!quiet){
+        message("Removing ", length(old), " platform(s) from live DCS list because their latest reported positions are more than 14 days old. The platform(s) ids are:\n", paste(latest$id[old], collapse = '\n'))  
+      }
       # remove
       latest = latest[-c(old),]
     }
