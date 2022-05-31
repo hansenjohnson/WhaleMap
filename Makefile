@@ -139,7 +139,7 @@ data/processed/dma.rda : R/map_dma.R \
 
 ## MAP ##
 .PHONY : map
-map : ./static_map/whale_map_en.html
+map : ./static_map/whalemap.html
 
 # Build map
 ./static_map/whale_map_en.html : R/build_static_map.R data/processed/*.rda data/processed/*.rds
