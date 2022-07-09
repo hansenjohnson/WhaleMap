@@ -35,6 +35,10 @@ rclone sync drive:"WhaleMap_CCS" "ccs/" --drive-formats csv --backup-dir backups
 printf "\n*** Checking NEAq Aerial Google Drive ***\n\n"
 rclone sync drive:"WhaleMap_NEAq_aerial" "neaq/aerial/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
 
+# Sync NEAq vessel data Google drive
+printf "\n*** Checking NEAq Vessel Google Drive ***\n\n"
+rclone sync drive:"2022 GSL  (NEAq) Data for WhaleMap" "neaq/vessel/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
+
 # Sync NERW aerial data Google drive
 printf "\n*** Checking NERW Google Drive ***\n\n"
 rclone sync drive:"WhaleMap" "nerw/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf

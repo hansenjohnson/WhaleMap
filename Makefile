@@ -17,6 +17,7 @@ data/processed/observations.rds : R/combine.R \
 									data/interim/dcs_live_*.rds \
 									data/interim/narwc_*.rds \
 									data/interim/neaq_aerial_*.rds \
+									data/interim/neaq_vessel_*.rds \
 									data/interim/neaq_sne_*.rds \
 									data/interim/nefsc_archived_*.rds \
 									data/interim/nefsc_vessel_*.rds \
@@ -55,6 +56,12 @@ data/interim/narwc_*.rds : R/proc_narwc.R data/raw/narwc/*
 
 # NEAq aerial
 data/interim/neaq_aerial_*.rds : R/proc_neaq_aerial.R data/raw/neaq/aerial/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# NEAq vessel
+data/interim/neaq_vessel_*.rds : R/proc_neaq_vessel.R data/raw/neaq/vessel/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
