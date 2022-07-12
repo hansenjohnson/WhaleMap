@@ -32,7 +32,10 @@ for(ii in seq_along(flist)){
   # assign vessel and timezone
   itz = 'America/Halifax'
   ivs = 'jdmartin'
-  tmp$time = as.POSIXct(tmp$TrkTime..ADT., tz = itz)
+  tmp$time = as.POSIXct(tmp$TrkTime..ADT., tz = itz, format = '%Y-%m-%dT%H:%M:%S')
+  
+  # convert to UTC
+  tmp$time = with_tz(tmp$time, tzone = 'UTC')
   
   # wrangle time
   tmp$date = as.Date(tmp$time)
