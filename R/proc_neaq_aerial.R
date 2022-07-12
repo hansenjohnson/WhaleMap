@@ -52,6 +52,7 @@ for(ii in seq_along(dates)){
   tmp$time = as.POSIXct(
     paste0(tmp$year,'-',tmp$month,'-',tmp$day,' ',sprintf('%06d', tmp$time)),
     format = '%Y-%m-%d %H%M%S', tz = 'America/New_York')
+  tmp$time = with_tz(tmp$time, tzone = 'UTC')
   tmp$date = as.Date(tmp$time)
   tmp$yday = yday(tmp$time)
   tmp$year = year(tmp$time)
@@ -128,6 +129,7 @@ for(ii in glist){
   
   # add required columns
   tmp$time = as.POSIXct(paste0(substr(basename(flist[ii]),1,8), ' ', trimws(tmp$Time)), format = '%Y%m%d %H:%M:%S ', tz = 'America/New_York')
+  tmp$time = with_tz(tmp$time, tzone = 'UTC')
   tmp$date = as.Date(tmp$time)
   tmp$yday = yday(tmp$time)
   tmp$year = year(tmp$time)
