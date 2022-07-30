@@ -37,7 +37,7 @@ Data from each contributor are processed to a common WhaleMap format (see below)
 
 3. Combine 
 
-All effort and observation data files in `data/interim/` are combined by (`R/combine.R`) and saved as `data/processed/tracks.rds` and `data/processed/observations.rds`, respectively.
+All effort and observation data files in `data/interim/` are combined by (`R/combine.R`) and saved as `data/processed/effort.rds` and `data/processed/observations.rds`, respectively.
 
 4. Repeat
 
