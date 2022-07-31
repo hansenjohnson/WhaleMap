@@ -18,9 +18,9 @@ R/              R scripts for data processing, display, and reporting
 src/            Shell scripts to execute data cloning and processing
 Makefile        Maps project dependency structure and facilitates efficient processing with `make`
 LICENSE         License information
-global.R        Shiny app
-server.R        Shiny app
-ui.R            Shiny app
+global.R        Shiny app - defining global variables
+server.R        Shiny app - processing data for shiny app
+ui.R            Shiny app - defining the user interface
 ```
 
 ## Data processing
