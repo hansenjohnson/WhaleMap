@@ -8,4 +8,4 @@ DATADIR=/Users/hansenjohnson/Projects/WhaleMap/data/processed/
 cd ${DATADIR}
 
 # Copy contents
-rsync -rtv whalemapvm:/srv/shiny-server/WhaleMap/data/processed/ .
+rsync -rtv wm-neaq:/srv/shiny-server/WhaleMap/data/processed/ .
