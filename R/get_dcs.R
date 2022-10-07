@@ -55,12 +55,12 @@ if(length(new_deps) > 0){
     # define detection file
     ptfile = paste0(u,'/manual_analysis.csv')
     
-    # check if file exists
-    if(!file.exists(ptfile)){
-      message('No manual analysis file found for: ', ptfile)
-      message('Skipping...\n')
-      next
-    }
+    # # check if file exists
+    # if(!file.exists(ptfile)){
+    #   message('No manual analysis file found for: ', ptfile)
+    #   message('Skipping...\n')
+    #   next
+    # }
     
     # read in data
     d = read.csv(ptfile, stringsAsFactors = F)  
