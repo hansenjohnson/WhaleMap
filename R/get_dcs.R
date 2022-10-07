@@ -100,6 +100,9 @@ if(length(new_deps) > 0){
     message('Adding new deployment: ', id)
   }
   
+  # organize chronologically
+  dl = dl %>% arrange(desc(id))
+  
   # save updated detection list
   write.csv(dl, file = dl_file, row.names = F)
 }
