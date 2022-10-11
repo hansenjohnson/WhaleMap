@@ -76,7 +76,7 @@ if(length(new_deps) > 0){
     lon = d$lon[1]
     
     # guess display status
-    if(lat < 0 | lon < -80 | !pt %in% c('buoy', 'slocum')){
+    if(lat < 0 | lon < -100 | !pt %in% c('buoy', 'slocum')){
       display = F
     } else {
       display = T
