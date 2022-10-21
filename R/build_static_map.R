@@ -180,9 +180,7 @@ map <- map %>% addLayersControl(
   options = layersControlOptions(collapsed = TRUE), position = 'topright')
 
 # hide groups
-map <- map %>% hideGroup(c(survey_grp,
-                           graticules_grp,
-                           robot_grp,
+map <- map %>% hideGroup(c(graticules_grp,
                            tc_zone_grp,
                            dfo_zone_grp,
                            alwtrp_grp)) %>%
