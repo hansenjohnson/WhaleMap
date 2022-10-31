@@ -300,7 +300,10 @@ names(tracks.df) %>%
 if(file.exists(lfile)){
   
   # add icons for latest position of live dcs platforms
-  map <- map %>% addMarkers(data = latest, ~lon, ~lat, icon = ~dcsIcons[platform],
+  map <- map %>% 
+    addMapPane("lts", zIndex = 350) %>%
+    addMarkers(data = latest, ~lon, ~lat, icon = ~dcsIcons[platform],
+               options=pathOptions(pane = "lts"),
                             popup = ~paste(sep = "<br/>",
                                            strong(robot_main),
                                            paste0(robot_date, 
