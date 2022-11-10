@@ -33,7 +33,7 @@ function(input, output, session){
           tags$li("A specific date or date range may contain few or no detections. This does not mean whales were not present. Effort is typically limited to seasonal whale watches or researchers dedicated to locating seasonal habitats."), 
           tags$li("Right whales are likely to be present within Seasonal and Dynamic Management Areas even if no sightings are illustrated.")
           ), 
-        footer = tags$em("Mariners are urged to use caution and proceed at safe speeds in areas where right whales occur."),
+        footer = tags$em("Mariners are urged to use caution and proceed at safe speeds in areas where whales occur."),
         easyClose = TRUE,
         fade = TRUE
       )
