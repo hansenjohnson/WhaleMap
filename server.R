@@ -21,25 +21,6 @@ function(input, output, session){
   load('data/processed/dma.rda')
   load('data/processed/sma.rda')
   
-
-  # show startup disclaimer -------------------------------------------------
-
-  observe({
-    showModal(
-      ui = modalDialog(
-        title = "Disclaimer:",
-        tags$ul(
-          tags$li("Because whales swim continuously, exact locations are obsolete within minutes of a sighting"), 
-          tags$li("A specific date or date range may contain few or no detections. This does not mean whales were not present. Effort is typically limited to seasonal whale watches or researchers dedicated to locating seasonal habitats."), 
-          tags$li("Right whales are likely to be present within Seasonal and Dynamic Management Areas even if no sightings are illustrated.")
-          ), 
-        footer = tags$em("Mariners are urged to use caution and proceed at safe speeds in areas where whales occur."),
-        easyClose = TRUE,
-        fade = TRUE
-      )
-    )
-  }) 
-  
   # build date UI -------------------------------------------------------
   
   output$dateChoice <- renderUI({
@@ -299,6 +280,24 @@ function(input, output, session){
       }
     })
   }
+  
+  # show startup disclaimer -------------------------------------------------
+  
+  observe({
+    showModal(
+      ui = modalDialog(
+        title = "Disclaimer:",
+        tags$ul(
+          tags$li("Because whales swim continuously, exact locations are obsolete within minutes of a sighting"), 
+          tags$li("A specific date or date range may contain few or no detections. This does not mean whales were not present. Effort is typically limited to seasonal whale watches or researchers dedicated to locating seasonal habitats."), 
+          tags$li("Right whales are likely to be present within Seasonal and Dynamic Management Areas even if no sightings are illustrated.")
+        ), 
+        footer = tags$em("Mariners are urged to use caution and proceed at safe speeds in areas where whales occur."),
+        easyClose = TRUE,
+        fade = TRUE
+      )
+    )
+  }) 
   
   # release notification  ------------------------------------------
   
