@@ -446,24 +446,25 @@ function(input, output, session){
   
   # noaa charts ------------------------------------------------------
   
-  observe(priority = 4, {
-
-    # define proxy
-    proxy <- leafletProxy("map")
-    proxy %>% clearGroup('noaa')
-
-    if(input$noaa){
-
-      # add noaa charts
-      proxy %>%
-        addTiles(urlTemplate = '//tileservice.charts.noaa.gov/tiles/50000_1/{z}/{x}/{y}.png', group = 'noaa')
-
-      # switch to show/hide
-      ifelse(input$noaa, showGroup(proxy, 'noaa'),
-             hideGroup(proxy, 'noaa'))
-    }
-
-  })
+  # observe(priority = 4, {
+  # 
+  #   # define proxy
+  #   proxy <- leafletProxy("map")
+  #   proxy %>% clearGroup('noaa')
+  # 
+  #   if(input$noaa){
+  # 
+  #     # add noaa charts
+  #     proxy %>%
+  #       addWMSTiles(baseUrl = "https://gis.charttools.noaa.gov/arcgis/rest/services/MCS/ENCOnline/MapServer/exts/MaritimeChartService/WMSServer")
+  #       # addTiles(urlTemplate = '//tileservice.charts.noaa.gov/tiles/50000_1/{z}/{x}/{y}.png', group = 'noaa')
+  # 
+  #     # switch to show/hide
+  #     ifelse(input$noaa, showGroup(proxy, 'noaa'),
+  #            hideGroup(proxy, 'noaa'))
+  #   }
+  # 
+  # })
   
   # critical habitat zone ------------------------------------------------------  
   

@@ -191,7 +191,7 @@ body <- dashboardBody(
                            
                            checkboxInput("graticules", label = 'Graticules', value = F),
                            
-                           checkboxInput("noaa", label = 'NOAA charts', value = F),
+                           # checkboxInput("noaa", label = 'NOAA charts', value = F),
                            
                            checkboxInput("latest", label = 'Latest robot positions', value = T),
                            
