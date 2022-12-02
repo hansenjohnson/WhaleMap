@@ -784,8 +784,7 @@ function(input, output, session){
                     options = pathOptions(clickable = T),
                     popup = ~paste(sep = "<br/>" ,
                                    "US Seasonal Management Area",
-                                   paste0(Restr_Area),
-                                   paste0("Active: ", active)),
+                                   paste0(NAME)),
                     weight = 1, 
                     color = 'red', 
                     fillColor = 'red')

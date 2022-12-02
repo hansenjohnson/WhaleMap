@@ -252,9 +252,8 @@ map <- map %>%
   addPolygons(data=sma, group = sma_grp,
               fill = T, fillOpacity = 0.3, stroke = T, smoothFactor = 0,
               popup = ~paste(sep = "<br/>" ,
-                             sma_grp,
-                             paste0(Restr_Area),
-                             paste0("Active: ", active)),
+                             "US Seasonal Management Area",
+                             paste0(NAME)),
               weight = 1, color = 'red', fillColor = 'red') 
 
 # plot US ALWTRP

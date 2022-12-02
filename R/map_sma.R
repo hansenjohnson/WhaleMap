@@ -1,69 +1,28 @@
-# proc_sma #
-# process US Seasonal Management Area
+## map_sma ##
+# process US dynamic management area (DMA) data
 
 # input -------------------------------------------------------------------
 
-# input directory
-gis_dir = 'data/raw/gis/sma/'
-
-# output file
 ofile = 'data/processed/sma.rda'
 
 # setup -------------------------------------------------------------------
 
-# libraries
-suppressPackageStartupMessages(library(rgdal))
-source('R/functions.R')
-
-# common projection
-ref = "+proj=longlat +init=epsg:3857"
-
-# system time
-sdate = as.Date(with_tz(Sys.time(), tzone = 'America/New_York'))
-syday = yday(sdate)
-extra_day = ifelse(leap_year(sdate),1,0)
+suppressPackageStartupMessages(library(httr))
+suppressPackageStartupMessages(library(sf))
 
 # process -----------------------------------------------------------------
 
-# read seasonal management data
-sma = readOGR(gis_dir) %>%
-  spTransform(ref)
+# get url as follows:
+# 1) go to query page: https://services2.arcgis.com/C8EMgrsFcRFL6LrL/ArcGIS/rest/services/NEFSC_Seasonal_Management_Areas/FeatureServer/0/query
+# 2) set "Where: 1=1" and "Out Fields: *" and "Format: GEOJSON"
+# 3) click "Query (GET)" and paste subsequent URL below
+url_sma = 'https://services2.arcgis.com/C8EMgrsFcRFL6LrL/ArcGIS/rest/services/NEFSC_Seasonal_Management_Areas/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&relationParam=&returnGeodetic=false&outFields=*&returnGeometry=true&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&defaultSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token='
 
-# add metadata for active period
-sma$start = sdate
-sma$end = sdate
-sma$start[sma$Restr_Area == 'Southeast U.S.'] = as.Date('2020-11-01')
-sma$end[sma$Restr_Area == 'Southeast U.S.'] = as.Date('2021-04-15')
-sma$start[sma$Restr_Area == 'Mid-Atlantic U.S. (South)'] = as.Date('2020-11-01')
-sma$end[sma$Restr_Area == 'Mid-Atlantic U.S. (South)'] = as.Date('2021-04-30')
-sma$start[sma$Restr_Area == 'Mid-Atl Morehead City/Beaufort'] = as.Date('2020-11-01')
-sma$end[sma$Restr_Area == 'Mid-Atl Morehead City/Beaufort'] = as.Date('2021-04-30')
-sma$start[sma$Restr_Area == 'Mid-Atl Chesapeake Bay'] = as.Date('2020-11-01')
-sma$end[sma$Restr_Area == 'Mid-Atl Chesapeake Bay'] = as.Date('2021-04-30')
-sma$start[sma$Restr_Area == 'Mid-Atl Delaware Bay'] = as.Date('2020-11-01')
-sma$end[sma$Restr_Area == 'Mid-Atl Delaware Bay'] = as.Date('2021-04-30')
-sma$start[sma$Restr_Area == 'Mid-Atl New York/New Jersey'] = as.Date('2020-11-01')
-sma$end[sma$Restr_Area == 'Mid-Atl New York/New Jersey'] = as.Date('2021-04-30')
-sma$start[sma$Restr_Area == 'Mid-Atl Block Island Sound'] = as.Date('2020-11-01')
-sma$end[sma$Restr_Area == 'Mid-Atl Block Island Sound'] = as.Date('2021-04-30')
-sma$start[sma$Restr_Area == 'NE U.S. Great South Channel'] = as.Date('2021-04-01')
-sma$end[sma$Restr_Area == 'NE U.S. Great South Channel'] = as.Date('2021-07-31')
-sma$start[sma$Restr_Area == 'NE U.S. Off Race Point'] = as.Date('2021-03-01')
-sma$end[sma$Restr_Area == 'NE U.S. Off Race Point'] = as.Date('2021-04-30')
-sma$start[sma$Restr_Area == 'NE U.S. Cape Cod Bay'] = as.Date('2021-01-01')
-sma$end[sma$Restr_Area == 'NE U.S. Cape Cod Bay'] = as.Date('2021-05-15')
+# read in dma data
+sma <- st_read(url_sma, quiet = TRUE)
 
-# add label
-sma$active = paste0(format(sma$start, '%b %d'), ' - ', format(sma$end, '%b %d'))
-
-# determine which are active
-sma$plot = FALSE
-for(ii in seq_along(sma$start)){
-  sma$plot[ii] = syday %in% (yday(seq.Date(from = sma$start[ii], to = sma$end[ii], by = 'day')) + extra_day)
-}
-
-# restrict to active
-sma = sma[sma$plot == TRUE,]
+# select only active
+sma <- sma %>% filter(INEFFECT == 1)
 
 # save
 save(sma, file = ofile)
@@ -74,6 +33,11 @@ save(sma, file = ofile)
 #   addTiles() %>%
 #   addLayersControl(
 #     overlayGroups = c('sma')
-#     ) %>%
-#   addPolygons(data = sma, color = 'brown', popup = ~paste0(ID,'<br>',Restr_Area,'<br>',active),
-#                group = 'sma',weight = 2)
+#   ) %>%
+#   addPolygons(data = sma, color = 'purple',
+#               popup = ~paste(sep = "<br/>" ,
+#                              "US Seasonal Management Area",
+#                              paste0(NAME),
+#                              # paste0("Type: ", triggertype),
+#                              paste0("Expires: ", ENDDATE)),
+#               group = 'sma',weight = 2)
