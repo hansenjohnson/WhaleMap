@@ -16,7 +16,7 @@ function(input, output, session){
   
   # sightings / detections
   observations = readRDS('data/processed/observations.rds')
- 
+  
   # dynamic map polygons
   load('data/processed/dma.rda')
   load('data/processed/sma.rda')
@@ -24,7 +24,7 @@ function(input, output, session){
   # build date UI -------------------------------------------------------
   
   output$dateChoice <- renderUI({
-
+    
     switch(input$dateType,
            'select' = dateInput('date', label = NULL,
                                 value = Sys.Date()),
@@ -45,7 +45,7 @@ function(input, output, session){
            )
     )
   })
-
+  
   # choose date -------------------------------------------------------
   
   dates <- reactive({
@@ -407,9 +407,9 @@ function(input, output, session){
         completedColor = "#004d1a",
         position = 'bottomleft') 
     
-      # addControlGPS(options = gpsOptions(position = "topleft", activate = FALSE, 
-      #                                              autoCenter = TRUE, maxZoom = 8, 
-      #                                              setView = TRUE))
+    # addControlGPS(options = gpsOptions(position = "topleft", activate = FALSE, 
+    #                                              autoCenter = TRUE, maxZoom = 8, 
+    #                                              setView = TRUE))
   })
   
   # tile observer ------------------------------------------------------  
@@ -420,9 +420,9 @@ function(input, output, session){
       clearTiles() %>%
       addProviderTiles(providers[[input$basemap]], layerId = 'basemap')
   })
- 
+  
   # graticules ------------------------------------------------------
-
+  
   observe(priority = 4, {
     
     # define proxy
@@ -568,12 +568,12 @@ function(input, output, session){
       
       # add polygons
       proxy %>%
-          addPolygons(data = full_grid, 
-                      color = 'grey',
-                      group = 'full_grid',
-                      weight = 2,
-                      smoothFactor = 3, 
-                      popup = ~paste0(Grid_Index))
+        addPolygons(data = full_grid, 
+                    color = 'grey',
+                    group = 'full_grid',
+                    weight = 2,
+                    smoothFactor = 3, 
+                    popup = ~paste0(Grid_Index))
       
       # switch to show/hide
       ifelse(input$full_grid, showGroup(proxy, 'full_grid'),
@@ -652,7 +652,7 @@ function(input, output, session){
     if(input$tss){
       
       # plot shipping lanes
-
+      
       proxy %>%
         addPolylines(tss_lines$lon, tss_lines$lat,
                      weight = .5,
@@ -675,7 +675,7 @@ function(input, output, session){
       # switch to show/hide
       ifelse(input$tss, showGroup(proxy, 'tss'), hideGroup(proxy, 'tss'))
     }
-  
+    
   })
   
   # US lobster observer ------------------------------------------------------  
@@ -742,29 +742,26 @@ function(input, output, session){
     proxy <- leafletProxy("map")
     proxy %>% clearGroup('dma')
     
-    if(input$dma & !('data.frame' %in% class(dma))){
-      
-      # add polygons
-      proxy %>%
-        addPolygons(data=dma, group = 'dma',
-                    fill = T, 
-                    fillOpacity = 0.3, 
-                    stroke = T, 
-                    dashArray = c(5,5), 
-                    options = pathOptions(clickable = T),
-                    popup = ~paste(sep = "<br/>" ,
-                                   "US Slow Zone",
-                                   paste0(name),
-                                   paste0("Type: ", triggertype),
-                                   paste0("Expires: ", expiration)),
-                    weight = 1, 
-                    color = '#ff9900', 
-                    fillColor = '#ff9900')
-      
-      # switch to show/hide
-      ifelse(input$dma, showGroup(proxy, 'dma'),
-             hideGroup(proxy, 'dma'))
-    }
+    # add polygons
+    proxy %>%
+      addPolygons(data=dma, group = 'dma',
+                  fill = T, 
+                  fillOpacity = 0.3, 
+                  stroke = T, 
+                  dashArray = c(5,5), 
+                  options = pathOptions(clickable = T),
+                  popup = ~paste(sep = "<br/>" ,
+                                 "US Slow Zone",
+                                 paste0(NAME),
+                                 # paste0("Type: ", triggertype),
+                                 paste0("Expires: ", EXPDATE)),
+                  weight = 1, 
+                  color = '#ff9900', 
+                  fillColor = '#ff9900')
+    
+    # switch to show/hide
+    ifelse(input$dma, showGroup(proxy, 'dma'),
+           hideGroup(proxy, 'dma'))
     
   })
   
@@ -915,17 +912,17 @@ function(input, output, session){
         proxy %>% 
           addMapPane("lts", zIndex = 350) %>%
           addMarkers(data = LATEST(), ~lon, ~lat, 
-                             icon = ~dcsIcons[platform],
-                             options=pathOptions(pane = "lts"),
-                             popup = ~paste(sep = "<br/>",
-                                            strong('Latest position'),
-                                            paste0('Platform: ', as.character(platform)),
-                                            paste0('Name: ', as.character(name)),
-                                            paste0('Time: ', as.character(time), ' UTC'),
-                                            paste0('Position: ', 
-                                                   as.character(lat), ', ', as.character(lon))),
-                             label = ~paste0('Latest position of ', as.character(name), ': ', 
-                                             as.character(time), ' UTC'), group = 'latest')
+                     icon = ~dcsIcons[platform],
+                     options=pathOptions(pane = "lts"),
+                     popup = ~paste(sep = "<br/>",
+                                    strong('Latest position'),
+                                    paste0('Platform: ', as.character(platform)),
+                                    paste0('Name: ', as.character(name)),
+                                    paste0('Time: ', as.character(time), ' UTC'),
+                                    paste0('Position: ', 
+                                           as.character(lat), ', ', as.character(lon))),
+                     label = ~paste0('Latest position of ', as.character(name), ': ', 
+                                     as.character(time), ' UTC'), group = 'latest')
         
       }
       
@@ -1155,7 +1152,7 @@ function(input, output, session){
       str9 <- paste0('<strong>Most recent observation</strong>: ', dInBounds()$date[rec_ind])
       
       str10 <- paste0('<strong>Most recent position</strong>: ', 
-                     dInBounds()$lat[rec_ind], ', ', dInBounds()$lon[rec_ind])
+                      dInBounds()$lat[rec_ind], ', ', dInBounds()$lon[rec_ind])
       
       # paste and render
       HTML(paste(str1, str2, str3, str4, str5, str6, str7, str8, str9, str10, sep = '<br/>'))
@@ -1179,7 +1176,7 @@ function(input, output, session){
     if(!input$possible){
       obs = obs[obs$score!='possible acoustic' & obs$score!='possible visual',]
     }
- 
+    
     # avoid error if no data selected or in map view
     if(nrow(obs)==0){
       return(NULL)
@@ -1203,7 +1200,7 @@ function(input, output, session){
     vis_effort = unique(tracks$yday[tracks$platform %in% visual_platforms])
     aco_effort = unique(tracks$yday[tracks$platform %in% acoustic_platforms])
     tot_effort = c(vis_effort, aco_effort)
- 
+    
     # configure effort geometry for plotting
     if(length(tot_effort)!=0){
       eff = data.frame('yday' = tot_effort,

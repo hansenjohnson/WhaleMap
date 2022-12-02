@@ -268,18 +268,16 @@ map <- map %>%
               weight = 1, color = 'brown2', fillColor = 'brown2') 
 
 # plot US DMAs
-if(!('data.frame' %in% class(dma))){
-  map <- map %>%
-    addPolygons(data=dma, group = dma_grp,
-                fill = T, fillOpacity = 0.3, stroke = T, smoothFactor = 0,
-                dashArray = c(2,2), 
-                popup = ~paste(sep = "<br/>" ,
-                               dma_grp,
-                               paste0(name),
-                               paste0("Type: ", triggertype),
-                               paste0("Expires: ", expiration)),
-                weight = 1, color = 'yellow', fillColor = 'yellow') 
-}
+map <- map %>%
+  addPolygons(data=dma, group = dma_grp,
+              fill = T, fillOpacity = 0.3, stroke = T, smoothFactor = 0,
+              dashArray = c(2,2), 
+              popup = ~paste(sep = "<br/>" ,
+                             "US Slow Zone",
+                             paste0(NAME),
+                             # paste0("Type: ", triggertype),
+                             paste0("Expires: ", EXPDATE)),
+              weight = 1, color = 'yellow', fillColor = 'yellow') 
 
 # add tracks --------------------------------------------------------------
 

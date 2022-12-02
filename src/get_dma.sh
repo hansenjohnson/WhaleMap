@@ -16,14 +16,5 @@ fi
 # move to project directory
 cd ${DESTDIR}
 
-# define data directory
-DATADIR=${DESTDIR}/data/raw/gis/dma/
-
-# define url
-URL=https://apps-nefsc.fisheries.noaa.gov/cgi-bin/mammalmaps/xmlgenDMA.pl
-
-# make data directory
-mkdir -p ${DATADIR}
-
-# download sas data
-wget -N ${URL} -P ${DATADIR}
+# get DMA data
+Rscript R/map_dma.R

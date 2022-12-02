@@ -3,67 +3,31 @@
 
 # input -------------------------------------------------------------------
 
-# input files
-ifile = 'data/raw/gis/dma/xmlgenDMA.pl'
 ofile = 'data/processed/dma.rda'
 
 # setup -------------------------------------------------------------------
 
-# libraries
-suppressPackageStartupMessages(library(xml2))
-suppressPackageStartupMessages(library(sp))
-suppressPackageStartupMessages(library(tidyverse))
-suppressPackageStartupMessages(library(lubridate))
+library(httr)
+library(sf)
 
-# common projection
-ref = "+proj=longlat +init=epsg:3857"
+# process -----------------------------------------------------------------
 
-# process raw sas ---------------------------------------------------------
+# get url dma as follows:
+# 1) go to query page: https://services2.arcgis.com/C8EMgrsFcRFL6LrL/arcgis/rest/services/NEFSC_Dynamic_Management_Areas/FeatureServer/0/query/?where=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&relationParam=&returnGeodetic=false&outFields=&returnGeometry=true&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&defaultSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=html&token=
+# 2) set "Where: 1=1" and "Out Fields: *" and "Format: GEOJSON"
+# 3) click "Query (GET)" and paste subsequent URL below
+url_dma = 'https://services2.arcgis.com/C8EMgrsFcRFL6LrL/arcgis/rest/services/NEFSC_Dynamic_Management_Areas/FeatureServer/0/query/?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&relationParam=&returnGeodetic=false&outFields=*&returnGeometry=true&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&defaultSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token='
 
-# read in active DMA data
-dmas = xml_find_all(read_xml(ifile), ".//dma")
-  
-if(length(dmas)>0){
-  
-  # extract coordinates in a list of polygons
-  DMA = vector('list',length = length(dmas))
-  for(ii in 1:length(dmas)){
-    
-    # extract data
-    tmp = dmas[[ii]]
-    ID = xml_attr(tmp,attr = 'id')
-    lat = xml_attr(xml_find_all(tmp, ".//waypoint"),attr = 'lat') %>% as.numeric()
-    lon = xml_attr(xml_find_all(tmp, ".//waypoint"),attr = 'lon') %>% as.numeric()
-    
-    # generate sp polygon
-    ply = Polygon(coords = cbind(lon,lat), hole = F)
-    DMA[[ii]] = Polygons(list(ply), ID)
-  }
-  
-  # convert to spatial polygons
-  splys = SpatialPolygons(Srl = DMA, proj4string = CRS(ref))
-  
-  # extract polygon metadata and name rows by id
-  md = data.frame(
-    name = xml_attr(dmas,attr = 'name'),
-    triggertype = xml_attr(dmas,attr = 'triggertype'),
-    expiration = paste0(xml_attr(dmas,attr = 'expdate'), ' UTC')
-  ) 
-  rownames(md) = xml_attr(dmas, attr = 'id')
-  
-  # fix trigger type
-  md$triggertype = as.character(md$triggertype)
-  md$triggertype[md$triggertype == 'v'] = 'Visual/DMA'
-  md$triggertype[md$triggertype == 'a'] = 'Acoustic'
+# read in dma data
+dma <- st_read(url_dma, quiet = TRUE)
+
+if(length(dma)>0){
   
   # check expiration times
-  e_dates = as.Date(as.POSIXct(md$expiration, tz = 'UTC'))
+  e_dates = as.Date(as.POSIXct(as.character(dma$EXPDATE), format = "%d-%b-%Y %H:%M:%S", tz = 'UTC'))
   if(TRUE %in% c(e_dates<Sys.Date())){
     warning("Expired DMA detected!")
   }
-  
-  # convert to spatial polygon data frame
-  dma = SpatialPolygonsDataFrame(Sr = splys, data = md, match.ID = TRUE)
   
 } else {
   
@@ -74,12 +38,17 @@ if(length(dmas)>0){
 # save
 save(dma, file = ofile)
 
-# test with leaflet
+# # test with leaflet
 # library(leaflet)
 # leaflet() %>%
 #   addTiles() %>%
 #   addLayersControl(
 #     overlayGroups = c('dma')
-#     ) %>%
-#   addPolygons(data = dma, color = 'orange', popup = ~paste0(name),
-#                group = 'dma',weight = 2)
+#   ) %>%
+#   addPolygons(data = dma, color = 'orange', 
+#               popup = ~paste(sep = "<br/>" ,
+#                              "US Slow Zone",
+#                              paste0(NAME),
+#                              # paste0("Type: ", triggertype),
+#                              paste0("Expires: ", EXPDATE)),
+#               group = 'dma',weight = 2)

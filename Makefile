@@ -136,12 +136,11 @@ shared/dfo-whalemap/*.csv : src/share_wi.sh R/share_wi.R data/processed/effort.r
 .PHONY : dma
 dma : data/processed/dma.rda
 
-# # Process dma
-# data/processed/dma.rda : R/map_dma.R \
-# 						data/raw/gis/dma/*.pl
-# 	$(report_error)
-# 	Rscript $<
-# 	$(remove_error)
+# Process dma
+data/processed/dma.rda : R/map_dma.R
+	$(report_error)
+	Rscript $<
+	$(remove_error)
 
 ## MAP ##
 .PHONY : map
