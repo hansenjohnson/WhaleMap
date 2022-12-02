@@ -22,7 +22,7 @@ url_sma = 'https://services2.arcgis.com/C8EMgrsFcRFL6LrL/ArcGIS/rest/services/NE
 sma <- st_read(url_sma, quiet = TRUE)
 
 # select only active
-sma <- sma %>% filter(INEFFECT == 1)
+sma <- sma[sma$INEFFECT == 1,]
 
 # save
 save(sma, file = ofile)
