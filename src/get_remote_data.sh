@@ -64,7 +64,7 @@ Rscript R/get_dcs.R
 
 # get US DMA data
 printf "\n*** Checking US DMA data ***\n\n"
-bash src/get_dma.sh
+Rscript R/map_dma.R
 
 # update WhaleMap
 printf "\n*** Updating WhaleMap ***\n\n"
