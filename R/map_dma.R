@@ -7,8 +7,8 @@ ofile = 'data/processed/dma.rda'
 
 # setup -------------------------------------------------------------------
 
-library(httr)
-library(sf)
+suppressPackageStartupMessages(library(httr))
+suppressPackageStartupMessages(library(sf))
 
 # process -----------------------------------------------------------------
 
