@@ -23,6 +23,7 @@ data/processed/observations.rds : R/combine.R \
 									data/interim/nefsc_vessel_*.rds \
 									data/interim/nerw_*.rds \
 									data/interim/serw_*.rds \
+									data/interim/sas_obs.rds \
 									data/interim/wi_*.rds \
 									data/interim/wm_*.rds
 	$(report_error)
@@ -96,10 +97,10 @@ data/interim/serw_*.rds : R/proc_serw.R data/raw/serw/*/*.csv
 	$(remove_error)
 
 # SAS sightings
-# data/interim/sas_obs.rds : R/share_sas.R data/raw/sas/*
-# 	$(report_error)
-# 	Rscript $<
-# 	$(remove_error)
+data/interim/sas_obs.rds : R/share_sas.R data/raw/sas/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
 
 # WhaleInsight
 data/interim/wi_*.rds : R/proc_wi.R data/raw/wi/*
