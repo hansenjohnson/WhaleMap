@@ -1,11 +1,11 @@
 #!/bin/bash
-# download processed data from WhaleMap server
+# download data from WhaleMap server
 
 # Define processed data directory
-DATADIR=/Users/hansenjohnson/Projects/WhaleMap/data/processed/
+DATADIR=/Users/${USER}/Projects/WhaleMap/data/
 
 # Move to data directory
 cd ${DATADIR}
 
 # Copy contents
-rsync -rtv wm-neaq:/srv/shiny-server/WhaleMap/data/processed/ .
+rsync -rtv wmpadmin@20.122.3.103:/srv/shiny-server/WhaleMap/data/ .
