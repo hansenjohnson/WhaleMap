@@ -5,7 +5,7 @@
 unamestr=`uname`
 
 # Define OS-specific paths
-if [[ "$unamestr" == 'Linux' ]]; then
+if [[ "$USER" == 'wmpadmin' ]]; then
 	
 	# Move to project directory
 	cd /srv/shiny-server/WhaleMap
@@ -16,10 +16,10 @@ if [[ "$unamestr" == 'Linux' ]]; then
 	# copy output data back to Google Drive
 	rclone copy "shared/dfo-whalemap/" whalemapdata:"WhaleMapData_Exchange/"
 
-elif [[ "$unamestr" == 'Darwin' ]]; then
+elif [[ "$USER" != 'wmpadmin' ]]; then
 
 	# Move to project directory
-	cd /Users/hansenjohnson/Projects/WhaleMap
+	cd /Users/${USER}/Projects/WhaleMap
 
 	# touch
 	touch shared/dfo-whalemap/obs_for_dfo.csv

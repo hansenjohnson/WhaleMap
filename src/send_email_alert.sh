@@ -5,7 +5,7 @@
 unamestr=`uname`
 
 # Define OS-specific paths
-if [[ "$unamestr" == 'Linux' ]]; then # server
+if [[ "$USER" == 'wmpadmin' ]]; then # server
 
 	# Move to project directory
 	cd /srv/shiny-server/WhaleMap
@@ -13,6 +13,6 @@ if [[ "$unamestr" == 'Linux' ]]; then # server
 	# write and send email
 	Rscript R/write_error_email.R
 
-elif [[ "$unamestr" == 'Darwin' ]]; then
+elif [[ "$USER" != 'wmpadmin' ]]; then
 	echo "No error email sent - will only send from server"
 fi

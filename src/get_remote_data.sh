@@ -5,12 +5,12 @@
 unamestr=`uname`
 
 # Define OS-specific paths
-if [[ "$unamestr" == 'Linux' ]]; then
+if [[ "$USER" == 'wmpadmin' ]]; then
 	DESTDIR=/srv/shiny-server/WhaleMap # server
-	SSHDIR=/home/hansen
-elif [[ "$unamestr" == 'Darwin' ]]; then
-	DESTDIR=/Users/hansenjohnson/Projects/WhaleMap # local
-	SSHDIR=/Users/hansenjohnson
+	SSHDIR=/home/wmpadmin
+elif [[ "$USER" != 'wmpadmin' ]]; then
+    DESTDIR=/Users/${USER}/Projects/WhaleMap # local
+	SSHDIR=/Users/${USER}
 fi
 
 # Determine raw data directory
