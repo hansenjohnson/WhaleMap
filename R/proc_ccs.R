@@ -3,7 +3,7 @@
 
 # user input --------------------------------------------------------------
 
-# directory to look for files
+# directory to look for data files
 a_data_dir = 'data/raw/ccs/aerial/'
 v_data_dir = 'data/raw/ccs/vessel/'
 opp_ifile = 'data/raw/ccs/opportunistic/CCS_opp.csv'
