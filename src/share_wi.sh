@@ -1,8 +1,11 @@
 #!/bin/bash
 # push data to DFO whalemap
 
+# get hostname
+HOSTNAME=`hostname`
+
 # Define OS-specific paths
-if [[ "$hostname" == 'AZE-WHALEMAP1' ]]; then
+if [[ "$HOSTNAME" == 'AZE-WHALEMAP1' ]]; then
 	
 	# Move to project directory
 	cd /srv/shiny-server/WhaleMap
@@ -13,7 +16,7 @@ if [[ "$hostname" == 'AZE-WHALEMAP1' ]]; then
 	# copy output data back to Google Drive
 	rclone copy "shared/dfo-whalemap/" whalemapdata:"WhaleMapData_Exchange/"
 
-elif [[ "$hostname" != 'AZE-WHALEMAP1' ]]; then
+elif [[ "$HOSTNAME" != 'AZE-WHALEMAP1' ]]; then
 
 	# Move to project directory
 	cd /Users/${USER}/Projects/WhaleMap

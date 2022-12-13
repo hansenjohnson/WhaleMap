@@ -1,11 +1,14 @@
 #!/bin/bash
 # process map data from BOEM
 
+# get hostname
+HOSTNAME=`hostname`
+
 # Define OS-specific paths
-if [[ "$hostname" == 'AZE-WHALEMAP1' ]]; then
+if [[ "$HOSTNAME" == 'AZE-WHALEMAP1' ]]; then
 	DESTDIR=/srv/shiny-server/WhaleMap # server
 	SSHDIR=/home/wmpadmin
-elif [[ "$hostname" != 'AZE-WHALEMAP1' ]]; then
+elif [[ "$HOSTNAME" != 'AZE-WHALEMAP1' ]]; then
   DESTDIR=/Users/${USER}/Projects/WhaleMap # local
 	SSHDIR=/Users/${USER}
 fi

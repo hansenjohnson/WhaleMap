@@ -1,6 +1,7 @@
 #!/bin/bash
 # download survey data from remote repository
 
+# get hostname
 HOSTNAME=`hostname`
 
 # Define OS-specific paths
