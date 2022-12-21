@@ -29,5 +29,5 @@ mkdir -p ${DATADIR}
 wget -N ${URL} -P ${DATADIR}
 
 # process
-Rscript R/share_sas.R
+touch R/share_sas.R
 make
