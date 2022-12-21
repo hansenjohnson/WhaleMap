@@ -16,7 +16,7 @@ wrk/
 tests/
 manager_maps/
 tmp/
-requests/
+requests/*/
 etc/
 
 # sensitive
