@@ -383,7 +383,7 @@ make_status_table = function(status_file='data/processed/status.txt',
   out = out[order(out$status, decreasing = TRUE),]
   
   # adjust column names
-  colnames(out) = c('Platform', 'Last processed [UTC]')
+  colnames(out) = c('Platform', 'Last processed (Eastern)')
   
   return(out)
 }
