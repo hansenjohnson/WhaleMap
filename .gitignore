@@ -8,13 +8,9 @@
 
 # directories
 data/
-figures/
-docs/
 shared/
 static_map/
 wrk/
-tests/
-manager_maps/
 tmp/
 requests/*/
 etc/
@@ -31,7 +27,6 @@ src/get_sas_url.sh
 *.docx
 
 # data files
-summary_report.pdf
 *.gps
 *.gpx
 *.xlsx
@@ -42,4 +37,4 @@ summary_report.pdf
 restart.txt
 status.txt
 error_email.txt
-.Rproj.user
+
