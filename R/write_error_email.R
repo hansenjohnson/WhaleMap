@@ -15,7 +15,7 @@ sendmail = '/usr/sbin/sendmail'
 email_file = 'error_email.txt'
 
 # user email
-myemail = 'hansen.johnson@dal.ca'
+myemail = 'whalemap.tech@gmail.com'
 
 # setup -------------------------------------------------------------------
 
@@ -77,7 +77,7 @@ if(length(er)!=0){
 
     # email pieces
     subject = paste0("Subject: WhaleMap Error (", format(Sys.time(), '%b-%d %H:%M %Z'),"): Cannot process data from ", id$name[bad])
-    from = "From: whalemapcurator@gmail.com"
+    from = paste0("From: ", myemail)
     to = paste0("To: ", paste(emails, collapse = ','))
     txt = paste0(
 "
