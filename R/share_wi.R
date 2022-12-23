@@ -1,5 +1,5 @@
-## write_dfo-whalemap_data ##
-# extract track and observation data for DFO WhaleMap
+## share_wi ##
+# extract track and observation data for Whale Insight
 
 # input -------------------------------------------------------------------
 
