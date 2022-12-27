@@ -12,6 +12,7 @@ shared/
 static_map/
 wrk/
 tmp/
+old/
 requests/*/
 etc/
 
@@ -37,5 +38,6 @@ src/get_sas_url.sh
 restart.txt
 status.txt
 error_email.txt
+work.md
 
 .Rproj.user
