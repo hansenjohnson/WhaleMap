@@ -169,7 +169,7 @@ body <- dashboardBody(
                            hr(),
                            
                            # Tracks color variable
-                           selectInput("colorby_trk", "Color tracks by:", 
+                           selectInput("colorby_trk", "Color effort by:", 
                                        choices = colorby_trk_choices, 
                                        selected = colorby_trk_choices[1]),
                            
