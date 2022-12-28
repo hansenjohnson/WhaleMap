@@ -156,13 +156,6 @@ body <- dashboardBody(
                   
                   # Customize plotting
                   tabPanel(title = 'Colors',
-                  
-                           # Basemap
-                           selectInput("basemap", label = "Choose basemap:",
-                                       choices =  basemap_choices, 
-                                       selected = basemap_choices[1]),
-                           
-                           hr(),
                            
                            # Observations color variable
                            selectInput("colorby_obs", "Color observations by:", 
@@ -189,6 +182,13 @@ body <- dashboardBody(
                   
                   # Customize plotting
                   tabPanel(title = 'Layers',
+                           
+                           # Basemap
+                           selectInput("basemap", label = "Choose basemap:",
+                                       choices =  basemap_choices, 
+                                       selected = basemap_choices[1]),
+                           
+                           hr(),
                            
                            helpText(tags$em('Map layers')),
                            
