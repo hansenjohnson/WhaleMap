@@ -77,9 +77,13 @@ for(ii in seq_along(dates)){
   itrk$lat = itrk$lat
   itrk$lon = itrk$long
   
-  # get speed and altitude
-  itrk$altitude = as.numeric(itrk$alt)
-  itrk$speed = as.numeric(itrk$gpsspeed)
+  # get altitude
+  alt_i = which(grepl('alt', x = colnames(itrk), ignore.case = T))[1] # select first column containing "alt"
+  itrk$altitude = as.numeric(itrk[,alt_i])
+  
+  # get speed
+  spd_i = which(grepl('speed', x = colnames(itrk), ignore.case = T))[1] # select first column containing "spped"
+  itrk$speed = as.numeric(itrk[,spd_i])
   
   # remove unused columns
   itrk = itrk[,c('time','lat','lon', 'altitude','speed','date','yday', 'year',  'platform', 'name', 'id')]
