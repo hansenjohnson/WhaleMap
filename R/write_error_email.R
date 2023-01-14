@@ -37,6 +37,9 @@ if(length(er)!=0){
   # only create and send email if it has not been sent already
   if(!file.exists(email_file)){
 
+    # read in default emails
+    default_emails = read.csv(default_email_list, header = TRUE, stringsAsFactors = FALSE)$email
+    
     # read in lookup table
     id = read.csv(index_file, header = TRUE, stringsAsFactors = FALSE)
 
@@ -61,18 +64,13 @@ if(length(er)!=0){
       if(grepl(pattern = '.xlsx$', x = efile)){
         tmp = read_excel(efile)
         colnames(tmp) = tolower(colnames(tmp))
-        emails = tmp$email
+        emails = unique(c(tmp$email, default_emails))
       } else {
-        emails = read.csv(efile, header = TRUE, stringsAsFactors = FALSE)$email  
+        emails = unique(c(read.csv(efile, header = TRUE, stringsAsFactors = FALSE)$email, default_emails))
       }
     } else {
       message('Could not find ', efile, ', so deferring to the default email list here: ', default_email_list)
-      emails = read.csv(default_email_list, header = TRUE, stringsAsFactors = FALSE)$email
-    }
-    
-    # add my email to the list
-    if(!myemail %in% emails){
-      emails = c(emails,myemail)
+      emails = default_emails
     }
 
     # email pieces
