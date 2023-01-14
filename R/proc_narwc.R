@@ -4,13 +4,16 @@
 # input -------------------------------------------------------------------
 
 # input file
-ifile = 'data/raw/narwc/HANSEN21.CSV'
+ifile <- 'data/raw/narwc/NARWC22N.CSV'
+
+# header file
+hfile <- 'data/raw/narwc/NARWC22N_sample.CSV'
 
 # output file
-ofile = 'data/interim/narwc_obs.rds'
+ofile <- 'data/interim/narwc_obs.rds'
 
 # earliest year
-yr = 2010
+yr <- 2010
 
 # setup -------------------------------------------------------------------
 
@@ -18,70 +21,79 @@ source('R/functions.R')
 
 # process -----------------------------------------------------------------
 
-# read in data
-all = read.csv(ifile, as.is = TRUE)
+# read in header info
+hdr <- read_csv(hfile) %>% colnames()
 
-# remove month 13s
-all = all[-which(all$MONTH == 13),]
+# read in data and remove effort/sightings from previous years
+all <- read_csv(ifile, col_names = hdr) %>%
+  filter(YEAR >= yr & SPECCODE != "xxxx")
 
 # make date column
-all$date = as.Date(paste0(all$YEAR, '-', all$MONTH, '-', all$DAY), format = '%Y-%m-%d')
+all$date <- as.Date(paste0(all$YEAR, '-', all$MONTH, '-', all$DAY), format = '%Y-%m-%d')
 
 # make time column
-all$time = as.POSIXct(paste0(all$YEAR, '-', all$MONTH, '-', all$DAY, ' ', all$TIME),
+all$time <- as.POSIXct(paste0(all$YEAR, '-', all$MONTH, '-', all$DAY, ' ', all$TIME),
                       format = '%Y-%m-%d %H%M%S', tz = 'UTC', usetz = T)
 
 # calculate yday
-all$yday = yday(all$date)
+all$yday <- yday(all$date)
 
 # calculate year
-all$year = year(all$date)
+all$year <- all$YEAR
 
 # lat lon
-all$lat = as.numeric(all$LAT_DD)
-all$lon = as.numeric(all$LONG_DD)
+all$lat <- as.numeric(all$LAT_DD)
+all$lon <- as.numeric(all$LONG_DD)
 
 # species codes
 all$species = NA
-all$species[all$SPECCODE == 'RIWH'] = 'right'
-all$species[all$SPECCODE == 'FIWH'] = 'fin'
-all$species[all$SPECCODE == 'HUWH'] = 'humpback'
-all$species[all$SPECCODE == 'BLWH'] = 'blue'
-all$species[all$SPECCODE == 'SEWH'] = 'sei'
+all$species[all$SPECCODE == 'RIWH'] <- 'right'
+all$species[all$SPECCODE == 'FIWH'] <- 'fin'
+all$species[all$SPECCODE == 'HUWH'] <- 'humpback'
+all$species[all$SPECCODE == 'BLWH'] <- 'blue'
+all$species[all$SPECCODE == 'SEWH'] <- 'sei'
+
+# remove unknown species
+all <- all[!is.na(all$species),]
+
+# remove dead whales
+all <- all[!(as.numeric(all$BEHAV1) %in% c(0, 1)),]
 
 # number
-all$number = as.numeric(all$NUMBER)
+all$number <- as.numeric(all$NUMBER)
+all$number[all$number == 99999] = NA
 
 # calves
-all$calves = as.numeric(all$NUMCALF)
+all$calves <- as.numeric(all$NUMCALF)
+all$calves[all$calves == 999] = NA
 
 # score
-all$score = NA
-all$score[all$IDREL %in% c(1,2,9)] = 'possibly sighted'
-all$score[all$IDREL == 3] = 'sighted'
+all$score <- NA
+all$score[all$IDREL %in% c(1,2,9)] <- 'possibly sighted'
+all$score[all$IDREL == 3] <- 'sighted'
 
-# platform
+# extract platform info
 all$platform = NA
-all$platform[all$DATATYPE == 'opport'] = 'opportunistic'
-all$platform[all$DATATYPE == 'shipbd'] = 'vessel'
-all$platform[all$DATATYPE == 'aerial'] = 'plane'
+fid = substr(all$FILEID, 0, 1)
+all$platform[fid == 'o'] <- 'opportunistic'
+all$platform[fid == 'p'] <- 'vessel'
+all$platform[fid %in% c('a', 'b', 'c', 'f')] <- 'plane'
+all$platform[all$IDSOURCE == "TAG"] <- 'tag'
 
 # define name
 all$name = paste0('NARWC-', all$DDSOURCE)
 
 # id
-all$id = all$FILEID
+all$id <- all$FILEID
 
-# filters 
-all = subset(all, WHLR == ' NO' & DEAD == ' NO')
-all = subset(all, !is.na(date) & !is.na(species) & !is.na(lat) & !is.na(lon))
-all = subset(all, year >= yr)
-
-# configure observations
-rwc = config_observations(all)
+# remove missing values
+all <- all %>% filter(!is.na(date) & !is.na(species) & !is.na(lat) & !is.na(lon) & !is.na(platform))
 
 # add source
-rwc$source = 'NARWC'
+all$source <- 'NARWC'
+
+# configure observations
+rwc <- config_observations(all)
 
 # save
 saveRDS(rwc, ofile)
