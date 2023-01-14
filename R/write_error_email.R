@@ -79,9 +79,7 @@ if(length(er)!=0){
     to = paste0("To: ", paste(emails, collapse = ','))
     txt = paste0(
 "
-WhaleMap could not process ", id$name[bad], " correctly!
-
-(Error in file: ", id$script[bad], ")
+WhaleMap could not process ", id$name[bad], " correctly! (Error in file: ", st$script[er], ")
 
 Please check your data for errors. Common issues include typos in the file name, mixing time or lat/lon conventions, or using unknown species codes. It can be very helpful to check the formatting of a previous record.
 
