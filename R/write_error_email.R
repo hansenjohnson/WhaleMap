@@ -81,6 +81,8 @@ if(length(er)!=0){
 "
 WhaleMap could not process ", id$name[bad], " correctly!
 
+(Error in file: ", id$script[bad], ")
+
 Please check your data for errors. Common issues include typos in the file name, mixing time or lat/lon conventions, or using unknown species codes. It can be very helpful to check the formatting of a previous record.
 
 If you have tried to make a correction, head to https://whalemap.org/WhaleMap to see if it was successful. WhaleMap updates every 15 minutes, so it should not take long to see your changes. You can also scroll down on WhaleMap to check the status table. If you see an error message next to your platform name, there is still a problem.
