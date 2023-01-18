@@ -125,7 +125,10 @@ if(file.exists(from_sas_file)){
   se_ok = se %>% filter(org %in% seus_plot_list | platform == 'opportunistic')
   
   # check rejects
-  # se_bad = se %>% filter(!(org %in% seus_plot_list | platform == 'opportunistic'))
+  se_bad = se %>% filter(!(org %in% seus_plot_list | platform == 'opportunistic'))
+  if(nrow(se_bad)>0){
+    message("Removing ", nrow(se_bad), ' records that were not on the approved platform list!')
+  }
   
   # redefine SAS
   sas = rbind(ne, se_ok)
