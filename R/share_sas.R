@@ -20,6 +20,7 @@ sas_lat = 36.5
 seus_plot_list = c("Sea to Shore Alliance (S2S)(WildLifeTrust/EcoHealthAlliance)",
                    "Florida Fish and Wildlife Research Institute (FWRI)",
                    "Georgia Department of Natural Resources (GADNR)",
+                   "NOAA|Northeast Fisheries Science Center (NEFSC) | Woods Hole",
                    "None/Other")
 
 # switch to include sas on WhaleMap
