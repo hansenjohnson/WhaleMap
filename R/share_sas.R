@@ -55,7 +55,7 @@ if(file.exists(from_sas_file)){
   # extract data
   sas = data.frame(
     id = as.numeric(xml_attr(tmp, "id")),
-    time = as.POSIXct(xml_attr(tmp, "sightdate"), tz = 'America/New_York'),
+    time = as.POSIXct(xml_attr(tmp, "sightdate"), tz = 'UTC'),
     lat = as.numeric(xml_attr(tmp, "lat")),
     lon = as.numeric(xml_attr(tmp, "lon")),
     number = as.numeric(xml_attr(tmp, "groupsize")),
