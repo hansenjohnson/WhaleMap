@@ -1,15 +1,15 @@
-## proc_wi ##
-# process and save Canadian observation and effort data from WhaleInsight
+## proc_live_wi ##
+# process and save live Canadian observation and effort data from WhaleInsight
 
 # user input --------------------------------------------------------------
 
 # input file
-trk_ifile = 'data/raw/wi/trk_from_dfo.csv'
-obs_ifile = 'data/raw/wi/obs_from_dfo.csv'
+trk_ifile = 'data/raw/wi/live/trk_from_dfo.csv'
+obs_ifile = 'data/raw/wi/live/obs_from_dfo.csv'
 
 # output files
-trk_ofile = 'data/interim/wi_eff.rds'
-obs_ofile = 'data/interim/wi_obs.rds'
+trk_ofile = 'data/interim/wi_live_eff.rds'
+obs_ofile = 'data/interim/wi_live_obs.rds'
 
 # process -----------------------------------------------------------------
 
