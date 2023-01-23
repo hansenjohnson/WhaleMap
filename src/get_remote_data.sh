@@ -41,7 +41,7 @@ rclone sync drive:"2022 GSL  (NEAq) Data for WhaleMap" "neaq/vessel/" --drive-sh
 
 # Sync NERW aerial data Google drive
 printf "\n*** Checking NERW Google Drive ***\n\n"
-rclone sync drive:"WhaleMap" "nerw/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
+rclone sync wm_drive:"2023/2023 NEFSC Survey Data/Flights/WhaleMap NEFSC 2023" "nerw/live" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
 # Sync NERW aerial data Google drive
 printf "\n*** Checking NEFSC vessel Google Drive ***\n\n"

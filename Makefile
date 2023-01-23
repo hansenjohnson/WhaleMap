@@ -21,7 +21,8 @@ data/processed/observations.rds : R/combine.R \
 									data/interim/neaq_sne_*.rds \
 									data/interim/nefsc_archived_*.rds \
 									data/interim/nefsc_vessel_*.rds \
-									data/interim/nerw_*.rds \
+									data/interim/nerw_live_*.rds \
+									data/interim/nerw_archived_*.rds \
 									data/interim/serw_*.rds \
 									data/interim/sas_obs.rds \
 									data/interim/wi_live_*.rds \
@@ -85,8 +86,14 @@ data/interim/nefsc_vessel_*.rds : R/proc_nefsc_vessel.R data/raw/nefsc_vessel/*
 	Rscript $<
 	$(remove_error)
 
-# NERW
-data/interim/nerw_*.rds : R/proc_nerw.R data/raw/nerw/*
+# NERW (live)
+data/interim/nerw_live_*.rds : R/proc_live_nerw.R data/raw/nerw/live/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# NERW (archived)
+data/interim/nerw_archived_*.rds : R/proc_archived_nerw.R data/raw/nerw/archived/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)

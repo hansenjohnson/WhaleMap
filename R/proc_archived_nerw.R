@@ -1,14 +1,14 @@
-## proc_nerw ##
-# Process gps and sightings data from NOAA Twin Otter survey plane
+## proc_archived_nerw ##
+# Process archived gps and sightings data from NOAA Twin Otter survey plane
 
 # user input --------------------------------------------------------------
 
 # data directory
-data_dir = 'data/raw/nerw/'
+data_dir = 'data/raw/nerw/archived/'
 
 # output file names
-track_file = 'data/interim/nerw_eff.rds'
-sighting_file = 'data/interim/nerw_obs.rds'
+track_file = 'data/interim/nerw_archived_eff.rds'
+sighting_file = 'data/interim/nerw_archived_obs.rds'
 
 # setup -------------------------------------------------------------------
 
