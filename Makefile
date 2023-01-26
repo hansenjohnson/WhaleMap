@@ -87,7 +87,7 @@ data/interim/nefsc_vessel_*.rds : R/proc_nefsc_vessel.R data/raw/nefsc_vessel/*
 	$(remove_error)
 
 # NERW (live)
-data/interim/nerw_live_*.rds : R/proc_live_nerw.R data/raw/nerw/live/*
+data/interim/nerw_live_*.rds : R/proc_live_nerw.R data/raw/nerw/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
