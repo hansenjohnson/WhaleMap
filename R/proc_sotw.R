@@ -99,5 +99,8 @@ for(ii in seq_along(EFF)){
 # flatten list and format
 effort = bind_rows(EFF) %>% config_tracks()
 
+# sort by time
+effort = effort %>% arrange(time)
+
 # save
 saveRDS(effort, eff_ofile)
