@@ -23,11 +23,6 @@ rw_calves = 'Number of calves: '
 rw_date = 'Date: '
 rw_position = 'Position: '
 
-# basemap labels
-basemap_grp = 'OpenStreetMap'
-blank_grp = 'Basemap'
-oceanmap_grp = 'Ocean basemap'
-
 # define layer labels
 survey_grp = 'Survey tracks'
 robot_grp = 'Latest robot positions'
@@ -145,9 +140,9 @@ sym = makeSymbolIcons(shape = 'circle',
 
 # add basemap tiles
 map <- leaflet() %>%
-  addProviderTiles(providers$OpenStreetMap, group=basemap_grp) %>%
-  addProviderTiles(providers$CartoDB.PositronNoLabels, group=blank_grp) %>%
-  addProviderTiles(providers$Esri.OceanBasemap, group=oceanmap_grp)
+  addWMSTiles(baseUrl = "https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}", layers = "Ocean_World_Ocean_Base") %>%
+  addWMSTiles(baseUrl = "https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Reference/MapServer/tile/{z}/{y}/{x}", 
+              layers = "Ocean_World_Ocean_Reference", attribution = 'Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, CHS, OSU, UNH, CSUMB, National Geographic, DeLorme, NAVTEQ, and Esri')
 
 # title and last updated message
 map <- map %>% 
@@ -162,11 +157,6 @@ map <- map %>%
 
 # layer control
 map <- map %>% addLayersControl(
-  baseGroups = c(
-    oceanmap_grp,
-    basemap_grp,
-    blank_grp
-  ),
   overlayGroups = c(survey_grp,
                     robot_grp,
                     rw_grp,

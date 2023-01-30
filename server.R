@@ -440,10 +440,19 @@ function(input, output, session){
   # tile observer ------------------------------------------------------  
   
   observeEvent(input$basemap, {
-    # add tile
-    leafletProxy("map") %>%
-      clearTiles() %>%
-      addProviderTiles(providers[[input$basemap]], layerId = 'basemap')
+    # add tiles
+    
+    if(input$basemap == 'Esri.OceanBasemap'){
+      leafletProxy("map") %>%
+        clearTiles() %>%
+        addWMSTiles(baseUrl = "https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}", layers = "Ocean_World_Ocean_Base") %>%
+        addWMSTiles(baseUrl = "https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Reference/MapServer/tile/{z}/{y}/{x}", 
+                    layers = "Ocean_World_Ocean_Reference", attribution = 'Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, CHS, OSU, UNH, CSUMB, National Geographic, DeLorme, NAVTEQ, and Esri')
+    } else {
+      leafletProxy("map") %>%
+        clearTiles() %>%
+        addProviderTiles(providers[[input$basemap]], layerId = 'basemap')
+    }
   })
   
   # graticules ------------------------------------------------------
