@@ -59,6 +59,10 @@ rclone sync drive:"WhaleMap-2022 NEAq SNE Surveys" "neaq/sne/" --drive-shared-wi
 printf "\n*** Checking Azura Google Drive ***\n\n"
 rclone sync wm_drive:"NOAA Aerial Surveys - VA, DE, NJ (2022-008-1A)/Data" "azura/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
+# Sync SOTW vessel data
+printf "\n*** Checking SOTW dropbox ***\n\n"
+rclone sync wm_dropbox:"2023 SOTW GpsData and sightings" "sotw/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
+
 # move to project directory
 cd ${DESTDIR}
 
