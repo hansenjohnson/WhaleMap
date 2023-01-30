@@ -106,7 +106,7 @@ data/interim/serw_*.rds : R/proc_serw.R data/raw/serw/*/*.csv
 	$(remove_error)
 
 # Azura
-data/interim/azura_*.rds : R/proc_azura.R data/raw/azura/*
+data/interim/azura_*.rds : R/proc_azura.R data/raw/azura
 	$(report_error)
 	Rscript $<
 	$(remove_error)
