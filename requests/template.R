@@ -210,8 +210,8 @@ if(INCLUDE_EFFORT){
 # plot --------------------------------------------------------------------
 
 # plot setup
-spp_shapes = c(21,22,23,24,25)
-spp_shapes = spp_shapes[1:length(SPECIES)]
+# spp_shapes = c(21,22,23,24,25)
+# spp_shapes = spp_shapes[1:length(SPECIES)]
 xlims = range(c(obs$lon,eff$lon), na.rm = TRUE)
 ylims = range(c(obs$lat,eff$lat), na.rm = TRUE)
 bg = ne_countries(scale = "large", continent = 'North America', returnclass = "sf")
@@ -220,13 +220,12 @@ bg = ne_countries(scale = "large", continent = 'North America', returnclass = "s
 p = ggplot()+
   geom_sf(data = bg, fill = "cornsilk", color = "cornsilk4", size = 0.2)+
   geom_path(data = eff, aes(x = lon, y = lat, color = platform, group = id), alpha = 0.7)+
-  geom_point(data = obs, aes(x = lon, y = lat, fill = score, shape = species), alpha = 0.7)+
+  geom_point(data = obs, aes(x = lon, y = lat, fill = score), shape = 21, alpha = 0.7)+
   scale_color_manual(values = platform_cols) +
   scale_fill_manual(values = score_cols) +
-  scale_shape_manual(values = spp_shapes) +
   coord_sf(xlim = xlims, ylim = ylims)+
   facet_wrap(as.formula(paste(".~", PLOTVAR)))+
-  labs(x = NULL, y = NULL, fill = 'Score', shape = "Species", color = "Platform",
+  labs(x = NULL, y = NULL, fill = 'Score', color = "Platform",
        title = 'WhaleMap data', subtitle = paste0('Extracted on ', Sys.Date())) +
   theme_bw()+
   theme(panel.grid = element_blank())
