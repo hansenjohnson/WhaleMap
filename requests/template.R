@@ -29,9 +29,10 @@ MAX_LAT = NA
 MIN_LON = NA
 MAX_LON = NA
 
-## restrict to US waters 
+## restrict to US/CAN waters 
 
 US_only = TRUE # enter TRUE or FALSE
+CAN_only = FALSE # enter TRUE or FALSE
 
 # time limits
 
@@ -62,6 +63,10 @@ DATASOURCES = c("WhaleMap", "RWSAS") # choose from: c("WhaleMap", "WhaleInsight"
 # data provider
 
 DATAPROVIDERS = NA # choose from many, including c("noaa_twin_otter", "ccs", "neaq")
+
+# facet variable (for summary plot)
+
+PLOTVAR = 'source'
 
 # setup -------------------------------------------------------------------
 
@@ -130,8 +135,13 @@ if(US_only){
   obs = obs %>% subset_canadian(inside = FALSE)
 }
 
+# space: can only
+if(CAN_only){
+  obs = obs %>% subset_canadian(inside = TRUE)
+}
+
 # restrict to necessary columns
-obs = obs %>% select("time", "date", "lat", "lon", "species", "score", "number", "calves", "platform", "name", "id", "source")
+obs = obs %>% select("time", "year", "date", "lat", "lon", "species", "score", "number", "calves", "platform", "name", "id", "source")
 
 # save
 write.csv(obs, file = paste0(request_dir,'WhaleMap_observations.csv'), row.names = FALSE)
@@ -180,8 +190,13 @@ if(INCLUDE_EFFORT){
     eff = eff %>% subset_canadian(inside = FALSE)
   }
   
+  # space: can only
+  if(CAN_only){
+    eff = eff %>% subset_canadian(inside = TRUE)
+  }
+  
   # restrict to necessary columns
-  eff = eff %>% select("time", "date", "lat", "lon", "platform", "name", "id", "source")
+  eff = eff %>% select("time", "year","date", "lat", "lon", "platform", "name", "id", "source")
   
   # save
   write.csv(eff, file = paste0(request_dir,'WhaleMap_effort.csv'), row.names = FALSE)
@@ -210,7 +225,7 @@ p = ggplot()+
   scale_fill_manual(values = score_cols) +
   scale_shape_manual(values = spp_shapes) +
   coord_sf(xlim = xlims, ylim = ylims)+
-  facet_wrap(.~source)+
+  facet_wrap(as.formula(paste(".~", PLOTVAR)))+
   labs(x = NULL, y = NULL, fill = 'Score', shape = "Species", color = "Platform",
        title = 'WhaleMap data', subtitle = paste0('Extracted on ', Sys.Date())) +
   theme_bw()+
