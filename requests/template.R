@@ -234,7 +234,7 @@ p = ggplot()+
 ggsave(
   filename = paste0(request_dir, 'WhaleMap_summary.jpg'),
   plot = p,
-  width = 12,
+  width = 10,
   height = 6,
   units = 'in',
   dpi = 300
