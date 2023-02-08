@@ -32,7 +32,7 @@ read_MDB = function(ifile, table_name){
   system(paste('mdb-export', shQuote(ifile), shQuote(table_name), ">", f))
   
   # read in data
-  read_csv(f, show_col_types = F)
+  read_csv(f, show_col_types = F) %>% as.data.frame()
 }
 
 clean_latlon = function(d){
@@ -152,6 +152,9 @@ config_tracks = function(tracks){
   # re-order
   tracks = tracks[c(columns)]
   
+  # convert to data frame
+  tracks = as.data.frame(tracks)
+  
   return(tracks)
 }
 
@@ -247,6 +250,9 @@ config_observations = function(obs){
   
   # re-order
   obs = obs[c(columns)]
+  
+  # convert to data frame
+  obs = as.data.frame(obs)
   
   return(obs)
 }
