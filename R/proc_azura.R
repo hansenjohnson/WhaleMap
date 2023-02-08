@@ -13,7 +13,6 @@ eff_file = 'data/interim/azura_eff.rds'
 # setup -------------------------------------------------------------------
 
 source('R/functions.R')
-suppressPackageStartupMessages(library(Hmisc))
 
 # process -----------------------------------------------------------------
 
@@ -23,11 +22,11 @@ flist = list.files(path = ddir, pattern = '*.mdb', full.names = T, recursive = T
 OBS = EFF = vector('list', length(flist))
 for(ii in seq_along(OBS)){
   
-  # read in database file (use quotes to avoid error caused by spaces in file name)
-  tmp = mdb.get(paste0('"',flist[[ii]],'"'), dateformat='%m/%d/%y')
+  # define ifile
+  ifile = flist[[ii]]
   
   # extract sightings and species codes
-  obs = as_tibble(tmp$Sightings)
+  obs = read_MDB(ifile, table_name = "Sightings")
   
   # check species codes
   # codes = as_tibble(tmp$MammalCodes)
@@ -64,7 +63,7 @@ for(ii in seq_along(OBS)){
   obs$species[obs$species == '9'] = 'humpback'
   
   # extract tracks
-  eff = as_tibble(tmp$SurveyTrack)
+  eff = read_MDB(ifile, table_name = "SurveyTrack")
   
   # isolate time strings
   tmp_time = substr(as.character(eff$Time), 10, 18)

@@ -22,6 +22,19 @@ read_KML = function(ifile){
   return(out)
 }
 
+read_MDB = function(ifile, table_name){
+  # read a single table from an mdb (access) database into csv
+  
+  # make temporary file
+  f <- tempfile()
+  
+  # assemble system call to mdb-export
+  system(paste('mdb-export', shQuote(ifile), shQuote(table_name), ">", f))
+  
+  # read in data
+  read_csv(f, show_col_types = F)
+}
+
 clean_latlon = function(d){
   d$lat = as.character(d$lat)
   d$lat = gsub(",","",d$lat)
