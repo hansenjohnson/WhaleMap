@@ -23,8 +23,8 @@ flist = list.files(path = ddir, pattern = '*.mdb', full.names = T, recursive = T
 OBS = EFF = vector('list', length(flist))
 for(ii in seq_along(OBS)){
   
-  # read in database file
-  tmp = mdb.get(flist[[ii]])
+  # read in database file (use quotes to avoid error caused by spaces in file name)
+  tmp = mdb.get(paste0('"',flist[[ii]],'"'))
   
   # extract sightings and species codes
   obs = as_tibble(tmp$Sightings)
@@ -38,7 +38,7 @@ for(ii in seq_along(OBS)){
   tmp_date = substr(as.character(obs$Date), 0, 8)
   
   # format
-  obs %>%
+  obs = obs %>%
     transmute(
       time = as.POSIXct(paste0(tmp_date, ' ', tmp_time), format = '%m/%d/%y %H:%M:%S', tz = 'UTC'),
       date = as.Date(time),
