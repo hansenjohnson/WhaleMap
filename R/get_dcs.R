@@ -92,7 +92,7 @@ if(length(new_deps) > 0){
     dl = rbind(dl,nl)
     
     # store detection data
-    ddir = paste0(dcs_data_dir,'live',id)
+    ddir = paste0(dcs_data_dir,'live/',id)
     if(!dir.exists(ddir)){dir.create(path = ddir, recursive = T)}
     write.csv(x = d, file = paste0(ddir, '/manual_analysis.csv'), row.names = F)
     
