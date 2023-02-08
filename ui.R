@@ -200,7 +200,7 @@ body <- dashboardBody(
                            
                            checkboxInput("tss", label = 'Shipping lanes', value = T),
                            
-                           checkboxInput("legend", label = 'Legends', value = T),
+                           checkboxInput("legend", label = 'Legends', value = F),
                            
                            # Canadian management layers
                            helpText(tags$em('Canadian management areas (2021)')),
