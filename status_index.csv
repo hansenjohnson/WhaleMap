@@ -7,3 +7,4 @@ proc_ccs.R,Center for Coastal Studies aerial survey sightings/effort,https://coa
 proc_serw.R,Southeast US aerial survey sightings/effort,https://mission.cmaquarium.org/research-institute/right-whale-research/,data/raw/serw/email_list.csv
 proc_sotw.R,R/V Song of the Whale vessel sightings/effort,http://www.marineconservationresearch.co.uk/,data/email/default.csv
 proc_live_nerw.R,NOAA NEFSC aerial survey sightings/effort,https://www.nefsc.noaa.gov/psb/surveys/NARWSS.html,data/email/default.csv
+proc_azura.R,Azura Consulting aerial survey sightings/effort,https://azuraco.com/large-whale-aerial-surveys-va-de-nj/,data/email/default.csv
