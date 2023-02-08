@@ -24,7 +24,7 @@ OBS = EFF = vector('list', length(flist))
 for(ii in seq_along(OBS)){
   
   # read in database file (use quotes to avoid error caused by spaces in file name)
-  tmp = mdb.get(paste0('"',flist[[ii]],'"'))
+  tmp = mdb.get(paste0('"',flist[[ii]],'"'), dateformat='%m/%d/%y')
   
   # extract sightings and species codes
   obs = as_tibble(tmp$Sightings)
