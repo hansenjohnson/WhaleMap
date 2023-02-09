@@ -47,20 +47,21 @@ for(ii in seq_along(OBS)){
       lon = EntryLongitude,
       species = SpeciesCode,
       score = 'definite visual',
-      number = SpeCount,
+      number = GroupSize,
       calves = Calves,
       platform = 'plane',
       name = 'azura',
       id = paste0(date, '_', platform, '_', name),
       source = 'WhaleMap'
-    )
+    ) %>%
+    config_observations()
   
   # convert species codes
-  obs$species[obs$species == '2'] = 'right'
-  obs$species[obs$species == '4'] = 'blue'
-  obs$species[obs$species == '5'] = 'fin'
-  obs$species[obs$species == '6'] = 'sei'
-  obs$species[obs$species == '9'] = 'humpback'
+  obs$species = factor(obs$species, levels = c('2','4','5','6','9'), 
+         labels = c('right','blue','fin','sei','humpback'))
+  
+  # fix calves number
+  obs$calves[obs$calves == -9] = NA
   
   # extract tracks
   eff = read_MDB(ifile, table_name = "SurveyTrack")
@@ -84,7 +85,8 @@ for(ii in seq_along(OBS)){
       name = 'azura',
       id = paste0(date, '_', platform, '_', name),
       source = 'WhaleMap'
-    )
+    ) %>%
+    config_tracks()
   
   # store
   OBS[[ii]] = obs
@@ -92,8 +94,8 @@ for(ii in seq_along(OBS)){
 }
 
 # collapse data
-observations = bind_rows(OBS) %>% config_observations()
-effort = bind_rows(EFF) %>% config_tracks()
+observations = bind_rows(OBS)
+effort = bind_rows(EFF)
 
 # save
 saveRDS(observations, file = obs_file)
