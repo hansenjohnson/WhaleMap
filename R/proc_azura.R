@@ -86,6 +86,7 @@ for(ii in seq_along(OBS)){
       id = paste0(date, '_', platform, '_', name),
       source = 'WhaleMap'
     ) %>%
+    arrange(time) %>%
     config_tracks()
   
   # store
