@@ -41,7 +41,7 @@ rclone sync wm_drive:"2023/2023 NEFSC Survey Data/Flights/WhaleMap NEFSC 2023" "
 
 # Sync SERW aerial data Google drive
 printf "\n*** Checking SERW Google Drive ***\n\n"
-rclone sync drive:"4_Data for SEUS Whale Map" "serw/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
+rclone sync wm_drive:"4_Data for SEUS Whale Map" "serw/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
 # Sync Azura flight data
 printf "\n*** Checking Azura Google Drive ***\n\n"
