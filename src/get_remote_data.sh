@@ -35,25 +35,13 @@ rclone sync drive:"WhaleMap_CCS" "ccs/" --drive-formats csv --backup-dir backups
 printf "\n*** Checking NEAq Aerial Google Drive ***\n\n"
 rclone sync drive:"WhaleMap_NEAq_aerial" "neaq/aerial/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
 
-# Sync NEAq vessel data Google drive
-printf "\n*** Checking NEAq Vessel Google Drive ***\n\n"
-rclone sync drive:"2022 GSL  (NEAq) Data for WhaleMap" "neaq/vessel/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
-
 # Sync NERW aerial data Google drive
 printf "\n*** Checking NERW Google Drive ***\n\n"
 rclone sync wm_drive:"2023/2023 NEFSC Survey Data/Flights/WhaleMap NEFSC 2023" "nerw/live" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
-# Sync NERW aerial data Google drive
-printf "\n*** Checking NEFSC vessel Google Drive ***\n\n"
-rclone sync drive:"Whalemap_NEFSC_vessel" "nefsc_vessel/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
-
 # Sync SERW aerial data Google drive
 printf "\n*** Checking SERW Google Drive ***\n\n"
 rclone sync drive:"4_Data for SEUS Whale Map" "serw/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
-
-# Sync NEAq vessel data
-printf "\n*** Checking NEAq SNE Google Drive ***\n\n"
-rclone sync drive:"WhaleMap-2022 NEAq SNE Surveys" "neaq/sne/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
 # Sync Azura flight data
 printf "\n*** Checking Azura Google Drive ***\n\n"
