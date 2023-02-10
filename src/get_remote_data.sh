@@ -29,7 +29,7 @@ rclone sync whalemapdata:"WhaleMapData_Exchange/obs_from_dfo.csv" "wi/live/" --d
 
 # Sync CCS aerial data Google drive
 printf "\n*** Checking CCS Google Drive ***\n\n"
-rclone sync drive:"WhaleMap_CCS" "ccs/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
+rclone sync wm_drive:"WhaleMap_CCS" "ccs/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
 
 # Sync NEAq aerial data Google drive
 printf "\n*** Checking NEAq Aerial Google Drive ***\n\n"
