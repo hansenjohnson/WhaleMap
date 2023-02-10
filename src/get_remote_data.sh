@@ -33,7 +33,7 @@ rclone sync wm_drive:"WhaleMap_CCS" "ccs/" --drive-shared-with-me --drive-format
 
 # Sync NEAq aerial data Google drive
 printf "\n*** Checking NEAq Aerial Google Drive ***\n\n"
-rclone sync drive:"WhaleMap_NEAq_aerial" "neaq/aerial/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
+rclone sync wm_drive:"WhaleMap_NEAq_aerial" "neaq/aerial/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
 
 # Sync NERW aerial data Google drive
 printf "\n*** Checking NERW Google Drive ***\n\n"
