@@ -47,7 +47,10 @@ if(!dir.exists(to_sas_dir)){dir.create(to_sas_dir, recursive = TRUE)}
 
 # process raw sas ---------------------------------------------------------
 
-if(file.exists(from_sas_file)){
+# test for viable xml file
+result <- try(read_xml(from_sas_file), silent = TRUE)
+
+if(class(result) != 'try-error'){
   
   # find all sightings nodes
   tmp = xml_find_all(read_xml(from_sas_file), ".//sight")
