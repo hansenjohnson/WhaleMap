@@ -107,7 +107,27 @@ if(length(new_deps) > 0){
   write.csv(dl, file = dl_file, row.names = F)
 }
 
-# check deployment status -------------------------------------------------
+# resurrect deployments ---------------------------------------------------
+
+# check to see if any archived deployments are now live
+to_resurrect = which(dl$url %in% lv$url & dl$status == 'archived' & dl$display == T)
+
+if(length(to_resurrect) > 0){
+  message('Resurrecting deployments:\n', paste(dl$id[to_resurrect], collapse = '\n'))
+  
+  # move data directories
+  for(ii in seq_along(to_resurrect)){
+    ia = to_resurrect[ii]
+    old_dir = paste0(pdir, '/',dcs_data_dir,'archived/',dl$id[ia])
+    new_dir = gsub('archived','live',old_dir)
+    system(paste0('mv ', old_dir, ' ', new_dir))
+  }
+  
+  dl$status[to_resurrect] = 'live'
+  write.csv(dl, file = dl_file, row.names = F)
+}
+
+# archive deployments -----------------------------------------------------
 
 # deployments to archive based on removal from live list
 la1 = which(!(dl$url %in% lv$url) & dl$status == 'live')
