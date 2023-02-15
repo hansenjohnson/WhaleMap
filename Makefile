@@ -25,6 +25,7 @@ data/processed/observations.rds : R/combine.R \
 									data/interim/nerw_archived_*.rds \
 									data/interim/serw_*.rds \
 									data/interim/azura_*.rds \
+									data/interim/hdr_*.rds \
 									data/interim/sotw_*.rds \
 									data/interim/sas_obs.rds \
 									data/interim/wi_live_*.rds \
@@ -111,6 +112,12 @@ data/interim/azura_*.rds : R/proc_azura.R data/raw/azura/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
+
+# HDR
+data/interim/hdr_*.rds : R/proc_hdr.R data/raw/hdr/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)	
 
 # SOTW
 data/interim/sotw_*.rds : R/proc_sotw.R data/raw/sotw/*
