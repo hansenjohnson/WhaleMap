@@ -29,7 +29,7 @@ for(ii in seq_along(OBS)){
   tmpdir = tempdir()
   
   # extract file in temporary directory
-  system(paste0('7z x ', ifile, ' -o', tmpdir, ' -aoa'))
+  system(paste0('7z x ', ifile, ' -o', tmpdir, ' -aoa'), ignore.stdout = TRUE)
   
   # path to extracted file
   zfile = paste0(tmpdir, '/v108/compass_ocsaerial.gdb/')
