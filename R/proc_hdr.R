@@ -48,7 +48,7 @@ for(ii in seq_along(OBS)){
       lat = LatAnimal,
       lon = LongAnimal,
       species = SpcsNmSci,
-      score = SpcsConfidence,
+      score = "definite visual",
       number = CountTotBest,
       calves = CountCalves,
       platform = 'plane',
@@ -62,11 +62,6 @@ for(ii in seq_along(OBS)){
   obs$species = factor(obs$species, 
                        levels = c('Eubalaena glacialis','Balaenoptera musculus','Balaenoptera physalus','Balaenoptera borealis','Megaptera novaeangliae'), 
                        labels = c('right','blue','fin','sei','humpback'))
-  
-  # fix scores
-  obs$score = as.character(obs$score)
-  obs$score[which(obs$score == "High")] = "definite visual"
-  obs$score[which(is.na(obs$score))] = "possible visual"
   
   # drop bad data
   obs = obs %>%
