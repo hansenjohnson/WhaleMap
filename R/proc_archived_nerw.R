@@ -18,7 +18,7 @@ source('R/functions.R')
 # process -----------------------------------------------------------------
 
 # list all flight directories
-flist = list.files(data_dir,pattern = '^f_', full.names = TRUE, recursive = FALSE)
+flist = list.files(data_dir,pattern = '^f_', full.names = TRUE, recursive = TRUE)
 
 # list output column names for sightings
 cnames = c('time','lat','lon','date','yday','species','score','number','calves','year','platform','name','id')
