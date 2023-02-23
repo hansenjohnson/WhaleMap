@@ -98,10 +98,7 @@ body <- dashboardBody(
                            
                            hr(),
                            
-                           # # add platform name choice
-                           # uiOutput("nameChoice"),
-                           # 
-                           # hr(),
+
                            
                            # add species choice
                            selectInput("species", "Choose species:", 
