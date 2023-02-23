@@ -3,6 +3,7 @@
 
 # input -------------------------------------------------------------------
 
+# these are the output files generated
 trk_file = 'shared/dfo-whalemap/trk_for_dfo.csv'
 obs_file = 'shared/dfo-whalemap/obs_for_dfo.csv'
 
@@ -31,6 +32,13 @@ trk = readRDS('data/processed/effort.rds') %>%
 obs = readRDS('data/processed/observations.rds') %>%
   dplyr::filter(date >= t0 & !is.na(lat) & !is.na(lon) & !(source %in% c('WhaleInsight', 'NARWC'))) %>%
   remove_dfo_ids()
+
+# create a folder to write the files to
+d_name <- dirname(trk_file)
+
+if (!dir.exists(d_name)) {
+  dir.create(d_name, recursive = T)
+}
 
 # save
 write.csv(x = trk, file = trk_file, row.names = FALSE)
