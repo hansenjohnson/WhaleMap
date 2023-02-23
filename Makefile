@@ -165,8 +165,10 @@ data/processed/dcs_live_latest_position.rds : R/proc_dcs_latest_position.R \
 wi : shared/dfo-whalemap/*.csv
 
 # Share data with DFO
-shared/dfo-whalemap/*.csv : src/share_wi.sh R/proc_live_wi.R data/processed/effort.rds data/processed/observations.rds
+shared/dfo-whalemap/*.csv : src/share_wi.sh R/share_wi.R data/processed/effort.rds data/processed/observations.rds
+	$(report_error)
 	src/share_wi.sh
+	$(remove_error)
 
 ## DMA ##
 .PHONY : dma
