@@ -11,7 +11,7 @@ if [[ "$HOSTNAME" == 'AZE-WHALEMAP1' ]]; then
 	cd /srv/shiny-server/WhaleMap
 
 	# Write dfo data
-	Rscript R/share_wi.R
+	Rscript R/proc_live_wi.R
 
 	# copy output data back to Google Drive
 	rclone copy "shared/dfo-whalemap/" whalemapdata:"WhaleMapData_Exchange/"
