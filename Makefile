@@ -185,7 +185,7 @@ data/processed/dma.rda : R/map_dma.R
 map : ./static_map/whalemap.html
 
 # Build map
-./static_map/whalemap.html : R/build_static_map.R data/processed/*
+./static_map/whalemap.html : R/build_static_map.R data/processed/*.rds
 	$(report_error)
 	Rscript $<
 	cp -r static_map/* ../server_index/
