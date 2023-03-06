@@ -71,44 +71,35 @@ for(ii in seq_along(OBS)){
   OBS[[ii]] = obs
   
   # read in effort
-  eff = st_read(zfile, layer = "PlatformTrack", quiet = TRUE)
+  eff = st_read(zfile, layer = "PlatformTrackPoint", quiet = TRUE) %>%
+    as.data.frame()
   
-  SEG = vector('list', nrow(eff))
-  for(jj in seq_along(SEG)){
+  # unique dates
+  eff$date = as.Date(eff$DateTime)
+  dts = unique(eff$date)
+  
+  SEG = vector('list', length(dts))
+  for(jj in seq_along(dts)){
     
-    # select segment
-    tmp = eff[jj,]
-    
-    # extract coordinates
-    crd = as.data.frame(st_coordinates(tmp))
-    
-    # build time sequence
-    tseq = seq(from = tmp$StartDateTime, to = tmp$EndDateTime, length.out = nrow(crd))
-    
-    # formate data
-    seg = crd %>% 
+    SEG[[jj]] = eff %>% 
+      filter(date == dts[jj]) %>%
       transmute(
-      time = tseq,
-      date = as.Date(time),
-      year = year(date),
-      yday = yday(date),
-      lat = Y,
-      lon = X,
-      speed = NA,
-      altitude = NA,
-      platform = 'plane',
-      name = 'hdr',
-      id = paste0(date, '_', platform, '_', name),
-      source = 'WhaleMap'
-    ) %>%
+        time = DateTime,
+        date = as.Date(time),
+        year = year(date),
+        yday = yday(date),
+        lat = LatPlatform,
+        lon = LongPlatform,
+        speed = NA,
+        altitude = NA,
+        platform = 'plane',
+        name = 'hdr',
+        id = paste0(date, '_', platform, '_', name),
+        source = 'WhaleMap'
+      ) %>%
+      arrange(time) %>%
       config_tracks() %>%
       subsample_gps()
-    
-    # remove row names
-    rownames(seg) = NULL
-    
-    # store 
-    SEG[[jj]] = seg
     
   }
   
@@ -116,7 +107,7 @@ for(ii in seq_along(OBS)){
   eff = bind_rows(SEG)
   
   # drop NA
-  eff = eff %>% filter(!is.na(source) & !is.na(time) & !is.na(lat) & !is.na(lon))
+  eff = eff %>% filter(!is.na(time) & !is.na(lat) & !is.na(lon))
   
   # store eff
   EFF[[ii]] = eff
