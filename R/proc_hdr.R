@@ -35,13 +35,13 @@ for(ii in seq_along(OBS)){
   zfile = paste0(tmpdir, '/v108/compass_ocsaerial.gdb/')
   
   # read in observations
-  obs = st_read(zfile, layer = "Observation", quiet = TRUE)
+  obs = st_read(zfile, layer = "Observation", quiet = TRUE) %>%
+    as.data.frame()
   
   # format observations
   obs = obs %>%
-    as.data.frame() %>%
     transmute(
-      time = DateTime,
+      time = as.POSIXct(as.character(DateTime), tz = 'UTC'),
       date = as.Date(time),
       year = year(date),
       yday = yday(date),
@@ -84,7 +84,7 @@ for(ii in seq_along(OBS)){
     SEG[[jj]] = eff %>% 
       filter(date == dts[jj]) %>%
       transmute(
-        time = DateTime,
+        time = as.POSIXct(as.character(DateTime), tz = 'UTC'),
         date = as.Date(time),
         year = year(date),
         yday = yday(date),
