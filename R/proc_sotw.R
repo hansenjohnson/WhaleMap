@@ -34,7 +34,7 @@ for(ii in seq_along(OBS)){
       yday = yday(date),
       lat = Latitude,
       lon = Longitude,
-      species = SpeciesCode,
+      spcode = SpeciesCode,
       score = Conf_ID,
       number = MinNo,
       calves = NA,
@@ -45,11 +45,14 @@ for(ii in seq_along(OBS)){
     )
  
   # fix species codes
-  obs$species[obs$species == 'NRW'] = 'right'
-  obs$species[obs$species == 'HUW'] = 'humpback'
-  obs$species[obs$species == 'BLW'] = 'blue'
-  obs$species[obs$species == 'FIW'] = 'fin'
-  obs$species[obs$species == 'SEW'] = 'sei'
+  obs$species = NA
+  obs$species[obs$spcode == 'NRW'] = 'right'
+  obs$species[obs$spcode == 'HUW'] = 'humpback'
+  obs$species[obs$spcode == 'BLW'] = 'blue'
+  obs$species[obs$spcode == 'FIW'] = 'fin'
+  obs$species[obs$spcode == 'SEW'] = 'sei'
+  obs$spcode = NULL
+  obs = obs %>% filter(!is.na(species))
   
   # fix scores
   obs$score[obs$score == 'Def'] = 'definite visual'
