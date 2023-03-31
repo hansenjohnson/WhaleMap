@@ -787,7 +787,7 @@ function(input, output, session){
                   popup = ~paste(sep = "<br/>" ,
                                  "US Slow Zone",
                                  paste0(NAME),
-                                 # paste0("Type: ", triggertype),
+                                 paste0("Type: ", TRIGGERTYPE),
                                  paste0("Expires: ", EXPDATE)),
                   weight = 1, 
                   color = '#ff9900', 

@@ -48,6 +48,11 @@ if(length(dma)>0){
     
   }
   
+  # fix triggertype
+  dma$TRIGGERTYPE = as.character(dma$TRIGGERTYPE)
+  dma$TRIGGERTYPE[dma$TRIGGERTYPE == 'a'] = 'Acoustic'
+  dma$TRIGGERTYPE[dma$TRIGGERTYPE == 'v'] = 'Visual'
+  
 } else {
   
   # blank DMA file
