@@ -28,25 +28,33 @@ if(nrow(tracks)>0){
 
 # fix glider/buoy IDs
 if(nrow(tracks)>0){
+  if (("buoy" %in% levels(tracks$platform)) | ("slocum" %in% levels(tracks$platform))) {
+
+    # filter tracks and arrange
+    itrk = tracks %>% filter(platform %in% c('buoy', 'slocum')) %>%
+      arrange(platform, name, time)
+    
+    # define unique index
+    itrk$ind = cumsum(c(0,diff(as.numeric(as.factor(paste0(itrk$platform, itrk$name))))))
+    
+    # redefine ID
+    itrk = itrk %>% group_by(platform, name, ind) %>%
+      mutate(id = paste0(min(date), '-', unique(platform), '-', unique(name))) %>%
+      ungroup() %>%
+      select(-ind)
+    
+    # extract other tracks
+    otrk = tracks %>% filter(!platform %in% c('buoy', 'slocum'))
+    
+    # combine
+    tracks = bind_rows(itrk,otrk)
   
-  # filter tracks and arrange
-  itrk = tracks %>% filter(platform %in% c('buoy', 'slocum')) %>%
-    arrange(platform, name, time)
-  
-  # define unique index
-  itrk$ind = cumsum(c(0,diff(as.numeric(as.factor(paste0(itrk$platform, itrk$name))))))
-  
-  # redefine ID
-  itrk = itrk %>% group_by(platform, name, ind) %>%
-    mutate(id = paste0(min(date), '-', unique(platform), '-', unique(name))) %>%
-    ungroup() %>%
-    select(-ind)
-  
-  # extract other tracks
-  otrk = tracks %>% filter(!platform %in% c('buoy', 'slocum'))
-  
-  # combine
-  tracks = bind_rows(itrk,otrk)
+  } else {
+    # extract other tracks
+    otrk = tracks %>% filter(!platform %in% c('buoy', 'slocum'))
+
+    tracks = otrk
+  }
 }
 
 # save
