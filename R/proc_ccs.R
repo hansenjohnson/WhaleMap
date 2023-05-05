@@ -174,7 +174,7 @@ if(length(v_flist)>0){
     # take only sightings
     sig = droplevels(tmp[which(as.character(tmp$Species)!=""),])
     
-    if(nrow(sig)>0){
+    if(nrow(sig)>0 & v_spp_key$code %in% sig$Species){
       
       # extract data
       sig$lat = sig$Latitude
