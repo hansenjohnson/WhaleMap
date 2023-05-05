@@ -63,7 +63,8 @@ if(length(new_deps) > 0){
     # }
     
     # read in data
-    d = read.csv(ptfile, stringsAsFactors = F)  
+    d = read.csv(ptfile, stringsAsFactors = F)
+    d = na.omit(d)
     
     # extract start date
     s = as.Date(substr(as.character(d$datetime_utc[1]), 0, 8), '%Y%m%d')
