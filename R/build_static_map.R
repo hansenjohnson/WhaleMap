@@ -257,7 +257,7 @@ map <- map %>%
               weight = 1, color = 'brown2', fillColor = 'brown2') 
 
 # plot US DMAs (if there are any active ones)
-if (nrow(dma > 0)) {
+if (nrow(dma > 0)) { 
   map <- map %>% 
     addPolygons(data=dma, group = dma_grp,
               fill = T, fillOpacity = 0.3, stroke = T, smoothFactor = 0,
