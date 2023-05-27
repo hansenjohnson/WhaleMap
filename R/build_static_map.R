@@ -256,9 +256,10 @@ map <- map %>%
                              paste0("Active: ", ACTIVE)),
               weight = 1, color = 'brown2', fillColor = 'brown2') 
 
-# plot US DMAs
-map <- map %>%
-  addPolygons(data=dma, group = dma_grp,
+# plot US DMAs (if there are any active ones)
+if (nrow(dma > 0)) {
+  map <- map %>% 
+    addPolygons(data=dma, group = dma_grp,
               fill = T, fillOpacity = 0.3, stroke = T, smoothFactor = 0,
               dashArray = c(2,2), 
               popup = ~paste(sep = "<br/>" ,
@@ -267,7 +268,7 @@ map <- map %>%
                              # paste0("Type: ", triggertype),
                              paste0("Expires: ", EXPDATE)),
               weight = 1, color = 'yellow', fillColor = 'yellow') 
-
+}
 # add tracks --------------------------------------------------------------
 
 # set up track plotting
