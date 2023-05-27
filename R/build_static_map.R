@@ -119,6 +119,9 @@ spp = Obs[Obs$species == 'right',]
 # only definite
 det = droplevels(spp[!spp$score %in% c('possible acoustic', 'possible visual'),])
 
+# remove completely empty rows
+det = det[rowSums(is.na(det)) != ncol(det), ]
+
 # rename factor levels
 det$score = gsub(pattern = 'definite visual', replacement = visual_lab, x = det$score)
 det$score = gsub(pattern = 'definite acoustic', replacement = acoustic_lab, x = det$score)
