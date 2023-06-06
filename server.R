@@ -779,7 +779,7 @@ function(input, output, session){
     # add polygons
     proxy %>%
       #  if there are active DMAs (no active DMAs causes error here)
-      {if(nrow(dma) > 0)    
+      #{if(nrow(dma) > 0)    
       addPolygons(data=dma, group = 'dma',
                   fill = T, 
                   fillOpacity = 0.3, 
@@ -794,7 +794,7 @@ function(input, output, session){
                   weight = 1, 
                   color = '#ff9900', 
                   fillColor = '#ff9900')
-        else .}  
+      #  else .}  
     
     # switch to show/hide
     ifelse(input$dma, showGroup(proxy, 'dma'),
