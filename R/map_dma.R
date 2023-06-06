@@ -22,7 +22,8 @@ url_dma <- 'https://services2.arcgis.com/C8EMgrsFcRFL6LrL/arcgis/rest/services/N
 # read in dma data
 dma <- st_read(url_dma, quiet = TRUE)
 
-if(nrow(dma)>0){
+if(length(dma)>0){
+#if(nrow(dma)>0){
   
   # check expiration times
   e_dates <- as.Date(as.POSIXct(as.character(dma$EXPDATE), format = "%d-%b-%Y %H:%M:%S", tz = 'UTC'))
@@ -56,12 +57,12 @@ if(nrow(dma)>0){
   # remove any rows with values in 'CANCELLED' field (DMAs or ASZs that were extended by duplicate zone or canceled outright)
   dma = dma[is.na(dma$CANCELLED),]
   
-} # else {       # dma is imported as an empty spatial layer already, therefore no need to recreate the empty dataframe/spatial layer here
-#   
+}  else {       # dma is imported as an empty spatial layer already, therefore no need to recreate the empty dataframe/spatial layer here
+   
 #   # blank DMA file
-#   #dma <- data.frame()
+   dma <- data.frame()
 #   #dma <- st_as_sf(dma, wkt= 'geom') #convert to spatial data frame
-# }
+ }
 
 # save
 save(dma, file = ofile)
