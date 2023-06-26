@@ -12,7 +12,7 @@ suppressPackageStartupMessages(library(sf))
 
 # process -----------------------------------------------------------------
 
-#or change back to xml feed in order to not show cancelled DMAs and Trigger type -HJF 20221208 test comment
+#or change back to xml feed in order to not show cancelled DMAs and Trigger type
 # get url dma as follows:
 # 1) go to query page: https://services2.arcgis.com/C8EMgrsFcRFL6LrL/arcgis/rest/services/NEFSC_Dynamic_Management_Areas/FeatureServer/0/query/?where=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&relationParam=&returnGeodetic=false&outFields=&returnGeometry=true&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&defaultSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=html&token=
 # 2) set "Where: 1=1" and "Out Fields: *" and "Format: GEOJSON"
@@ -22,12 +22,12 @@ url_dma <- 'https://services2.arcgis.com/C8EMgrsFcRFL6LrL/arcgis/rest/services/N
 # read in dma data
 dma <- st_read(url_dma, quiet = TRUE)
 
-if(length(dma)>0){
-#if(nrow(dma)>0){
+if(nrow(dma)>0){
   
   # check expiration times
   e_dates <- as.Date(as.POSIXct(as.character(dma$EXPDATE), format = "%d-%b-%Y %H:%M:%S", tz = 'UTC'))
   
+  # if bad DMAs exist, remove them
   if(TRUE %in% c(e_dates<Sys.Date())){
     
     # indices of bad DMAs
@@ -55,26 +55,25 @@ if(length(dma)>0){
   dma$TRIGGERTYPE[dma$TRIGGERTYPE == 'v'] = 'Visual'
   
   # remove any rows with values in 'CANCELLED' field (DMAs or ASZs that were extended by duplicate zone or canceled outright)
-  dma = dma[is.na(dma$CANCELLED),]
+  dma <- dma[is.na(dma$CANCELLED),]
   
-}  else {       # dma is imported as an empty spatial layer already, therefore no need to recreate the empty dataframe/spatial layer here
-   
-#   # blank DMA file
-   dma <- data.frame()
-#   #dma <- st_as_sf(dma, wkt= 'geom') #convert to spatial data frame
- }
+}  else {
+  
+  # blank DMA file
+  dma <- data.frame()
+  
+}
 
 # save
 save(dma, file = ofile)
 
-# # test with leaflet
+# # test with leaflet (only works with active DMA)
 # library(leaflet)
 # leaflet() %>%
 #   addTiles() %>%
 #   addLayersControl(
 #     overlayGroups = c('dma')
 #   ) %>%
-#   {if(nrow(dma) > 0)                      # if dma is empty, then don't try to add the empty polygon (which would cause an error)                 
 #     addPolygons(data = dma, color = 'orange',
 #                 popup = ~paste(sep = "<br/>" ,
 #                                "US Slow Zone",
@@ -82,4 +81,3 @@ save(dma, file = ofile)
 #                                # paste0("Type: ", triggertype),
 #                                paste0("Expires: ", EXPDATE)),
 #                 group = 'dma',weight = 2)
-#     else .}

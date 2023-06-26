@@ -777,24 +777,23 @@ function(input, output, session){
     proxy %>% clearGroup('dma')
     
     # add polygons
-    proxy %>%
-      #  if there are active DMAs (no active DMAs causes error here)
-      #{if(nrow(dma) > 0)    
-      addPolygons(data=dma, group = 'dma',
-                  fill = T, 
-                  fillOpacity = 0.3, 
-                  stroke = T, 
-                  dashArray = c(5,5), 
-                  options = pathOptions(clickable = T),
-                  popup = ~paste(sep = "<br/>" ,
-                                 "US Slow Zone",
-                                 paste0(NAME),
-                                 paste0("Type: ", TRIGGERTYPE),
-                                 paste0("Expires: ", EXPDATE)),
-                  weight = 1, 
-                  color = '#ff9900', 
-                  fillColor = '#ff9900')
-      #  else .}  
+    if(nrow(dma) > 0){
+      proxy %>%
+        addPolygons(data=dma, group = 'dma',
+                    fill = T, 
+                    fillOpacity = 0.3, 
+                    stroke = T, 
+                    dashArray = c(5,5), 
+                    options = pathOptions(clickable = T),
+                    popup = ~paste(sep = "<br/>" ,
+                                   "US Slow Zone",
+                                   paste0(NAME),
+                                   paste0("Type: ", TRIGGERTYPE),
+                                   paste0("Expires: ", EXPDATE)),
+                    weight = 1, 
+                    color = '#ff9900', 
+                    fillColor = '#ff9900')
+    }
     
     # switch to show/hide
     ifelse(input$dma, showGroup(proxy, 'dma'),
