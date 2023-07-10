@@ -24,6 +24,9 @@ sma <- st_read(url_sma, quiet = TRUE)
 # select only active
 sma <- sma[sma$INEFFECT == 1,]
 
+# fix projection
+st_crs(sma) <- st_crs('+proj=longlat +datum=WGS84')
+
 # save
 save(sma, file = ofile)
 
