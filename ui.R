@@ -97,8 +97,14 @@ body <- dashboardBody(
                                                     'opportunistic')),
                            
                            hr(),
-                           
 
+                           # add platform name choice
+                           selectInput("name", "Choose platform name(s):", 
+                                       multiple = T,
+                                       choices = c('All', name_choices),
+                                       selected = 'All', selectize = TRUE),
+                           
+                           hr(),
                            
                            # add species choice
                            selectInput("species", "Choose species:", 

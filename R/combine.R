@@ -72,3 +72,11 @@ obs$source[is.na(obs$source)] = 'WhaleMap'
 
 # save
 saveRDS(obs, 'data/processed/observations.rds')
+
+# names -------------------------------------------------------------------
+
+# select names (for app filtering)
+name_choices = as.character(unique(tracks$name))
+
+# save
+save(name_choices, file = 'data/processed/names.rda')

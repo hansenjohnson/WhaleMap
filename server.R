@@ -89,44 +89,16 @@ function(input, output, session){
     input$platform
   })
   
-  # name choices -----------------------------------------------------------
-  
-  # # extract names of active platform(s)
-  # name_choices <- reactive({
-  #   
-  #   # require date and platform
-  #   req(dates(), platform())
-  #   
-  #   suppressWarnings(
-  #     rbind(tracks[c('date', 'platform', 'name')], observations[c('date', 'platform', 'name')]) %>%
-  #       filter(date %in% dates() & platform %in% platform()) %>%
-  #       pull(name) %>%
-  #       as.character() %>%
-  #       unique()
-  #   )
-  # })
-  
-  # build name UI -----------------------------------------------------------
-  
-  # output$nameChoice <- renderUI({
-  #   
-  #   # construct UI
-  #   selectInput("name", "Choose platform name(s):", multiple = T,
-  #               choices = c('All', name_choices()), 
-  #               selected = 'All', selectize = TRUE)
-  #   
-  # })
-  
   # choose name -----------------------------------------------------------
   
-  # # name
-  # name <- reactive({
-  #   if('All' %in% input$name | input$go == 0){
-  #     name_choices()
-  #   } else {
-  #     input$name  
-  #   }
-  # })
+  # name
+  name <- reactive({
+    if('All' %in% input$name | input$go == 0){
+      name_choices
+    } else {
+      input$name
+    }
+  })
   
   # choose data source ------------------------------------------------------
   
@@ -170,7 +142,7 @@ function(input, output, session){
         filter(
           date %in% dates() & 
             source %in% dsource() &
-            # name %in% name() &
+            name %in% name() &
             platform %in% platform() 
         )
       
@@ -180,8 +152,8 @@ function(input, output, session){
         filter(
           date %in% dates() & 
             source %in% dsource() &
-            # name %in% name() &
-            # !(name %in% hidden_platforms)
+            name %in% name() &
+            !(name %in% hidden_platforms) &
             platform %in% platform() 
         )
       
@@ -197,7 +169,7 @@ function(input, output, session){
           date %in% dates() & 
             source %in% dsource() &
             platform %in% platform() & 
-            # name %in% name() &
+            name %in% name() &
             species %in% species()
         ) %>%
         droplevels()
@@ -210,8 +182,8 @@ function(input, output, session){
             source %in% dsource() &
             platform %in% platform() & 
             species %in% species() &
-            # name %in% name() &
-            # !(name %in% hidden_platforms) &
+            name %in% name() &
+            !(name %in% hidden_platforms) &
             score != 'possible visual'
         ) %>%
         droplevels()
@@ -262,7 +234,7 @@ function(input, output, session){
           filter(
             date %in% dates() & 
               source %in% dsource() &
-              # name %in% name() &
+              name %in% name() &
               platform %in% platform()
           )
         
@@ -272,8 +244,8 @@ function(input, output, session){
           filter(
             date %in% dates() & 
               source %in% dsource() &
-              # name %in% name() &
-              # !(name %in% hidden_platforms)
+              name %in% name() &
+              !(name %in% hidden_platforms) &
               platform %in% platform()
           )
         
