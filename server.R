@@ -290,7 +290,7 @@ function(input, output, session){
   # password warnings
   observeEvent(input$go,{
     if(input$password == password){
-      showNotification(h4('Password was correct! Showing unverified and/or test data...'),
+      showNotification(h4('Password was correct! Showing unverified data and removing plotting limits...'),
                        duration = NULL, closeButton = T, type = 'message')
     }
   })
@@ -299,7 +299,7 @@ function(input, output, session){
   observeEvent(input$go,{
     
     # track warning
-    if(nrow(trk())>npts){
+    if(nrow(trk())>npts & input$password != password){
       showNotification(h4(paste0('Warning! Tracklines have been turned off because 
                               you have attemped to plot too many points (i.e. more than ', as.character(npts), '). 
                               Please select less data to view tracks.')), 
@@ -847,7 +847,7 @@ function(input, output, session){
     
     # tracks
     
-    if(input$tracks & nrow(trk())<npts){
+    if(input$tracks & nrow(trk())<npts|input$password == password){
       
       # set up polyline plotting
       tracks.df <- split(trk(), trk()$id)
