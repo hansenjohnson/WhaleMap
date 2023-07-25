@@ -76,7 +76,7 @@ saveRDS(obs, 'data/processed/observations.rds')
 # names -------------------------------------------------------------------
 
 # select names (for app filtering)
-name_choices = as.character(unique(tracks$name))
+name_choices = unique(c(as.character(tracks$name), as.character(obs$name)))
 
 # save
 save(name_choices, file = 'data/processed/names.rda')
