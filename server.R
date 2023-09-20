@@ -781,7 +781,7 @@ function(input, output, session){
     proxy <- leafletProxy("map")
     proxy %>% clearGroup('sma')
     
-    if(input$sma){
+    if(input$sma & nrow(sma) != 0){
       
       # add polygons
       proxy %>%
