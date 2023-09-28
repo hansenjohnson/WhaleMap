@@ -241,7 +241,7 @@ map <- map %>%
               weight = 1, color = 'darkblue', fillColor = 'darkblue')
 
 # plot US SMAs
-if (nrow(sma>0)) {
+if (nrow(sma)>0) {
   map <- map %>%
   addPolygons(data=sma, group = sma_grp,
               fill = T, fillOpacity = 0.3, stroke = T, smoothFactor = 0,
