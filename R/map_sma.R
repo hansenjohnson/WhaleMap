@@ -1,5 +1,5 @@
 ## map_sma ##
-# process US dynamic management area (DMA) data
+# process US seasonal management area (SMA) data
 
 # input -------------------------------------------------------------------
 
