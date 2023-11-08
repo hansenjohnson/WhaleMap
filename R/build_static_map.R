@@ -247,7 +247,8 @@ if (nrow(sma)>0) {
               fill = T, fillOpacity = 0.3, stroke = T, smoothFactor = 0,
               popup = ~paste(sep = "<br/>" ,
                              "US Seasonal Management Area",
-                             paste0(NAME)),
+                             paste0(NAME),
+                             paste0("Active: ",STARTDATE, ' - ', ENDDATE)),
               weight = 1, color = 'red', fillColor = 'red') 
 }
 
