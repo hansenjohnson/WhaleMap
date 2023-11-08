@@ -6,10 +6,10 @@
 
 suppressPackageStartupMessages(library(shiny))
 suppressPackageStartupMessages(library(leaflet))
-suppressPackageStartupMessages(library(rgdal))
+# suppressPackageStartupMessages(library(rgdal))
 suppressPackageStartupMessages(library(htmltools))
 suppressPackageStartupMessages(library(htmlwidgets))
-suppressPackageStartupMessages(library(maptools))
+# suppressPackageStartupMessages(library(maptools))
 suppressPackageStartupMessages(library(lubridate))
 suppressPackageStartupMessages(library(oce))
 suppressPackageStartupMessages(library(shinydashboard))

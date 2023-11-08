@@ -6,7 +6,7 @@ suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(RColorBrewer))
 suppressPackageStartupMessages(library(lubridate))
 suppressPackageStartupMessages(library(sp))
-suppressPackageStartupMessages(library(rgeos))
+# suppressPackageStartupMessages(library(rgeos))
 
 read_GPX = function(ifile){
   tmp = sf::st_read(ifile, layer = "track_points", quiet = TRUE)
