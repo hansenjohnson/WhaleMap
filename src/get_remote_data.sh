@@ -39,6 +39,10 @@ rclone sync wm_drive:"WhaleMap_NEAq_aerial" "neaq/aerial/" --drive-shared-with-m
 printf "\n*** Checking NERW Google Drive ***\n\n"
 rclone sync wm_drive:"2023/2023 NEFSC Survey Data/Flights/WhaleMap NEFSC 2023" "nerw/live" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
+# Sync NEFSC vessel data Google drive
+printf "\n*** Checking NEFSC vessel Google Drive ***\n\n"
+rclone sync drive:"Whalemap_NEFSC_vessel" "nefsc_vessel/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
+
 # Sync SERW aerial data Google drive
 printf "\n*** Checking SERW Google Drive ***\n\n"
 rclone sync wm_drive:"4_Data for SEUS Whale Map" "serw/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
