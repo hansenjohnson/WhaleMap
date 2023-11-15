@@ -132,7 +132,7 @@ for(ii in glist){
   tmp = read.csv(flist[ii], as.is = TRUE)
   
   # add required columns
-  tmp$time = as.POSIXct(paste0(substr(basename(flist[ii]),1,8), ' ', trimws(tmp$Time)), format = '%Y%m%d %H:%M:%S ', tz = 'America/New_York')
+  tmp$time = as.POSIXct(paste0(substr(basename(flist[ii]),1,8), ' ', trimws(substr(tmp$Time, 1,9))), format = '%Y%m%d %H:%M:%S ', tz = 'America/New_York')    ### LN: 11/15 add substr() to tmp$Time to remove weird trailing text
   tmp$time = with_tz(tmp$time, tzone = 'UTC')
   tmp$date = as.Date(tmp$time)
   tmp$yday = yday(tmp$time)
