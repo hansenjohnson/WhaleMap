@@ -463,7 +463,9 @@ sub_dataframe = function(dataframe, n){
   dataframe[(seq(n,to=nrow(dataframe),by=n)),]
 }
 
-subsample_gps = function(gps, n=60, tol = 0.001, plot_comparison=FALSE, full_res=FALSE, simplify = TRUE){
+subsample_gps = function(gps, n=60, tol = 0.001, plot_comparison=FALSE, full_res=FALSE, simplify = FALSE){     ### LN: 11/15 testing out simplify as FALSE to get around needing gSimplify
+  
+# subsample_gps = function(gps, n=60, tol = 0.001, plot_comparison=FALSE, full_res=FALSE, simplify = TRUE){
   # 'gps' is a data frame that has columns named 'lat' and 'lon' in decimal degrees
   # 'n' is the desired gps sampling interval in seconds (only when simplify=FALSE)
   # 'tol' is a tolerance for simplifying where larger values provide fewer points (only when simplify=TRUE)
