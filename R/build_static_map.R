@@ -43,10 +43,8 @@ fout = './static_map/whalemap.html'
 
 # required libraries
 suppressPackageStartupMessages(library(leaflet))
-suppressPackageStartupMessages(library(rgdal))
 suppressPackageStartupMessages(library(htmltools))
 suppressPackageStartupMessages(library(htmlwidgets))
-suppressPackageStartupMessages(library(maptools))
 suppressPackageStartupMessages(library(lubridate))
 suppressPackageStartupMessages(library(oce))
 suppressPackageStartupMessages(library(leaflet.extras))
