@@ -14,6 +14,11 @@ obs_ofile = 'data/interim/wi_archived_obs.rds'
 
 source('R/functions.R')
 
+# read in platform names from DCS
+dl_file = 'data/raw/dcs/deployment_list.csv'
+dl = read.csv(dl_file, stringsAsFactors = F)  
+dcs = unique(str_split(dl$id, pattern = '_', n = 3, simplify = T)[,3])
+
 # effort ------------------------------------------------------------------
 
 # find track files
@@ -31,6 +36,9 @@ trk = bind_rows(TRK)
 
 # config data types
 tracks = config_tracks(trk)
+
+# remove DCS platforms
+tracks = tracks[!tracks$name %in% dcs,]
 
 # fix source
 if(nrow(tracks)>0){
@@ -80,6 +88,9 @@ obs = bind_rows(OBS)
 
 # config data types
 observations = config_observations(obs)
+
+# remove DCS platforms
+observations = observations[!observations$name %in% dcs,]
 
 # fix source
 if(nrow(observations)>0){

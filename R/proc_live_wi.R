@@ -21,6 +21,14 @@ trk = read.csv(trk_ifile)
 # config data types
 tracks = config_tracks(trk)
 
+# read in platform names from DCS
+dl_file = 'data/raw/dcs/deployment_list.csv'
+dl = read.csv(dl_file, stringsAsFactors = F)  
+dcs = unique(str_split(dl$id, pattern = '_', n = 3, simplify = T)[,3])
+
+# remove DCS platforms
+tracks = tracks[!tracks$name %in% dcs,]
+
 # fix source
 if(nrow(tracks)>0){
   tracks$source = 'WhaleInsight'  
@@ -65,6 +73,9 @@ obs = read.csv(obs_ifile, stringsAsFactors = F)
 
 # config data types
 observations = config_observations(obs)
+
+# remove DCS platforms
+observations = observations[!observations$name %in% dcs,]
 
 # fix source
 if(nrow(observations)>0){
