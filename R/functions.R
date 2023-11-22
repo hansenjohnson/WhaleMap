@@ -465,7 +465,7 @@ sub_dataframe = function(dataframe, n){
   dataframe[(seq(n,to=nrow(dataframe),by=n)),]
 }
 
-subsample_gps = function(gps, n=60, tol = 0.001, plot_comparison=FALSE, full_res=FALSE, simplify = FALSE){     ### LN: 11/15 testing out simplify as FALSE to get around needing gSimplify
+subsample_gps = function(gps, n=60, tol = 0.001, plot_comparison=FALSE, full_res=FALSE, simplify = TRUE){     ### LN: 11/15 testing out simplify as FALSE to get around needing gSimplify
   
 # subsample_gps = function(gps, n=60, tol = 0.001, plot_comparison=FALSE, full_res=FALSE, simplify = TRUE){
   # 'gps' is a data frame that has columns named 'lat' and 'lon' in decimal degrees
@@ -499,25 +499,16 @@ subsample_gps = function(gps, n=60, tol = 0.001, plot_comparison=FALSE, full_res
       
     } else {
       
-      # remove columns without lat or lon
-      gps = gps[which(!is.na(gps$lat)),]
-      gps = gps[which(!is.na(gps$lon)),]
-      
-      # create lines object
-      ln = Line(cbind(gps$lat, gps$lon))
-      
-      # convert to Lines
-      lns = Lines(ln, ID = 'track')
-      
-      # convert to Spatial Lines
-      slns = SpatialLines(list(lns))
-      
-      # simplify
-      sim = gSimplify(slns, tol = tol)
+      # simplify line to remove unnecessary points
+      sim <- gps %>% drop_na(lon, lat) %>% # remove columns without lat or lon
+        st_as_sf(coords = c("lon", "lat")) %>% # convert to points sf object
+        dplyr::summarize(do_union=FALSE) %>% # combine points
+        st_cast("LINESTRING") %>% # convert to linestring
+        st_simplify(dTolerance = tol) # simplify
       
       # extract coordinates in data frame
-      df = as.data.frame(coordinates(sim)[[1]][[1]])
-      colnames(df) = c('lat', 'lon')
+      df = as.data.frame(st_coordinates(sim))[,1:2]
+      colnames(df) = c('lon', 'lat')
       
       # match appropriate rows in original data
       new = gps[match(round(df$lon,5),round(gps$lon,5)),]
