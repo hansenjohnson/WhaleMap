@@ -43,6 +43,7 @@ fout = './static_map/whalemap.html'
 
 # required libraries
 suppressPackageStartupMessages(library(leaflet))
+suppressPackageStartupMessages(library(sp))
 suppressPackageStartupMessages(library(htmltools))
 suppressPackageStartupMessages(library(htmlwidgets))
 suppressPackageStartupMessages(library(lubridate))
