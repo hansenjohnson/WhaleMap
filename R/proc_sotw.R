@@ -96,7 +96,8 @@ for(ii in seq_along(EFF)){
     )
   
   # add to list
-  EFF[[ii]] = eff
+  EFF[[ii]] = subsample_gps(eff)
+
 }
 
 # flatten list and format

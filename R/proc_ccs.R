@@ -73,7 +73,7 @@ if(length(a_flist)>0){
     trk = trk[,c('time','lat','lon', 'altitude','speed','date','yday', 'year',  'platform', 'name', 'id')]
     
     # store track
-    TRK[[ii]] = trk
+    TRK[[ii]] = subsample_gps(gps = trk)
     
     # sightings ---------------------------------------------------------------
     
@@ -167,7 +167,7 @@ if(length(v_flist)>0){
     trk = trk[,c('time','lat','lon', 'altitude','speed','date','yday', 'year',  'platform', 'name', 'id')]
     
     # store track
-    TRK[[ii]] = trk
+    TRK[[ii]] = subsample_gps(gps = trk)
     
     # sightings ---------------------------------------------------------------
     

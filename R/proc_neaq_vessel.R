@@ -69,8 +69,8 @@ for(ii in seq_along(flist)){
   # remove unused columns
   trk = trk[,c('time','lat','lon', 'altitude','speed','date','yday', 'year',  'platform', 'name', 'id')]
   
-  # store track
-  TRK[[ii]] = trk
+  # simplify and store track
+  TRK[[ii]] = subsample_gps(gps = trk)
   
   # sightings ---------------------------------------------------------------
   
