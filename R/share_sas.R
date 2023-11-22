@@ -50,7 +50,7 @@ if(!dir.exists(to_sas_dir)){dir.create(to_sas_dir, recursive = TRUE)}
 # test for viable xml file
 result <- try(read_xml(from_sas_file), silent = TRUE)
 
-if(class(result) != 'try-error'){
+if(!'try-error' %in% class(result)){
   
   # find all sightings nodes
   tmp = xml_find_all(read_xml(from_sas_file), ".//sight")
