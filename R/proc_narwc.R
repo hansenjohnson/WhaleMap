@@ -22,10 +22,10 @@ source('R/functions.R')
 # process -----------------------------------------------------------------
 
 # read in header info
-hdr <- read_csv(hfile) %>% colnames()
+hdr <- read_csv(hfile, show_col_types = FALSE) %>% colnames()
 
 # read in data and remove effort/sightings from previous years
-all <- read_csv(ifile, col_names = hdr) %>%
+all <- read_csv(ifile, col_names = hdr, show_col_types = FALSE) %>%
   filter(YEAR >= yr & SPECCODE != "xxxx")
 
 # make date column
