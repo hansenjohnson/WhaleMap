@@ -1,5 +1,7 @@
 ## proc_hdr ##
 # process survey data from hdr consultant group
+# requires external p7zip package
+# easiest to install on mac/homebrew with `brew install p7zip`
 
 # input -------------------------------------------------------------------
 

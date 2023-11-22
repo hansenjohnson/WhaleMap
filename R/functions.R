@@ -24,6 +24,8 @@ read_KML = function(ifile){
 
 read_MDB = function(ifile, table_name){
   # read a single table from an mdb (access) database into csv
+  # requires the external mdbtools library 
+  # (easiest to install on mac/homebrew with `brew install mdbtools`)
   
   # make temporary file
   f <- tempfile()
