@@ -65,8 +65,6 @@ obs = obs[obs$score != 'Not Egs',]
 # fix name
 obs$name = orgs$ORG[match(obs$name, table = orgs$ORGCODE)]
 
-obs
-
 # add id
 obs$id = paste0(obs$date,'_',obs$platform,'_', obs$name)
 
