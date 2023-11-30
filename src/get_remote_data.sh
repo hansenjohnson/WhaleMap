@@ -28,6 +28,7 @@ rclone sync wm_drive:"WhaleMapData_Exchange/trk_from_dfo.csv" "wi/live/" --drive
 rclone sync wm_drive:"WhaleMapData_Exchange/obs_from_dfo.csv" "wi/live/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
 
 # Sync RWSAS opportunistic data
+printf "\n*** Checking RWSAS Google Drive ***\n\n"
 rclone sync wm_drive:"RWsight4OracleUpload.xlsx" "sas" --drive-shared-with-me --backup-dir backups -v
 
 # Sync CCS aerial data Google drive
