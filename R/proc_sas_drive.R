@@ -44,7 +44,7 @@ obs <- d %>%
             number = groupsize, 
             calves = momcalf, 
             year = year(date), 
-            platform = 'opportunistic', 
+            category, 
             name = observer_org_number, 
             source = 'RWSAS')
 
@@ -53,11 +53,19 @@ obs$score[obs$score == 'Definite'] = 'definite visual'
 obs$score[obs$score == 'Probable'] = 'possible visual'
 obs$score[obs$score == 'Unknown'] = 'possible visual'
 
+# fix platform
+obs$platform = 'opportunistic'
+obs$platform[obs$category == 'Dedicated Eg Aerial'] = 'plane'
+obs$platform[obs$category == 'Dedicated Eg Shipboard'] = 'vessel'
+obs$category = NULL
+
 # remove non-right whales
 obs = obs[obs$score != 'Not Egs',]
 
 # fix name
 obs$name = orgs$ORG[match(obs$name, table = orgs$ORGCODE)]
+
+obs
 
 # add id
 obs$id = paste0(obs$date,'_',obs$platform,'_', obs$name)
