@@ -28,6 +28,7 @@ data/processed/observations.rds : R/combine.R \
 									data/interim/hdr_*.rds \
 									data/interim/sotw_*.rds \
 									data/interim/sas_obs.rds \
+									data/interim/sas_drive_obs.rds \
 									data/interim/wi_live_*.rds \
 									data/interim/wi_archived_*.rds \
 									data/interim/wm_*.rds
@@ -126,7 +127,13 @@ data/interim/sotw_*.rds : R/proc_sotw.R data/raw/sotw/*
 	$(remove_error)
 
 # SAS sightings
-data/interim/sas_obs.rds : R/share_sas.R data/raw/sas/*
+data/interim/sas_obs.rds : R/share_sas.R data/raw/sas/xmlgenSAS_H.pl
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# SAS Google drive sightings
+data/interim/sas_drive_obs.rds : R/proc_sas_drive.R data/raw/sas/RWsight4OracleUpload.xlsx
 	$(report_error)
 	Rscript $<
 	$(remove_error)

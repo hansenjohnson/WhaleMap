@@ -1,7 +1,8 @@
 script,name,url,email_list
 proc_live_dcs.R,WHOI acoustic detections/effort,http://dcs.whoi.edu/,data/email/default.csv
 proc_live_wi.R,Whale Insight (Canadian) observations/effort,https://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/narw-science-eng.html,data/email/default.csv
-share_sas.R,NOAA Right Whale Sightings Advisory System (RWSAS) sightings,https://www.fisheries.noaa.gov/new-england-mid-atlantic/marine-mammal-protection/whale-and-dolphin-research-northeast#right-whale-sighting-advisory-system,data/email/default.csv
+share_sas.R,NOAA Right Whale Sightings Advisory System (RWSAS) sightings (Oracle),https://www.fisheries.noaa.gov/new-england-mid-atlantic/marine-mammal-protection/whale-and-dolphin-research-northeast#right-whale-sighting-advisory-system,data/email/default.csv
+proc_sas_drive.R,NOAA Right Whale Sightings Advisory System (RWSAS) sightings (Google Drive),https://www.fisheries.noaa.gov/new-england-mid-atlantic/marine-mammal-protection/whale-and-dolphin-research-northeast#right-whale-sighting-advisory-system,data/email/default.csv
 proc_neaq_aerial.R,New England Aquarium aerial survey sightings/effort,https://www.andersoncabotcenterforoceanlife.org/rightwhales/right-whales/,data/raw/neaq/aerial/email_list.csv
 proc_ccs.R,Center for Coastal Studies aerial survey sightings/effort,https://coastalstudies.org/,data/raw/ccs/email_list.csv
 proc_serw.R,Southeast US aerial survey sightings/effort,https://mission.cmaquarium.org/research-institute/right-whale-research/,data/raw/serw/email_list.csv
