@@ -46,7 +46,7 @@ obs <- d %>%
             year = year(date), 
             platform = 'opportunistic', 
             name = observer_org_number, 
-            source = 'RWSAS-drive')
+            source = 'RWSAS')
 
 # fix score
 obs$score[obs$score == 'Definite'] = 'definite visual'
