@@ -4,7 +4,7 @@
 # input -------------------------------------------------------------------
 
 # data paths
-email_list = 'data/email/test.csv'
+email_list = 'data/email/default.csv'
 
 # path to sendmail executable
 sendmail = '/usr/sbin/sendmail'
