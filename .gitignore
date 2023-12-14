@@ -38,6 +38,7 @@ src/get_sas_url.sh
 restart.txt
 status.txt
 error_email.txt
+test_email.txt
 work.md
 
 .Rproj.user
