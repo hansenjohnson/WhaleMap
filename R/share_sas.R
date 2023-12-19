@@ -88,16 +88,19 @@ if(!'try-error' %in% class(result)){
                'US Coast Guard', 
                'Volunteer Sighting Network',
                'Whale watch',
+               'Acoustic Detection',
                'Unknown')
+  
+  # convert score levels
+  sas$score[sas$score == 'Definite' & sas$platform == 'Acoustic Detection'] = 'detected'
+  sas$score[sas$score %in% c('Probable', 'Unknown') & sas$platform == 'Acoustic Detection'] = 'possibly detected'
+  sas$score[sas$score == 'Definite'] = 'sighted'
+  sas$score[sas$score %in% c('Probable', 'Unknown')] = 'possibly sighted'
   
   # convert platform levels
   sas$platform[sas$platform %in% opp_list] = 'opportunistic'
   sas$platform[sas$platform == 'Dedicated Eg Aerial'] = 'plane'
   sas$platform[sas$platform == 'Dedicated Eg Shipboard'] = 'vessel'
-  
-  # convert score levels
-  sas$score[sas$score == 'Definite'] = 'sighted'
-  sas$score[sas$score %in% c('Probable', 'Unknown')] = 'possibly sighted'
   
   # add columns
   sas = sas %>%
