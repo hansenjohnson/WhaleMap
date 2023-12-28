@@ -200,10 +200,10 @@ map : ./static_map/whalemap.html
 
 ## FEED ##
 .PHONY : feed
-feed : ./feed/WhaleMap.xml
+feed : ./feed/public.xml
 
 # Build data feed
-./feed/WhaleMap.xml : R/write_public_xml.R data/processed/observations.rds
+./feed/public.xml : R/write_public_xml.R data/processed/observations.rds
 	$(report_error)
 	Rscript $<
 	cp -r feed/* ../server_index/data/
