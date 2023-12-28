@@ -33,11 +33,8 @@ obs = readRDS('data/processed/observations.rds') %>%
 # fix mom/calf
 obs$momcalf = ifelse(obs$calves == 1, 'Yes', 'No')
 
-# create xml for each data point
-tmp = xml_new_root('SAS')
-
 # create a blank file
-file.create(public_xml)
+invisible(file.create(public_xml))
 write('<SAS>', file = public_xml)
 for(ii in 1:nrow(obs)){
   
