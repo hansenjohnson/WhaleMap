@@ -9,6 +9,7 @@
 # directories
 data/
 shared/
+feed/
 static_map/
 wrk/
 tmp/
@@ -35,6 +36,7 @@ src/get_sas_url.sh
 *.rds
 *.rda
 *.pptx
+*.xml
 restart.txt
 status.txt
 error_email.txt

@@ -4,7 +4,7 @@ remove_error = @bash src/remove_error.sh $<
 
 ## ALL ##
 .PHONY : all
-all : obs latest wi dma map
+all : obs latest wi dma map feed
 
 ## OBSERVATIONS ##
 .PHONY : obs
@@ -196,6 +196,17 @@ map : ./static_map/whalemap.html
 	$(report_error)
 	Rscript $<
 	cp -r static_map/* ../server_index/
+	$(remove_error)
+
+## FEED ##
+.PHONY : feed
+feed : ./feed/WhaleMap.xml
+
+# Build data feed
+./feed/WhaleMap.xml : R/write_public_xml.R data/processed/observations.rds
+	$(report_error)
+	Rscript $<
+	cp -r feed/* ../server_index/
 	$(remove_error)
 
 ## CLEAN ##
