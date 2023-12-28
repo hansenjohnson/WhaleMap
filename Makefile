@@ -206,7 +206,7 @@ feed : ./feed/WhaleMap.xml
 ./feed/WhaleMap.xml : R/write_public_xml.R data/processed/observations.rds
 	$(report_error)
 	Rscript $<
-	cp -r feed/* ../server_index/
+	cp -r feed/* ../server_index/data/
 	$(remove_error)
 
 ## CLEAN ##
