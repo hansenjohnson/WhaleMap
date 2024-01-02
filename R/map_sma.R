@@ -37,6 +37,10 @@ end_date = as.Date(paste0(yr, '-', sma$end_mo,'-', sma$end_day))
 ei = end_date <= st_date
 end_date[ei] = end_date[ei] %m+% years(1)
 
+# descrease start dates to previous year if needed
+si = st_date >= end_date
+st_date[ei] = st_date[ei] %m-% years(1)
+
 # determine which zones are active
 sma$active = dt >= st_date & dt <= end_date
 
