@@ -207,13 +207,12 @@ map : ./static_map/whalemap.html
 
 ## FEED ##
 .PHONY : feed
-feed : ./feed/public.xml
+feed : ./feed/*.xml
 
 # Build data feed
-./feed/public.xml : R/write_public_xml.R data/processed/observations.rds
+./feed/*.xml : R/write_xml.R data/processed/observations.rds
 	$(report_error)
 	Rscript $<
-	cp -r feed/* ../server_index/data/
 	$(remove_error)
 
 ## CLEAN ##
