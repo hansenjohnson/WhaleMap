@@ -6,7 +6,7 @@ proc_sas_drive.R,NOAA Right Whale Sightings Advisory System (RWSAS) sightings (G
 proc_neaq_aerial.R,New England Aquarium aerial survey sightings/effort,https://www.andersoncabotcenterforoceanlife.org/rightwhales/right-whales/,data/raw/neaq/aerial/email_list.csv
 proc_ccs.R,Center for Coastal Studies aerial survey sightings/effort,https://coastalstudies.org/,data/raw/ccs/email_list.csv
 proc_serw.R,Southeast US aerial survey sightings/effort,https://mission.cmaquarium.org/research-institute/right-whale-research/,data/raw/serw/email_list.csv
-proc_nefsc_vessel.R,NOAA NEFSC vessel survey sightings/effort,https://www.nefsc.noaa.gov/psb/surveys/NARWSS.html,data/email/default.csv
+proc_nefsc_vessel_live.R,NOAA NEFSC vessel survey sightings/effort,https://www.nefsc.noaa.gov/psb/surveys/NARWSS.html,data/email/default.csv
 proc_sotw.R,R/V Song of the Whale vessel sightings/effort,http://www.marineconservationresearch.co.uk/,data/email/default.csv
 proc_live_nerw.R,NOAA NEFSC aerial survey sightings/effort,https://www.nefsc.noaa.gov/psb/surveys/NARWSS.html,data/email/default.csv
 proc_azura.R,Azura Consulting aerial survey sightings/effort,https://azuraco.com/large-whale-aerial-surveys-va-de-nj/,data/email/default.csv
