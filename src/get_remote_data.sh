@@ -53,7 +53,7 @@ rclone sync wm_drive:"4_Data for SEUS Whale Map" "serw/" --drive-shared-with-me 
 
 # Sync Azura flight data
 printf "\n*** Checking Azura Google Drive ***\n\n"
-rclone sync wm_drive:"NOAA Aerial Surveys - VA, DE, NJ (2022-008-1A)/Data" "azura/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
+rclone sync wm_drive:"NOAA Aerial Surveys - Mid-Atlantic (2023-009-1A) /Data" "azura/live/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
 # Sync SOTW vessel data
 printf "\n*** Checking SOTW dropbox ***\n\n"
