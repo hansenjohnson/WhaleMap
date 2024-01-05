@@ -8,7 +8,6 @@ xml_filenames = 'data/processed/xml_filenames.rda'
 
 # setup -------------------------------------------------------------------
 
-suppressPackageStartupMessages(library(xml2))
 source('R/functions.R')
 
 # read in xml info
