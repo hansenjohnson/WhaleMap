@@ -28,40 +28,47 @@ for(ii in seq_along(OBS)){
   # extract sightings and species codes
   obs = read_MDB(ifile, table_name = "Sightings")
   
-  # check species codes
-  # codes = as_tibble(tmp$MammalCodes)
-  # 2 = right, 4 = blue, 5 = fin, 6 = sei, 9 = humpback,
-  
-  # isolate time strings
-  tmp_time = substr(as.character(obs$EntryTime), 10, 18)
-  tmp_date = substr(as.character(obs$Date), 0, 8)
-  
-  # format
-  obs = obs %>%
-    transmute(
-      time = as.POSIXct(paste0(tmp_date, ' ', tmp_time), format = '%m/%d/%y %H:%M:%S', tz = 'UTC'),
-      date = as.Date(time),
-      year = year(date),
-      yday = yday(date),
-      lat = EntryLatitude,
-      lon = EntryLongitude,
-      species = SpeciesCode,
-      score = 'definite visual',
-      number = GroupSize,
-      calves = Calves,
-      platform = 'plane',
-      name = 'azura',
-      id = paste0(date, '_', platform, '_', name),
-      source = 'WhaleMap'
-    ) %>%
-    config_observations()
-  
-  # convert species codes
-  obs$species = factor(obs$species, levels = c('2','4','5','6','9'), 
-         labels = c('right','blue','fin','sei','humpback'))
-  
-  # fix calves number
-  obs$calves[obs$calves == -9] = NA
+  if(nrow(obs)>0){
+    
+    # check species codes
+    # codes = as_tibble(tmp$MammalCodes)
+    # 2 = right, 4 = blue, 5 = fin, 6 = sei, 9 = humpback,
+    
+    # isolate time strings
+    tmp_time = substr(as.character(obs$EntryTime), 10, 18)
+    tmp_date = substr(as.character(obs$Date), 0, 8)
+    
+    # format
+    obs = obs %>%
+      transmute(
+        time = as.POSIXct(paste0(tmp_date, ' ', tmp_time), format = '%m/%d/%y %H:%M:%S', tz = 'UTC'),
+        date = as.Date(time),
+        year = year(date),
+        yday = yday(date),
+        lat = EntryLatitude,
+        lon = EntryLongitude,
+        species = SpeciesCode,
+        score = 'definite visual',
+        number = GroupSize,
+        calves = Calves,
+        platform = 'plane',
+        name = 'azura',
+        id = paste0(date, '_', platform, '_', name),
+        source = 'WhaleMap'
+      ) %>%
+      config_observations()
+    
+    # convert species codes
+    obs$species = factor(obs$species, levels = c('2','4','5','6','9'), 
+                         labels = c('right','blue','fin','sei','humpback'))
+    
+    # fix calves number
+    obs$calves[obs$calves == -9] = NA
+  } else {
+    obs = config_observations(data.frame())
+  }
+  # store obs
+  OBS[[ii]] = obs
   
   # extract tracks
   eff = read_MDB(ifile, table_name = "SurveyTrack")
@@ -90,7 +97,6 @@ for(ii in seq_along(OBS)){
     config_tracks()
   
   # store
-  OBS[[ii]] = obs
   EFF[[ii]] = eff
 }
 
