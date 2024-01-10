@@ -3,7 +3,7 @@
 
 # input -------------------------------------------------------------------
 
-ifile = 'data/raw/sas/RWsight4OracleUpload.xlsx'
+ifile = 'data/raw/sas/RWSAS_opportunistic_uploads.xlsx'
 ofile = 'data/interim/sas_drive_obs.rds'
 
 # setup -------------------------------------------------------------------
@@ -22,21 +22,17 @@ orgs = read_excel(ifile, sheet = 3)
 # skip example line 
 d = d[-1,]
 
-# define correct lat/lon
-d$LAT = d$lat
-d$LON = d$lon
-
 # determine which coords are in DDM and correct
 latmin_i = which(!is.na(d$latmin))
 lonmin_i = which(!is.na(d$lonmin))
-d$LAT[latmin_i] = d$lat[latmin_i] + d$latmin[latmin_i]/60
-d$LON[lonmin_i] = d$lon[lonmin_i] - d$lonmin[lonmin_i]/60 # hard coded for N hemisphere
+d$lat[latmin_i] = d$lat[latmin_i] + d$latmin[latmin_i]/60
+d$lon[lonmin_i] = d$lon[lonmin_i] - d$lonmin[lonmin_i]/60 # hard coded for N hemisphere
 
 # extract important info
 obs <- d %>%
   transmute(time = sightdate, 
-            lat = LAT, 
-            lon = LON, 
+            lat = lat, 
+            lon = lon, 
             date = as.Date(time), 
             yday = yday(date), 
             species = 'right', 
@@ -45,7 +41,7 @@ obs <- d %>%
             calves = momcalf, 
             year = year(date), 
             category, 
-            name = observer_org_number, 
+            name = Observer_Org, 
             source = 'RWSAS')
 
 # fix score

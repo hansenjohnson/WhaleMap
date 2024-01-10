@@ -140,7 +140,7 @@ data/interim/sas_obs.rds : R/share_sas.R data/raw/sas/xmlgenSAS_H.pl
 	$(remove_error)
 
 # SAS Google drive sightings
-data/interim/sas_drive_obs.rds : R/proc_sas_drive.R data/raw/sas/RWsight4OracleUpload.xlsx
+data/interim/sas_drive_obs.rds : R/proc_sas_drive.R data/raw/sas/RWSAS_opportunistic_uploads.xlsx
 	$(report_error)
 	Rscript $<
 	$(remove_error)

@@ -29,7 +29,8 @@ rclone sync wm_drive:"WhaleMapData_Exchange/obs_from_dfo.csv" "wi/live/" --drive
 
 # Sync RWSAS opportunistic data
 printf "\n*** Checking RWSAS Google Drive ***\n\n"
-rclone sync wm_drive:"RWsight4OracleUpload.xlsx" "sas" --drive-shared-with-me --backup-dir backups -v
+# rclone sync wm_drive:"RWsight4OracleUpload.xlsx" "sas" --drive-shared-with-me --backup-dir backups -v
+rclone sync wm_drive:"RWSAS_opportunistic_uploads.xlsx" "sas" --backup-dir backups -v
 
 # Sync CCS aerial data Google drive
 printf "\n*** Checking CCS Google Drive ***\n\n"
