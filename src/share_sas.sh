@@ -26,7 +26,7 @@ DATADIR=${DESTDIR}/data/raw/sas/
 mkdir -p ${DATADIR}
 
 # download sas data
-wget -N ${URL} -P ${DATADIR} -t 3
+# wget -N ${URL} -P ${DATADIR} -t 3
 
 # process
 touch R/share_sas.R
