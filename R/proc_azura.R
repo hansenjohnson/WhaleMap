@@ -38,6 +38,17 @@ for(ii in seq_along(OBS)){
     tmp_time = substr(as.character(obs$EntryTime), 10, 18)
     tmp_date = substr(as.character(obs$Date), 0, 8)
     
+    # fix formats
+    if('InitLatitude' %in% colnames(obs)){
+      obs$EntryLatitude = obs$InitLatitude
+      obs$EntryLongitude = obs$InitLongitude
+      levs = c('FIWH', 'RIWH', 'SEWH', 'HUWH', 'BLWH')
+      labs = c('fin','right','sei','humpback','blue')
+    } else {
+      levs = c('2','4','5','6','9')
+      labs = c('right','blue','fin','sei','humpback')
+    }
+    
     # format
     obs = obs %>%
       transmute(
@@ -59,8 +70,7 @@ for(ii in seq_along(OBS)){
       config_observations()
     
     # convert species codes
-    obs$species = factor(obs$species, levels = c('2','4','5','6','9'), 
-                         labels = c('right','blue','fin','sei','humpback'))
+    obs$species = factor(obs$species, levels = levs, labels = labs)
     
     # fix calves number
     obs$calves[obs$calves == -9] = NA
