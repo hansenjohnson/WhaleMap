@@ -17,7 +17,7 @@ source('R/functions.R')
 d = read_excel(ifile, sheet = 1)
 
 # read in org lookup table
-orgs = read_excel(ifile, sheet = 3)
+orgs = read_excel(ifile, sheet = "Organizations")
 
 # skip example line 
 d = d[-1,]
@@ -44,15 +44,22 @@ obs <- d %>%
             name = Observer_Org, 
             source = 'RWSAS')
 
-# fix score
-obs$score[obs$score == 'Definite'] = 'definite visual'
-obs$score[obs$score == 'Probable'] = 'possible visual'
-obs$score[obs$score == 'Unknown'] = 'possible visual'
+# force negative longitude
+obs$lon = -abs(obs$lon)
 
 # fix platform
 obs$platform = 'opportunistic'
 obs$platform[obs$category == 'Dedicated Eg Aerial'] = 'plane'
 obs$platform[obs$category == 'Dedicated Eg Shipboard'] = 'vessel'
+
+# fix score
+obs$score[obs$score == 'Definite'] = 'definite visual'
+obs$score[obs$score == 'Probable'] = 'possible visual'
+obs$score[obs$score == 'Unknown'] = 'possible visual'
+obs$score[obs$score == 'definite visual' & obs$category == 'Acoustic Detection'] = 'definite acoustic'
+obs$score[obs$score == 'possible visual' & obs$category == 'Acoustic Detection'] = 'possible acoustic'
+
+# remove category
 obs$category = NULL
 
 # remove non-right whales
