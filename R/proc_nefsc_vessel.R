@@ -10,7 +10,7 @@ source('R/functions.R')
 proc_nefsc_vessel_effort = function(data_dir){
   
   # list gpx tracks
-  flist = list.files(data_dir, pattern = '\\d{8}_*.*_Garmin_Trackline.gpx$', ignore.case = T, full.names = T, recursive = T)
+  flist = list.files(data_dir, pattern = '*_Trackline.gpx$', ignore.case = T, full.names = T, recursive = T)
   
   if(length(flist)>0){
     
