@@ -19,11 +19,26 @@ source('R/functions.R')
 # list database files
 flist = list.files(path = ddir, pattern = '*.mdb', full.names = T, recursive = T)
 
+# list fnames for comparison
+fnames = tolower(basename(flist))
+
 OBS = EFF = vector('list', length(flist))
 for(ii in seq_along(OBS)){
   
   # define ifile
   ifile = flist[[ii]]
+  iname = fnames[[ii]]
+  
+  # add logic to skip raw files if edited files exist
+  if(!grepl('edited', iname)){
+    nname = gsub(pattern = 'raw', replacement = 'edited', x = iname)
+    if(nname %in% fnames){
+      inname = which(nname %in% fnames)
+      message('Skipping raw data file: `', iname, '` because edited data exist here: `', fnames[inname], '`')
+      OBS[[ii]] = data.frame()
+      next
+    }
+  }
   
   # extract sightings and species codes
   obs = read_MDB(ifile, table_name = "Sightings")
