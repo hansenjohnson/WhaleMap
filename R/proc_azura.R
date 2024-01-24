@@ -44,6 +44,11 @@ for(ii in seq_along(OBS)){
       obs$EntryLongitude = obs$InitLongitude
       levs = c('FIWH', 'RIWH', 'SEWH', 'HUWH', 'BLWH')
       labs = c('fin','right','sei','humpback','blue')
+    } else if('InitLat' %in% colnames(obs)){
+      obs$EntryLatitude = obs$InitLat
+      obs$EntryLongitude = obs$InitLong
+      levs = c('FIWH', 'RIWH', 'SEWH', 'HUWH', 'BLWH')
+      labs = c('fin','right','sei','humpback','blue')
     } else {
       levs = c('2','4','5','6','9')
       labs = c('right','blue','fin','sei','humpback')
