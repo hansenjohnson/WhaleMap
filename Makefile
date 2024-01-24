@@ -182,7 +182,7 @@ shared/dfo-whalemap/*.csv : src/share_wi.sh R/share_wi.R data/processed/effort.r
 wi : shared/sas/*.csv
 
 # Share data with NEFSC
-shared/sas/*.csv : src/share_sas.R data/processed/observations.rds
+shared/sas/*.csv : R/share_sas.R data/processed/observations.rds
 	$(report_error)
 	Rscript $<
 	$(remove_error)
