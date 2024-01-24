@@ -4,7 +4,7 @@ remove_error = @bash src/remove_error.sh $<
 
 ## ALL ##
 .PHONY : all
-all : obs latest wi dma map feed
+all : obs latest wi sas dma map feed
 
 ## OBSERVATIONS ##
 .PHONY : obs
@@ -28,7 +28,6 @@ data/processed/observations.rds : R/combine.R \
 									data/interim/azura_*.rds \
 									data/interim/hdr_*.rds \
 									data/interim/sotw_*.rds \
-									data/interim/sas_obs.rds \
 									data/interim/sas_drive_obs.rds \
 									data/interim/wi_live_*.rds \
 									data/interim/wi_archived_*.rds \
@@ -133,12 +132,6 @@ data/interim/sotw_*.rds : R/proc_sotw.R data/raw/sotw/*
 	Rscript $<
 	$(remove_error)
 
-# SAS sightings
-data/interim/sas_obs.rds : R/share_sas.R data/raw/sas/xmlgenSAS_H.pl
-	$(report_error)
-	Rscript $<
-	$(remove_error)
-
 # SAS Google drive sightings
 data/interim/sas_drive_obs.rds : R/proc_sas_drive.R data/raw/sas/RWSAS_opportunistic_uploads.xlsx
 	$(report_error)
@@ -182,6 +175,16 @@ wi : shared/dfo-whalemap/*.csv
 shared/dfo-whalemap/*.csv : src/share_wi.sh R/share_wi.R data/processed/effort.rds data/processed/observations.rds
 	$(report_error)
 	src/share_wi.sh
+	$(remove_error)
+
+## SAS ##
+.PHONY : sas
+wi : shared/sas/*.csv
+
+# Share data with NEFSC
+shared/sas/*.csv : src/share_sas.R data/processed/observations.rds
+	$(report_error)
+	Rscript $<
 	$(remove_error)
 
 ## DMA ##
