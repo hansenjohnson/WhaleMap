@@ -42,7 +42,8 @@ obs <- d %>%
             year = year(date), 
             category, 
             name = Observer_Org, 
-            source = 'RWSAS')
+            source = 'RWSAS') %>%
+  filter(!is.na(lat) & !is.na(lon) & !is.na(time))
 
 # force negative longitude
 obs$lon = -abs(obs$lon)
