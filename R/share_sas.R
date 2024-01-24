@@ -31,18 +31,13 @@ obs = readRDS(obs_file)
 obs$whalemap_id = seq(1, nrow(obs),1)
 
 # filter whalemap data
-obs = obs %>%
+to_send = obs %>%
   filter(date >= t0 & date <= t1 & 
            species == 'right' & !is.na(lat) & !is.na(lon) & 
            !grepl('SAS-', name) &
            !(name %in% no_send_list) & source != 'NARWC')
 
 # write output -----------------------------------------------------------
-
-if(plot_sas){
-  # whalemap
-  saveRDS(object = to_keep, file = keep_sas_file)
-}
 
 # sas
 write.csv(x = to_send, file = paste0(to_sas_dir, 'whalemap-data.csv'), row.names = FALSE)
