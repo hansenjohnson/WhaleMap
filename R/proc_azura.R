@@ -33,7 +33,7 @@ for(ii in seq_along(OBS)){
   if(!grepl('edited', iname)){
     nname = gsub(pattern = 'raw', replacement = 'edited', x = iname)
     if(nname %in% fnames){
-      inname = which(nname %in% fnames)
+      inname = which(fnames == nname)
       message('Skipping raw data file: `', iname, '` because edited data exist here: `', fnames[inname], '`')
       OBS[[ii]] = data.frame()
       next
