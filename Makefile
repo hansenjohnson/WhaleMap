@@ -179,10 +179,10 @@ shared/dfo-whalemap/*.csv : src/share_wi.sh R/share_wi.R data/processed/effort.r
 
 ## SAS ##
 .PHONY : sas
-wi : shared/sas/*.csv
+wi : shared/sas/whalemap-data.csv
 
 # Share data with NEFSC
-shared/sas/*.csv : R/share_sas.R data/processed/observations.rds
+shared/sas/whalemap-data.csv : R/share_sas.R data/processed/observations.rds
 	$(report_error)
 	Rscript $<
 	$(remove_error)
