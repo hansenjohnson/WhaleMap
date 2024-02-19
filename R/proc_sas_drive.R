@@ -52,6 +52,7 @@ obs$lon = -abs(obs$lon)
 obs$platform = 'opportunistic'
 obs$platform[obs$category == 'Dedicated Eg Aerial'] = 'plane'
 obs$platform[obs$category == 'Dedicated Eg Shipboard'] = 'vessel'
+obs$platform[obs$category == 'Opportunistic - Small Vessel Survey'] = 'vessel'
 
 # fix score
 obs$score[obs$score == 'Definite'] = 'definite visual'

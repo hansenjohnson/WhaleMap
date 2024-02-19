@@ -51,7 +51,7 @@ if(length(obs_file)>=0){
   
   # add sightings data
   tmp$species = 'right'
-  tmp$number = tmp$SightingNumber
+  tmp$number = tmp$GroupSize
   tmp$calves = tmp$Calves..0.for.no.1.for.yes.
   
   tmp$score = 'possibly sighted'
