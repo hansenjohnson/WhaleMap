@@ -32,8 +32,8 @@ rm -r $ODIR
 # Make backup dir
 mkdir -p $ODIR
 
-# Copy data contents to backup dir
-cp -r data/ $ODIR
+# Copy raw data to backup dir
+cp -r data/raw $ODIR
 
 # Get timestamp
 TSTMP=`date '+%Y-%m-%d %H:%M:%S'`
@@ -48,14 +48,8 @@ touch $RMFILE
 echo "WhaleMap data backup created at" >> $RMFILE
 echo $TSTMP >> $RMFILE
 
-# remove raw narwc data
-rm -r $ODIR/raw/narwc/
-
 # remove raw data backups
 rm -r $ODIR/raw/backups/
 
-# remove interim data
-rm -r $ODIR/interim/
-
-# remove email data
-rm -r $ODIR/email/
+# remove raw narwc data
+rm -r $ODIR/raw/narwc/
