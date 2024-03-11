@@ -28,6 +28,9 @@ lonmin_i = which(!is.na(d$lonmin))
 d$lat[latmin_i] = d$lat[latmin_i] + d$latmin[latmin_i]/60
 d$lon[lonmin_i] = d$lon[lonmin_i] - d$lonmin[lonmin_i]/60 # hard coded for N hemisphere
 
+# restrict to only records that should be displayed
+d = d[d$display == 'yes',]
+
 # extract important info
 obs <- d %>%
   transmute(time = sightdate, 
