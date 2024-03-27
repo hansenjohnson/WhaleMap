@@ -13,7 +13,7 @@ remove_hidden = FALSE
 dcs_data_dir = 'data/raw/dcs/'
 
 # active url
-lv_url = 'http://dcs.whoi.edu/deployed_platforms.csv'
+lv_url = 'https://dcs.whoi.edu/deployed_platforms.csv'
 
 # archived list
 dl_file = 'data/raw/dcs/deployment_list.csv'
