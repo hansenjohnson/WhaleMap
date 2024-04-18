@@ -95,5 +95,12 @@ all$source <- 'NARWC'
 # configure observations
 rwc <- config_observations(all)
 
+# add exceptions ----------------------------------------------------------
+
+# fix a score in the NARWC database flagged by T Cole via email on Apr 18, 2024
+rwc$score[rwc$date == '2019-07-24' & rwc$lat == 41.30833] = 'possibly sighted'
+
+# save --------------------------------------------------------------------
+
 # save
 saveRDS(rwc, ofile)
