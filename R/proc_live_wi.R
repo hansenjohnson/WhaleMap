@@ -32,6 +32,7 @@ tracks = tracks[!tracks$name %in% dcs,]
 # fix source
 if(nrow(tracks)>0){
   tracks$source = 'WhaleInsight'  
+  tracks$platform = droplevels(tracks$platform)
 }
 
 # fix glider/buoy IDs
