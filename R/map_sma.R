@@ -28,21 +28,21 @@ dt = Sys.Date()
 yr = year(dt)
 
 # define start dates
-st_date = as.Date(paste0(yr, '-', sma$st_mo,'-', sma$st_day))
+sma$st_date = as.Date(paste0(yr, '-', sma$st_mo,'-', sma$st_day))
 
 # define end dates
-end_date = as.Date(paste0(yr, '-', sma$end_mo,'-', sma$end_day))
+sma$end_date = as.Date(paste0(yr, '-', sma$end_mo,'-', sma$end_day))
 
 # increase end dates to next year if needed
-ei = end_date <= st_date
-end_date[ei] = end_date[ei] %m+% years(1)
+ei = sma$end_date <= sma$st_date
+sma$end_date[ei] = sma$end_date[ei] %m+% years(1)
 
 # descrease start dates to previous year if needed
-si = st_date >= end_date
-st_date[ei] = st_date[ei] %m-% years(1)
+si = sma$st_date >= sma$end_date
+sma$st_date[si] = sma$st_date[si] %m-% years(1)
 
 # determine which zones are active
-sma$active = dt >= st_date & dt <= end_date
+sma$active = dt >= sma$st_date & dt <= sma$end_date
 
 # define start/end date labels
 sma$STARTDATE = paste0(month(sma$st_mo, label = T),' ', sma$st_day)
