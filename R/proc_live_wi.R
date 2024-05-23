@@ -21,6 +21,9 @@ trk = read.csv(trk_ifile)
 # config data types
 tracks = config_tracks(trk)
 
+# fix yday
+tracks$yday = yday(tracks$date)
+
 # read in platform names from DCS
 dl_file = 'data/raw/dcs/deployment_list.csv'
 dl = read.csv(dl_file, stringsAsFactors = F)  
