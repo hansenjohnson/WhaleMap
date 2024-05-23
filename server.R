@@ -805,6 +805,38 @@ function(input, output, session){
     
   })
   
+  # spd observer ------------------------------------------------------  
+  
+  observe(priority = 4, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('spd')
+    
+    if(input$spd & nrow(spd) != 0){
+      
+      # add polygons
+      proxy %>%
+        addPolygons(data=spd, group = 'spd',
+                    fill = T, 
+                    fillOpacity = 0.3, 
+                    stroke = T, 
+                    options = pathOptions(clickable = T),
+                    popup = ~paste(sep = "<br/>" ,
+                                   "Proposed Right Whale Seasonal Speed Zone",
+                                   paste0(NAME),
+                                   paste0("Active: ",STARTDATE, ' - ', ENDDATE)),
+                    weight = 1, 
+                    color = 'darkgreen', 
+                    fillColor = 'darkgreen')
+      
+      # switch to show/hide
+      ifelse(input$spd, showGroup(proxy, 'spd'),
+             hideGroup(proxy, 'spd'))
+    }
+    
+  })
+  
   # alwtrp observer ------------------------------------------------------  
   
   observe(priority = 4, {

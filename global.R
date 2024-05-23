@@ -115,6 +115,7 @@ hidden_platforms = c('cp_king_air', 'jasco_test')
 load('data/processed/tss.rda')
 load('data/processed/gis.rda')
 load('data/processed/boem.rda')
+load('data/processed/spd.rda')
 
 # read in platform names
 load('data/processed/names.rda')
