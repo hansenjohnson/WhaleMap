@@ -206,7 +206,7 @@ body <- dashboardBody(
                            checkboxInput("legend", label = 'Legends', value = T),
                            
                            # Canadian management layers
-                           helpText(tags$em('Canadian management areas (2021)')),
+                           helpText(tags$em('Canadian management areas')),
                            
                            checkboxInput("critical_habitat_zone", 
                                          label = 'Critical habitat areas', value = T),
@@ -215,19 +215,19 @@ body <- dashboardBody(
                                          label = 'Management Grid', value = F),
             
                            checkboxInput("dfo_zone", value = F,
-                                         label = span("Fishing management areas", 
+                                         label = span("Areas subject to dynamic closure protocol for fisheries", 
                                                       tags$a(icon("info-sign", lib = "glyphicon"), 
                                                              target="_blank",
                                                              href = "http://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html"))),
                            
                            checkboxInput("dfo_lines", value = F,
-                                         label = span("Fishing depth contours (10 and 20 fathom)", 
+                                         label = span("Shallow water protocol lines (10 and 20 fathom)", 
                                                       tags$a(icon("info-sign", lib = "glyphicon"), 
                                                              target="_blank",
                                                              href = "http://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html"))),
                            
                            checkboxInput("tc_zone", value = F,
-                                         label = span("Shipping management areas", 
+                                         label = span("Vessel traffic management areas", 
                                                       tags$a(icon("info-sign", lib = "glyphicon"), 
                                                              target="_blank",
                                                              href = "https://www.tc.gc.ca/en/services/marine/navigation-marine-conditions/protecting-north-atlantic-right-whales-collisions-ships-gulf-st-lawrence.html"))),
@@ -251,7 +251,7 @@ body <- dashboardBody(
                                          label = span("US fishery seasonal restricted areas", 
                                                       tags$a(icon("info-sign", lib = "glyphicon"), 
                                                              target="_blank",
-                                                             href = "https://media.fisheries.noaa.gov/2021-10/ALWTP%20Summary%20of%20Changes%2010192021.pdf"))),
+                                                             href = "https://www.fisheries.noaa.gov/resource/map/new-and-existing-restricted-areas-2021-atlantic-large-whale-take-reduction-plan"))),
                            
                            checkboxInput("sma", value = T,
                                          label = span("Seasonal management areas", 
