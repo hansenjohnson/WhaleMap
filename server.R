@@ -1244,7 +1244,7 @@ function(input, output, session){
       
       # build plot
       g = ggplot(obs, aes(x = yday, y = counter))+
-        geom_col(na.rm = T, aes_string(fill = paste0(colorby_obs())))+
+        geom_col(na.rm = T, aes(fill = .data[[colorby_obs()]]))+
         labs(x = '', y = '')+
         fillcols+
         facet_wrap(~cat, scales="free_y", nrow = 2)+
@@ -1281,7 +1281,7 @@ function(input, output, session){
       
       # build plot
       g = ggplot(cnt, aes(x = yday))+
-        geom_col(na.rm = T, aes_string(fill = paste0(colorby_obs()), y = 'n'))+
+        geom_col(na.rm = T, aes(fill = .data[[colorby_obs()]], y = n))+
         labs(x = '', y = '')+
         fillcols+
         facet_wrap(~cat, scales="free_y", nrow = 2)+
