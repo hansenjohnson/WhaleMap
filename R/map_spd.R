@@ -7,6 +7,7 @@ ofile = 'data/processed/spd.rda'
 
 # setup -------------------------------------------------------------------
 
+suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(sf))
 suppressPackageStartupMessages(library(lubridate))
 
