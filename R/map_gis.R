@@ -13,7 +13,7 @@ suppressPackageStartupMessages(library(sf))
 suppressPackageStartupMessages(library(tidyverse))
 
 # common projection
-ref = 3857
+ref = '+proj=longlat +datum=WGS84'
 
 # process -----------------------------------------------------------------
 
