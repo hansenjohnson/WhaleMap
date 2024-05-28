@@ -712,30 +712,62 @@ function(input, output, session){
     
   })
   
-  # US BOEM observer ------------------------------------------------------  
+  # wind lease observer ------------------------------------------------------  
   
   observe(priority = 4, {
     
     # define proxy
     proxy <- leafletProxy("map")
-    proxy %>% clearGroup('boem')
+    proxy %>% clearGroup('wind_lease')
     
-    if(input$boem){
+    if(input$wind_lease){
       
       # add polygons
       proxy %>%
-        addPolygons(data=boem, group = 'boem',
+        addPolygons(data=wind_lease, group = 'wind_lease',
                     fill = T, 
                     fillOpacity = 0.25, 
                     stroke = T, 
-                    popup = ~paste0(ID),
+                    popup = ~paste(sep = "<br/>" ,
+                                   "BOEM wind lease area",
+                                   paste0("Name: ", info)),
+                    weight = 1, 
+                    color = 'brown', 
+                    fillColor = 'brown')
+      
+      # switch to show/hide
+      ifelse(input$wind_lease, showGroup(proxy, 'wind_lease'),
+             hideGroup(proxy, 'wind_lease'))
+    }
+    
+  })
+  
+  # wind lease observer ------------------------------------------------------  
+  
+  observe(priority = 4, {
+    
+    # define proxy
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('wind_planning')
+    
+    if(input$wind_planning){
+      
+      # add polygons
+      proxy %>%
+        addPolygons(data=wind_planning, group = 'wind_planning',
+                    fill = T, 
+                    fillOpacity = 0.25, 
+                    stroke = T, 
+                    popup = ~paste(sep = "<br/>" ,
+                                   "BOEM wind planning area",
+                                   paste0("Name: ", info)),
                     weight = 1, 
                     color = 'green', 
                     fillColor = 'green')
       
       # switch to show/hide
-      ifelse(input$boem, showGroup(proxy, 'boem'),
-             hideGroup(proxy, 'boem'))
+      ifelse(input$wind_planning, showGroup(proxy, 'wind_planning'),
+             hideGroup(proxy, 'wind_planning'))
     }
     
   })

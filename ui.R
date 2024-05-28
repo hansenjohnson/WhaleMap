@@ -211,9 +211,6 @@ body <- dashboardBody(
                            checkboxInput("critical_habitat_zone", 
                                          label = 'Critical habitat areas', value = T),
                            
-                           # checkboxInput("full_grid", 
-                           #               label = 'Management Grid', value = F),
-                           # 
                            checkboxInput("dfo_zone", value = F,
                                          label = span("Areas subject to dynamic closure protocol for fisheries", 
                                                       tags$a(icon("info-sign", lib = "glyphicon"), 
@@ -268,11 +265,16 @@ body <- dashboardBody(
                                                       tags$a(icon("info-sign", lib = "glyphicon"), 
                                                              target="_blank",
                                                              href = "https://www.fisheries.noaa.gov/resource/data/proposed-right-whale-seasonal-speed-zones"))),
-                           checkboxInput("boem", value = F,
-                                         label = span("Wind development areas", 
+                           checkboxInput("wind_planning", value = F,
+                                         label = span("Wind planning areas", 
                                                       tags$a(icon("info-sign", lib = "glyphicon"), 
                                                              target="_blank",
-                                                             href = "https://www.boem.gov/renewable-energy/renewable-energy-program-overview")))
+                                                             href = "https://www.boem.gov/renewable-energy/mapping-and-data/renewable-energy-gis-data"))),
+                           checkboxInput("wind_lease", value = F,
+                                         label = span("Wind lease areas", 
+                                                      tags$a(icon("info-sign", lib = "glyphicon"), 
+                                                             target="_blank",
+                                                             href = "https://www.boem.gov/renewable-energy/mapping-and-data/renewable-energy-gis-data")))
                   )
            )
     ),
