@@ -55,7 +55,7 @@ if(nrow(dma)>0){
   dma$TRIGGERTYPE[dma$TRIGGERTYPE == 'v'] = 'Visual'
   
   # remove any rows with values in 'CANCELLED' field (DMAs or ASZs that were extended by duplicate zone or canceled outright)
-  dma <- dma[is.na(dma$CANCELLED),]
+  # dma <- dma[is.na(dma$CANCELLED),]
   
 }  else {
   
