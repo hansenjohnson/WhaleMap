@@ -66,6 +66,12 @@ if(length(new_deps) > 0){
     d = read.csv(ptfile, stringsAsFactors = F)
     d = na.omit(d)
     
+    # skip empty file
+    if(nrow(d)==0){
+      message('No data found in ', ptfile, '. Skipping...')
+      next
+    }
+    
     # extract start date
     s = as.Date(substr(as.character(d$datetime_utc[1]), 0, 8), '%Y%m%d')
     
