@@ -28,6 +28,7 @@ data/processed/observations.rds : R/combine.R \
 									data/interim/azura_*.rds \
 									data/interim/hdr_*.rds \
 									data/interim/sotw_*.rds \
+									data/interim/medmr_*.rds \
 									data/interim/sas_drive_obs.rds \
 									data/interim/wi_live_*.rds \
 									data/interim/wi_archived_*.rds \
@@ -128,6 +129,12 @@ data/interim/hdr_*.rds : R/proc_hdr.R data/raw/hdr/*
 
 # SOTW
 data/interim/sotw_*.rds : R/proc_sotw.R data/raw/sotw/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# ME DMR
+data/interim/medmr_*.rds : R/proc_medmr.R data/raw/medmr/*/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)

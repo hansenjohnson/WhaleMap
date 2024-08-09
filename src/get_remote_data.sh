@@ -57,12 +57,16 @@ printf "\n*** Checking Azura Google Drive ***\n\n"
 rclone sync wm_drive:"NOAA Aerial Surveys - Mid-Atlantic (2023-009-1A) /Data" "azura/live/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
 # Sync SOTW vessel data
-printf "\n*** Checking SOTW dropbox ***\n\n"
-rclone sync wm_dropbox:"2023 SOTW GpsData and sightings" "sotw/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
+# printf "\n*** Checking SOTW dropbox ***\n\n"
+# rclone sync wm_dropbox:"2023 SOTW GpsData and sightings" "sotw/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
 # Sync HDR aerial data Google drive
 printf "\n*** Checking HDR Google Drive ***\n\n"
 rclone sync wm_drive:"HDR Aerial Survey Data" "hdr/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
+
+# Sync Maine DMR Google drive
+printf "\n*** Checking Maine DMR Google Drive ***\n\n"
+rclone sync wm_drive:"Maine_DMR_WhaleMap" "medmr/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
 
 # move to project directory
 cd ${DESTDIR}
