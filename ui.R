@@ -218,7 +218,7 @@ body <- dashboardBody(
                                                              href = "http://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html"))),
                            
                            checkboxInput("dfo_lines", value = F,
-                                         label = span("Shallow water protocol lines (10 and 20 fathom)", 
+                                         label = span("Shallow water protocol lines (10 and 20 fathoms)", 
                                                       tags$a(icon("info-sign", lib = "glyphicon"), 
                                                              target="_blank",
                                                              href = "http://www.dfo-mpo.gc.ca/fisheries-peches/commercial-commerciale/atl-arc/narw-bnan/management-gestion-eng.html"))),
