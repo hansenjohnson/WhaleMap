@@ -170,9 +170,12 @@ if(length(v_flist)>0){
     if(nrow(sig)>0 & TRUE %in% (spp_key$code %in% sig$SPECCODE...Sighting)){
       
       # extract data
-      sig$lat = sig$Sgt.Lat...Sighting
-      sig$lon = sig$Sgt.Lon...Sighting
-      sig$number = as.numeric(as.character(sig$COUNT...Sighting))
+      sig_lat_col = which(colnames(sig) == "Sgt.Lat...Sighting"|colnames(sig) == "S_LAT...Sighting")
+      sig_lon_col = which(colnames(sig) == "Sgt.Lon...Sighting"|colnames(sig) == "S_LONG...Sighting")
+      number_col = which(colnames(sig) == "COUNT...Sighting"|colnames(sig) == "NUMBER...Sighting")
+      sig$lat = sig[,sig_lat_col]
+      sig$lon = sig[,sig_lon_col]
+      sig$number = as.numeric(as.character(sig[,number_col]))
       sig$calves = sig$NUMCALF...Sighting
       
       # find indicies of matching
