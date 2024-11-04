@@ -46,7 +46,11 @@ if(length(new_deps) > 0){
     u = as.character(new_deps[ii])
     
     # read in platform data
-    p = read.csv(paste0(u,'/platform.csv'),stringsAsFactors = F)
+    p = try(read.csv(paste0(u,'/platform.csv'),stringsAsFactors = F),silent = T)
+    if(class(p) == "try-error"){
+      message('ERROR: Could not read file from: ', u, '\nSkipping...')
+      next
+    }
     
     # extract platform type
     pt = p$platform_type
