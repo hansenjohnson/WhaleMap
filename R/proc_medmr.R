@@ -33,7 +33,7 @@ if(length(a_flist)>0){
     tmp = read.csv(a_flist[ii])
     
     # wrangle time
-    tmp$time = as.POSIXct(tmp$TrkTime..EDT., format = '%Y-%m-%dT%H:%M:%S', tz = 'America/New_York')
+    tmp$time = as.POSIXct(tmp[,grep(pattern = "TrkTime..", x = colnames(tmp))], format = '%Y-%m-%dT%H:%M:%S', tz = 'America/New_York')
     tmp$time = with_tz(tmp$time, tzone = 'UTC')
     tmp$date = as.Date(tmp$time)
     tmp$yday = yday(tmp$time)
@@ -129,7 +129,7 @@ if(length(v_flist)>0){
     tmp = read.csv(v_flist[ii])
     
     # wrangle time
-    tmp$time = as.POSIXct(tmp$TrkTime..EDT., format = '%Y-%m-%dT%H:%M:%S', tz = 'America/New_York')
+    tmp$time = as.POSIXct(tmp[,grep(pattern = "TrkTime..", x = colnames(tmp))], format = '%Y-%m-%dT%H:%M:%S', tz = 'America/New_York')
     tmp$time = with_tz(tmp$time, tzone = 'UTC')
     tmp$date = as.Date(tmp$time)
     tmp$yday = yday(tmp$time)
