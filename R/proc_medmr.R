@@ -23,7 +23,7 @@ spp_key = data.frame(
 # aerial ------------------------------------------------------------------
 
 # list data files
-a_flist = list.files(a_data_dir, pattern = '*Integrated Export.csv$', full.names = T, recursive = T)
+a_flist = list.files(a_data_dir, pattern = '*.csv$', full.names = T, recursive = T)
 
 TRK = SIG = vector('list', length = length(a_flist))
 if(length(a_flist)>0){
@@ -119,7 +119,7 @@ a_sightings = config_observations(a_sightings)
 # vessel ------------------------------------------------------------------
 
 # list data files
-v_flist = list.files(v_data_dir, pattern = '*Integrated Export.csv$', full.names = T, recursive = T)
+v_flist = list.files(v_data_dir, pattern = '*.csv$', full.names = T, recursive = T)
 
 TRK = SIG = vector('list', length = length(v_flist))
 if(length(v_flist)>0){
