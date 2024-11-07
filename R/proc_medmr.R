@@ -32,8 +32,11 @@ if(length(a_flist)>0){
     # read in data
     tmp = read.csv(a_flist[ii])
     
+    # colnames in caps
+    colnames(tmp) = toupper(colnames(tmp))
+    
     # wrangle time
-    tmp$time = as.POSIXct(tmp[,grep(pattern = "TrkTime..", x = colnames(tmp))], format = '%Y-%m-%dT%H:%M:%S', tz = 'America/New_York')
+    tmp$time = as.POSIXct(tmp[,grep(pattern = "TRKTIME..", x = colnames(tmp))], format = '%Y-%m-%dT%H:%M:%S', tz = 'America/New_York')
     tmp$time = with_tz(tmp$time, tzone = 'UTC')
     tmp$date = as.Date(tmp$time)
     tmp$yday = yday(tmp$time)
@@ -50,12 +53,12 @@ if(length(a_flist)>0){
     trk = tmp
     
     # fix lat lons
-    trk$lat = trk$TrkLatitude
-    trk$lon = trk$TrkLongitude
+    trk$lat = trk$TRKLATITUDE
+    trk$lon = trk$TRKLONGITUDE
     
     # get speed and altitude
-    trk$altitude = trk$TrkAltitude..ft.
-    trk$speed = trk$PlatformSpeed..kts.
+    trk$altitude = trk$TRKALTITUDE..FT.
+    trk$speed = trk$PLATFORMSPEED..KTS.
     
     # add source
     trk$source = 'WhaleMap'
@@ -74,8 +77,8 @@ if(length(a_flist)>0){
     if(nrow(sig)>0 & TRUE %in% (spp_key$code %in% sig$SPECCODE...SIGHTINGS)){
       
       # extract data
-      sig$lat = sig$TrkLatitude
-      sig$lon = sig$TrkLongitude
+      sig$lat = sig$TRKLATITUDE
+      sig$lon = sig$TRKLONGITUDE
       sig$number = as.numeric(sig$NUMBER...SIGHTINGS)
       sig$calves = as.numeric(sig$NUMCALF...SIGHTINGS)
       
@@ -128,8 +131,11 @@ if(length(v_flist)>0){
     # read in data
     tmp = read.csv(v_flist[ii])
     
+    # colnames in caps
+    colnames(tmp) = toupper(colnames(tmp))
+    
     # wrangle time
-    tmp$time = as.POSIXct(tmp[,grep(pattern = "TrkTime..", x = colnames(tmp))], format = '%Y-%m-%dT%H:%M:%S', tz = 'America/New_York')
+    tmp$time = as.POSIXct(tmp[,grep(pattern = "TRKTIME..", x = colnames(tmp))], format = '%Y-%m-%dT%H:%M:%S', tz = 'America/New_York')
     tmp$time = with_tz(tmp$time, tzone = 'UTC')
     tmp$date = as.Date(tmp$time)
     tmp$yday = yday(tmp$time)
@@ -146,8 +152,8 @@ if(length(v_flist)>0){
     trk = tmp
     
     # fix lat lons
-    trk$lat = trk$TrkLatitude
-    trk$lon = trk$TrkLongitude
+    trk$lat = trk$TRKLATITUDE
+    trk$lon = trk$TRKLONGITUDE
     
     # get speed and altitude
     trk$altitude = NA
@@ -165,21 +171,21 @@ if(length(v_flist)>0){
     # sightings ---------------------------------------------------------------
     
     # take only sightings
-    sig = droplevels(tmp[which(as.character(tmp$SPECCODE...Sighting)!=""),])
+    sig = droplevels(tmp[which(as.character(tmp$SPECCODE...SIGHTING)!=""),])
     
-    if(nrow(sig)>0 & TRUE %in% (spp_key$code %in% sig$SPECCODE...Sighting)){
+    if(nrow(sig)>0 & TRUE %in% (spp_key$code %in% sig$SPECCODE...SIGHTING)){
       
       # extract data
-      sig_lat_col = which(colnames(sig) == "Sgt.Lat...Sighting"|colnames(sig) == "S_LAT...Sighting")
-      sig_lon_col = which(colnames(sig) == "Sgt.Lon...Sighting"|colnames(sig) == "S_LONG...Sighting")
-      number_col = which(colnames(sig) == "COUNT...Sighting"|colnames(sig) == "NUMBER...Sighting")
+      sig_lat_col = which(colnames(sig) == "SGT.LAT...SIGHTING"|colnames(sig) == "S_LAT...SIGHTING")
+      sig_lon_col = which(colnames(sig) == "SGT.LON...SIGHTING"|colnames(sig) == "S_LONG...SIGHTING")
+      number_col = which(colnames(sig) == "COUNT...SIGHTING"|colnames(sig) == "NUMBER...SIGHTING")
       sig$lat = sig[,sig_lat_col]
       sig$lon = sig[,sig_lon_col]
       sig$number = as.numeric(as.character(sig[,number_col]))
-      sig$calves = sig$NUMCALF...Sighting
+      sig$calves = sig$NUMCALF...SIGHTING
       
       # find indicies of matching
-      mind = match(table = spp_key$code, x = sig$SPECCODE...Sighting)
+      mind = match(table = spp_key$code, x = sig$SPECCODE...SIGHTING)
       
       # replace codes with species names
       sig$species = spp_key$species[mind]
@@ -189,7 +195,7 @@ if(length(v_flist)>0){
       
       # get scores
       sig$score = "possibly sighted"
-      sig$score[which(sig$IDREL...Sighting %in% c(3,2))] = 'sighted'
+      sig$score[which(sig$IDREL...SIGHTING %in% c(3,2))] = 'sighted'
       
       # add source
       sig$source = 'WhaleMap'
