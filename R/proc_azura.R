@@ -59,6 +59,7 @@ for(ii in seq_along(OBS)){
       obs$EntryLongitude = obs$InitLongitude
       levs = c('FIWH', 'RIWH', 'SEWH', 'HUWH', 'BLWH')
       labs = c('fin','right','sei','humpback','blue')
+      labs = c('fin','right','sei','humpback','blue')
     } else if('InitLat' %in% colnames(obs)){
       obs$EntryLatitude = obs$InitLat
       obs$EntryLongitude = obs$InitLong
@@ -72,7 +73,7 @@ for(ii in seq_along(OBS)){
     # format
     obs = obs %>%
       transmute(
-        time = as.POSIXct(paste0(tmp_date, ' ', tmp_time), format = '%m/%d/%y %H:%M:%S', tz = 'UTC'),
+        time = with_tz(as.POSIXct(paste0(tmp_date, ' ', tmp_time), format = '%m/%d/%y %H:%M:%S', tz = 'America/New_York'), tz = 'UTC'),
         date = as.Date(time),
         year = year(date),
         yday = yday(date),
@@ -110,7 +111,7 @@ for(ii in seq_along(OBS)){
   # format
   eff = eff %>%
     transmute(
-      time = as.POSIXct(paste0(tmp_date, ' ', tmp_time), format = '%m/%d/%y %H:%M:%S', tz = 'UTC'),
+      time = with_tz(as.POSIXct(paste0(tmp_date, ' ', tmp_time), format = '%m/%d/%y %H:%M:%S', tz = 'America/New_York'), tz = 'UTC'),
       date = as.Date(time),
       year = year(date),
       yday = yday(date),
