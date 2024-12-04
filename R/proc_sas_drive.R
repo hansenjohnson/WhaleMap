@@ -48,6 +48,10 @@ obs <- d %>%
             source = 'RWSAS') %>%
   filter(!is.na(lat) & !is.na(lon) & !is.na(time))
 
+# convert to UTC time
+tz(obs$time) = 'America/New_York'
+obs$time = with_tz(obs$time, tzone = 'UTC')
+
 # force negative longitude
 obs$lon = -abs(obs$lon)
 
