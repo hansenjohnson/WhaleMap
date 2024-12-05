@@ -34,7 +34,7 @@ for(ii in seq_along(OBS)){
   system(paste0('7z x ', ifile, ' -o', tmpdir, ' -aoa'), ignore.stdout = TRUE)
   
   # path to extracted file
-  zfile = paste0(tmpdir, '/v108/compass_ocsaerial.gdb/')
+  zfile = paste0(tmpdir, '/commondata/compass_ocsaerial.gdb/')
   
   # read in observations
   obs = st_read(zfile, layer = "Observation", quiet = TRUE) %>%
