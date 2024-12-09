@@ -1,14 +1,14 @@
-## proc_azura ##
+## proc_azura_live ##
 # process survey data from azura consultant group
 
 # input -------------------------------------------------------------------
 
 # data directory
-ddir = 'data/raw/azura/'
+ddir = 'data/raw/azura/live/'
 
 # outputs
-obs_file = 'data/interim/azura_obs.rds'
-eff_file = 'data/interim/azura_eff.rds'
+obs_file = 'data/interim/azura_live_obs.rds'
+eff_file = 'data/interim/azura_live_eff.rds'
 
 # setup -------------------------------------------------------------------
 

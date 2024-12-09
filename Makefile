@@ -25,7 +25,8 @@ data/processed/observations.rds : R/combine.R \
 									data/interim/nerw_live_*.rds \
 									data/interim/nerw_archived_*.rds \
 									data/interim/serw_*.rds \
-									data/interim/azura_*.rds \
+									data/interim/azura_archived_*.rds \
+									data/interim/azura_live_*.rds \
 									data/interim/hdr_*.rds \
 									data/interim/sotw_*.rds \
 									data/interim/medmr_*.rds \
@@ -115,8 +116,14 @@ data/interim/serw_*.rds : R/proc_serw.R data/raw/serw/*/*.csv
 	Rscript $<
 	$(remove_error)
 
-# Azura
-data/interim/azura_*.rds : R/proc_azura.R data/raw/azura/*
+# Azura (archived)
+data/interim/azura_archived_*.rds : R/proc_azura_archived.R data/raw/azura/archived/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# Azura (live)
+data/interim/azura_live_*.rds : R/proc_azura_live.R data/raw/azura/live/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)
