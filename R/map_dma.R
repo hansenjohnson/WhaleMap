@@ -54,8 +54,8 @@ if(nrow(dma)>0){
   dma$TRIGGERTYPE[dma$TRIGGERTYPE == 'a'] = 'Acoustic'
   dma$TRIGGERTYPE[dma$TRIGGERTYPE == 'v'] = 'Visual'
   
-  # remove any rows with values in 'CANCELLED' field (DMAs or ASZs that were extended by duplicate zone or canceled outright)
-  # dma <- dma %>% filter(CANCELLED != 'true')
+  # remove any dmas with text in the CANCELLED field
+  dma = dma[is.na(dma$CANCELLED),]
   
 }  else {
   
