@@ -99,8 +99,8 @@ for(ii in seq_along(flist)){
     itrk$lon = itrk$Longitude
     
     # get speed and altitude
-    itrk$altitude = as.numeric(itrk$ALT)
-    itrk$speed = as.numeric(itrk$SPEED)
+    itrk$altitude = ifelse(!is.null(itrk$ALT), as.numeric(itrk$ALT), NA)
+    itrk$speed = ifelse(!is.null(itrk$SPEED), as.numeric(itrk$SPEED), NA)
     
     # remove unused columns
     itrk = itrk[,c('time','lat','lon','altitude','speed','date','yday','year','platform','name','id','source')]
