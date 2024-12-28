@@ -75,7 +75,7 @@ for(ii in seq_along(EFF)){
   # format
   eff = eff %>%
     transmute(
-      time = as.POSIXct(as.character(DateTime), format = "%m/%d/%Y %H:%M", tz = 'UTC'),
+      time = as.POSIXct(as.character(eff$DateTime), format = "%Y-%m-%d %I:%M:%S %p", tz = 'UTC'),
       date = as.Date(time),
       year = year(date),
       yday = yday(date),
@@ -94,6 +94,9 @@ for(ii in seq_along(EFF)){
   
   # drop NA
   eff = eff %>% filter(!is.na(time) & !is.na(lat) & !is.na(lon))
+  
+  # error check
+  if(nrow(eff) == 0){stop("No data extracted from: ", ifile)}
   
   # store eff
   EFF[[ii]] = eff
