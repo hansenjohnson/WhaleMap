@@ -21,9 +21,7 @@ remove_dfo_ids = function(obs){
 # process -----------------------------------------------------------------
 
 # define start time
-message('NOTE - sending all data since Jan 1 2024 until DFO has archived 2024 data')
-t0 = as.Date('2024-01-01')
-# t0 = as.Date(paste0(year(Sys.Date()),'-01-01'))
+t0 = as.Date(paste0(year(Sys.Date()),'-01-01'))
 
 # read and subset tracks
 trk = readRDS('data/processed/effort.rds') %>%
