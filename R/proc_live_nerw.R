@@ -84,8 +84,12 @@ for(i in seq_along(flist)){
   # re-order
   trk = trk[order(trk$time, decreasing = TRUE),]
   
-  # simplify
-  trk = subsample_gps(gps = trk)
+  # simplify (with condition for odd file behavior)
+  if(basename(ifile) == "f_250211.xlsx"){
+    trk = subsample_gps(gps = trk, n = 30, simplify = F)  
+  } else {
+    trk = subsample_gps(gps = trk)  
+  }
   
   # combine all effort segments
   TRK[[i]] = trk

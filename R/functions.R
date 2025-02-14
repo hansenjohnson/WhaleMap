@@ -536,11 +536,11 @@ subsample_gps = function(gps, n=60, tol = 0.001, plot_comparison=FALSE, full_res
       
     }else{      
       # determine sample rate
-      ts = as.numeric(round(median(diff(gps$time), na.rm = T), 1))
+      ts = abs(as.numeric(round(median(diff(gps$time), na.rm = T), 1)))
       
       # subsample
       if(ts>0 & n>ts){
-        new = gps[seq(1, nrow(gps), n/ts),]
+        new = gps[seq(1, nrow(gps), round(n/ts)),]
       } else {
         message('No subsampling occured - unable to determine gps sampling rate')
         new = gps
@@ -552,7 +552,7 @@ subsample_gps = function(gps, n=60, tol = 0.001, plot_comparison=FALSE, full_res
   if(plot_comparison & !full_res){
     
     # start plot
-    png(paste0('figures/track_comparison/', min(gps$time), '.png'), width = 8, height = 5, units = 'in', res = 100)
+    # png(paste0('figures/track_comparison/', min(gps$time), '.png'), width = 8, height = 5, units = 'in', res = 100)
     
     par(mfrow=c(1,2))
     
@@ -565,7 +565,7 @@ subsample_gps = function(gps, n=60, tol = 0.001, plot_comparison=FALSE, full_res
     lines(new$lon, new$lat, type = 'l', col = 'blue')
     mtext(paste0('Points: ', nrow(new), ', Size (bytes): ', object.size(new)), side = 3, adj = 0)
     
-    dev.off()
+    # dev.off()
   }
   
   # return data
