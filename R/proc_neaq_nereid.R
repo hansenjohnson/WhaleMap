@@ -77,6 +77,7 @@ for(ii in seq_along(flist)){
   sig$calves = NA
   
   # get score
+  sig$score = NA
   sig$score[which(sig$number>0)] = 'sighted'
   
   # find indecies of matching
