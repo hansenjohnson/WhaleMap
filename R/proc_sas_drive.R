@@ -22,6 +22,9 @@ orgs = read_excel(ifile, sheet = "Organizations")
 # skip example line 
 d = d[-1,]
 
+# remove lines without time or position
+d = d %>% filter(!is.na(sightdate) & !is.na(lat) & !is.na(lon))
+
 # determine which coords are in DDM and correct
 latmin_i = which(!is.na(d$latmin))
 lonmin_i = which(!is.na(d$lonmin))
