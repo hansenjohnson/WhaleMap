@@ -107,7 +107,7 @@ graticule_ints = list(
 )
 
 # hidden platforms
-hidden_platforms = c('cp_king_air', 'jasco_test')
+hidden_platforms = c('cp_king_air', 'jasco_test', 'jasco-unmanned-sp48')
 
 # load data ---------------------------------------------------------------
 
