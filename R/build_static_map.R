@@ -50,6 +50,7 @@ suppressPackageStartupMessages(library(lubridate))
 suppressPackageStartupMessages(library(oce))
 suppressPackageStartupMessages(library(leaflet.extras))
 suppressPackageStartupMessages(library(leaflegend))
+source('global.R')
 
 # time period to show (days)
 t1 = as.Date(format(Sys.time(), "%Y-%m-%d", tz = 'UTC'))
@@ -93,7 +94,7 @@ load('data/processed/dma.rda')
 load('data/processed/sma.rda')
 
 # tracklines
-tracks = readRDS('data/processed/effort.rds')
+tracks = readRDS('data/processed/effort.rds') %>% filter(!(name %in% hidden_platforms))
 
 # latest dcs positions
 lfile = 'data/processed/dcs_live_latest_position.rds'
@@ -102,7 +103,7 @@ if(file.exists(lfile)){
 }
 
 # sightings / detections
-obs = readRDS('data/processed/observations.rds')
+obs = readRDS('data/processed/observations.rds') %>% filter(!(name %in% hidden_platforms))
 
 # subset data -------------------------------------------------------------
 

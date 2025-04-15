@@ -10,6 +10,7 @@ obs_file = 'shared/dfo-whalemap/obs_for_dfo.csv'
 # setup -------------------------------------------------------------------
 
 source('R/functions.R')
+source('global.R')
 
 # remove dfo/tc ids
 remove_dfo_ids = function(obs){
@@ -25,12 +26,12 @@ t0 = as.Date(paste0(year(Sys.Date()),'-01-01'))
 
 # read and subset tracks
 trk = readRDS('data/processed/effort.rds') %>%
-  dplyr::filter(date >= t0 & !is.na(lat) & !is.na(lon) & !(source %in% c('WhaleInsight', 'NARWC'))) %>%
+  dplyr::filter(date >= t0 & !is.na(lat) & !is.na(lon) & !(source %in% c('WhaleInsight', 'NARWC')) & !(name %in% hidden_platforms)) %>%
   remove_dfo_ids()
 
 # read and subset observations
 obs = readRDS('data/processed/observations.rds') %>%
-  dplyr::filter(date >= t0 & !is.na(lat) & !is.na(lon) & !(source %in% c('WhaleInsight', 'NARWC'))) %>%
+  dplyr::filter(date >= t0 & !is.na(lat) & !is.na(lon) & !(source %in% c('WhaleInsight', 'NARWC')) & !(name %in% hidden_platforms)) %>%
   remove_dfo_ids()
 
 # create a folder to write the files to
