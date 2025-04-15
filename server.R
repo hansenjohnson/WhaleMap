@@ -136,7 +136,7 @@ function(input, output, session){
   
   # subset track data
   trk <- eventReactive(input$go|input$go == 0, {
-    if(input$password == password){
+    if(input$password == password | input$password == test_password){
       
       tracks %>%
         filter(
@@ -171,6 +171,19 @@ function(input, output, session){
             platform %in% platform() & 
             name %in% name() &
             species %in% species()
+        ) %>%
+        droplevels()
+      
+    } else if(input$password == test_password){
+      
+      observations %>%
+        filter(
+          date %in% dates() & 
+            source %in% dsource() &
+            platform %in% platform() & 
+            species %in% species() &
+            name %in% name() &
+            score != 'possible visual'
         ) %>%
         droplevels()
       
@@ -290,7 +303,14 @@ function(input, output, session){
   # password warnings
   observeEvent(input$go,{
     if(input$password == password){
-      showNotification(h4('Password was correct! Showing unverified data and removing plotting limits...'),
+      showNotification(h4('Password was correct! Showing unverified test data and removing plotting limits...'),
+                       duration = NULL, closeButton = T, type = 'message')
+    }
+  })
+  
+  observeEvent(input$go,{
+    if(input$password == test_password){
+      showNotification(h4('Password was correct! Showing unverified test data...'),
                        duration = NULL, closeButton = T, type = 'message')
     }
   })
