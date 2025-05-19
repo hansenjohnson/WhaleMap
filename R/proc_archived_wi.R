@@ -77,10 +77,12 @@ saveRDS(tracks, trk_ofile)
 obs_ifiles = list.files(path = idir, pattern = 'obs_from_dfo.csv', 
                         include.dirs = T, recursive = T, full.names = T)
 
-# read in tracks
+# read in obs
 OBS = vector('list', length = length(obs_ifiles))
 for(ii in seq_along(OBS)){
-  OBS[[ii]] = read.csv(obs_ifiles[[ii]], stringsAsFactors = F)
+  OBS[[ii]] = read.csv(obs_ifiles[[ii]], stringsAsFactors = F) %>% 
+    mutate(source = "WhaleInsight") %>%
+    config_observations()
 }
 
 # flatten
@@ -91,11 +93,6 @@ observations = config_observations(obs)
 
 # remove DCS platforms
 observations = observations[!observations$name %in% dcs,]
-
-# fix source
-if(nrow(observations)>0){
-  observations$source = 'WhaleInsight'  
-}
 
 # save
 saveRDS(observations, obs_ofile)
