@@ -69,6 +69,9 @@ if(nrow(tracks)>0){
   }
 }
 
+# REMOVE BAD DATA
+tracks = tracks %>% filter(id != "2025-06-12_vessel_jdmartin")
+
 # save
 saveRDS(tracks, trk_ofile)
 
@@ -85,6 +88,9 @@ observations = observations[!observations$name %in% dcs,]
 if(nrow(observations)>0){
   observations$source = 'WhaleInsight'  
 }
+
+# REMOVE BAD DATA
+observations = observations %>% filter(id != "2025-06-12_vessel_jdmartin")
 
 # save
 saveRDS(observations, obs_ofile)
