@@ -28,6 +28,7 @@ data/processed/observations.rds : R/combine.R \
 									data/interim/serw_*.rds \
 									data/interim/azura_archived_*.rds \
 									data/interim/azura_live_*.rds \
+									data/interim/tetra_*.rds \
 									data/interim/hdr_*.rds \
 									data/interim/sotw_*.rds \
 									data/interim/medmr_*.rds \
@@ -138,6 +139,12 @@ data/interim/azura_live_*.rds : R/proc_azura_live.R data/raw/azura/live/*
 
 # HDR
 data/interim/hdr_*.rds : R/proc_hdr.R data/raw/hdr/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)	
+
+# Tetra
+data/interim/tetra_*.rds : R/proc_tetra.R data/raw/tetra/*/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)	

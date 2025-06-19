@@ -77,6 +77,10 @@ rclone sync wm_drive:"HDR Aerial Survey Data" "hdr/" --drive-shared-with-me --dr
 printf "\n*** Checking Maine DMR Google Drive ***\n\n"
 rclone sync wm_drive:"Maine_DMR_WhaleMap" "medmr/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
 
+# Sync Tetra Tech
+printf "\n*** Checking Maine DMR Google Drive ***\n\n"
+rclone sync wm_drive:"Year 1 Survey Effort" "tetra/drive/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
+
 # move to project directory
 cd ${DESTDIR}
 

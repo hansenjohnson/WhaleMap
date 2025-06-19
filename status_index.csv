@@ -12,3 +12,4 @@ proc_medmr.R,Maine DMR sightings/effort,https://www.maine.gov/dmr/science/right-
 proc_live_nerw.R,NOAA NEFSC aerial survey sightings/effort,https://www.nefsc.noaa.gov/psb/surveys/NARWSS.html,data/email/default.csv
 proc_azura_live.R,Azura Consulting aerial survey sightings/effort,https://azuraco.com/large-whale-aerial-surveys-va-de-nj/,data/email/default.csv
 proc_hdr.R,HDR aerial survey sightings/effort,https://www.navymarinespeciesmonitoring.us/reading-room/project-profiles/mid-atlantic-nearshore-mid-shelf-baleen-whale-monitoring/,data/email/default.csv
+proc_tetra.R,Tetra Tech aerial survey sightings/effort,https://www.tetratech.com/,data/email/default.csv
