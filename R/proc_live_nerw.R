@@ -65,7 +65,7 @@ for(i in seq_along(flist)){
   
   # add deployment metadata
   tmp$platform = 'plane'
-  tmp$name = 'noaa_twin_otter'
+  tmp$name = gsub(pattern = " ", replacement = "_", x = tolower(tmp$PLANE))
   tmp$id = paste(tmp$date, tmp$platform, tmp$name, sep = '_')
   
   # extract lat/lon
