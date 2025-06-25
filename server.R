@@ -278,7 +278,7 @@ function(input, output, session){
             tags$ul(
               tags$li("Because whales swim continuously, exact locations are obsolete within minutes of a sighting"), 
               tags$li("A specific date or date range may contain few or no detections. This does not mean whales were not present. Effort is typically limited to seasonal whale watches or researchers dedicated to locating seasonal habitats."), 
-              tags$li("Right whales are likely to be present within Seasonal and Dynamic Management Areas even if no observations are illustrated.")
+              tags$li("Right whales are likely to be present within Seasonal and Dynamic Management Areas and Slow Zones, even if no observations are illustrated.")
             ), 
             tags$br(""),
             tags$p(style="text-align:center;", "New to WhaleMap?", tags$a(href="https://whalemap.org/guide.html","Click here for a user guide"))
