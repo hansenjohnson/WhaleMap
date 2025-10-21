@@ -131,11 +131,16 @@ for(i in seq_along(flist)){
                   grepl('fin est no break', eg$SIGHTING_COMMENTS) | 
                   grepl('No right whales', eg$DateTime))),]
     
+    # blue whales
+    bw = sig[sig$species=='blue',]
+    bw = bw[(!grepl('dup', bw$SIGHTING_COMMENTS) & 
+               grepl('ap', bw$SIGHTING_COMMENTS)),]
+    
     # other whales
-    noeg = sig[sig$species!='right',]
+    ows = sig[!sig$species %in% c('right','blue'),]
     
     # recombine all species
-    sig = rbind.data.frame(eg,noeg)
+    sig = rbind.data.frame(eg,bw,ows)
     
     # keep important columns
     sig = sig[,cnames]
