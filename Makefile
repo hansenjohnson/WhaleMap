@@ -212,6 +212,12 @@ shared/dfo-whalemap/*.csv : src/share_wi.sh R/share_wi.R data/processed/effort.r
 	src/share_wi.sh
 	$(remove_error)
 
+# Share data with SARBO
+shared/sarbo/*.csv : src/share_sarbo.sh R/share_sarbo.R data/processed/effort.rds data/processed/observations.rds
+	$(report_error)
+	src/share_sarbo.sh
+	$(remove_error)
+
 ## SAS ##
 .PHONY : sas
 wi : shared/sas/whalemap-data.csv
