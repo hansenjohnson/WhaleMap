@@ -4,7 +4,7 @@ remove_error = @bash src/remove_error.sh $<
 
 ## ALL ##
 .PHONY : all
-all : obs latest wi sas dma map feed
+all : obs latest wi sarbo sas dma map feed
 
 ## OBSERVATIONS ##
 .PHONY : obs
@@ -211,6 +211,10 @@ shared/dfo-whalemap/*.csv : src/share_wi.sh R/share_wi.R data/processed/effort.r
 	$(report_error)
 	src/share_wi.sh
 	$(remove_error)
+
+## SARBO ##
+.PHONY : sarbo
+sarbo : shared/sarbo/*.csv
 
 # Share data with SARBO
 shared/sarbo/*.csv : src/share_sarbo.sh R/share_sarbo.R data/processed/effort.rds data/processed/observations.rds
