@@ -144,7 +144,7 @@ data/interim/hdr_*.rds : R/proc_hdr.R data/raw/hdr/*
 	$(remove_error)	
 
 # Tetra
-data/interim/tetra_*.rds : R/proc_tetra.R data/raw/tetra/*/*
+data/interim/tetra_*.rds : R/proc_tetra.R data/raw/tetra/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)	
