@@ -34,7 +34,7 @@ obs$platform[obs$platform == 'dedicated'] = 'vessel'
 sig = obs %>%
   st_drop_geometry() %>%
   transmute(
-    time = as.POSIXct(CaptureDate/1000),
+    time = as.POSIXct(CaptureDate/1000, origin = "1970-01-01"),
     date = as.Date(time),
     year = year(date),
     yday = yday(date),
