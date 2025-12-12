@@ -32,6 +32,7 @@ data/processed/observations.rds : R/combine.R \
 									data/interim/hdr_*.rds \
 									data/interim/sotw_*.rds \
 									data/interim/medmr_*.rds \
+									data/interim/mdmf_*.rds \
 									data/interim/jasco_seatrac_*.rds \
 									data/interim/sas_drive_obs.rds \
 									data/interim/wi_live_*.rds \
@@ -157,6 +158,12 @@ data/interim/sotw_*.rds : R/proc_sotw.R data/raw/sotw/*
 
 # ME DMR
 data/interim/medmr_*.rds : R/proc_medmr.R data/raw/medmr/*/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# MDMF
+data/interim/mdmf_*.rds : R/proc_mdmf.R
 	$(report_error)
 	Rscript $<
 	$(remove_error)
