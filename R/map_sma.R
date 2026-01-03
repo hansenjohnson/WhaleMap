@@ -34,8 +34,8 @@ sma$st_date = as.Date(paste0(yr, '-', sma$st_mo,'-', sma$st_day))
 sma$end_date = as.Date(paste0(yr, '-', sma$end_mo,'-', sma$end_day))
 
 # increase end dates to next year if needed
-ei = sma$end_date <= sma$st_date
-sma$end_date[ei] = sma$end_date[ei] %m+% years(1)
+# ei = sma$end_date <= sma$st_date
+# sma$end_date[ei] = sma$end_date[ei] %m+% years(1)
 
 # decrease start dates to previous year if needed
 si = sma$st_date >= sma$end_date
