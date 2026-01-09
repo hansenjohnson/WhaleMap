@@ -1,5 +1,5 @@
 ## proc_dmr ##
-# process and save all dmr vessel/aerial sightings and effort
+# process and save all Maine dmr vessel/aerial sightings and effort
 
 # user input --------------------------------------------------------------
 
