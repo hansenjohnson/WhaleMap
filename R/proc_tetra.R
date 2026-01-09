@@ -1,5 +1,5 @@
 ## proc_tetra ##
-# process data from tetra tech
+# process data from tetra tech ny surveys
 
 # input -------------------------------------------------------------------
 
