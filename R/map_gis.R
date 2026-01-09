@@ -74,6 +74,7 @@ z_lma$ID = 'LMA 1 Restricted Area'
 z_lma$ACTIVE = '01 Oct - 31 Jan'
 z_lma = z_lma %>% select(ID,ACTIVE,geometry)
 
+#https://www.fisheries.noaa.gov/resource/map/massachusetts-restricted-area-state-waters-expansion-and-wedge-area
 z_mass0 = st_read('data/raw/gis/alwtp/Mass_Restricted_Area_State_Expansion/') %>%
   st_transform(ref)
 z_mass = st_simplify(z_mass0, dTolerance = 0.01, preserveTopology = TRUE)
