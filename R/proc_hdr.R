@@ -1,5 +1,5 @@
 ## proc_hdr ##
-# process survey data from hdr consultant group
+# process survey data from hdr survey group
 
 # input -------------------------------------------------------------------
 
