@@ -22,8 +22,7 @@ remove_dfo_ids = function(obs){
 # process -----------------------------------------------------------------
 
 # define start time
-# t0 = as.Date(paste0(year(Sys.Date()),'-01-01'))
-t0 = as.Date('2025-01-01')
+t0 = as.Date(paste0(year(Sys.Date()),'-01-01'))
 
 # read and subset tracks
 trk = readRDS('data/processed/effort.rds') %>%
