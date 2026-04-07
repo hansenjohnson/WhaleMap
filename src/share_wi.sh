@@ -14,7 +14,7 @@ if [[ "$HOSTNAME" == 'AZE-WHALEMAP1' ]]; then
 	Rscript R/share_wi.R
 
 	# copy output data back to Google Drive
-	rclone copy "shared/dfo-whalemap/" whalemapdata:"WhaleMapData_Exchange/"
+	rclone copy "shared/dfo-whalemap/" wm_drive:"WhaleMapData_Exchange/" --drive-shared-with-me
 
 elif [[ "$HOSTNAME" != 'AZE-WHALEMAP1' ]]; then
 
