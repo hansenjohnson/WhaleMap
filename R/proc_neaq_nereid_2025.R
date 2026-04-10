@@ -1,14 +1,14 @@
-## proc_neaq_nereid ##
+## proc_neaq_nereid_2025 ##
 # process and save all sightings and tracklines from neaq vessel nereid
 
 # user input --------------------------------------------------------------
 
 # directory to look for files
-data_dir = 'data/raw/neaq/nereid/'
+data_dir = 'data/raw/neaq/nereid/2025/'
 
 # directory for output
-eff_file = 'data/interim/neaq_nereid_eff.rds'
-obs_file = 'data/interim/neaq_nereid_obs.rds'
+eff_file = 'data/interim/neaq_nereid_2025_eff.rds'
+obs_file = 'data/interim/neaq_nereid_2025_obs.rds'
 
 # setup -------------------------------------------------------------------
 
