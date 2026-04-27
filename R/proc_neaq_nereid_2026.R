@@ -73,7 +73,7 @@ for(ii in seq_along(flist)){
   # extract data
   sig$lat = sig$LATITUDE
   sig$lon = sig$LONGITUDE
-  sig$number = sig$NUMBER
+  sig$number = as.numeric(sig$NUMBER)
   sig$calves = sig$NUMCALF
   
   # get score
