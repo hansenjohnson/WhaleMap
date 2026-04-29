@@ -76,6 +76,7 @@ z_lma = z_lma %>% select(ID,ACTIVE,geometry)
 
 #https://www.fisheries.noaa.gov/resource/map/massachusetts-restricted-area-state-waters-expansion-and-wedge-area
 z_mass0 = st_read('data/raw/gis/alwtp/MRAWedgeandExpansion/') %>%
+  filter(COMMNAME != "MRA Wedge")%>%
   st_transform(ref)
 z_mass = st_simplify(z_mass0, dTolerance = 0.01, preserveTopology = TRUE)
 z_mass$ID = 'Massachusetts Restricted Area'
@@ -107,7 +108,7 @@ z_seraS$ACTIVE = '01 Dec - 31 Mar'
 z_seraS = z_seraS %>% select(ID,ACTIVE,geometry)
 
 # combine
-alwtrp = rbind(z_gsc, z_lma, z_mass, z_soi, z_ccb, z_seraN, z_seraS)
+alwtrp = rbind(z_gsc, z_lma, z_mass, z_soi, z_seraN, z_seraS) #removed z_ccb 2026-04-29
 
 # test with leaflet
 # library(leaflet)
