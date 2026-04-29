@@ -18,7 +18,8 @@ data/processed/observations.rds : R/combine.R \
 									data/interim/narwc_*.rds \
 									data/interim/neaq_aerial_*.rds \
 									data/interim/neaq_vessel_*.rds \
-									data/interim/neaq_nereid_*.rds \
+									data/interim/neaq_nereid_2025_*.rds \
+									data/interim/neaq_nereid_2026_*.rds \
 									data/interim/neaq_sne_*.rds \
 									data/interim/nefsc_archived_*.rds \
 									data/interim/nefsc_vessel_live_*.rds \
@@ -78,8 +79,14 @@ data/interim/neaq_vessel_*.rds : R/proc_neaq_vessel.R data/raw/neaq/vessel/*
 	Rscript $<
 	$(remove_error)
 
-# NEAq nereid
-data/interim/neaq_nereid_*.rds : R/proc_neaq_nereid.R data/raw/neaq/nereid/*
+# NEAq nereid 2025
+data/interim/neaq_nereid_2025_*.rds : R/proc_neaq_nereid_2025.R data/raw/neaq/nereid/2025/*
+	$(report_error)
+	Rscript $<
+	$(remove_error)
+
+# NEAq nereid 2026
+data/interim/neaq_nereid_2026_*.rds : R/proc_neaq_nereid_2026.R data/raw/neaq/nereid/2026/*
 	$(report_error)
 	Rscript $<
 	$(remove_error)

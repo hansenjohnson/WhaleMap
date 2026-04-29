@@ -1,5 +1,5 @@
 ## proc_nefsc_vessel ##
-# define function to process sightings and tracklines from NEFSC vessel(s)
+# define function to process sightings and tracklines from NEFSC vessel(s) surveys
 
 # setup -------------------------------------------------------------------
 

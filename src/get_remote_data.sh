@@ -42,11 +42,11 @@ rclone sync wm_drive:"WhaleMap_NEAq_aerial" "neaq/aerial/" --drive-shared-with-m
 
 # Sync NEAq vessel data Google drive
 printf "\n*** Checking NEAq NEREID Google Drive ***\n\n"
-rclone sync wm_drive:"2025_NEAq_NEREID" "neaq/nereid/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
+rclone sync wm_drive:"2026_NEAq_NEREID" "neaq/nereid/2026/" --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.mp3 --exclude *.MP3 --exclude *.pdf --exclude *.MPG
 
 # Sync NERW aerial data Google drive
 printf "\n*** Checking NERW Google Drive ***\n\n"
-rclone sync wm_drive:"2025 NEFSC Aerials/2025 NEFSC Survey Data/Flights/WhaleMap NEFSC 2025" "nerw/archived/2025/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
+# rclone sync wm_drive:"2025 NEFSC Aerials/2025 NEFSC Survey Data/Flights/WhaleMap NEFSC 2025" "nerw/archived/2025/" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 rclone sync wm_drive:"WhaleMap NEFSC 2026" "nerw/live" --drive-shared-with-me --drive-formats csv --backup-dir backups -v --exclude *.JPG --exclude *.jpg --exclude *.mp4 --exclude *.pdf
 
 # Sync NEFSC vessel data Google drive
