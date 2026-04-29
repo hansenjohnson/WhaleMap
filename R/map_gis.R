@@ -75,7 +75,7 @@ z_lma$ACTIVE = '01 Oct - 31 Jan'
 z_lma = z_lma %>% select(ID,ACTIVE,geometry)
 
 #https://www.fisheries.noaa.gov/resource/map/massachusetts-restricted-area-state-waters-expansion-and-wedge-area
-z_mass0 = st_read('data/raw/gis/alwtp/Mass_Restricted_Area_State_Expansion/') %>%
+z_mass0 = st_read('data/raw/gis/alwtp/MRAWedgeandExpansion/') %>%
   st_transform(ref)
 z_mass = st_simplify(z_mass0, dTolerance = 0.01, preserveTopology = TRUE)
 z_mass$ID = 'Massachusetts Restricted Area'
@@ -88,11 +88,11 @@ z_soi$ID = 'South Island Restricted Area'
 z_soi$ACTIVE = '01 Feb - 30 Apr'
 z_soi = z_soi %>% select(ID,ACTIVE,geometry)
 
-z_ccb = st_read('data/raw/gis/alwtp/Cape_Cod_Bay_Restricted_Area/') %>%
-  st_transform(ref)
-z_ccb$ID = 'Cape Cod Bay Restricted Area'
-z_ccb$ACTIVE = '01 Jan - 15 Apr'
-z_ccb = z_ccb %>% select(ID,ACTIVE,geometry)
+# z_ccb = st_read('data/raw/gis/alwtp/Cape_Cod_Bay_Restricted_Area/') %>%
+#   st_transform(ref)
+# z_ccb$ID = 'Cape Cod Bay Restricted Area'
+# z_ccb$ACTIVE = '01 Jan - 15 Apr'
+# z_ccb = z_ccb %>% select(ID,ACTIVE,geometry)
 
 z_seraN = st_read('data/raw/gis/alwtp/Southeast_US_Restricted_Area/north/') %>%
   st_transform(ref)
