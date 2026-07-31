@@ -106,7 +106,7 @@ if(!TRUE %in% is.na(SCORES)){
 
 # platforms
 if(!TRUE %in% is.na(PLATFORMS)){
-  obs = obs %>% filter(score %in% PLATFORMS)
+  obs = obs %>% filter(platform %in% PLATFORMS)
 }
 
 # providers
