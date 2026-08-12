@@ -289,7 +289,11 @@ body <- dashboardBody(
            box(width = NULL, solidHeader = T,collapsible = T, 
                status = 'primary', title = 'Map', 
                
-               leafletOutput("map", height = 550),
+               # leafglOutput (not leafletOutput) is required when using
+               # leafgl's WebGL point/polyline layers - it attaches the
+               # extra JS dependencies leafgl needs. The server-side render
+               # call stays renderLeaflet() (see server.R).
+               leafgl::leafglOutput("map", height = 550),
                
                helpText("These data are preliminary data, subject to change, and not to be used without permission from the contributor(s)")
            ),

@@ -17,6 +17,10 @@ suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(plotly))
 suppressPackageStartupMessages(library(leaflet.extras))
 suppressPackageStartupMessages(library(shinybusy))
+# used for WebGL-accelerated rendering of the observation-point and track
+# layers (leafgl wraps Leaflet.glify); see the track/possible/detected
+# observers in server.R and leafglOutput("map") in ui.R
+suppressPackageStartupMessages(library(leafgl))
 # used in server.R to batch many separate track polylines into a single
 # addPolylines() call (one sf LINESTRING feature per track) instead of one
 # proxy call per track - see the track observer in server.R
@@ -80,7 +84,7 @@ visual_platforms = c('plane', 'vessel', 'rpas')
 acoustic_platforms = c('slocum', 'buoy', 'wave')
 
 # define track point plotting threshold
-npts = 500000
+npts = 250000
 
 # define time lag for startup plotting
 tlag = 14 # days

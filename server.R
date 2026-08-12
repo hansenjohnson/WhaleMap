@@ -881,6 +881,13 @@ function(input, output, session){
     proxy <- leafletProxy("map")
     proxy %>% clearGroup('tracks')
     
+    # tracks rendered via leafgl (Leaflet.glify) are WebGL layers, not
+    # standard leaflet layers, so clearGroup('tracks') above does NOT remove
+    # them - they have to be removed explicitly by layerId. Wrapped in
+    # tryCatch since this errors harmlessly the first time the app loads
+    # (nothing has been added with this layerId yet).
+    tryCatch(removeGlPolylines(proxy, layerId = 'gltracks'), error = function(e) NULL)
+    
     # tracks
     
     if(input$tracks & nrow(trk())<npts|input$password == password){
@@ -889,6 +896,8 @@ function(input, output, session){
       pal = colorpal_trk()
       
       ind = which(colnames(trk())==colorby_trk())
+      
+      t0 <- Sys.time()
       
       # set up polyline plotting - sort within each id so points connect
       # in time order, and drop any track with fewer than 2 points (a
@@ -900,14 +909,13 @@ function(input, output, session){
       
       # NOTE: previously this issued ONE addPolylines() call per track id via
       # purrr::walk(), which for hundreds of tracks means hundreds of separate
-      # proxy calls sent to the browser - each with real overhead.
-      # A first attempt at batching this (passing lng/lat as a *list* of
-      # vectors directly) doesn't work: addPolylines()'s internal
-      # validateCoords() requires lng/lat to be plain numeric vectors, not a
-      # list, so it errored immediately. The correct way to draw many
-      # separate lines - each with its own color and popup - in a single
-      # call is to build one `sf` object with one LINESTRING feature per
-      # track and pass that as `data`, with color/popup as column formulas.
+      # proxy calls sent to the browser - each with real overhead. Building
+      # one sf object with one LINESTRING feature per track and drawing it
+      # in a single call (now via leafgl's WebGL renderer, addGlPolylines)
+      # is both far fewer calls AND WebGL-rendered, which is the main
+      # speedup for datasets with many/long tracks. leafgl does NOT support
+      # MULTILINESTRING geometry, so each feature here must stay a plain
+      # LINESTRING (already true, since we build one feature per track id).
       if(length(tracks.df) > 0){
         
         line_geoms <- lapply(tracks.df, function(d){
@@ -924,16 +932,42 @@ function(input, output, session){
         )
         
         proxy <- proxy %>%
-          addPolylines(data = lines_sf,
-                       group = 'tracks',
-                       weight = 2,
-                       smoothFactor = 1,
-                       options = markerOptions(removeOutsideVisibleBounds=TRUE, opacity = 0.5),
-                       color = ~trk_color,
-                       popup = ~trk_popup)
+          addGlPolylines(data = lines_sf,
+                         layerId = 'gltracks',
+                         group = 'tracks',
+                         weight = 0.4,
+                         opacity = 0.3,
+                         color = lines_sf$trk_color,
+                         popup = lines_sf$trk_popup)
+        
+        message(sprintf(
+          "[tracks] %d tracks (%d total points) -> leafgl (addGlPolylines) (server-side draw call: %.3f sec)",
+          length(tracks.df), nrow(trk_sorted), as.numeric(Sys.time() - t0, units = 'secs')
+        ))
       }
       
-      # set up buoy plotting (first ping per buoy deployment)
+    }
+    
+  })
+  
+  # buoy observer ------------------------------------------------------  
+  # split out from the track observer above so it can run at a lower
+  # priority than possible/detected below - see the priority-ordering note
+  # by the "latest observer" section for why.
+  observeEvent(input$tracks|input$go|input$go == 0, priority = 0, {
+    
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('buoys')
+    
+    if(input$tracks & nrow(trk())<npts|input$password == password){
+      
+      pal = colorpal_trk()
+      ind = which(colnames(trk())==colorby_trk())
+      
+      # set up buoy plotting (first ping per buoy deployment). buoy
+      # deployments are a small handful of points at most, so this stays on
+      # the regular (non-WebGL) leaflet renderer - the batching fix from
+      # before (single vectorized addCircleMarkers call) is enough here.
       buoy.df <- trk() %>%
         filter(platform == 'buoy') %>%
         arrange(time) %>%
@@ -941,9 +975,6 @@ function(input, output, session){
         dplyr::slice(1) %>%
         ungroup()
       
-      # NOTE: same batching fix here - addCircleMarkers() already accepts a
-      # whole data frame plus vectorized color/popup in one call, so the
-      # per-buoy purrr::walk() loop was unnecessary even before this change.
       if(nrow(buoy.df) > 0){
         buoy_colors <- pal(as.character(buoy.df[[ind]]))
         buoy_popups <- paste0('Track ID: ', buoy.df$id)
@@ -956,7 +987,7 @@ function(input, output, session){
                            fill = T,
                            fillOpacity = 0,
                            weight = 2.5,
-                           group = 'tracks', 
+                           group = 'buoys', 
                            lng = ~lon, 
                            lat = ~lat, 
                            color = buoy_colors,
@@ -968,9 +999,19 @@ function(input, output, session){
   })
   
   # latest observer ------------------------------------------------------  
+  # NOTE on layer order: on startup and after "Go", the default visual
+  # stacking (bottom to top) should be polygons < tracks < observations <
+  # icons (buoys/live positions). This is controlled purely by *when* each
+  # observer's block runs and adds its layer to the map - later-added layers
+  # draw on top of earlier ones - so priority is set high (runs first, ends
+  # up at the bottom) for polygons and progressively lower (runs later, ends
+  # up higher) for tracks, then observations, then icons. This intentionally
+  # preserves the old/original behavior where toggling any individual layer
+  # off and back on re-adds it last, putting it on top regardless of this
+  # default order - only the STARTUP order is being controlled here.
   if(file.exists(lfile)){
     
-    observe(priority = 3, {
+    observe(priority = 0, {
       
       # define proxy
       proxy <- leafletProxy("map")
@@ -1001,6 +1042,40 @@ function(input, output, session){
     })
   }
   
+  # shared popup builder for observation points (possible + definite) ------
+  
+  build_obs_popup <- function(d){
+    paste(sep = "<br/>",
+         paste0("Species: ", d$species),
+         paste0("Score: ", d$score),
+         paste0("Number: ", d$number),
+         paste0("Calves: ", d$calves),
+         paste0("Platform: ", d$platform),
+         paste0("Name: ", d$name),
+         paste0("Date: ", as.character(d$date)),
+         paste0("Time: ", as.character(format(d$time, '%H:%M:%S UTC'))),
+         paste0("Position: ", as.character(d$lat), ', ', as.character(d$lon)),
+         paste0("Source: ", d$source))
+  }
+  
+  # sf::st_as_sf() refuses to build point geometry from NA coordinates
+  # (unlike the old addCircleMarkers(), which just silently skipped/rendered
+  # nothing for those rows) - drop them first.
+  drop_na_coords <- function(d){
+    d[!is.na(d$lon) & !is.na(d$lat), ]
+  }
+  
+  # render logger -------------------------------------------------------
+  # Prints to the R console (visible in the R/RStudio console when running
+  # locally, or in the server log under shiny-server/Connect) so you can
+  # confirm point counts and server-side draw timing.
+  log_render <- function(label, n, elapsed_sec){
+    message(sprintf(
+      "[%s] %d points -> leaflet (addCircleMarkers) (server-side draw call: %.3f sec)",
+      label, n, elapsed_sec
+    ))
+  }
+  
   # possible observer ------------------------------------------------------  
   
   observe(priority = 2,{
@@ -1009,27 +1084,23 @@ function(input, output, session){
     proxy <- leafletProxy("map")
     proxy %>% clearGroup('possible')
     
-    if(input$possible){
+    pos_clean <- drop_na_coords(pos())
+    
+    if(input$possible & nrow(pos_clean) > 0){
       
       # set up color palette plotting
       pal <- colorpal_obs()
       
-      # possible detections
-      addCircleMarkers(map = proxy, data = pos(), ~lon, ~lat, group = 'possible',
+      t0 <- Sys.time()
+      
+      # possible detections - standard leaflet rendering (addCircleMarkers)
+      addCircleMarkers(map = proxy, data = pos_clean, ~lon, ~lat, group = 'possible',
                        radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
-                       fillColor = pal(pos()[,which(colnames(pos())==colorby_obs())]),
-                       popup = ~paste(sep = "<br/>" ,
-                                      paste0("Species: ", species),
-                                      paste0("Score: ", score),
-                                      paste0("Number: ", number),
-                                      paste0("Calves: ", calves),
-                                      paste0("Platform: ", platform),
-                                      paste0("Name: ", name),
-                                      paste0("Date: ", as.character(date)),
-                                      paste0("Time: ", as.character(format(time, '%H:%M:%S UTC'))),
-                                      paste0("Position: ", as.character(lat), ', ', as.character(lon)),
-                                      paste0("Source: ", source)),
+                       fillColor = pal(pos_clean[[colorby_obs()]]),
+                       popup = build_obs_popup(pos_clean),
                        options = markerOptions(removeOutsideVisibleBounds=T))
+      
+      log_render('possible', nrow(pos_clean), as.numeric(Sys.time() - t0, units = 'secs'))
     }
   })
   
@@ -1041,27 +1112,23 @@ function(input, output, session){
     proxy <- leafletProxy("map")
     proxy %>% clearGroup('detected')
     
-    if(input$detected){
+    det_clean <- drop_na_coords(det())
+    
+    if(input$detected & nrow(det_clean) > 0){
       
       # set up color palette plotting
       pal <- colorpal_obs()
       
-      # definite detections
-      addCircleMarkers(map = proxy, data = det(), ~lon, ~lat, group = 'detected',
+      t0 <- Sys.time()
+      
+      # definite detections - standard leaflet rendering (addCircleMarkers)
+      addCircleMarkers(map = proxy, data = det_clean, ~lon, ~lat, group = 'detected',
                        radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
-                       fillColor = pal(det()[,which(colnames(det())==colorby_obs())]),
-                       popup = ~paste(sep = "<br/>" ,
-                                      paste0("Species: ", species),
-                                      paste0("Score: ", score),
-                                      paste0("Number: ", number),
-                                      paste0("Calves: ", calves),
-                                      paste0("Platform: ", platform),
-                                      paste0("Name: ", name),
-                                      paste0("Date: ", as.character(date)),
-                                      paste0("Time: ", as.character(format(time, '%H:%M:%S UTC'))),
-                                      paste0("Position: ", as.character(lat), ', ', as.character(lon)),
-                                      paste0("Source: ", source)),
+                       fillColor = pal(det_clean[[colorby_obs()]]),
+                       popup = build_obs_popup(det_clean),
                        options = markerOptions(removeOutsideVisibleBounds=T))
+      
+      log_render('detected', nrow(det_clean), as.numeric(Sys.time() - t0, units = 'secs'))
     }
   })
   
