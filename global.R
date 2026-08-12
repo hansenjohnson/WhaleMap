@@ -17,6 +17,10 @@ suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(plotly))
 suppressPackageStartupMessages(library(leaflet.extras))
 suppressPackageStartupMessages(library(shinybusy))
+# used in server.R to batch many separate track polylines into a single
+# addPolylines() call (one sf LINESTRING feature per track) instead of one
+# proxy call per track - see the track observer in server.R
+suppressPackageStartupMessages(library(sf))
 source('R/functions.R')
 
 # definitions -------------------------------------------------------------
@@ -76,7 +80,7 @@ visual_platforms = c('plane', 'vessel', 'rpas')
 acoustic_platforms = c('slocum', 'buoy', 'wave')
 
 # define track point plotting threshold
-npts = 250000
+npts = 500000
 
 # define time lag for startup plotting
 tlag = 14 # days
@@ -109,7 +113,9 @@ graticule_ints = list(
 # hidden platforms
 hidden_platforms = c('cp_king_air', 'jasco_test', 'jasco-unmanned-sp48')
 
-# load data ---------------------------------------------------------------
+# load static data ---------------------------------------------------------
+# (data that does not change while the app is running - loaded once at
+#  app startup and shared across all sessions)
 
 # read in static map polygons
 load('data/processed/tss.rda')
@@ -122,3 +128,65 @@ load('data/processed/names.rda')
 
 # read in password file
 load('data/processed/password.rda')
+
+# load live data (auto-refreshing) ------------------------------------------
+# these files are overwritten by a cron job every ~15 min. reactivePoll /
+# reactiveFileReader with session = NULL creates a single, APPLICATION-WIDE
+# reactive data source: the file's mtime is checked on the interval below,
+# and the (potentially expensive) read function only runs again if the file
+# has actually changed. Because session = NULL, this poll happens once for
+# the whole app, not once per connected user, and every session automatically
+# sees the latest data without needing to reload or restart the app.
+
+# how often to check whether the underlying files have changed (ms)
+poll_interval = 5 * 60 * 1000 # 5 minutes
+
+# helper to load a single named object out of an .rda file
+load_rda_object = function(path, objname){
+  e = new.env()
+  load(path, envir = e)
+  get(objname, envir = e)
+}
+
+# tracklines
+get_tracks = reactiveFileReader(
+  intervalMillis = poll_interval,
+  session = NULL,
+  filePath = 'data/processed/effort.rds',
+  readFunc = readRDS
+)
+
+# sightings / detections
+get_observations = reactiveFileReader(
+  intervalMillis = poll_interval,
+  session = NULL,
+  filePath = 'data/processed/observations.rds',
+  readFunc = readRDS
+)
+
+# latest dcs positions (file may not exist on all deployments)
+lfile = 'data/processed/dcs_live_latest_position.rds'
+if(file.exists(lfile)){
+  get_latest = reactiveFileReader(
+    intervalMillis = poll_interval,
+    session = NULL,
+    filePath = lfile,
+    readFunc = readRDS
+  )
+}
+
+# dynamic management area polygons
+get_dma = reactivePoll(
+  intervalMillis = poll_interval,
+  session = NULL,
+  checkFunc = function() file.info('data/processed/dma.rda')$mtime,
+  valueFunc = function() load_rda_object('data/processed/dma.rda', 'dma')
+)
+
+# seasonal management area polygons
+get_sma = reactivePoll(
+  intervalMillis = poll_interval,
+  session = NULL,
+  checkFunc = function() file.info('data/processed/sma.rda')$mtime,
+  valueFunc = function() load_rda_object('data/processed/sma.rda', 'sma')
+)

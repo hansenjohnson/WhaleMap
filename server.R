@@ -3,23 +3,12 @@
 
 function(input, output, session){
   
-  # read in data -------------------------------------------------------
-  
-  # tracklines
-  tracks = readRDS('data/processed/effort.rds')
-  
-  # latest dcs positions
-  lfile = 'data/processed/dcs_live_latest_position.rds'
-  if(file.exists(lfile)){
-    latest = readRDS(lfile) 
-  }
-  
-  # sightings / detections
-  observations = readRDS('data/processed/observations.rds')
-  
-  # dynamic map polygons
-  load('data/processed/dma.rda')
-  load('data/processed/sma.rda')
+  # NOTE: tracks, observations, latest positions, dma, and sma are no longer
+  # read here. They're loaded once, application-wide, in global.R via
+  # reactiveFileReader()/reactivePoll() (see get_tracks(), get_observations(),
+  # get_latest(), get_dma(), get_sma()), which also keeps them refreshed
+  # automatically whenever the underlying files change (e.g. from the cron
+  # job) without needing a per-session re-read or an app restart.
   
   # build date UI -------------------------------------------------------
   
@@ -138,7 +127,7 @@ function(input, output, session){
   trk <- eventReactive(input$go|input$go == 0, {
     if(input$password == password | input$password == test_password){
       
-      tracks %>%
+      get_tracks() %>%
         filter(
           date %in% dates() & 
             source %in% dsource() &
@@ -148,7 +137,7 @@ function(input, output, session){
       
     } else {
       
-      tracks %>%
+      get_tracks() %>%
         filter(
           date %in% dates() & 
             source %in% dsource() &
@@ -164,7 +153,7 @@ function(input, output, session){
   obs <- eventReactive(input$go|input$go == 0, {
     if(input$password == password){
       
-      observations %>%
+      get_observations() %>%
         filter(
           date %in% dates() & 
             source %in% dsource() &
@@ -176,7 +165,7 @@ function(input, output, session){
       
     } else if(input$password == test_password){
       
-      observations %>%
+      get_observations() %>%
         filter(
           date %in% dates() & 
             source %in% dsource() &
@@ -189,7 +178,7 @@ function(input, output, session){
       
     } else {
       
-      observations %>%
+      get_observations() %>%
         filter(
           date %in% dates() & 
             source %in% dsource() &
@@ -238,12 +227,13 @@ function(input, output, session){
   })
   
   # position for live dcs platform
+  # (lfile / file.exists check now lives in global.R, run once at app startup)
   if(file.exists(lfile)){
     LATEST <- eventReactive(input$go|input$go == 0, {
       
       if(input$password == password){
         
-        latest %>%
+        get_latest() %>%
           filter(
             date %in% dates() & 
               source %in% dsource() &
@@ -253,7 +243,7 @@ function(input, output, session){
         
       } else {
         
-        latest %>%
+        get_latest() %>%
           filter(
             date %in% dates() & 
               source %in% dsource() &
@@ -406,7 +396,7 @@ function(input, output, session){
   # basemap -----------------------------------------------------------------
   
   output$map <- renderLeaflet({
-    leaflet(tracks) %>% 
+    leaflet(get_tracks()) %>% 
       fitBounds(~max(lon, na.rm = T), 
                 ~min(lat, na.rm = T), 
                 ~min(lon, na.rm = T), 
@@ -463,9 +453,6 @@ function(input, output, session){
                            group = 'graticules', 
                            showOriginLabel = FALSE)
       
-      # switch to show/hide
-      ifelse(input$graticules, showGroup(proxy, 'graticules'),
-             hideGroup(proxy, 'graticules'))
     }
     
   })
@@ -515,9 +502,6 @@ function(input, output, session){
                     color = 'darkgreen', 
                     fillColor = 'darkgreen')
       
-      # switch to show/hide
-      ifelse(input$critical_habitat_zone, showGroup(proxy, 'critical_habitat_zone'),
-             hideGroup(proxy, 'critical_habitat_zone'))
     }
     
   })
@@ -545,9 +529,6 @@ function(input, output, session){
                     color = 'darkblue', 
                     fillColor = 'darkblue')
       
-      # switch to show/hide
-      ifelse(input$dfo_zone, showGroup(proxy, 'dfo_zone'),
-             hideGroup(proxy, 'dfo_zone'))
     }
     
   })
@@ -575,9 +556,6 @@ function(input, output, session){
                      weight = 1, 
                      color = 'darkblue')
       
-      # switch to show/hide
-      ifelse(input$dfo_lines, showGroup(proxy, 'dfo_lines'),
-             hideGroup(proxy, 'dfo_lines'))
     }
     
   })
@@ -631,9 +609,6 @@ function(input, output, session){
                     color = 'darkgreen', 
                     fillColor = 'darkgreen')
       
-      # switch to show/hide
-      ifelse(input$tc_zone, showGroup(proxy, 'tc_zone'),
-             hideGroup(proxy, 'tc_zone'))
     }
     
   })
@@ -660,9 +635,6 @@ function(input, output, session){
                     color = 'orange', 
                     fillColor = 'orange')
       
-      # switch to show/hide
-      ifelse(input$tc_ra, showGroup(proxy, 'tc_ra'),
-             hideGroup(proxy, 'tc_ra'))
     }
     
   })
@@ -698,8 +670,6 @@ function(input, output, session){
                     options = pathOptions(clickable = F),
                     group = 'tss')
       
-      # switch to show/hide
-      ifelse(input$tss, showGroup(proxy, 'tss'), hideGroup(proxy, 'tss'))
     }
     
   })
@@ -725,9 +695,6 @@ function(input, output, session){
                     color = 'blue', 
                     fillColor = 'blue')
       
-      # switch to show/hide
-      ifelse(input$us_lobster, showGroup(proxy, 'us_lobster'),
-             hideGroup(proxy, 'us_lobster'))
     }
     
   })
@@ -755,9 +722,6 @@ function(input, output, session){
                     color = 'brown', 
                     fillColor = 'brown')
       
-      # switch to show/hide
-      ifelse(input$wind_lease, showGroup(proxy, 'wind_lease'),
-             hideGroup(proxy, 'wind_lease'))
     }
     
   })
@@ -785,9 +749,6 @@ function(input, output, session){
                     color = 'green', 
                     fillColor = 'green')
       
-      # switch to show/hide
-      ifelse(input$wind_planning, showGroup(proxy, 'wind_planning'),
-             hideGroup(proxy, 'wind_planning'))
     }
     
   })
@@ -801,9 +762,12 @@ function(input, output, session){
     proxy %>% clearGroup('dma')
     
     # add polygons
-    if(nrow(dma) > 0){
+    # NOTE: previously this block was not gated on input$dma at all (it only
+    # checked nrow(dma) > 0), so the "DMA" layer toggle checkbox never
+    # actually controlled this layer's visibility - it was always redrawn.
+    if(input$dma & nrow(get_dma()) > 0){
       proxy %>%
-        addPolygons(data=dma, group = 'dma',
+        addPolygons(data=get_dma(), group = 'dma',
                     fill = T, 
                     fillOpacity = 0.3, 
                     stroke = T, 
@@ -819,10 +783,6 @@ function(input, output, session){
                     fillColor = '#ff9900')
     }
     
-    # switch to show/hide
-    ifelse(input$dma, showGroup(proxy, 'dma'),
-           hideGroup(proxy, 'dma'))
-    
   })
   
   # sma observer ------------------------------------------------------  
@@ -833,11 +793,11 @@ function(input, output, session){
     proxy <- leafletProxy("map")
     proxy %>% clearGroup('sma')
     
-    if(input$sma & nrow(sma) != 0){
+    if(input$sma & nrow(get_sma()) != 0){
       
       # add polygons
       proxy %>%
-        addPolygons(data=sma, group = 'sma',
+        addPolygons(data=get_sma(), group = 'sma',
                     fill = T, 
                     fillOpacity = 0.3, 
                     stroke = T, 
@@ -850,9 +810,6 @@ function(input, output, session){
                     color = 'red', 
                     fillColor = 'red')
       
-      # switch to show/hide
-      ifelse(input$sma, showGroup(proxy, 'sma'),
-             hideGroup(proxy, 'sma'))
     }
     
   })
@@ -882,9 +839,6 @@ function(input, output, session){
                     color = 'darkgreen', 
                     fillColor = 'darkgreen')
       
-      # switch to show/hide
-      ifelse(input$spd, showGroup(proxy, 'spd'),
-             hideGroup(proxy, 'spd'))
     }
     
   })
@@ -914,9 +868,6 @@ function(input, output, session){
                     color = 'brown2', 
                     fillColor = 'brown2')
       
-      # switch to show/hide
-      ifelse(input$alwtrp, showGroup(proxy, 'alwtrp'),
-             hideGroup(proxy, 'alwtrp'))
     }
     
   })
@@ -934,54 +885,83 @@ function(input, output, session){
     
     if(input$tracks & nrow(trk())<npts|input$password == password){
       
-      # set up polyline plotting
-      tracks.df <- split(trk(), trk()$id)
-      
       # get color palette
       pal = colorpal_trk()
       
       ind = which(colnames(trk())==colorby_trk())
       
-      # add lines
-      names(tracks.df) %>%
-        purrr::walk( function(df) {
-          proxy <<- proxy %>%
-            addPolylines(data=tracks.df[[df]], 
-                         group = 'tracks',
-                         lng=~lon, 
-                         lat=~lat, 
-                         weight = 2,
-                         smoothFactor = 1, 
-                         options = markerOptions(removeOutsideVisibleBounds=TRUE, opacity = 0.5),
-                         color = pal(tracks.df[[df]][1,ind]),
-                         popup = paste0('Track ID: ', unique(tracks.df[[df]]$id)))
-        })
+      # set up polyline plotting - sort within each id so points connect
+      # in time order, and drop any track with fewer than 2 points (a
+      # single point can't form a line) or NA coordinates
+      trk_sorted <- trk()[order(trk()$id, trk()$time), ]
+      trk_sorted <- trk_sorted[!is.na(trk_sorted$lon) & !is.na(trk_sorted$lat), ]
+      tracks.df <- split(trk_sorted, trk_sorted$id)
+      tracks.df <- tracks.df[vapply(tracks.df, nrow, integer(1)) >= 2]
       
-      # set up buoy plotting
+      # NOTE: previously this issued ONE addPolylines() call per track id via
+      # purrr::walk(), which for hundreds of tracks means hundreds of separate
+      # proxy calls sent to the browser - each with real overhead.
+      # A first attempt at batching this (passing lng/lat as a *list* of
+      # vectors directly) doesn't work: addPolylines()'s internal
+      # validateCoords() requires lng/lat to be plain numeric vectors, not a
+      # list, so it errored immediately. The correct way to draw many
+      # separate lines - each with its own color and popup - in a single
+      # call is to build one `sf` object with one LINESTRING feature per
+      # track and pass that as `data`, with color/popup as column formulas.
+      if(length(tracks.df) > 0){
+        
+        line_geoms <- lapply(tracks.df, function(d){
+          sf::st_linestring(as.matrix(d[, c('lon','lat')]))
+        })
+        
+        first_vals <- vapply(tracks.df, function(d) as.character(d[[ind]][1]), character(1))
+        
+        lines_sf <- sf::st_sf(
+          id = names(tracks.df),
+          trk_color = pal(first_vals),
+          trk_popup = paste0('Track ID: ', names(tracks.df)),
+          geometry = sf::st_sfc(line_geoms, crs = 4326)
+        )
+        
+        proxy <- proxy %>%
+          addPolylines(data = lines_sf,
+                       group = 'tracks',
+                       weight = 2,
+                       smoothFactor = 1,
+                       options = markerOptions(removeOutsideVisibleBounds=TRUE, opacity = 0.5),
+                       color = ~trk_color,
+                       popup = ~trk_popup)
+      }
+      
+      # set up buoy plotting (first ping per buoy deployment)
       buoy.df <- trk() %>%
         filter(platform == 'buoy') %>%
         arrange(time) %>%
         group_by(id) %>%
-        dplyr::slice(1)
-      buoy.df <- split(buoy.df, buoy.df$id)
+        dplyr::slice(1) %>%
+        ungroup()
       
-      # add circles
-      names(buoy.df) %>%
-        purrr::walk( function(df) {
-          proxy <<- proxy %>%
-            addCircleMarkers(data=buoy.df[[df]], 
-                             radius = 6, 
-                             opacity = 1,
-                             stroke = T, 
-                             fill = T,
-                             fillOpacity = 0,
-                             weight = 2.5,
-                             group = 'tracks', 
-                             lng=~lon, 
-                             lat=~lat, 
-                             color = pal(tracks.df[[df]][1,ind]),
-                             popup = paste0('Track ID: ', unique(tracks.df[[df]]$id)))
-        })
+      # NOTE: same batching fix here - addCircleMarkers() already accepts a
+      # whole data frame plus vectorized color/popup in one call, so the
+      # per-buoy purrr::walk() loop was unnecessary even before this change.
+      if(nrow(buoy.df) > 0){
+        buoy_colors <- pal(as.character(buoy.df[[ind]]))
+        buoy_popups <- paste0('Track ID: ', buoy.df$id)
+        
+        proxy %>%
+          addCircleMarkers(data = buoy.df,
+                           radius = 6, 
+                           opacity = 1,
+                           stroke = T, 
+                           fill = T,
+                           fillOpacity = 0,
+                           weight = 2.5,
+                           group = 'tracks', 
+                           lng = ~lon, 
+                           lat = ~lat, 
+                           color = buoy_colors,
+                           popup = buoy_popups)
+      }
       
     }
     
@@ -1085,6 +1065,24 @@ function(input, output, session){
     }
   })
   
+  # combined visible observations -----------------------------------------
+  # shared by the legend observer and dInBounds() below so the
+  # rbind(det(), pos()) combination (and the input$detected/input$possible
+  # switch logic behind it) is computed once per invalidation instead of
+  # twice.
+  
+  visibleObs <- reactive({
+    if(input$detected & input$possible){
+      rbind(det(), pos())
+    } else if(input$detected & !input$possible){
+      det()
+    } else if(!input$detected & input$possible){
+      pos()
+    } else {
+      NULL
+    }
+  })
+  
   # legend observer ------------------------------------------------------  
   
   observe({
@@ -1097,13 +1095,8 @@ function(input, output, session){
     var_trk <- trk()[,which(colnames(trk())==colorby_trk())]
     
     # determine which dataset to use based on display switches
-    if(input$detected & input$possible){
-      dat <- rbind(det(),pos())
-    } else if(input$detected & !input$possible){
-      dat <- det()
-    } else if(!input$detected & input$possible){
-      dat <- pos()
-    } else {
+    dat <- visibleObs()
+    if(is.null(dat)){
       proxy %>% clearControls() %>% 
         addLegend(position = "bottomright",labFormat = labelFormat(big.mark = ""),
                   pal = pal_trk, values = var_trk, 
@@ -1154,11 +1147,18 @@ function(input, output, session){
   
   # inbounds data ------------------------------------------------------  
   
+  # map_bounds updates continuously while the user drags/zooms the map,
+  # which used to trigger a full re-filter + re-render of the summary text
+  # and bar graph on every intermediate frame of the drag. Debouncing it
+  # means downstream reactives only recompute ~400ms after the user stops
+  # moving the map.
+  map_bounds_debounced <- reactive({ input$map_bounds }) %>% debounce(400)
+  
   # determine tracks in map bounds
   tInBounds <- reactive({
-    if (is.null(input$map_bounds))
+    if (is.null(map_bounds_debounced()))
       return(trk()[FALSE,])
-    bounds <- input$map_bounds
+    bounds <- map_bounds_debounced()
     latRng <- range(bounds$north, bounds$south)
     lngRng <- range(bounds$east, bounds$west)
     
@@ -1171,24 +1171,20 @@ function(input, output, session){
   dInBounds <- reactive({
     
     # determine which dataset to use based on display switches
-    if(input$detected & input$possible){
-      dat <- rbind(det(),pos())
-    } else if(input$detected & !input$possible){
-      dat <- det()
-    } else if(!input$detected & input$possible){
-      dat <- pos()
-    } else {
+    # (shared with the legend observer via visibleObs(), see above)
+    dat <- visibleObs()
+    if(is.null(dat)){
       dat = data.frame()
       return(dat[FALSE,])
     }
     
     # catch error if no data is displayed
-    if (is.null(input$map_bounds)){
+    if (is.null(map_bounds_debounced())){
       return(dat[FALSE,])
     }
     
     # define map bounds
-    bounds <- input$map_bounds
+    bounds <- map_bounds_debounced()
     latRng <- range(bounds$north, bounds$south)
     lngRng <- range(bounds$east, bounds$west)
     
@@ -1216,24 +1212,36 @@ function(input, output, session){
       str3 <- paste0('<strong>Number of whales sighted (includes duplicates)</strong>: ', 
                      sum(dInBounds()$number[dInBounds()$score=='definite visual'], na.rm = T))
       
-      ifelse(input$possible, 
-             t<-nrow(dInBounds()[dInBounds()$score=='possible visual',]),
-             t<-0)
+      # NOTE: these were previously built with ifelse(input$possible, a<-.., b<-0),
+      # which is a real bug - ifelse() evaluates BOTH the "yes" and "no"
+      # arguments as a side effect of its internal vectorized subsetting, so
+      # both assignments always ran and the variable always ended up holding
+      # whichever assignment executed last (the "0" branch), regardless of
+      # input$possible. Using ordinary if/else fixes this.
+      if(input$possible){
+        t <- nrow(dInBounds()[dInBounds()$score=='possible visual',])
+      } else {
+        t <- 0
+      }
       
       str4 <- paste0('<strong>Number of possible sighting events</strong>: ', t)
       
-      ifelse(input$possible, 
-             u<-sum(dInBounds()$number[dInBounds()$score=='possible visual'], na.rm = T),
-             u<-0)
+      if(input$possible){
+        u <- sum(dInBounds()$number[dInBounds()$score=='possible visual'], na.rm = T)
+      } else {
+        u <- 0
+      }
       
       str5 <- paste0('<strong>Number of whales possibly sighted</strong>: ', u)
       
       str6 <- paste0('<strong>Number of definite detections</strong>: ', 
                      nrow(dInBounds()[dInBounds()$score=='definite acoustic',]))
       
-      ifelse(input$possible, 
-             v<-nrow(dInBounds()[dInBounds()$score=='possible acoustic',]),
-             v<-0)
+      if(input$possible){
+        v <- nrow(dInBounds()[dInBounds()$score=='possible acoustic',])
+      } else {
+        v <- 0
+      }
       
       str7 <- paste0('<strong>Number of possible detections</strong>: ', v)
       
