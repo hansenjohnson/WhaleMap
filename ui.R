@@ -54,6 +54,43 @@ $(function() {
     }
   );
 });
+
+// grey out the "Go!" button and show a spinner centered inside it (rather
+// than a separate floating spinner positioned by fixed pixel margins, which
+// only lines up with the button by coincidence and drifts whenever the
+// button size/position changes) while Shiny is busy recomputing. See the
+// #go.btn-busy CSS below for the actual visual.
+$(document).on("shiny:busy", function(event) {
+  $("#go").addClass("btn-busy");
+});
+$(document).on("shiny:idle", function(event) {
+  $("#go").removeClass("btn-busy");
+});
+'
+
+csscode <- '
+#go.btn-busy {
+  background-color: #999999 !important;
+  border-color: #888888 !important;
+  color: transparent !important;
+  pointer-events: none;
+}
+#go.btn-busy::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 3px solid rgba(255,255,255,0.4);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: go-btn-spin 0.8s linear infinite;
+}
+@keyframes go-btn-spin {
+  to { transform: rotate(360deg); }
+}
 '
 
 # body --------------------------------------------------------------------
@@ -61,7 +98,7 @@ $(function() {
 body <- dashboardBody(
   
   fluidRow(
-    tags$head(tags$script(HTML(jscode))),
+    tags$head(tags$script(HTML(jscode)), tags$style(HTML(csscode))),
     
     # sidebar ----------------------------------------------------------
     
@@ -333,21 +370,12 @@ body <- dashboardBody(
   
   # floating go button
   fixedPanel(
-    add_busy_spinner(
-      color = "#FF0000",
-      timeout = 300,
-      spin = 'rotating-plane',
-      height = '25px',
-      width = '30px',
-      position = 'bottom-left',
-      margins = c(10, 45)
-    ),
     actionButton(
       "go",
       "Go!",
       width = '200%',
       class = "btn-primary btn-lg",
-      style = "color: #fff; background-color: #337ab7; border-color: #2e6da4"
+      style = "color: #fff; background-color: #337ab7; border-color: #2e6da4; position: relative;"
     ),
     left = 20,
     bottom = 10,
