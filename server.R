@@ -897,8 +897,6 @@ function(input, output, session){
       
       ind = which(colnames(trk())==colorby_trk())
       
-      t0 <- Sys.time()
-      
       # set up polyline plotting - sort within each id so points connect
       # in time order, and drop any track with fewer than 2 points (a
       # single point can't form a line) or NA coordinates
@@ -936,14 +934,9 @@ function(input, output, session){
                          layerId = 'gltracks',
                          group = 'tracks',
                          weight = 0.4,
-                         opacity = 0.3,
+                         opacity = 0.5,
                          color = lines_sf$trk_color,
                          popup = lines_sf$trk_popup)
-        
-        message(sprintf(
-          "[tracks] %d tracks (%d total points) -> leafgl (addGlPolylines) (server-side draw call: %.3f sec)",
-          length(tracks.df), nrow(trk_sorted), as.numeric(Sys.time() - t0, units = 'secs')
-        ))
       }
       
     }
@@ -968,8 +961,16 @@ function(input, output, session){
       # deployments are a small handful of points at most, so this stays on
       # the regular (non-WebGL) leaflet renderer - the batching fix from
       # before (single vectorized addCircleMarkers call) is enough here.
+      # drop_na_coords() removes rows with missing/invalid lat or lon before
+      # they ever reach addCircleMarkers() - a buoy's very first
+      # transmission after deployment can land without a GPS fix yet, and
+      # passing that straight to leaflet triggered a validateCoords()
+      # warning (and, once that row was leaflet's only row, a follow-on
+      # "no non-missing arguments to min" warning from trying to summarize
+      # an now-empty cleaned dataset).
       buoy.df <- trk() %>%
         filter(platform == 'buoy') %>%
+        drop_na_coords() %>%
         arrange(time) %>%
         group_by(id) %>%
         dplyr::slice(1) %>%
@@ -1065,17 +1066,6 @@ function(input, output, session){
     d[!is.na(d$lon) & !is.na(d$lat), ]
   }
   
-  # render logger -------------------------------------------------------
-  # Prints to the R console (visible in the R/RStudio console when running
-  # locally, or in the server log under shiny-server/Connect) so you can
-  # confirm point counts and server-side draw timing.
-  log_render <- function(label, n, elapsed_sec){
-    message(sprintf(
-      "[%s] %d points -> leaflet (addCircleMarkers) (server-side draw call: %.3f sec)",
-      label, n, elapsed_sec
-    ))
-  }
-  
   # possible observer ------------------------------------------------------  
   
   observe(priority = 2,{
@@ -1091,16 +1081,12 @@ function(input, output, session){
       # set up color palette plotting
       pal <- colorpal_obs()
       
-      t0 <- Sys.time()
-      
       # possible detections - standard leaflet rendering (addCircleMarkers)
       addCircleMarkers(map = proxy, data = pos_clean, ~lon, ~lat, group = 'possible',
                        radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
                        fillColor = pal(pos_clean[[colorby_obs()]]),
                        popup = build_obs_popup(pos_clean),
                        options = markerOptions(removeOutsideVisibleBounds=T))
-      
-      log_render('possible', nrow(pos_clean), as.numeric(Sys.time() - t0, units = 'secs'))
     }
   })
   
@@ -1119,16 +1105,12 @@ function(input, output, session){
       # set up color palette plotting
       pal <- colorpal_obs()
       
-      t0 <- Sys.time()
-      
       # definite detections - standard leaflet rendering (addCircleMarkers)
       addCircleMarkers(map = proxy, data = det_clean, ~lon, ~lat, group = 'detected',
                        radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
                        fillColor = pal(det_clean[[colorby_obs()]]),
                        popup = build_obs_popup(det_clean),
                        options = markerOptions(removeOutsideVisibleBounds=T))
-      
-      log_render('detected', nrow(det_clean), as.numeric(Sys.time() - t0, units = 'secs'))
     }
   })
   
@@ -1453,8 +1435,20 @@ function(input, output, session){
     }
     
     # build interactive plot
-    gg = ggplotly(g, dynamicTicks = F, tooltip = c("text", "count", "fill")) %>%
-      layout(margin=list(r=120, l=70, t=40, b=70), showlegend = input$legend)
+    # ggplotly() (via ggplot_build()) computes each facet's own axis range
+    # internally, since facet_wrap(scales = "free_y") gives each facet an
+    # independent scale. If the "plot in bounds" view has zero rows for one
+    # facet (e.g. no acoustic detections currently in the visible map area
+    # while there are sightings), that facet's internal range calculation
+    # calls min()/max() on nothing - this is what's actually producing the
+    # "no non-missing arguments" warning when toggling input$plotInBounds,
+    # not any of our own code (all of our own min()/max() calls above are
+    # already guarded against empty data). Scoping suppressWarnings() to
+    # just this call keeps it from hiding warnings anywhere else in the app.
+    gg = suppressWarnings(
+      ggplotly(g, dynamicTicks = F, tooltip = c("text", "count", "fill")) %>%
+        layout(margin=list(r=120, l=70, t=40, b=70), showlegend = input$legend)
+    )
     gg$elementId <- NULL # remove widget id warning
     gg
   })
