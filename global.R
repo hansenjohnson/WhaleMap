@@ -25,6 +25,11 @@ suppressPackageStartupMessages(library(leafgl))
 # addPolylines() call (one sf LINESTRING feature per track) instead of one
 # proxy call per track - see the track observer in server.R
 suppressPackageStartupMessages(library(sf))
+# fst reads/writes data frames much faster than base R's readRDS()/saveRDS()
+# for large files (readRDS's default gzip decompression is CPU-bound and is
+# often the dominant cost for a file the size of tracks.rds/observations.rds)
+# - see the get_tracks()/get_observations() loaders below.
+suppressPackageStartupMessages(library(fst))
 source('R/functions.R')
 
 # definitions -------------------------------------------------------------
@@ -153,19 +158,22 @@ load_rda_object = function(path, objname){
 }
 
 # tracklines
+# fst instead of RDS - see the fst library() note above. Point this at
+# effort.fst (produced by the export snippet in the chat response) instead
+# of effort.rds.
 get_tracks = reactiveFileReader(
   intervalMillis = poll_interval,
   session = NULL,
-  filePath = 'data/processed/effort.rds',
-  readFunc = readRDS
+  filePath = 'data/processed/effort.fst',
+  readFunc = fst::read_fst
 )
 
 # sightings / detections
 get_observations = reactiveFileReader(
   intervalMillis = poll_interval,
   session = NULL,
-  filePath = 'data/processed/observations.rds',
-  readFunc = readRDS
+  filePath = 'data/processed/observations.fst',
+  readFunc = fst::read_fst
 )
 
 # latest dcs positions (file may not exist on all deployments)
