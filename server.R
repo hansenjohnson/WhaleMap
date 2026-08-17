@@ -898,34 +898,46 @@ function(input, output, session){
       ind = which(colnames(trk())==colorby_trk())
       
       # set up polyline plotting - sort within each id so points connect
-      # in time order, and drop any track with fewer than 2 points (a
-      # single point can't form a line) or NA coordinates
+      # in time order. A row with NA lon/lat is a deliberate "break" marker
+      # (not a data error) - it's how a gap gets introduced into a single
+      # track's line without needing a separate id, matching the old
+      # addPolylines() behavior where an NA in the coordinate vector created
+      # a visual gap. mark a new segment every time an NA row is hit within
+      # an id, then drop the NA rows themselves (they're not real points) -
+      # each segment becomes its own LINESTRING feature below, since leafgl
+      # doesn't support MULTILINESTRING geometry, so a single id can now
+      # produce more than one feature (sharing the same color/popup) when it
+      # contains a break.
       trk_sorted <- trk()[order(trk()$id, trk()$time), ]
+      trk_sorted <- trk_sorted %>%
+        group_by(id) %>%
+        mutate(.seg = cumsum(is.na(lon) | is.na(lat))) %>%
+        ungroup()
       trk_sorted <- trk_sorted[!is.na(trk_sorted$lon) & !is.na(trk_sorted$lat), ]
-      tracks.df <- split(trk_sorted, trk_sorted$id)
+      tracks.df <- split(trk_sorted, paste(trk_sorted$id, trk_sorted$.seg, sep = '__'))
       tracks.df <- tracks.df[vapply(tracks.df, nrow, integer(1)) >= 2]
       
       # NOTE: previously this issued ONE addPolylines() call per track id via
       # purrr::walk(), which for hundreds of tracks means hundreds of separate
       # proxy calls sent to the browser - each with real overhead. Building
-      # one sf object with one LINESTRING feature per track and drawing it
-      # in a single call (now via leafgl's WebGL renderer, addGlPolylines)
-      # is both far fewer calls AND WebGL-rendered, which is the main
-      # speedup for datasets with many/long tracks. leafgl does NOT support
-      # MULTILINESTRING geometry, so each feature here must stay a plain
-      # LINESTRING (already true, since we build one feature per track id).
+      # one sf object with one LINESTRING feature per track (or per segment,
+      # for tracks with a break) and drawing it in a single call (now via
+      # leafgl's WebGL renderer, addGlPolylines) is both far fewer calls AND
+      # WebGL-rendered, which is the main speedup for datasets with many/long
+      # tracks.
       if(length(tracks.df) > 0){
         
         line_geoms <- lapply(tracks.df, function(d){
           sf::st_linestring(as.matrix(d[, c('lon','lat')]))
         })
         
+        trk_ids    <- vapply(tracks.df, function(d) as.character(d$id[1]), character(1))
         first_vals <- vapply(tracks.df, function(d) as.character(d[[ind]][1]), character(1))
         
         lines_sf <- sf::st_sf(
-          id = names(tracks.df),
+          id = trk_ids,
           trk_color = pal(first_vals),
-          trk_popup = paste0('Track ID: ', names(tracks.df)),
+          trk_popup = paste0('Track ID: ', trk_ids),
           geometry = sf::st_sfc(line_geoms, crs = 4326)
         )
         
@@ -934,7 +946,7 @@ function(input, output, session){
                          layerId = 'gltracks',
                          group = 'tracks',
                          weight = 0.4,
-                         opacity = 0.3,
+                         opacity = 0.5,
                          color = lines_sf$trk_color,
                          popup = lines_sf$trk_popup)
       }
@@ -1023,8 +1035,17 @@ function(input, output, session){
       if(input$latest){
         
         # add icons for latest position of live dcs platforms
+        # NOTE: zIndex raised from 350 to 450. At 350 this pane sat BELOW
+        # leaflet's default overlayPane (400) - harmless when tracks were
+        # plain SVG paths (which only intercept clicks exactly on the drawn
+        # line), but leafgl's WebGL tracks now render to a full-viewport
+        # <canvas> in that same overlayPane, and canvas elements capture
+        # click events across their whole bounding box regardless of visual
+        # transparency. That canvas was very likely swallowing clicks meant
+        # for these icons before they ever reached the lower "lts" pane,
+        # which is the most likely reason the popup stopped opening.
         proxy %>% 
-          addMapPane("lts", zIndex = 350) %>%
+          addMapPane("lts", zIndex = 450) %>%
           addMarkers(data = LATEST(), ~lon, ~lat, 
                      icon = ~dcsIcons[platform],
                      options=pathOptions(pane = "lts"),
