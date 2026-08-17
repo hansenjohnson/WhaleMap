@@ -256,6 +256,24 @@ function(input, output, session){
     })
   }
   
+  # subset dma/sma data --------------------------------------------------
+  # same event-gated pattern as trk()/obs()/LATEST() above, rather than
+  # calling get_dma()/get_sma() directly from the polygon-drawing observers
+  # below. Previously those observers called get_dma()/get_sma() directly,
+  # which - unlike trk()/obs() - are NOT isolated inside an eventReactive,
+  # so a background data refresh would redraw the DMA/SMA layer immediately,
+  # independent of whatever tracks/observations are currently on screen.
+  # Gating them the same way keeps the management-area overlays visually
+  # consistent with the rest of the displayed data, only updating together
+  # when "Go" is pressed.
+  dma_data <- eventReactive(input$go|input$go == 0, {
+    get_dma()
+  })
+  
+  sma_data <- eventReactive(input$go|input$go == 0, {
+    get_sma()
+  })
+  
   # show startup disclaimer -------------------------------------------------
   
   observe({
@@ -396,7 +414,20 @@ function(input, output, session){
   # basemap -----------------------------------------------------------------
   
   output$map <- renderLeaflet({
-    leaflet(get_tracks()) %>% 
+    
+    # isolate() so this widget is built ONCE per session (using tracks data
+    # as of whenever the session starts) and never gets rebuilt just because
+    # the shared background poll in global.R detects the underlying file
+    # changed. Without this, get_tracks() here is a live dependency: a
+    # mid-session data refresh would tear down and rebuild the entire map
+    # widget, resetting pan/zoom back to the default fitBounds() extent and
+    # wiping every overlay layer (tracks/points/polygons), since those were
+    # attached to the old widget instance via leafletProxy(). trk()/obs()
+    # elsewhere are already safely isolated inside eventReactive(input$go),
+    # so the actual filtered data a user is looking at was never at risk -
+    # this was specifically about the base widget getting rebuilt out from
+    # under them.
+    leaflet(isolate(get_tracks())) %>% 
       fitBounds(~max(lon, na.rm = T), 
                 ~min(lat, na.rm = T), 
                 ~min(lon, na.rm = T), 
@@ -765,9 +796,9 @@ function(input, output, session){
     # NOTE: previously this block was not gated on input$dma at all (it only
     # checked nrow(dma) > 0), so the "DMA" layer toggle checkbox never
     # actually controlled this layer's visibility - it was always redrawn.
-    if(input$dma & nrow(get_dma()) > 0){
+    if(input$dma & nrow(dma_data()) > 0){
       proxy %>%
-        addPolygons(data=get_dma(), group = 'dma',
+        addPolygons(data=dma_data(), group = 'dma',
                     fill = T, 
                     fillOpacity = 0.3, 
                     stroke = T, 
@@ -793,11 +824,11 @@ function(input, output, session){
     proxy <- leafletProxy("map")
     proxy %>% clearGroup('sma')
     
-    if(input$sma & nrow(get_sma()) != 0){
+    if(input$sma & nrow(sma_data()) != 0){
       
       # add polygons
       proxy %>%
-        addPolygons(data=get_sma(), group = 'sma',
+        addPolygons(data=sma_data(), group = 'sma',
                     fill = T, 
                     fillOpacity = 0.3, 
                     stroke = T, 
