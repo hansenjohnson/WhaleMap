@@ -977,7 +977,7 @@ function(input, output, session){
                          layerId = 'gltracks',
                          group = 'tracks',
                          weight = 0.4,
-                         opacity = 0.5,
+                         opacity = 0.3,
                          color = lines_sf$trk_color,
                          popup = lines_sf$trk_popup)
       }
