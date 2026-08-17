@@ -6,6 +6,7 @@ suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(RColorBrewer))
 suppressPackageStartupMessages(library(lubridate))
 suppressPackageStartupMessages(library(sp))
+suppressPackageStartupMessages(library(fst))
 # suppressPackageStartupMessages(library(rgeos))
 
 read_GPX = function(ifile){

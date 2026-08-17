@@ -30,6 +30,7 @@ tracks$source[is.na(tracks$source)] = 'WhaleMap'
 
 # save
 saveRDS(tracks, 'data/processed/effort.rds')
+fst::write_fst(tracks, 'data/processed/effort.fst', compress = 20)
 
 # observations ------------------------------------------------------------
 
@@ -72,6 +73,7 @@ obs$source[is.na(obs$source)] = 'WhaleMap'
 
 # save
 saveRDS(obs, 'data/processed/observations.rds')
+fst::write_fst(obs, 'data/processed/observations.fst', compress = 20)
 
 # names -------------------------------------------------------------------
 
