@@ -89,7 +89,7 @@ visual_platforms = c('plane', 'vessel', 'rpas')
 acoustic_platforms = c('slocum', 'buoy', 'wave')
 
 # define track point plotting threshold
-npts = 500000
+npts = 1000000
 
 # define time lag for startup plotting
 tlag = 14 # days

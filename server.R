@@ -329,7 +329,7 @@ function(input, output, session){
     # track warning
     if(nrow(trk())>npts & input$password != password){
       showNotification(h4(paste0('Warning! Tracklines have been turned off because 
-                              you have attemped to plot too many points (i.e. more than ', as.character(npts), '). 
+                              you have attemped to plot too many points (i.e. more than ', format(npts, big.mark = ",", scientific = FALSE), '). 
                               Please select less data to view tracks.')), 
                        duration = 15, closeButton = T, type = 'error')
     }
@@ -428,6 +428,16 @@ function(input, output, session){
     # this was specifically about the base widget getting rebuilt out from
     # under them.
     leaflet(isolate(get_tracks())) %>% 
+      
+      # obsPane pins the possible/detected observation points above every
+      # other layer, including the "lts" pane (zIndex 450) used for the
+      # live-position icons. A fixed-zIndex pane like "lts" doesn't respect
+      # normal add-order stacking, so simply reordering observer priorities
+      # can't put points above it - this is the only reliable way to
+      # guarantee points stay on top of tracks, polygons, AND icons
+      # regardless of what order those layers happen to redraw in.
+      addMapPane('obsPane', zIndex = 500) %>%
+      
       fitBounds(~max(lon, na.rm = T), 
                 ~min(lat, na.rm = T), 
                 ~min(lon, na.rm = T), 
@@ -443,7 +453,31 @@ function(input, output, session){
         secondaryAreaUnit="acres", 
         activeColor = "#006622",
         completedColor = "#004d1a",
-        position = 'bottomleft') 
+        position = 'bottomleft') %>%
+      
+      # leafgl hover cursor ---------------------------------------------
+      # Different mechanism than the earlier attempt (which relied on
+      # input$map_glify_mouseover/_mouseout - a Shiny-event bridge that
+      # appears to only exist in leafgl's GitHub dev version, not the CRAN
+      # release, and never fired). This instead uses the raw JS "hover"
+      # callback that addGlPoints()/addGlPolylines() forward straight to
+      # Leaflet.glify itself - the same underlying hit-testing mechanism
+      # that already successfully powers click-to-popup on these layers, so
+      # it's a mechanism we know is live in this installed version, not a
+      # guess. It's purely client-side: no round trip to the server, so no
+      # added lag. A generic mousemove listener resets the cursor to
+      # default on every tick; Leaflet.glify's own hover hit-test then
+      # overrides it back to a pointer, via the hover= callback passed into
+      # each addGlPoints()/addGlPolylines() call below, only on ticks where
+      # the mouse is actually over a rendered feature.
+      htmlwidgets::onRender("
+        function(el, x) {
+          var map = this;
+          map.on('mousemove', function(e) {
+            map.getContainer().style.cursor = '';
+          });
+        }
+      ")
     
     # addControlGPS(options = gpsOptions(position = "topleft", activate = FALSE, 
     #                                              autoCenter = TRUE, maxZoom = 8, 
@@ -939,8 +973,8 @@ function(input, output, session){
       # doesn't support MULTILINESTRING geometry, so a single id can now
       # produce more than one feature (sharing the same color/popup) when it
       # contains a break.
-      trk_sorted <- trk()[order(trk()$id, trk()$time), ]
-      trk_sorted <- trk_sorted %>%
+      # trk_sorted <- trk()[order(trk()$id, trk()$time), ]
+      trk_sorted <- trk() %>%
         group_by(id) %>%
         mutate(.seg = cumsum(is.na(lon) | is.na(lat))) %>%
         ungroup()
@@ -979,7 +1013,8 @@ function(input, output, session){
                          weight = 0.4,
                          opacity = 0.3,
                          color = lines_sf$trk_color,
-                         popup = lines_sf$trk_popup)
+                         popup = lines_sf$trk_popup,
+                         hover = glify_hover_js)
       }
       
     }
@@ -1118,6 +1153,21 @@ function(input, output, session){
     d[!is.na(d$lon) & !is.na(d$lat), ]
   }
   
+  # shared leafgl hover-cursor callback --------------------------------------
+  # passed to the "hover" argument of addGlPoints()/addGlPolylines() below
+  # via their ... passthrough straight to Leaflet.glify's own JS. See the
+  # onRender() note in output$map for why this approach (vs. the earlier,
+  # unsuccessful Shiny-event attempt) should actually work. Targets the map
+  # container directly by its known selector rather than assuming the exact
+  # shape of the callback's own arguments (e/feature/xy), which isn't
+  # something I can verify without a live browser - this way the fix only
+  # depends on the callback firing at all, not on what it's passed.
+  glify_hover_js <- htmlwidgets::JS("
+    function(e, feature, xy) {
+      document.querySelector('#map .leaflet-container').style.cursor = 'pointer';
+    }
+  ")
+  
   # possible observer ------------------------------------------------------  
   
   observe(priority = 2,{
@@ -1126,6 +1176,11 @@ function(input, output, session){
     proxy <- leafletProxy("map")
     proxy %>% clearGroup('possible')
     
+    # leafgl (WebGL) layers aren't tracked by clearGroup() above - they have
+    # to be removed explicitly by layerId. Safe to call even before anything
+    # has been added.
+    tryCatch(removeGlPoints(proxy, layerId = 'glpossible'), error = function(e) NULL)
+    
     pos_clean <- drop_na_coords(pos())
     
     if(input$possible & nrow(pos_clean) > 0){
@@ -1133,12 +1188,21 @@ function(input, output, session){
       # set up color palette plotting
       pal <- colorpal_obs()
       
-      # possible detections - standard leaflet rendering (addCircleMarkers)
-      addCircleMarkers(map = proxy, data = pos_clean, ~lon, ~lat, group = 'possible',
-                       radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
-                       fillColor = pal(pos_clean[[colorby_obs()]]),
-                       popup = build_obs_popup(pos_clean),
-                       options = markerOptions(removeOutsideVisibleBounds=T))
+      # possible detections - rendered via leafgl's WebGL point layer
+      # (addGlPoints) instead of leaflet's addCircleMarkers. Switching back
+      # to this (after having reverted it once before) because the actual
+      # trigger for slowness/crashes turned out to be large OBSERVATION
+      # point counts (multi-species, multi-year selections), not just large
+      # track counts - addCircleMarkers renders one DOM/SVG element per
+      # point, which doesn't scale the way a single WebGL draw call does.
+      pos_sf <- sf::st_as_sf(pos_clean, coords = c('lon','lat'), crs = 4326, remove = FALSE)
+      
+      addGlPoints(map = proxy, data = pos_sf, group = 'possible',
+                 layerId = 'glpossible', pane = 'obsPane',
+                 radius = 10, fillOpacity = 0.9,
+                 fillColor = pal(pos_sf[[colorby_obs()]]),
+                 popup = build_obs_popup(pos_sf),
+                 hover = glify_hover_js)
     }
   })
   
@@ -1150,6 +1214,8 @@ function(input, output, session){
     proxy <- leafletProxy("map")
     proxy %>% clearGroup('detected')
     
+    tryCatch(removeGlPoints(proxy, layerId = 'gldetected'), error = function(e) NULL)
+    
     det_clean <- drop_na_coords(det())
     
     if(input$detected & nrow(det_clean) > 0){
@@ -1157,12 +1223,15 @@ function(input, output, session){
       # set up color palette plotting
       pal <- colorpal_obs()
       
-      # definite detections - standard leaflet rendering (addCircleMarkers)
-      addCircleMarkers(map = proxy, data = det_clean, ~lon, ~lat, group = 'detected',
-                       radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
-                       fillColor = pal(det_clean[[colorby_obs()]]),
-                       popup = build_obs_popup(det_clean),
-                       options = markerOptions(removeOutsideVisibleBounds=T))
+      # definite detections - see note above on addGlPoints
+      det_sf <- sf::st_as_sf(det_clean, coords = c('lon','lat'), crs = 4326, remove = FALSE)
+      
+      addGlPoints(map = proxy, data = det_sf, group = 'detected',
+                 layerId = 'gldetected', pane = 'obsPane',
+                 radius = 10, fillOpacity = 0.9,
+                 fillColor = pal(det_sf[[colorby_obs()]]),
+                 popup = build_obs_popup(det_sf),
+                 hover = glify_hover_js)
     }
   })
   
