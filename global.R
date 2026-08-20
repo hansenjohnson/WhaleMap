@@ -89,7 +89,14 @@ visual_platforms = c('plane', 'vessel', 'rpas')
 acoustic_platforms = c('slocum', 'buoy', 'wave')
 
 # define track point plotting threshold
-npts = 1000000
+npts = 250000
+
+# maximum number of observation points (possible/detected, checked
+# independently) to plot at once. Large multi-species/multi-year selections
+# were making the deployed app unstable, so plotting is skipped and a
+# warning shown instead once a selection exceeds this - see the
+# possible/definite observers in server.R.
+nobs = 50000
 
 # define time lag for startup plotting
 tlag = 14 # days
