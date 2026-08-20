@@ -762,32 +762,30 @@ function(input, output, session){
     
   })
   
-  # wind lease observer ------------------------------------------------------  
+  # virginia rfi observer ------------------------------------------------------  
   
   observe(priority = 4, {
     
     # define proxy
     proxy <- leafletProxy("map")
-    proxy %>% clearGroup('wind_planning')
+    proxy %>% clearGroup('virginia_rfi')
     
-    if(input$wind_planning){
+    if(input$virginia_rfi){
       
       # add polygons
       proxy %>%
-        addPolygons(data=wind_planning, group = 'wind_planning',
+        addPolygons(data=virginia_rfi, group = 'virginia_rfi',
                     fill = T, 
                     fillOpacity = 0.25, 
                     stroke = T, 
-                    popup = ~paste(sep = "<br/>" ,
-                                   "BOEM wind planning area",
-                                   paste0("Name: ", info)),
+                    popup = ~paste0(info),
                     weight = 1, 
                     color = 'green', 
                     fillColor = 'green')
       
       # switch to show/hide
-      ifelse(input$wind_planning, showGroup(proxy, 'wind_planning'),
-             hideGroup(proxy, 'wind_planning'))
+      ifelse(input$virginia_rfi, showGroup(proxy, 'virginia_rfi'),
+             hideGroup(proxy, 'virginia_rfi'))
     }
     
   })
