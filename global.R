@@ -89,7 +89,7 @@ visual_platforms = c('plane', 'vessel', 'rpas')
 acoustic_platforms = c('slocum', 'buoy', 'wave')
 
 # define track point plotting threshold
-npts = 250000
+npts = 500000
 
 # maximum number of observation points (possible/detected, checked
 # independently) to plot at once. Large multi-species/multi-year selections

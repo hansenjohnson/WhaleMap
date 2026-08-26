@@ -329,7 +329,7 @@ function(input, output, session){
     # track warning
     if(nrow(trk())>npts & input$password != password){
       showNotification(h4(paste0('Warning! Tracklines have been turned off because 
-                              you have attemped to plot too many points (i.e. more than ', as.character(npts), '). 
+                              you have attemped to plot too many points (i.e. more than ', format(npts, big.mark = ",", scientific = FALSE), ')
                               Please select less data to view tracks.')), 
                        duration = 15, closeButton = T, type = 'error')
     }
@@ -990,7 +990,7 @@ function(input, output, session){
                          layerId = 'gltracks',
                          group = 'tracks',
                          weight = 0.4,
-                         opacity = 0.5,
+                         opacity = 0.3,
                          color = lines_sf$trk_color,
                          popup = lines_sf$trk_popup)
       }
