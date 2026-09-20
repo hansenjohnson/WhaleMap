@@ -176,9 +176,9 @@ if(length(v_flist)>0){
     if(nrow(sig)>0 & TRUE %in% (spp_key$code %in% sig$SPECCODE...SIGHTING)){
       
       # extract data
-      sig_lat_col = which(colnames(sig) == "SGT.LAT...SIGHTING"|colnames(sig) == "S_LAT...SIGHTING")
-      sig_lon_col = which(colnames(sig) == "SGT.LON...SIGHTING"|colnames(sig) == "S_LONG...SIGHTING")
-      number_col = which(colnames(sig) == "COUNT...SIGHTING"|colnames(sig) == "NUMBER...SIGHTING")
+      sig_lat_col = which(colnames(sig) == "SGT.LAT...SIGHTING"|colnames(sig) == "S_LAT...SIGHTING"|colnames(sig) == "S_LAT...SIGHTINGS")
+      sig_lon_col = which(colnames(sig) == "SGT.LON...SIGHTING"|colnames(sig) == "S_LONG...SIGHTING"|colnames(sig) == "S_LONG...SIGHTINGS")
+      number_col = which(colnames(sig) == "COUNT...SIGHTING"|colnames(sig) == "NUMBER...SIGHTING"|colnames(sig) == "NUMBER...SIGHTINGS")
       sig$lat = sig[,sig_lat_col]
       sig$lon = sig[,sig_lon_col]
       sig$number = as.numeric(as.character(sig[,number_col]))
