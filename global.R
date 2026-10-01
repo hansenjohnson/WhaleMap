@@ -6,29 +6,15 @@
 
 suppressPackageStartupMessages(library(shiny))
 suppressPackageStartupMessages(library(leaflet))
-# suppressPackageStartupMessages(library(rgdal))
 suppressPackageStartupMessages(library(htmltools))
 suppressPackageStartupMessages(library(htmlwidgets))
-# suppressPackageStartupMessages(library(maptools))
 suppressPackageStartupMessages(library(lubridate))
 suppressPackageStartupMessages(library(oce))
 suppressPackageStartupMessages(library(shinydashboard))
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(plotly))
 suppressPackageStartupMessages(library(leaflet.extras))
-# used for WebGL-accelerated rendering of the track layer (leafgl wraps
-# Leaflet.glify); see the track observer in server.R and leafglOutput("map")
-# in ui.R. (Observation points were reverted to standard leaflet rendering -
-# addCircleMarkers - so this is only needed for tracks now.)
-suppressPackageStartupMessages(library(leafgl))
-# used in server.R to batch many separate track polylines into a single
-# addPolylines() call (one sf LINESTRING feature per track) instead of one
-# proxy call per track - see the track observer in server.R
 suppressPackageStartupMessages(library(sf))
-# fst reads/writes data frames much faster than base R's readRDS()/saveRDS()
-# for large files (readRDS's default gzip decompression is CPU-bound and is
-# often the dominant cost for a file the size of tracks.rds/observations.rds)
-# - see the get_tracks()/get_observations() loaders below.
 suppressPackageStartupMessages(library(fst))
 source('R/functions.R')
 
@@ -88,14 +74,11 @@ colorby_trk_choices =
 visual_platforms = c('plane', 'vessel', 'rpas')
 acoustic_platforms = c('slocum', 'buoy', 'wave')
 
-# define track point plotting threshold
-npts = 500000
+# define track point plotting threshold (tracklines are turned off above
+# this many points to keep the deployed app stable)
+npts = 250000
 
-# maximum number of observation points (possible/detected, checked
-# independently) to plot at once. Large multi-species/multi-year selections
-# were making the deployed app unstable, so plotting is skipped and a
-# warning shown instead once a selection exceeds this - see the
-# possible/definite observers in server.R.
+# maximum number of observation points
 nobs = 50000
 
 # define time lag for startup plotting
@@ -130,8 +113,6 @@ graticule_ints = list(
 hidden_platforms = c('cp_king_air', 'jasco_test', 'jasco-unmanned-sp48')
 
 # load static data ---------------------------------------------------------
-# (data that does not change while the app is running - loaded once at
-#  app startup and shared across all sessions)
 
 # read in static map polygons
 load('data/processed/tss.rda')
@@ -144,68 +125,3 @@ load('data/processed/names.rda')
 
 # read in password file
 load('data/processed/password.rda')
-
-# load live data (auto-refreshing) ------------------------------------------
-# these files are overwritten by a cron job every ~15 min. reactivePoll /
-# reactiveFileReader with session = NULL creates a single, APPLICATION-WIDE
-# reactive data source: the file's mtime is checked on the interval below,
-# and the (potentially expensive) read function only runs again if the file
-# has actually changed. Because session = NULL, this poll happens once for
-# the whole app, not once per connected user, and every session automatically
-# sees the latest data without needing to reload or restart the app.
-
-# how often to check whether the underlying files have changed (ms)
-poll_interval = 5 * 60 * 1000 # 5 minutes
-
-# helper to load a single named object out of an .rda file
-load_rda_object = function(path, objname){
-  e = new.env()
-  load(path, envir = e)
-  get(objname, envir = e)
-}
-
-# tracklines
-# fst instead of RDS - see the fst library() note above. Point this at
-# effort.fst (produced by the export snippet in the chat response) instead
-# of effort.rds.
-get_tracks = reactiveFileReader(
-  intervalMillis = poll_interval,
-  session = NULL,
-  filePath = 'data/processed/effort.fst',
-  readFunc = fst::read_fst
-)
-
-# sightings / detections
-get_observations = reactiveFileReader(
-  intervalMillis = poll_interval,
-  session = NULL,
-  filePath = 'data/processed/observations.fst',
-  readFunc = fst::read_fst
-)
-
-# latest dcs positions (file may not exist on all deployments)
-lfile = 'data/processed/dcs_live_latest_position.rds'
-if(file.exists(lfile)){
-  get_latest = reactiveFileReader(
-    intervalMillis = poll_interval,
-    session = NULL,
-    filePath = lfile,
-    readFunc = readRDS
-  )
-}
-
-# dynamic management area polygons
-get_dma = reactivePoll(
-  intervalMillis = poll_interval,
-  session = NULL,
-  checkFunc = function() file.info('data/processed/dma.rda')$mtime,
-  valueFunc = function() load_rda_object('data/processed/dma.rda', 'dma')
-)
-
-# seasonal management area polygons
-get_sma = reactivePoll(
-  intervalMillis = poll_interval,
-  session = NULL,
-  checkFunc = function() file.info('data/processed/sma.rda')$mtime,
-  valueFunc = function() load_rda_object('data/processed/sma.rda', 'sma')
-)

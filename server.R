@@ -2,14 +2,24 @@
 # WhaleMap - a Shiny app for visualizing whale survey data
 
 function(input, output, session){
-  
-  # NOTE: tracks, observations, latest positions, dma, and sma are no longer
-  # read here. They're loaded once, application-wide, in global.R via
-  # reactiveFileReader()/reactivePoll() (see get_tracks(), get_observations(),
-  # get_latest(), get_dma(), get_sma()), which also keeps them refreshed
-  # automatically whenever the underlying files change (e.g. from the cron
-  # job) without needing a per-session re-read or an app restart.
-  
+
+  # load data -----------------------------------------------------------
+
+  # effort
+  tracks = fst::read_fst('data/processed/effort.fst')
+  # observations
+  observations = fst::read_fst('data/processed/observations.fst')
+
+  # latest dcs positions (file may not exist on all deployments)
+  lfile = 'data/processed/dcs_live_latest_position.rds'
+  if(file.exists(lfile)){
+    latest = readRDS(lfile)
+  }
+
+  # dynamic and seasonal management area polygons
+  load('data/processed/dma.rda')
+  load('data/processed/sma.rda')
+
   # build date UI -------------------------------------------------------
   
   output$dateChoice <- renderUI({
@@ -127,7 +137,7 @@ function(input, output, session){
   trk <- eventReactive(input$go|input$go == 0, {
     if(input$password == password | input$password == test_password){
       
-      get_tracks() %>%
+      tracks %>%
         filter(
           date %in% dates() & 
             source %in% dsource() &
@@ -137,7 +147,7 @@ function(input, output, session){
       
     } else {
       
-      get_tracks() %>%
+      tracks %>%
         filter(
           date %in% dates() & 
             source %in% dsource() &
@@ -153,7 +163,7 @@ function(input, output, session){
   obs <- eventReactive(input$go|input$go == 0, {
     if(input$password == password){
       
-      get_observations() %>%
+      observations %>%
         filter(
           date %in% dates() & 
             source %in% dsource() &
@@ -165,7 +175,7 @@ function(input, output, session){
       
     } else if(input$password == test_password){
       
-      get_observations() %>%
+      observations %>%
         filter(
           date %in% dates() & 
             source %in% dsource() &
@@ -178,7 +188,7 @@ function(input, output, session){
       
     } else {
       
-      get_observations() %>%
+      observations %>%
         filter(
           date %in% dates() & 
             source %in% dsource() &
@@ -227,13 +237,12 @@ function(input, output, session){
   })
   
   # position for live dcs platform
-  # (lfile / file.exists check now lives in global.R, run once at app startup)
   if(file.exists(lfile)){
     LATEST <- eventReactive(input$go|input$go == 0, {
       
       if(input$password == password){
         
-        get_latest() %>%
+        latest %>%
           filter(
             date %in% dates() & 
               source %in% dsource() &
@@ -243,7 +252,7 @@ function(input, output, session){
         
       } else {
         
-        get_latest() %>%
+        latest %>%
           filter(
             date %in% dates() & 
               source %in% dsource() &
@@ -255,24 +264,6 @@ function(input, output, session){
       }
     })
   }
-  
-  # subset dma/sma data --------------------------------------------------
-  # same event-gated pattern as trk()/obs()/LATEST() above, rather than
-  # calling get_dma()/get_sma() directly from the polygon-drawing observers
-  # below. Previously those observers called get_dma()/get_sma() directly,
-  # which - unlike trk()/obs() - are NOT isolated inside an eventReactive,
-  # so a background data refresh would redraw the DMA/SMA layer immediately,
-  # independent of whatever tracks/observations are currently on screen.
-  # Gating them the same way keeps the management-area overlays visually
-  # consistent with the rest of the displayed data, only updating together
-  # when "Go" is pressed.
-  dma_data <- eventReactive(input$go|input$go == 0, {
-    get_dma()
-  })
-  
-  sma_data <- eventReactive(input$go|input$go == 0, {
-    get_sma()
-  })
   
   # show startup disclaimer -------------------------------------------------
   
@@ -329,7 +320,7 @@ function(input, output, session){
     # track warning
     if(nrow(trk())>npts & input$password != password){
       showNotification(h4(paste0('Warning! Tracklines have been turned off because 
-                              you have attemped to plot too many points (i.e. more than ', format(npts, big.mark = ",", scientific = FALSE), ')
+                              you have attemped to plot too many points (i.e. more than ', as.character(npts), '). 
                               Please select less data to view tracks.')), 
                        duration = 15, closeButton = T, type = 'error')
     }
@@ -414,20 +405,8 @@ function(input, output, session){
   # basemap -----------------------------------------------------------------
   
   output$map <- renderLeaflet({
-    
-    # isolate() so this widget is built ONCE per session (using tracks data
-    # as of whenever the session starts) and never gets rebuilt just because
-    # the shared background poll in global.R detects the underlying file
-    # changed. Without this, get_tracks() here is a live dependency: a
-    # mid-session data refresh would tear down and rebuild the entire map
-    # widget, resetting pan/zoom back to the default fitBounds() extent and
-    # wiping every overlay layer (tracks/points/polygons), since those were
-    # attached to the old widget instance via leafletProxy(). trk()/obs()
-    # elsewhere are already safely isolated inside eventReactive(input$go),
-    # so the actual filtered data a user is looking at was never at risk -
-    # this was specifically about the base widget getting rebuilt out from
-    # under them.
-    leaflet(isolate(get_tracks())) %>% 
+
+    leaflet(tracks) %>%
       
       fitBounds(~max(lon, na.rm = T), 
                 ~min(lat, na.rm = T), 
@@ -444,23 +423,14 @@ function(input, output, session){
         secondaryAreaUnit="acres", 
         activeColor = "#006622",
         completedColor = "#004d1a",
-        position = 'bottomleft') 
-    
-    # NOTE: attempted a hover-cursor fix here (leafgl's raw JS hover=
-    # callback + an onRender() mousemove listener) - didn't work, reverted.
-    # Known limitation: leafgl's WebGL canvas doesn't get the browser's
-    # usual per-feature hover cursor the way SVG-rendered leaflet layers do.
-    
-    # addControlGPS(options = gpsOptions(position = "topleft", activate = FALSE, 
-    #                                              autoCenter = TRUE, maxZoom = 8, 
-    #                                              setView = TRUE))
+        position = 'bottomleft')
+
   })
   
   # tile observer ------------------------------------------------------  
   
   observeEvent(input$basemap, {
     # add tiles
-    
     if(input$basemap == 'Esri.OceanBasemap'){
       leafletProxy("map") %>%
         clearTiles() %>%
@@ -799,12 +769,9 @@ function(input, output, session){
     proxy %>% clearGroup('dma')
     
     # add polygons
-    # NOTE: previously this block was not gated on input$dma at all (it only
-    # checked nrow(dma) > 0), so the "DMA" layer toggle checkbox never
-    # actually controlled this layer's visibility - it was always redrawn.
-    if(input$dma & nrow(dma_data()) > 0){
+    if(input$dma & nrow(dma) > 0){
       proxy %>%
-        addPolygons(data=dma_data(), group = 'dma',
+        addPolygons(data=dma, group = 'dma',
                     fill = T, 
                     fillOpacity = 0.3, 
                     stroke = T, 
@@ -830,11 +797,11 @@ function(input, output, session){
     proxy <- leafletProxy("map")
     proxy %>% clearGroup('sma')
     
-    if(input$sma & nrow(sma_data()) != 0){
+    if(input$sma & nrow(sma) != 0){
       
       # add polygons
       proxy %>%
-        addPolygons(data=sma_data(), group = 'sma',
+        addPolygons(data=sma, group = 'sma',
                     fill = T, 
                     fillOpacity = 0.3, 
                     stroke = T, 
@@ -917,42 +884,17 @@ function(input, output, session){
     # define proxy
     proxy <- leafletProxy("map")
     proxy %>% clearGroup('tracks')
-    
-    # tracks rendered via leafgl (Leaflet.glify) are WebGL layers, not
-    # standard leaflet layers, so clearGroup('tracks') above does NOT remove
-    # them - they have to be removed explicitly by layerId. Wrapped in
-    # tryCatch since this errors harmlessly the first time the app loads
-    # (nothing has been added with this layerId yet).
-    tryCatch(removeGlPolylines(proxy, layerId = 'gltracks'), error = function(e) NULL)
-    
+
     # tracks
-    
+
     if(input$tracks & nrow(trk())<npts|input$password == password){
-      
+
       # get color palette
       pal = colorpal_trk()
-      
+
       ind = which(colnames(trk())==colorby_trk())
-      
-      # set up polyline plotting. A row with NA lon/lat is a deliberate
-      # "break" marker (not a data error) - it's how a gap gets introduced
-      # into a single track's line without needing a separate id, matching
-      # the old addPolylines() behavior where an NA in the coordinate vector
-      # created a visual gap. mark a new segment every time an NA row is hit
-      # within an id, then drop the NA rows themselves (they're not real
-      # points) - each segment becomes its own LINESTRING feature below,
-      # since leafgl doesn't support MULTILINESTRING geometry, so a single
-      # id can now produce more than one feature (sharing the same
-      # color/popup) when it contains a break.
-      #
-      # NOTE: deliberately NOT re-sorting by order(id, time) here. trk()'s
-      # source data is already correctly ordered chronologically per id -
-      # re-sorting by time turned out to scramble that correct order for
-      # some tracks (likely tie-breaking behavior for points sharing an
-      # identical/rounded timestamp), which is worse than doing nothing. If
-      # the upstream data pipeline ever stops guaranteeing chronological
-      # order per id, this needs to be revisited - but forcing a resort here
-      # is not a safe substitute for that guarantee.
+
+      # set up polyline plotting
       trk_sorted <- trk() %>%
         group_by(id) %>%
         mutate(.seg = cumsum(is.na(lon) | is.na(lat))) %>%
@@ -960,50 +902,39 @@ function(input, output, session){
       trk_sorted <- trk_sorted[!is.na(trk_sorted$lon) & !is.na(trk_sorted$lat), ]
       tracks.df <- split(trk_sorted, paste(trk_sorted$id, trk_sorted$.seg, sep = '__'))
       tracks.df <- tracks.df[vapply(tracks.df, nrow, integer(1)) >= 2]
-      
-      # NOTE: previously this issued ONE addPolylines() call per track id via
-      # purrr::walk(), which for hundreds of tracks means hundreds of separate
-      # proxy calls sent to the browser - each with real overhead. Building
-      # one sf object with one LINESTRING feature per track (or per segment,
-      # for tracks with a break) and drawing it in a single call (now via
-      # leafgl's WebGL renderer, addGlPolylines) is both far fewer calls AND
-      # WebGL-rendered, which is the main speedup for datasets with many/long
-      # tracks.
+
+      # plot polylines with sf (more efficient than previous purr() call)
       if(length(tracks.df) > 0){
-        
+
         line_geoms <- lapply(tracks.df, function(d){
           sf::st_linestring(as.matrix(d[, c('lon','lat')]))
         })
-        
+
         trk_ids    <- vapply(tracks.df, function(d) as.character(d$id[1]), character(1))
         first_vals <- vapply(tracks.df, function(d) as.character(d[[ind]][1]), character(1))
-        
+
         lines_sf <- sf::st_sf(
           id = trk_ids,
           trk_color = pal(first_vals),
           trk_popup = paste0('Track ID: ', trk_ids),
           geometry = sf::st_sfc(line_geoms, crs = 4326)
         )
-        
+
         proxy <- proxy %>%
-          addGlPolylines(data = lines_sf,
-                         layerId = 'gltracks',
-                         group = 'tracks',
-                         weight = 0.4,
-                         opacity = 0.3,
-                         color = lines_sf$trk_color,
-                         popup = lines_sf$trk_popup)
+          addPolylines(data = lines_sf,
+                       group = 'tracks',
+                       weight = 2,
+                       opacity = 0.5,
+                       color = lines_sf$trk_color,
+                       popup = lines_sf$trk_popup)
       }
-      
+
     }
-    
+
   })
   
   # buoy observer ------------------------------------------------------  
-  # split out from the track observer above so it can run at a lower
-  # priority than possible/detected below - see the priority-ordering note
-  # by the "latest observer" section for why.
-  observeEvent(input$tracks|input$go|input$go == 0, priority = 3, {
+  observeEvent(input$tracks|input$go|input$go == 0, priority = 0, {
     
     proxy <- leafletProxy("map")
     proxy %>% clearGroup('buoys')
@@ -1013,17 +944,7 @@ function(input, output, session){
       pal = colorpal_trk()
       ind = which(colnames(trk())==colorby_trk())
       
-      # set up buoy plotting (first ping per buoy deployment). buoy
-      # deployments are a small handful of points at most, so this stays on
-      # the regular (non-WebGL) leaflet renderer - the batching fix from
-      # before (single vectorized addCircleMarkers call) is enough here.
-      # drop_na_coords() removes rows with missing/invalid lat or lon before
-      # they ever reach addCircleMarkers() - a buoy's very first
-      # transmission after deployment can land without a GPS fix yet, and
-      # passing that straight to leaflet triggered a validateCoords()
-      # warning (and, once that row was leaflet's only row, a follow-on
-      # "no non-missing arguments to min" warning from trying to summarize
-      # an now-empty cleaned dataset).
+      # set up buoy plotting
       buoy.df <- trk() %>%
         filter(platform == 'buoy') %>%
         drop_na_coords() %>%
@@ -1056,19 +977,9 @@ function(input, output, session){
   })
   
   # latest observer ------------------------------------------------------  
-  # NOTE on layer order: on startup and after "Go", the default visual
-  # stacking (bottom to top) should be polygons < tracks < observations <
-  # icons (buoys/live positions). This is controlled purely by *when* each
-  # observer's block runs and adds its layer to the map - later-added layers
-  # draw on top of earlier ones - so priority is set high (runs first, ends
-  # up at the bottom) for polygons and progressively lower (runs later, ends
-  # up higher) for tracks, then observations, then icons. This intentionally
-  # preserves the old/original behavior where toggling any individual layer
-  # off and back on re-adds it last, putting it on top regardless of this
-  # default order - only the STARTUP order is being controlled here.
   if(file.exists(lfile)){
     
-    observe(priority = 4, {
+    observe(priority = 0, {
       
       # define proxy
       proxy <- leafletProxy("map")
@@ -1079,20 +990,9 @@ function(input, output, session){
       if(input$latest){
         
         # add icons for latest position of live dcs platforms
-        # NOTE: zIndex raised from 350 to 450. At 350 this pane sat BELOW
-        # leaflet's default overlayPane (400) - harmless when tracks were
-        # plain SVG paths (which only intercept clicks exactly on the drawn
-        # line), but leafgl's WebGL tracks now render to a full-viewport
-        # <canvas> in that same overlayPane, and canvas elements capture
-        # click events across their whole bounding box regardless of visual
-        # transparency. That canvas was very likely swallowing clicks meant
-        # for these icons before they ever reached the lower "lts" pane,
-        # which is the most likely reason the popup stopped opening.
-        proxy %>% 
-          # addMapPane("lts", zIndex = 450) %>%
-          addMarkers(data = LATEST(), ~lon, ~lat, 
+        proxy %>%
+          addMarkers(data = LATEST(), ~lon, ~lat,
                      icon = ~dcsIcons[platform],
-                     # options=pathOptions(pane = "lts"),
                      popup = ~paste(sep = "<br/>",
                                     strong('Latest position'),
                                     paste0('Platform: ', as.character(platform)),
@@ -1108,7 +1008,7 @@ function(input, output, session){
     })
   }
   
-  # shared popup builder for observation points (possible + definite) ------
+  # shared popup builder for obs --------
   
   build_obs_popup <- function(d){
     paste(sep = "<br/>",
@@ -1124,16 +1024,14 @@ function(input, output, session){
          paste0("Source: ", d$source))
   }
   
-  # sf::st_as_sf() refuses to build point geometry from NA coordinates
-  # (unlike the old addCircleMarkers(), which just silently skipped/rendered
-  # nothing for those rows) - drop them first.
+  # sf::st_as_sf() fails with NA coordinates - drop them first
   drop_na_coords <- function(d){
     d[!is.na(d$lon) & !is.na(d$lat), ]
   }
   
   # possible observer ------------------------------------------------------  
   
-  observe(priority = 1,{
+  observe(priority = 2,{
     
     # define proxy
     proxy <- leafletProxy("map")
@@ -1160,12 +1058,7 @@ function(input, output, session){
       # set up color palette plotting
       pal <- colorpal_obs()
       
-      # possible detections - standard leaflet rendering (addCircleMarkers).
-      # Reverted from leafgl's WebGL rendering after the deployed app proved
-      # unstable with it for large observation counts. Plot order (relative
-      # to tracks/polygons/icons) is established via observer priority
-      # (this observer's priority = 2, see the other layer observers) rather
-      # than a fixed pane.
+      # plot possible detections
       addCircleMarkers(map = proxy, data = pos_clean, ~lon, ~lat, group = 'possible',
                        radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
                        fillColor = pal(pos_clean[[colorby_obs()]]),
@@ -1176,7 +1069,7 @@ function(input, output, session){
   
   # definite observer ------------------------------------------------------  
   
-  observe(priority = 0,{
+  observe(priority = 1,{
     
     # define proxy
     proxy <- leafletProxy("map")
@@ -1211,10 +1104,7 @@ function(input, output, session){
   })
   
   # combined visible observations -----------------------------------------
-  # shared by the legend observer and dInBounds() below so the
-  # rbind(det(), pos()) combination (and the input$detected/input$possible
-  # switch logic behind it) is computed once per invalidation instead of
-  # twice.
+  # shared by the legend observer and dInBounds() below
   
   visibleObs <- reactive({
     if(input$detected & input$possible){
@@ -1316,7 +1206,6 @@ function(input, output, session){
   dInBounds <- reactive({
     
     # determine which dataset to use based on display switches
-    # (shared with the legend observer via visibleObs(), see above)
     dat <- visibleObs()
     if(is.null(dat)){
       dat = data.frame()
@@ -1357,12 +1246,6 @@ function(input, output, session){
       str3 <- paste0('<strong>Number of whales sighted (includes duplicates)</strong>: ', 
                      sum(dInBounds()$number[dInBounds()$score=='definite visual'], na.rm = T))
       
-      # NOTE: these were previously built with ifelse(input$possible, a<-.., b<-0),
-      # which is a real bug - ifelse() evaluates BOTH the "yes" and "no"
-      # arguments as a side effect of its internal vectorized subsetting, so
-      # both assignments always ran and the variable always ended up holding
-      # whichever assignment executed last (the "0" branch), regardless of
-      # input$possible. Using ordinary if/else fixes this.
       if(input$possible){
         t <- nrow(dInBounds()[dInBounds()$score=='possible visual',])
       } else {
@@ -1531,16 +1414,6 @@ function(input, output, session){
     }
     
     # build interactive plot
-    # ggplotly() (via ggplot_build()) computes each facet's own axis range
-    # internally, since facet_wrap(scales = "free_y") gives each facet an
-    # independent scale. If the "plot in bounds" view has zero rows for one
-    # facet (e.g. no acoustic detections currently in the visible map area
-    # while there are sightings), that facet's internal range calculation
-    # calls min()/max() on nothing - this is what's actually producing the
-    # "no non-missing arguments" warning when toggling input$plotInBounds,
-    # not any of our own code (all of our own min()/max() calls above are
-    # already guarded against empty data). Scoping suppressWarnings() to
-    # just this call keeps it from hiding warnings anywhere else in the app.
     gg = suppressWarnings(
       ggplotly(g, dynamicTicks = F, tooltip = c("text", "count", "fill")) %>%
         layout(margin=list(r=120, l=70, t=40, b=70), showlegend = input$legend)
