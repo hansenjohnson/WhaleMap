@@ -76,7 +76,7 @@ acoustic_platforms = c('slocum', 'buoy', 'wave')
 
 # define track point plotting threshold (tracklines are turned off above
 # this many points to keep the deployed app stable)
-npts = 250000
+npts = 500000
 
 # maximum number of observation points
 nobs = 50000
