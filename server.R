@@ -2,24 +2,24 @@
 # WhaleMap - a Shiny app for visualizing whale survey data
 
 function(input, output, session){
-
+  
   # load data -----------------------------------------------------------
-
+  
   # effort
   tracks = fst::read_fst('data/processed/effort.fst')
   # observations
   observations = fst::read_fst('data/processed/observations.fst')
-
+  
   # latest dcs positions (file may not exist on all deployments)
   lfile = 'data/processed/dcs_live_latest_position.rds'
   if(file.exists(lfile)){
     latest = readRDS(lfile)
   }
-
+  
   # dynamic and seasonal management area polygons
   load('data/processed/dma.rda')
   load('data/processed/sma.rda')
-
+  
   # build date UI -------------------------------------------------------
   
   output$dateChoice <- renderUI({
@@ -320,8 +320,18 @@ function(input, output, session){
     # track warning
     if(nrow(trk())>npts & input$password != password){
       showNotification(h4(paste0('Warning! Tracklines have been turned off because 
-                              you have attemped to plot too many points (i.e. more than ', as.character(npts), '). 
-                              Please select less data to view tracks.')), 
+                              you have attemped to plot ', format(nrow(trk()), big.mark = ",", scientific = FALSE), ' points. 
+                              The limit is ', format(npts, big.mark = ",", scientific = FALSE), '. Please select less 
+                              data to view tracklines.')), 
+                       duration = 15, closeButton = T, type = 'error')
+    }
+    
+    # obs warning
+    if(nrow(obs())>nobs & input$password != password){
+      showNotification(h4(paste0('Warning! Observations have been turned off because 
+                              you have attemped to plot ', format(nrow(obs()), big.mark = ",", scientific = FALSE), ' points. 
+                              The limit is ', format(nobs, big.mark = ",", scientific = FALSE), '. Please select less 
+                              data to view observations.')), 
                        duration = 15, closeButton = T, type = 'error')
     }
     
@@ -405,7 +415,7 @@ function(input, output, session){
   # basemap -----------------------------------------------------------------
   
   output$map <- renderLeaflet({
-
+    
     leaflet(tracks) %>%
       
       fitBounds(~max(lon, na.rm = T), 
@@ -424,7 +434,7 @@ function(input, output, session){
         activeColor = "#006622",
         completedColor = "#004d1a",
         position = 'bottomleft')
-
+    
   })
   
   # tile observer ------------------------------------------------------  
@@ -884,16 +894,16 @@ function(input, output, session){
     # define proxy
     proxy <- leafletProxy("map")
     proxy %>% clearGroup('tracks')
-
+    
     # tracks
-
+    
     if(input$tracks & nrow(trk())<npts|input$password == password){
-
+      
       # get color palette
       pal = colorpal_trk()
-
+      
       ind = which(colnames(trk())==colorby_trk())
-
+      
       # set up polyline plotting
       trk_sorted <- trk() %>%
         group_by(id) %>%
@@ -902,24 +912,24 @@ function(input, output, session){
       trk_sorted <- trk_sorted[!is.na(trk_sorted$lon) & !is.na(trk_sorted$lat), ]
       tracks.df <- split(trk_sorted, paste(trk_sorted$id, trk_sorted$.seg, sep = '__'))
       tracks.df <- tracks.df[vapply(tracks.df, nrow, integer(1)) >= 2]
-
+      
       # plot polylines with sf (more efficient than previous purr() call)
       if(length(tracks.df) > 0){
-
+        
         line_geoms <- lapply(tracks.df, function(d){
           sf::st_linestring(as.matrix(d[, c('lon','lat')]))
         })
-
+        
         trk_ids    <- vapply(tracks.df, function(d) as.character(d$id[1]), character(1))
         first_vals <- vapply(tracks.df, function(d) as.character(d[[ind]][1]), character(1))
-
+        
         lines_sf <- sf::st_sf(
           id = trk_ids,
           trk_color = pal(first_vals),
           trk_popup = paste0('Track ID: ', trk_ids),
           geometry = sf::st_sfc(line_geoms, crs = 4326)
         )
-
+        
         proxy <- proxy %>%
           addPolylines(data = lines_sf,
                        group = 'tracks',
@@ -928,9 +938,9 @@ function(input, output, session){
                        color = lines_sf$trk_color,
                        popup = lines_sf$trk_popup)
       }
-
+      
     }
-
+    
   })
   
   # buoy effort observer ------------------------------------------------  
@@ -1014,16 +1024,16 @@ function(input, output, session){
   
   build_obs_popup <- function(d){
     paste(sep = "<br/>",
-         paste0("Species: ", d$species),
-         paste0("Score: ", d$score),
-         paste0("Number: ", d$number),
-         paste0("Calves: ", d$calves),
-         paste0("Platform: ", d$platform),
-         paste0("Name: ", d$name),
-         paste0("Date: ", as.character(d$date)),
-         paste0("Time: ", as.character(format(d$time, '%H:%M:%S UTC'))),
-         paste0("Position: ", as.character(d$lat), ', ', as.character(d$lon)),
-         paste0("Source: ", d$source))
+          paste0("Species: ", d$species),
+          paste0("Score: ", d$score),
+          paste0("Number: ", d$number),
+          paste0("Calves: ", d$calves),
+          paste0("Platform: ", d$platform),
+          paste0("Name: ", d$name),
+          paste0("Date: ", as.character(d$date)),
+          paste0("Time: ", as.character(format(d$time, '%H:%M:%S UTC'))),
+          paste0("Position: ", as.character(d$lat), ', ', as.character(d$lon)),
+          paste0("Source: ", d$source))
   }
   
   # sf::st_as_sf() fails with NA coordinates - drop them first
@@ -1039,23 +1049,10 @@ function(input, output, session){
     proxy <- leafletProxy("map")
     proxy %>% clearGroup('possible')
     
-    pos_clean <- drop_na_coords(pos())
-    
-    if(input$possible & nrow(pos_clean) > 0){
+    if(input$possible & nrow(obs()) < nobs|input$password == password){
       
-      # guard against plotting more points than the deployed app can handle
-      # stably - see nobs in global.R. Warn the user and skip drawing this
-      # layer entirely rather than attempting it and risking a crash.
-      if(nrow(pos_clean) > nobs){
-        showNotification(
-          paste0('Too many possible observations to plot (',
-                 format(nrow(pos_clean), big.mark = ','),
-                 ' selected, limit is ', format(nobs, big.mark = ','),
-                 '). Narrow your species, platform, or date selection to view this layer.'),
-          type = 'warning', duration = 8
-        )
-        return(NULL)
-      }
+      # remove nas
+      pos_clean <- drop_na_coords(pos())
       
       # set up color palette plotting
       pal <- colorpal_obs()
@@ -1077,21 +1074,10 @@ function(input, output, session){
     proxy <- leafletProxy("map")
     proxy %>% clearGroup('detected')
     
-    det_clean <- drop_na_coords(det())
-    
-    if(input$detected & nrow(det_clean) > 0){
+    if(input$detected & nrow(obs()) < nobs|input$password == password){
       
-      # see note above on the nobs guard
-      if(nrow(det_clean) > nobs){
-        showNotification(
-          paste0('Too many definite observations to plot (',
-                 format(nrow(det_clean), big.mark = ','),
-                 ' selected, limit is ', format(nobs, big.mark = ','),
-                 '). Narrow your species, platform, or date selection to view this layer.'),
-          type = 'warning', duration = 8
-        )
-        return(NULL)
-      }
+      # remove nas
+      det_clean <- drop_na_coords(det())
       
       # set up color palette plotting
       pal <- colorpal_obs()
