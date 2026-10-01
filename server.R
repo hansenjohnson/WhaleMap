@@ -933,8 +933,8 @@ function(input, output, session){
 
   })
   
-  # buoy observer ------------------------------------------------------  
-  observeEvent(input$tracks|input$go|input$go == 0, priority = 0, {
+  # buoy effort observer ------------------------------------------------  
+  observeEvent(input$tracks|input$go|input$go == 0, priority = 3, {
     
     proxy <- leafletProxy("map")
     proxy %>% clearGroup('buoys')
@@ -979,7 +979,7 @@ function(input, output, session){
   # latest observer ------------------------------------------------------  
   if(file.exists(lfile)){
     
-    observe(priority = 0, {
+    observe(priority = 3.5, {
       
       # define proxy
       proxy <- leafletProxy("map")
@@ -991,8 +991,10 @@ function(input, output, session){
         
         # add icons for latest position of live dcs platforms
         proxy %>%
+          addMapPane("lts", zIndex = 350) %>%
           addMarkers(data = LATEST(), ~lon, ~lat,
                      icon = ~dcsIcons[platform],
+                     options=pathOptions(pane = "lts"),
                      popup = ~paste(sep = "<br/>",
                                     strong('Latest position'),
                                     paste0('Platform: ', as.character(platform)),
