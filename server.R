@@ -1011,9 +1011,9 @@ function(input, output, session){
                                     paste0('Name: ', as.character(name)),
                                     paste0('Time: ', as.character(time), ' UTC'),
                                     paste0('Position: ', 
-                                           as.character(lat), ', ', as.character(lon))),
-                     label = ~paste0('Latest position of ', as.character(name), ': ', 
-                                     as.character(time), ' UTC'), group = 'latest')
+                                           as.character(lat), ', ', as.character(lon))))
+                     # label = ~paste0('Latest position of ', as.character(name), ': ', 
+                     #                 as.character(time), ' UTC'), group = 'latest')
         
       }
       
