@@ -5,18 +5,17 @@ function(input, output, session){
   
   # load data -----------------------------------------------------------
   
-  # effort
-  tracks = fst::read_fst('data/processed/effort.fst')
-  # observations
-  observations = fst::read_fst('data/processed/observations.fst')
+  # NOTE: tracks and observations are read on demand from the fst files
+  # (only the rows matching the current query) - see read_effort() and
+  # read_observations() in global.R and the trk()/obs() reactives below.
   
-  # latest dcs positions (file may not exist on all deployments)
+  # latest dcs positions (small; file may not exist on all deployments)
   lfile = 'data/processed/dcs_live_latest_position.rds'
   if(file.exists(lfile)){
     latest = readRDS(lfile)
   }
   
-  # dynamic and seasonal management area polygons
+  # dynamic and seasonal management area polygons (small)
   load('data/processed/dma.rda')
   load('data/processed/sma.rda')
   
@@ -133,74 +132,24 @@ function(input, output, session){
   
   # reactive data -----------------------------------------------------------
   
-  # subset track data
+  # subset track data (read on demand from effort.fst)
   trk <- eventReactive(input$go|input$go == 0, {
-    if(input$password == password | input$password == test_password){
-      
-      tracks %>%
-        filter(
-          date %in% dates() & 
-            source %in% dsource() &
-            name %in% name() &
-            platform %in% platform() 
-        )
-      
-    } else {
-      
-      tracks %>%
-        filter(
-          date %in% dates() & 
-            source %in% dsource() &
-            name %in% name() &
-            !(name %in% hidden_platforms) &
-            platform %in% platform() 
-        )
-      
-    }
+    read_effort(dates = dates(),
+                dsource = dsource(),
+                names = name(),
+                platforms = platform(),
+                show_hidden = input$password == password | input$password == test_password)
   })
   
-  # subset observation data
+  # subset observation data (read on demand from observations.fst)
   obs <- eventReactive(input$go|input$go == 0, {
-    if(input$password == password){
-      
-      observations %>%
-        filter(
-          date %in% dates() & 
-            source %in% dsource() &
-            platform %in% platform() & 
-            name %in% name() &
-            species %in% species()
-        ) %>%
-        droplevels()
-      
-    } else if(input$password == test_password){
-      
-      observations %>%
-        filter(
-          date %in% dates() & 
-            source %in% dsource() &
-            platform %in% platform() & 
-            species %in% species() &
-            name %in% name() &
-            score != 'possible visual'
-        ) %>%
-        droplevels()
-      
-    } else {
-      
-      observations %>%
-        filter(
-          date %in% dates() & 
-            source %in% dsource() &
-            platform %in% platform() & 
-            species %in% species() &
-            name %in% name() &
-            !(name %in% hidden_platforms) &
-            score != 'possible visual'
-        ) %>%
-        droplevels()
-      
-    }
+    read_observations(dates = dates(),
+                      dsource = dsource(),
+                      platforms = platform(),
+                      names = name(),
+                      species = species(),
+                      show_hidden = input$password == password | input$password == test_password,
+                      show_possible_visual = input$password == password)
   })
   
   # only possible
@@ -416,12 +365,13 @@ function(input, output, session){
   
   output$map <- renderLeaflet({
     
-    leaflet(tracks) %>%
+    # default extent computed once at startup in global.R (track_bounds)
+    leaflet() %>%
       
-      fitBounds(~max(lon, na.rm = T), 
-                ~min(lat, na.rm = T), 
-                ~min(lon, na.rm = T), 
-                ~max(lat, na.rm = T)) %>%
+      fitBounds(track_bounds$lng_max, 
+                track_bounds$lat_min, 
+                track_bounds$lng_min, 
+                track_bounds$lat_max) %>%
       
       # add extra map features
       addScaleBar(position = 'topright')%>%

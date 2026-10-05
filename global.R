@@ -125,3 +125,93 @@ load('data/processed/names.rda')
 
 # read in password file
 load('data/processed/password.rda')
+
+# on-demand fst data access ------------------------------------------------
+# tracks and observations are NOT loaded into memory wholesale (neither here
+# nor per session). Each query reads only the rows it needs from the fst
+# files, so memory use scales with the user's selection rather than with the
+# size of the database * number of sessions. The cron job can overwrite the
+# fst files at any time; the next query simply reads the new file.
+
+effort_file = 'data/processed/effort.fst'
+observations_file = 'data/processed/observations.fst'
+
+# default map extent covering all track data. Only the lat/lon columns are
+# read (once, at app startup, shared by all sessions) and then discarded.
+local({
+  ll = fst::read_fst(effort_file, columns = c('lon', 'lat'))
+  track_bounds <<- list(lng_max = max(ll$lon, na.rm = TRUE),
+                        lat_min = min(ll$lat, na.rm = TRUE),
+                        lng_min = min(ll$lon, na.rm = TRUE),
+                        lat_max = max(ll$lat, na.rm = TRUE))
+})
+
+# read selected rows (ascending row indices) from an fst file, preserving the
+# original row order (track point order matters for plotting). Contiguous
+# runs are read directly with from/to; if the selection is very fragmented,
+# the enclosing row range is read once and subset instead.
+read_fst_rows = function(path, idx, max_runs = 50){
+  
+  if(length(idx) == 0){
+    # zero-row data frame with the correct columns/types
+    return(fst::read_fst(path, from = 1, to = 1)[0, , drop = FALSE])
+  }
+  
+  brk = which(diff(idx) != 1)
+  starts = idx[c(1, brk + 1)]
+  ends = idx[c(brk, length(idx))]
+  
+  if(length(starts) <= max_runs){
+    out = do.call(rbind, Map(function(s, e) fst::read_fst(path, from = s, to = e), 
+                             starts, ends))
+  } else {
+    out = fst::read_fst(path, from = min(idx), to = max(idx))
+    out = out[idx - min(idx) + 1, , drop = FALSE]
+  }
+  
+  rownames(out) = NULL
+  out
+}
+
+# effort/tracks matching the query
+read_effort = function(dates, dsource, names, platforms, show_hidden){
+  
+  # read only the columns needed for filtering
+  f = fst::read_fst(effort_file, columns = c('date', 'source', 'name', 'platform'))
+  
+  keep = f$date %in% dates & 
+    f$source %in% dsource & 
+    f$name %in% names & 
+    f$platform %in% platforms
+  
+  if(!show_hidden){
+    keep = keep & !(f$name %in% hidden_platforms)
+  }
+  rm(f)
+  
+  read_fst_rows(effort_file, which(keep))
+}
+
+# observations matching the query
+read_observations = function(dates, dsource, platforms, names, species, 
+                             show_hidden, show_possible_visual){
+  
+  f = fst::read_fst(observations_file, 
+                    columns = c('date', 'source', 'platform', 'name', 'species', 'score'))
+  
+  keep = f$date %in% dates & 
+    f$source %in% dsource & 
+    f$platform %in% platforms & 
+    f$name %in% names & 
+    f$species %in% species
+  
+  if(!show_hidden){
+    keep = keep & !(f$name %in% hidden_platforms)
+  }
+  if(!show_possible_visual){
+    keep = keep & f$score != 'possible visual'
+  }
+  rm(f)
+  
+  droplevels(read_fst_rows(observations_file, which(keep)))
+}
