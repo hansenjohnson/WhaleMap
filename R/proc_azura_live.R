@@ -55,14 +55,13 @@ for(ii in seq_along(OBS)){
     
     # fix formats
     if('InitLatitude' %in% colnames(obs)){
-      obs$EntryLatitude = obs$InitLatitude
-      obs$EntryLongitude = obs$InitLongitude
+      obs$EntryLatitude = ifelse(!is.na(obs$ActualLat), obs$ActualLat, obs$InitLatitude)
+      obs$EntryLongitude = ifelse(!is.na(obs$ActualLong), obs$ActualLong, obs$InitLongitude)
       levs = c('FIWH', 'RIWH', 'SEWH', 'HUWH', 'BLWH')
       labs = c('fin','right','sei','humpback','blue')
-      labs = c('fin','right','sei','humpback','blue')
     } else if('InitLat' %in% colnames(obs)){
-      obs$EntryLatitude = obs$InitLat
-      obs$EntryLongitude = obs$InitLong
+      obs$EntryLatitude = ifelse(!is.na(obs$ActualLat), obs$ActualLat, obs$InitLat)
+      obs$EntryLongitude = ifelse(!is.na(obs$ActualLong), obs$ActualLong, obs$InitLong)
       levs = c('FIWH', 'RIWH', 'SEWH', 'HUWH', 'BLWH')
       labs = c('fin','right','sei','humpback','blue')
     } else {
