@@ -3,21 +3,20 @@
 
 function(input, output, session){
   
-  # read in data -------------------------------------------------------
+  # load data -----------------------------------------------------------
   
-  # tracklines
-  tracks = readRDS('data/processed/effort.rds')
+  # effort
+  tracks = fst::read_fst('data/processed/effort.fst')
+  # observations
+  observations = fst::read_fst('data/processed/observations.fst')
   
-  # latest dcs positions
+  # latest dcs positions (file may not exist on all deployments)
   lfile = 'data/processed/dcs_live_latest_position.rds'
   if(file.exists(lfile)){
-    latest = readRDS(lfile) 
+    latest = readRDS(lfile)
   }
   
-  # sightings / detections
-  observations = readRDS('data/processed/observations.rds')
-  
-  # dynamic map polygons
+  # dynamic and seasonal management area polygons
   load('data/processed/dma.rda')
   load('data/processed/sma.rda')
   
@@ -321,8 +320,18 @@ function(input, output, session){
     # track warning
     if(nrow(trk())>npts & input$password != password){
       showNotification(h4(paste0('Warning! Tracklines have been turned off because 
-                              you have attemped to plot too many points (i.e. more than ', as.character(npts), '). 
-                              Please select less data to view tracks.')), 
+                              you have attemped to plot ', format(nrow(trk()), big.mark = ",", scientific = FALSE), ' points. 
+                              The limit is ', format(npts, big.mark = ",", scientific = FALSE), '. Please select less 
+                              data to view tracklines.')), 
+                       duration = 15, closeButton = T, type = 'error')
+    }
+    
+    # obs warning
+    if(nrow(obs())>nobs & input$password != password){
+      showNotification(h4(paste0('Warning! Observations have been turned off because 
+                              you have attemped to plot ', format(nrow(obs()), big.mark = ",", scientific = FALSE), ' points. 
+                              The limit is ', format(nobs, big.mark = ",", scientific = FALSE), '. Please select less 
+                              data to view observations.')), 
                        duration = 15, closeButton = T, type = 'error')
     }
     
@@ -406,7 +415,9 @@ function(input, output, session){
   # basemap -----------------------------------------------------------------
   
   output$map <- renderLeaflet({
-    leaflet(tracks) %>% 
+    
+    leaflet(tracks) %>%
+      
       fitBounds(~max(lon, na.rm = T), 
                 ~min(lat, na.rm = T), 
                 ~min(lon, na.rm = T), 
@@ -422,18 +433,14 @@ function(input, output, session){
         secondaryAreaUnit="acres", 
         activeColor = "#006622",
         completedColor = "#004d1a",
-        position = 'bottomleft') 
+        position = 'bottomleft')
     
-    # addControlGPS(options = gpsOptions(position = "topleft", activate = FALSE, 
-    #                                              autoCenter = TRUE, maxZoom = 8, 
-    #                                              setView = TRUE))
   })
   
   # tile observer ------------------------------------------------------  
   
   observeEvent(input$basemap, {
     # add tiles
-    
     if(input$basemap == 'Esri.OceanBasemap'){
       leafletProxy("map") %>%
         clearTiles() %>%
@@ -463,9 +470,6 @@ function(input, output, session){
                            group = 'graticules', 
                            showOriginLabel = FALSE)
       
-      # switch to show/hide
-      ifelse(input$graticules, showGroup(proxy, 'graticules'),
-             hideGroup(proxy, 'graticules'))
     }
     
   })
@@ -515,9 +519,6 @@ function(input, output, session){
                     color = 'darkgreen', 
                     fillColor = 'darkgreen')
       
-      # switch to show/hide
-      ifelse(input$critical_habitat_zone, showGroup(proxy, 'critical_habitat_zone'),
-             hideGroup(proxy, 'critical_habitat_zone'))
     }
     
   })
@@ -545,9 +546,6 @@ function(input, output, session){
                     color = 'darkblue', 
                     fillColor = 'darkblue')
       
-      # switch to show/hide
-      ifelse(input$dfo_zone, showGroup(proxy, 'dfo_zone'),
-             hideGroup(proxy, 'dfo_zone'))
     }
     
   })
@@ -575,9 +573,6 @@ function(input, output, session){
                      weight = 1, 
                      color = 'darkblue')
       
-      # switch to show/hide
-      ifelse(input$dfo_lines, showGroup(proxy, 'dfo_lines'),
-             hideGroup(proxy, 'dfo_lines'))
     }
     
   })
@@ -631,9 +626,6 @@ function(input, output, session){
                     color = 'darkgreen', 
                     fillColor = 'darkgreen')
       
-      # switch to show/hide
-      ifelse(input$tc_zone, showGroup(proxy, 'tc_zone'),
-             hideGroup(proxy, 'tc_zone'))
     }
     
   })
@@ -660,9 +652,6 @@ function(input, output, session){
                     color = 'orange', 
                     fillColor = 'orange')
       
-      # switch to show/hide
-      ifelse(input$tc_ra, showGroup(proxy, 'tc_ra'),
-             hideGroup(proxy, 'tc_ra'))
     }
     
   })
@@ -698,8 +687,6 @@ function(input, output, session){
                     options = pathOptions(clickable = F),
                     group = 'tss')
       
-      # switch to show/hide
-      ifelse(input$tss, showGroup(proxy, 'tss'), hideGroup(proxy, 'tss'))
     }
     
   })
@@ -725,9 +712,6 @@ function(input, output, session){
                     color = 'blue', 
                     fillColor = 'blue')
       
-      # switch to show/hide
-      ifelse(input$us_lobster, showGroup(proxy, 'us_lobster'),
-             hideGroup(proxy, 'us_lobster'))
     }
     
   })
@@ -755,9 +739,6 @@ function(input, output, session){
                     color = 'brown', 
                     fillColor = 'brown')
       
-      # switch to show/hide
-      ifelse(input$wind_lease, showGroup(proxy, 'wind_lease'),
-             hideGroup(proxy, 'wind_lease'))
     }
     
   })
@@ -782,10 +763,6 @@ function(input, output, session){
                     weight = 1, 
                     color = 'green', 
                     fillColor = 'green')
-      
-      # switch to show/hide
-      ifelse(input$virginia_rfi, showGroup(proxy, 'virginia_rfi'),
-             hideGroup(proxy, 'virginia_rfi'))
     }
     
   })
@@ -799,7 +776,7 @@ function(input, output, session){
     proxy %>% clearGroup('dma')
     
     # add polygons
-    if(nrow(dma) > 0){
+    if(input$dma & nrow(dma) > 0){
       proxy %>%
         addPolygons(data=dma, group = 'dma',
                     fill = T, 
@@ -816,10 +793,6 @@ function(input, output, session){
                     color = '#ff9900', 
                     fillColor = '#ff9900')
     }
-    
-    # switch to show/hide
-    ifelse(input$dma, showGroup(proxy, 'dma'),
-           hideGroup(proxy, 'dma'))
     
   })
   
@@ -848,9 +821,6 @@ function(input, output, session){
                     color = 'red', 
                     fillColor = 'red')
       
-      # switch to show/hide
-      ifelse(input$sma, showGroup(proxy, 'sma'),
-             hideGroup(proxy, 'sma'))
     }
     
   })
@@ -880,9 +850,6 @@ function(input, output, session){
                     color = 'darkgreen', 
                     fillColor = 'darkgreen')
       
-      # switch to show/hide
-      ifelse(input$spd, showGroup(proxy, 'spd'),
-             hideGroup(proxy, 'spd'))
     }
     
   })
@@ -912,9 +879,6 @@ function(input, output, session){
                     color = 'brown2', 
                     fillColor = 'brown2')
       
-      # switch to show/hide
-      ifelse(input$alwtrp, showGroup(proxy, 'alwtrp'),
-             hideGroup(proxy, 'alwtrp'))
     }
     
   })
@@ -932,54 +896,88 @@ function(input, output, session){
     
     if(input$tracks & nrow(trk())<npts|input$password == password){
       
-      # set up polyline plotting
-      tracks.df <- split(trk(), trk()$id)
-      
       # get color palette
       pal = colorpal_trk()
       
       ind = which(colnames(trk())==colorby_trk())
       
-      # add lines
-      names(tracks.df) %>%
-        purrr::walk( function(df) {
-          proxy <<- proxy %>%
-            addPolylines(data=tracks.df[[df]], 
-                         group = 'tracks',
-                         lng=~lon, 
-                         lat=~lat, 
-                         weight = 2,
-                         smoothFactor = 1, 
-                         options = markerOptions(removeOutsideVisibleBounds=TRUE, opacity = 0.5),
-                         color = pal(tracks.df[[df]][1,ind]),
-                         popup = paste0('Track ID: ', unique(tracks.df[[df]]$id)))
+      # set up polyline plotting
+      trk_sorted <- trk() %>%
+        group_by(id) %>%
+        mutate(.seg = cumsum(is.na(lon) | is.na(lat))) %>%
+        ungroup()
+      trk_sorted <- trk_sorted[!is.na(trk_sorted$lon) & !is.na(trk_sorted$lat), ]
+      tracks.df <- split(trk_sorted, paste(trk_sorted$id, trk_sorted$.seg, sep = '__'))
+      tracks.df <- tracks.df[vapply(tracks.df, nrow, integer(1)) >= 2]
+      
+      # plot polylines with sf (more efficient than previous purr() call)
+      if(length(tracks.df) > 0){
+        
+        line_geoms <- lapply(tracks.df, function(d){
+          sf::st_linestring(as.matrix(d[, c('lon','lat')]))
         })
+        
+        trk_ids    <- vapply(tracks.df, function(d) as.character(d$id[1]), character(1))
+        first_vals <- vapply(tracks.df, function(d) as.character(d[[ind]][1]), character(1))
+        
+        lines_sf <- sf::st_sf(
+          id = trk_ids,
+          trk_color = pal(first_vals),
+          trk_popup = paste0('Track ID: ', trk_ids),
+          geometry = sf::st_sfc(line_geoms, crs = 4326)
+        )
+        
+        proxy <- proxy %>%
+          addPolylines(data = lines_sf,
+                       group = 'tracks',
+                       weight = 2,
+                       opacity = 0.5,
+                       color = lines_sf$trk_color,
+                       popup = lines_sf$trk_popup)
+      }
+      
+    }
+    
+  })
+  
+  # buoy effort observer ------------------------------------------------  
+  observeEvent(input$tracks|input$go|input$go == 0, priority = 3, {
+    
+    proxy <- leafletProxy("map")
+    proxy %>% clearGroup('buoys')
+    
+    if(input$tracks & nrow(trk())<npts|input$password == password){
+      
+      pal = colorpal_trk()
+      ind = which(colnames(trk())==colorby_trk())
       
       # set up buoy plotting
       buoy.df <- trk() %>%
         filter(platform == 'buoy') %>%
+        drop_na_coords() %>%
         arrange(time) %>%
         group_by(id) %>%
-        dplyr::slice(1)
-      buoy.df <- split(buoy.df, buoy.df$id)
+        dplyr::slice(1) %>%
+        ungroup()
       
-      # add circles
-      names(buoy.df) %>%
-        purrr::walk( function(df) {
-          proxy <<- proxy %>%
-            addCircleMarkers(data=buoy.df[[df]], 
-                             radius = 6, 
-                             opacity = 1,
-                             stroke = T, 
-                             fill = T,
-                             fillOpacity = 0,
-                             weight = 2.5,
-                             group = 'tracks', 
-                             lng=~lon, 
-                             lat=~lat, 
-                             color = pal(tracks.df[[df]][1,ind]),
-                             popup = paste0('Track ID: ', unique(tracks.df[[df]]$id)))
-        })
+      if(nrow(buoy.df) > 0){
+        buoy_colors <- pal(as.character(buoy.df[[ind]]))
+        buoy_popups <- paste0('Track ID: ', buoy.df$id)
+        
+        proxy %>%
+          addCircleMarkers(data = buoy.df,
+                           radius = 6, 
+                           opacity = 1,
+                           stroke = T, 
+                           fill = T,
+                           fillOpacity = 0,
+                           weight = 2.5,
+                           group = 'buoys', 
+                           lng = ~lon, 
+                           lat = ~lat, 
+                           color = buoy_colors,
+                           popup = buoy_popups)
+      }
       
     }
     
@@ -988,7 +986,7 @@ function(input, output, session){
   # latest observer ------------------------------------------------------  
   if(file.exists(lfile)){
     
-    observe(priority = 3, {
+    observe(priority = 3.5, {
       
       # define proxy
       proxy <- leafletProxy("map")
@@ -999,9 +997,9 @@ function(input, output, session){
       if(input$latest){
         
         # add icons for latest position of live dcs platforms
-        proxy %>% 
+        proxy %>%
           addMapPane("lts", zIndex = 350) %>%
-          addMarkers(data = LATEST(), ~lon, ~lat, 
+          addMarkers(data = LATEST(), ~lon, ~lat,
                      icon = ~dcsIcons[platform],
                      options=pathOptions(pane = "lts"),
                      popup = ~paste(sep = "<br/>",
@@ -1010,13 +1008,34 @@ function(input, output, session){
                                     paste0('Name: ', as.character(name)),
                                     paste0('Time: ', as.character(time), ' UTC'),
                                     paste0('Position: ', 
-                                           as.character(lat), ', ', as.character(lon))),
-                     label = ~paste0('Latest position of ', as.character(name), ': ', 
-                                     as.character(time), ' UTC'), group = 'latest')
+                                           as.character(lat), ', ', as.character(lon))))
+                     # label = ~paste0('Latest position of ', as.character(name), ': ', 
+                     #                 as.character(time), ' UTC'), group = 'latest')
         
       }
       
     })
+  }
+  
+  # shared popup builder for obs --------
+  
+  build_obs_popup <- function(d){
+    paste(sep = "<br/>",
+          paste0("Species: ", d$species),
+          paste0("Score: ", d$score),
+          paste0("Number: ", d$number),
+          paste0("Calves: ", d$calves),
+          paste0("Platform: ", d$platform),
+          paste0("Name: ", d$name),
+          paste0("Date: ", as.character(d$date)),
+          paste0("Time: ", as.character(format(d$time, '%H:%M:%S UTC'))),
+          paste0("Position: ", as.character(d$lat), ', ', as.character(d$lon)),
+          paste0("Source: ", d$source))
+  }
+  
+  # sf::st_as_sf() fails with NA coordinates - drop them first
+  drop_na_coords <- function(d){
+    d[!is.na(d$lon) & !is.na(d$lat), ]
   }
   
   # possible observer ------------------------------------------------------  
@@ -1027,26 +1046,19 @@ function(input, output, session){
     proxy <- leafletProxy("map")
     proxy %>% clearGroup('possible')
     
-    if(input$possible){
+    if(input$possible & nrow(obs()) < nobs|input$password == password){
+      
+      # remove nas
+      pos_clean <- drop_na_coords(pos())
       
       # set up color palette plotting
       pal <- colorpal_obs()
       
-      # possible detections
-      addCircleMarkers(map = proxy, data = pos(), ~lon, ~lat, group = 'possible',
+      # plot possible detections
+      addCircleMarkers(map = proxy, data = pos_clean, ~lon, ~lat, group = 'possible',
                        radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
-                       fillColor = pal(pos()[,which(colnames(pos())==colorby_obs())]),
-                       popup = ~paste(sep = "<br/>" ,
-                                      paste0("Species: ", species),
-                                      paste0("Score: ", score),
-                                      paste0("Number: ", number),
-                                      paste0("Calves: ", calves),
-                                      paste0("Platform: ", platform),
-                                      paste0("Name: ", name),
-                                      paste0("Date: ", as.character(date)),
-                                      paste0("Time: ", as.character(format(time, '%H:%M:%S UTC'))),
-                                      paste0("Position: ", as.character(lat), ', ', as.character(lon)),
-                                      paste0("Source: ", source)),
+                       fillColor = pal(pos_clean[[colorby_obs()]]),
+                       popup = build_obs_popup(pos_clean),
                        options = markerOptions(removeOutsideVisibleBounds=T))
     }
   })
@@ -1059,27 +1071,35 @@ function(input, output, session){
     proxy <- leafletProxy("map")
     proxy %>% clearGroup('detected')
     
-    if(input$detected){
+    if(input$detected & nrow(obs()) < nobs|input$password == password){
+      
+      # remove nas
+      det_clean <- drop_na_coords(det())
       
       # set up color palette plotting
       pal <- colorpal_obs()
       
-      # definite detections
-      addCircleMarkers(map = proxy, data = det(), ~lon, ~lat, group = 'detected',
+      # definite detections - see note above on possible observer
+      addCircleMarkers(map = proxy, data = det_clean, ~lon, ~lat, group = 'detected',
                        radius = 4, fillOpacity = 0.9, stroke = T, col = 'black', weight = 0.5,
-                       fillColor = pal(det()[,which(colnames(det())==colorby_obs())]),
-                       popup = ~paste(sep = "<br/>" ,
-                                      paste0("Species: ", species),
-                                      paste0("Score: ", score),
-                                      paste0("Number: ", number),
-                                      paste0("Calves: ", calves),
-                                      paste0("Platform: ", platform),
-                                      paste0("Name: ", name),
-                                      paste0("Date: ", as.character(date)),
-                                      paste0("Time: ", as.character(format(time, '%H:%M:%S UTC'))),
-                                      paste0("Position: ", as.character(lat), ', ', as.character(lon)),
-                                      paste0("Source: ", source)),
+                       fillColor = pal(det_clean[[colorby_obs()]]),
+                       popup = build_obs_popup(det_clean),
                        options = markerOptions(removeOutsideVisibleBounds=T))
+    }
+  })
+  
+  # combined visible observations -----------------------------------------
+  # shared by the legend observer and dInBounds() below
+  
+  visibleObs <- reactive({
+    if(input$detected & input$possible){
+      rbind(det(), pos())
+    } else if(input$detected & !input$possible){
+      det()
+    } else if(!input$detected & input$possible){
+      pos()
+    } else {
+      NULL
     }
   })
   
@@ -1095,13 +1115,8 @@ function(input, output, session){
     var_trk <- trk()[,which(colnames(trk())==colorby_trk())]
     
     # determine which dataset to use based on display switches
-    if(input$detected & input$possible){
-      dat <- rbind(det(),pos())
-    } else if(input$detected & !input$possible){
-      dat <- det()
-    } else if(!input$detected & input$possible){
-      dat <- pos()
-    } else {
+    dat <- visibleObs()
+    if(is.null(dat)){
       proxy %>% clearControls() %>% 
         addLegend(position = "bottomright",labFormat = labelFormat(big.mark = ""),
                   pal = pal_trk, values = var_trk, 
@@ -1152,11 +1167,18 @@ function(input, output, session){
   
   # inbounds data ------------------------------------------------------  
   
+  # map_bounds updates continuously while the user drags/zooms the map,
+  # which used to trigger a full re-filter + re-render of the summary text
+  # and bar graph on every intermediate frame of the drag. Debouncing it
+  # means downstream reactives only recompute ~400ms after the user stops
+  # moving the map.
+  map_bounds_debounced <- reactive({ input$map_bounds }) %>% debounce(400)
+  
   # determine tracks in map bounds
   tInBounds <- reactive({
-    if (is.null(input$map_bounds))
+    if (is.null(map_bounds_debounced()))
       return(trk()[FALSE,])
-    bounds <- input$map_bounds
+    bounds <- map_bounds_debounced()
     latRng <- range(bounds$north, bounds$south)
     lngRng <- range(bounds$east, bounds$west)
     
@@ -1169,24 +1191,19 @@ function(input, output, session){
   dInBounds <- reactive({
     
     # determine which dataset to use based on display switches
-    if(input$detected & input$possible){
-      dat <- rbind(det(),pos())
-    } else if(input$detected & !input$possible){
-      dat <- det()
-    } else if(!input$detected & input$possible){
-      dat <- pos()
-    } else {
+    dat <- visibleObs()
+    if(is.null(dat)){
       dat = data.frame()
       return(dat[FALSE,])
     }
     
     # catch error if no data is displayed
-    if (is.null(input$map_bounds)){
+    if (is.null(map_bounds_debounced())){
       return(dat[FALSE,])
     }
     
     # define map bounds
-    bounds <- input$map_bounds
+    bounds <- map_bounds_debounced()
     latRng <- range(bounds$north, bounds$south)
     lngRng <- range(bounds$east, bounds$west)
     
@@ -1214,24 +1231,30 @@ function(input, output, session){
       str3 <- paste0('<strong>Number of whales sighted (includes duplicates)</strong>: ', 
                      sum(dInBounds()$number[dInBounds()$score=='definite visual'], na.rm = T))
       
-      ifelse(input$possible, 
-             t<-nrow(dInBounds()[dInBounds()$score=='possible visual',]),
-             t<-0)
+      if(input$possible){
+        t <- nrow(dInBounds()[dInBounds()$score=='possible visual',])
+      } else {
+        t <- 0
+      }
       
       str4 <- paste0('<strong>Number of possible sighting events</strong>: ', t)
       
-      ifelse(input$possible, 
-             u<-sum(dInBounds()$number[dInBounds()$score=='possible visual'], na.rm = T),
-             u<-0)
+      if(input$possible){
+        u <- sum(dInBounds()$number[dInBounds()$score=='possible visual'], na.rm = T)
+      } else {
+        u <- 0
+      }
       
       str5 <- paste0('<strong>Number of whales possibly sighted</strong>: ', u)
       
       str6 <- paste0('<strong>Number of definite detections</strong>: ', 
                      nrow(dInBounds()[dInBounds()$score=='definite acoustic',]))
       
-      ifelse(input$possible, 
-             v<-nrow(dInBounds()[dInBounds()$score=='possible acoustic',]),
-             v<-0)
+      if(input$possible){
+        v <- nrow(dInBounds()[dInBounds()$score=='possible acoustic',])
+      } else {
+        v <- 0
+      }
       
       str7 <- paste0('<strong>Number of possible detections</strong>: ', v)
       
@@ -1376,8 +1399,10 @@ function(input, output, session){
     }
     
     # build interactive plot
-    gg = ggplotly(g, dynamicTicks = F, tooltip = c("text", "count", "fill")) %>%
-      layout(margin=list(r=120, l=70, t=40, b=70), showlegend = input$legend)
+    gg = suppressWarnings(
+      ggplotly(g, dynamicTicks = F, tooltip = c("text", "count", "fill")) %>%
+        layout(margin=list(r=120, l=70, t=40, b=70), showlegend = input$legend)
+    )
     gg$elementId <- NULL # remove widget id warning
     gg
   })

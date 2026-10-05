@@ -6,17 +6,16 @@
 
 suppressPackageStartupMessages(library(shiny))
 suppressPackageStartupMessages(library(leaflet))
-# suppressPackageStartupMessages(library(rgdal))
 suppressPackageStartupMessages(library(htmltools))
 suppressPackageStartupMessages(library(htmlwidgets))
-# suppressPackageStartupMessages(library(maptools))
 suppressPackageStartupMessages(library(lubridate))
 suppressPackageStartupMessages(library(oce))
 suppressPackageStartupMessages(library(shinydashboard))
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(plotly))
 suppressPackageStartupMessages(library(leaflet.extras))
-suppressPackageStartupMessages(library(shinybusy))
+suppressPackageStartupMessages(library(sf))
+suppressPackageStartupMessages(library(fst))
 source('R/functions.R')
 
 # definitions -------------------------------------------------------------
@@ -75,8 +74,12 @@ colorby_trk_choices =
 visual_platforms = c('plane', 'vessel', 'rpas')
 acoustic_platforms = c('slocum', 'buoy', 'wave')
 
-# define track point plotting threshold
-npts = 250000
+# define track point plotting threshold (tracklines are turned off above
+# this many points to keep the deployed app stable)
+npts = 500000
+
+# maximum number of observation points
+nobs = 50000
 
 # define time lag for startup plotting
 tlag = 14 # days
@@ -109,7 +112,7 @@ graticule_ints = list(
 # hidden platforms
 hidden_platforms = c('cp_king_air', 'jasco_test', 'jasco-unmanned-sp48')
 
-# load data ---------------------------------------------------------------
+# load static data ---------------------------------------------------------
 
 # read in static map polygons
 load('data/processed/tss.rda')
