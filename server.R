@@ -47,7 +47,8 @@ function(input, output, session){
   
   # choose date -------------------------------------------------------
   
-  dates <- reactive({
+  # date selection
+  dates <- eventReactive(input$go|input$go == 0, {
     
     # catch startup error
     if(is.null(input$date)){
@@ -82,16 +83,21 @@ function(input, output, session){
     }
   })
   
+  # date type (select, range or multiyear)
+  dtype <- eventReactive(input$go|input$go == 0, {
+    input$dateType
+  })
+
   # choose platform -----------------------------------------------------------
-  
-  platform <- reactive({
+
+  platform <- eventReactive(input$go|input$go == 0, {
     input$platform
   })
-  
+
   # choose name -----------------------------------------------------------
-  
+
   # name
-  name <- reactive({
+  name <- eventReactive(input$go|input$go == 0, {
     if('All' %in% input$name | input$go == 0){
       name_choices
     } else {
@@ -204,7 +210,7 @@ function(input, output, session){
   })
   
   # only possible
-  pos <- eventReactive(input$go|input$go == 0, {
+  pos <- reactive({
     
     obs() %>%
       filter(
@@ -1090,7 +1096,7 @@ function(input, output, session){
   
   # combined visible observations -----------------------------------------
   # shared by the legend observer and dInBounds() below
-  
+
   visibleObs <- reactive({
     if(input$detected & input$possible){
       rbind(det(), pos())
@@ -1274,6 +1280,11 @@ function(input, output, session){
   
   # bargraph ----------------------------------------------------------------
   
+  # Map a date onto the same day/month in a common reference year (2000)
+  to_ref <- function(d){
+    as.Date(format(as.Date(d), '2000-%m-%d'))
+  }
+  
   output$graph <- renderPlotly({
     
     # define input observations
@@ -1304,23 +1315,41 @@ function(input, output, session){
       tracks = trk()  
     }
     
+    # x-axis dates: common calendar (reference year) for multiyear,
+    # real dates for single date and range selections
+    multi = dtype() == 'multiyear'
+    to_plot_date <- function(d){
+      if(multi) to_ref(d) else as.Date(d)
+    }
+    
+    obs$pdate = to_plot_date(obs$date)
+    
+    # axis limits from the SAME date snapshot used to subset the data
+    lims = range(to_plot_date(dates()))
+    
+    # whole-day breaks (fractional breaks put labels off-centre from bars)
+    brks = unique(as.Date(round(seq(as.numeric(lims[1]), as.numeric(lims[2]), 
+                                    length.out = 6)), origin = '1970-01-01'))
+    
+    # label format for axis and tooltips: day-month only, never the year
+    date_fmt = '%d-%b'
+
     # make categories for facet plotting
     obs$cat = ''
     obs$cat[obs$score == 'definite visual' | obs$score == 'possible visual'] = 'Sighting events per day'
     obs$cat[obs$score == 'definite acoustic' | obs$score == 'possible acoustic'] = 'Acoustic detection events per day'
     
     # determine days with trackline effort
-    vis_effort = unique(tracks$yday[tracks$platform %in% visual_platforms])
-    aco_effort = unique(tracks$yday[tracks$platform %in% acoustic_platforms])
-    tot_effort = c(vis_effort, aco_effort)
+    vis_effort = unique(to_plot_date(tracks$date[tracks$platform %in% visual_platforms]))
+    aco_effort = unique(to_plot_date(tracks$date[tracks$platform %in% acoustic_platforms]))
     
     # configure effort geometry for plotting
-    if(length(tot_effort)!=0){
-      eff = data.frame('yday' = tot_effort,
+    if(length(vis_effort) + length(aco_effort) != 0){
+      eff = data.frame('pdate' = c(vis_effort, aco_effort),
                        'cat' = c(rep('Sighting events per day',length(vis_effort)), 
                                  rep('Acoustic detection events per day',length(aco_effort))),
                        'y' = -1)
-      geom_effort = geom_point(data = eff, aes(x = yday, y=y), pch=45, cex = 3, col = 'blue')
+      geom_effort = geom_point(data = eff, aes(x = pdate, y = y), pch=45, cex = 3, col = 'blue')
     } else {
       geom_effort = NULL
     }
@@ -1331,9 +1360,8 @@ function(input, output, session){
     # choose palette for discrete scale
     cols = get_palette(pal = pal_obs(), n = ncol)
     
-    # define min and max yday
-    min_yday = isolate(min(yday(dates())))
-    max_yday = isolate(max(yday(dates())))
+    # shared x scale
+    xscale = scale_x_date(date_labels = date_fmt, breaks = brks)
     
     if(colorby_obs() %in% c('number', 'calves', 'lat','lon', 'year')){
       
@@ -1348,16 +1376,15 @@ function(input, output, session){
                                    na.value = 'darkslategrey')
       
       # build plot
-      g = ggplot(obs, aes(x = yday, y = counter))+
+      g = ggplot(obs, aes(x = pdate, y = counter))+
         geom_col(na.rm = T, aes(fill = .data[[colorby_obs()]]))+
         labs(x = '', y = '')+
         fillcols+
         facet_wrap(~cat, scales="free_y", nrow = 2)+
-        scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"), 
-                           breaks = seq(from = min_yday, to = max_yday, length.out = 6))+
-        aes(text = paste('date: ', format(as.Date(as.character(yday), "%j"), "%d-%b")))+
+        xscale+
+        aes(text = paste('date: ', format(pdate, date_fmt)))+
         geom_effort+
-        expand_limits(x = c(min_yday, max_yday))
+        expand_limits(x = lims)
       
     } else {
       if(colorby_obs()=='score' & pal_obs() == 'Default'){
@@ -1381,20 +1408,19 @@ function(input, output, session){
       }
       
       # count score by day, variable and category
-      cnt = obs %>% group_by(cat, (!!as.name(colorby_obs())), yday) %>%
+      cnt = obs %>% group_by(cat, (!!as.name(colorby_obs())), pdate) %>%
         count()
       
       # build plot
-      g = ggplot(cnt, aes(x = yday))+
+      g = ggplot(cnt, aes(x = pdate))+
         geom_col(na.rm = T, aes(fill = .data[[colorby_obs()]], y = n))+
         labs(x = '', y = '')+
         fillcols+
         facet_wrap(~cat, scales="free_y", nrow = 2)+
-        scale_x_continuous(labels = function(x) format(as.Date(as.character(x), "%j"), "%d-%b"), 
-                           breaks = seq(from = min_yday, to = max_yday, length.out = 6))+
-        aes(text = paste('date: ', format(as.Date(as.character(yday), "%j"), "%d-%b")))+
+        xscale+
+        aes(text = paste('date: ', format(pdate, date_fmt)))+
         geom_effort+
-        expand_limits(x = c(min_yday, max_yday))
+        expand_limits(x = lims)
       
     }
     
