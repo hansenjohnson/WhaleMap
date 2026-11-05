@@ -23,23 +23,32 @@ url_sma = 'https://services2.arcgis.com/C8EMgrsFcRFL6LrL/arcgis/rest/services/Se
 # read in dma data
 sma <- st_read(url_sma, quiet = TRUE)
 
-# today's dates
+# today's date
 dt = Sys.Date()
 yr = year(dt)
 
-# define start dates
-sma$st_date = as.Date(paste0(yr, '-', sma$st_mo,'-', sma$st_day))
+# make sure month/day fields are integers
+st_mo  = as.integer(sma$st_mo)
+st_day = as.integer(sma$st_day)
+end_mo  = as.integer(sma$end_mo)
+end_day = as.integer(sma$end_day)
 
-# define end dates
-sma$end_date = as.Date(paste0(yr, '-', sma$end_mo,'-', sma$end_day))
+# encode month/day as MMDD numbers for year-independent comparison
+st_md    = st_mo * 100 + st_day
+end_md   = end_mo * 100 + end_day
+today_md = month(dt) * 100 + day(dt)
 
-# increase end dates to next year if needed
-# ei = sma$end_date <= sma$st_date
-# sma$end_date[ei] = sma$end_date[ei] %m+% years(1)
+# zones whose season crosses Dec 31 (e.g., Nov 1 - Apr 30)
+wraps = st_md > end_md
 
-# decrease start dates to previous year if needed
-si = sma$st_date >= sma$end_date
-sma$st_date[si] = sma$st_date[si] %m-% years(1)
+# for wrapping zones, if today is before the start month/day,
+# we're in the Jan-to-end part of a season that began last year
+st_yr  = ifelse(wraps & today_md < st_md, yr - 1, yr)
+end_yr = ifelse(wraps, st_yr + 1, st_yr)
+
+# define start and end dates
+sma$st_date  = make_date(st_yr,  st_mo,  st_day)
+sma$end_date = make_date(end_yr, end_mo, end_day)
 
 # determine which zones are active
 sma$active = dt >= sma$st_date & dt <= sma$end_date
